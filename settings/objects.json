@@ -1,0 +1,21 @@
+{
+    "0" : {
+        "name" : "Barrel",
+        "health" : 100.0,
+        "heading" : 0.0,
+        "shape" : {
+            "name" : "CYLINDER",
+            "radius" : 1.0
+        }
+    },
+    "1" : {
+        "name": "Box",
+        "health": 100.0,
+        "heading":0.0,
+        "shape" : {
+            "name": "RECTANGLE",
+            "width": 1.0,
+            "height": 1.0
+        }
+    }
+}

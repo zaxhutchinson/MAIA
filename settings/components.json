@@ -1,0 +1,10 @@
+{
+    "0": {
+        "name":"Paintball Cannon",
+        "type":"FixedGun",
+        "reload_duration":1.0,
+        "ammunition":100,
+        "damage":1.0,
+        "velocity":1.0
+    }
+}
