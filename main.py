@@ -4,24 +4,20 @@ import sys
 import app
 import vec2
 import math
-import loader
 import zmap
 from log import *
+
 
 
 if __name__ == "__main__":
     # Initialize the log files
     LogInit()
-
-    # Load configs
-    l = loader.Loader()
-    l.loadComponents('settings/components.json')
-    l.loadObjectTemplates("settings/objects.json")
-    l.loadMapTemplates("settings/maps.json")
+    
 
     # Start App
     root = tk.Tk()
     maia_app = app.App(master=root)
+    maia_app.Run()
 
 
 

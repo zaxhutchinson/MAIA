@@ -27,22 +27,21 @@ class Component:
             return None
         
     def setData(self,data):
+
         # Fill out self.data with None values
-        local_data = [
+        req_data = [
             'id','name','ctype'
         ]
         
-        for rd in local_data:
-            self.data[rd]=None
-
         # Populate with actual data.
-        for rd in local_data:
+        for rd in req_data:
             if rd in data:
                 self.data[rd] = data[rd]
             else:
+                self.data[rd]=None
                 self.LogMissingData(rd)
 
-        self.required_data += local_data
+        self.required_data += req_data
 
     def update(self,time,command):
         return None
@@ -141,7 +140,7 @@ class Engine(Component):
         distance = self.data['speed']*self.data['throttle']
         self.parent.move(distance)
 
-        turn = self.data['turn_rate']*self.data['turn']
+        turn = self.data['turn_rate']*math.radians(self.data['turn'])
         self.parent.turn(turn)
 
     

@@ -85,7 +85,8 @@ class Object:
         self.data = {}
         self.data['shape']=shape
         self.data['pos']=vec2.Vec2(0.0,0.0)
-        self.required_date = []
+        self.data['components']={}
+        self.required_data = []
         self.setData(data)
     def getData(self,key):
         if key in self.data:
@@ -94,20 +95,27 @@ class Object:
             return None
 
     def setData(self,data):
-        local_data = [
-            'ID','name','health','damage','heading'
+        req_data = [
+            'id','name','health','damage','heading'
         ]
+            
 
-        for rd in local_data:
-            self.data[rd]=None
-
-        for rd in local_data:
+        for rd in req_data:
             if rd in data:
                 self.data[rd] = data[rd]
             else:
+                self.data[rd]=None
                 self.LogMissingData(rd)
 
-        self.required_date += local_data
+        self.required_data += req_data
+
+        opt_data = [
+            'component_ids'
+        ]
+        for od in opt_data:
+            if od in data:
+                self.data[od] = data[od]
+                self.required_data.append(od)
 
     def LogMissingData(self,rd):
         LogError("Comp is missing "+rd)
@@ -129,7 +137,7 @@ class Object:
             self.data['heading'] -= _2PI
     def move(self,distance):
         self.data['pos'].move(self.data['heading'],distance)
-    def collision(self,line):
+    def collidesWithMe(self,line):
         return self.data['shape'].collision(self.data['pos'],self.data['heading'],line)
     def randomize(self):
         self.data['shape'].randomize()
@@ -139,6 +147,15 @@ class Object:
             if k in self.data:
                 self.data[k]=v
         self.shape.setData(data)
+
+
+    def addComponent(self,comp):
+        comp_id = comp.getData('id')
+        if comp_id in self.data['components']:
+            self.data['components'][comp_id].append(comp)
+        else:
+            self.data['components'][comp_id]=[comp]
+
         
 
 

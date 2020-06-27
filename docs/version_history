@@ -1,0 +1,13 @@
+
+Version 0.01
+June 27, 2020
+- Initial UI work
+- Building objects from stored data
+- Restructured data members into a dictionary with a basic way to require some
+    variables and make others optional.
+
+Init Version
+June 27, 2020
+- Basic structure of the objects, comps, map, and teams
+- Loading of data from json files.
+- No UI.
