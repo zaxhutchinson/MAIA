@@ -21,7 +21,7 @@
         }
     },
     "2" : {
-        "id": 0,
+        "id": 2,
         "name" : "Round Tank",
         "health" : 10.0,
         "heading" : 0.0,

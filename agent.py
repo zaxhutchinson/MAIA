@@ -17,12 +17,19 @@ class Agent:
 
     def setObj(self,obj):
         self.obj = obj
+    def getObj(self):
+        return self.obj
+    def getObjProfile(self):
+        if self.obj != None:
+            return self.obj.getObjProfile()
+        else:
+            return {}
     def setAI(self,ai):
         self.ai = ai
 
     # Returns a list of commands
-    def AI(self):
+    def Update(self,world_state):
         if self.ai != None:
-            return self.ai()
+            return self.ai(world_state)
         else:
             return []

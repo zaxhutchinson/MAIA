@@ -16,6 +16,11 @@ class Shape:
         None
     def setData(self,data):
         pass
+    def getData(self,key):
+        if key in self.data:
+            return self.data[key]
+        else:
+            return None
 
 class Cylinder(Shape):
     def __init__(self,name,radius):
@@ -86,6 +91,7 @@ class Object:
         self.data['shape']=shape
         self.data['pos']=vec2.Vec2(0.0,0.0)
         self.data['components']={}
+        self.data['damage']=0.0
         self.required_data = []
         self.setData(data)
     def getData(self,key):
@@ -96,7 +102,7 @@ class Object:
 
     def setData(self,data):
         req_data = [
-            'id','name','health','damage','heading'
+            'id','name','health','heading'
         ]
             
 
@@ -110,7 +116,7 @@ class Object:
         self.required_data += req_data
 
         opt_data = [
-            'component_ids'
+            'component_ids','damage'
         ]
         for od in opt_data:
             if od in data:
@@ -118,7 +124,7 @@ class Object:
                 self.required_data.append(od)
 
     def LogMissingData(self,rd):
-        LogError("Comp is missing "+rd)
+        LogError("Object is missing "+rd)
     def getCurrentHealth(self):
         return self.data['health'] - self.data['damage']
     def addDamage(self,amt):
@@ -142,11 +148,13 @@ class Object:
     def randomize(self):
         self.data['shape'].randomize()
 
-    def setDataFromDict(self,data):
-        for k,v in data:
+    def initObjectFromData(self,data):
+        for k,v in data.items():
             if k in self.data:
-                self.data[k]=v
-        self.shape.setData(data)
+                if k == 'pos':
+                    self.data['pos'] = vec2.Vec2(v[0],v[1])
+                else:
+                    self.data[k]=v
 
 
     def addComponent(self,comp):
@@ -157,6 +165,11 @@ class Object:
             self.data['components'][comp_id]=[comp]
 
         
-
+    def getObjProfile(self):
+        obj_prof = {}
+        obj_prof['shape_name']=self.getData('shape').name
+        obj_prof['loc_x']=self.getData('pos').getX()
+        obj_prof['loc_y']=self.getData('pos').getY()
+        return obj_prof
 
 

@@ -16,6 +16,7 @@ class Sim:
         self.teamDict = {}
 
         self.teamsInPlay = {}
+        self.mapInPlay = None
 
 
     def addObject(self,_obj):
@@ -27,11 +28,15 @@ class Sim:
         key = comp.getData('id')
         if key != None:
             self.componentDict[key] = comp
+        else:
+            print("Sim: Adding component, comp has not data member id.")
 
     def addMap(self,_map):
-        key = _map.getData('id')
+        key = _map.getData('name')
         if key != None:
             self.mapDict[key] = _map
+        else:
+            LogError("LOADER: Map has no name.")
 
     def addTeam(self,team):
         key = team.getData('name')
@@ -50,12 +55,19 @@ class Sim:
                     newComp = self.buildComponent(c)
                     _obj.addComponent(newComp)
 
+            return _obj
+        else:
+            print("Obj key "+key+" not in dict")
+            return None
 
     def buildComponent(self,key):
         if key in self.componentDict:
             comp = copy.deepcopy(self.componentDict[key])
 
-        return comp
+            return comp
+        else:
+            print("Comp "+str(key)+" not in comp dict.")
+            return None
 
     def clearTeamsInPlay(self):
         self.teamsInPlay.clear()
@@ -63,12 +75,12 @@ class Sim:
 
     def buildTeam(self,key):
         if key in self.teamDict:
-            _team = self.getTeam(key)
+            _team = self.getTeamCopy(key)
 
-            name = _team.getData('name')
+            teamName = _team.getData('name')
             _agents = _team.getData('agents')
-            for agent in _agents.items():
-                self.buildAgent(agent,name)
+            for k,v in _agents.items():
+                self.buildAgent(v,teamName)
 
             self.teamsInPlay[key]=_team
 
@@ -78,12 +90,15 @@ class Sim:
             ai_filename = _agent.getData('ai_filename')
             _agent.setObj(self.buildObject(objid))
 
+
+            print(ai_filename,'teams/'+teamName+"/"+ai_filename)
             ai_spec = importlib.util.spec_from_file_location(ai_filename,'teams/'+teamName+"/"+ai_filename)
             ai_module = importlib.util.module_from_spec(ai_spec)
             ai_spec.loader.exec_module(ai_module)
 
-            _agent.setAI(ai_module.AI())
+            _agent.setAI(ai_module.AI(teamName,self.getSimProfile(),_agent.getObjProfile()))
 
+            #self.mapInPlay.addAgentObject(_agent.getObj())
             
         else:
             LogError("SIM: Agent is None")
@@ -91,17 +106,50 @@ class Sim:
     def getObject(self,ID):
         return copy.deepcopy(self.objectDict[ID])
 
+    def getMapCopy(self,ID):
+        if ID in self.mapDict:
+            return copy.deepcopy(self.mapDict[ID])
+        else:
+            return None
+
     def getMap(self,ID):
-        return copy.deepcopy(self.mapDict[ID])
+        if ID in self.mapDict:
+            return self.mapDict[ID]
+        else:
+            return None
 
     def getTeam(self,key):
-        return copy.deepcopy(self.teamDict[key])
+        if key in self.teamDict:
+            return self.teamDict[key]
+        else:
+            return None
 
+    def getTeamCopy(self,key):
+        if key in self.teamDict:
+            return copy.deepcopy(self.teamDict[key])
+        else:
+            return None
 
     def getTeamNames(self):
         return list(self.teamDict.keys())
     def getMapNames(self):
         return list(self.mapDict.keys())
+
+
+    def getSimProfile(self):
+        simdata = {}
+        simdata['map_name']=self.mapInPlay.getData('name')
+        simdata['map_width']=self.mapInPlay.getData('width')
+        simdata['map_height']=self.mapInPlay.getData('height')
+        return simdata
+
+    def setMapInPlay(self,name):
+        self.mapInPlay = self.getMapCopy(name)
+        if self.mapInPlay != None:
+            self.mapInPlay.generateMap(self)
+
+    def isMapReady(self):
+        return self.mapInPlay != None
 
     def runSim(self):
         pass

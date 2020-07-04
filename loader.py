@@ -90,10 +90,10 @@ class Loader:
             jsonObjs = json.load(f)
             compmodule = importlib.import_module('component')
             for k,v in jsonObjs.items():
-                if 'type' not in v:
-                    LogError('Comp is missing the type.')
+                if 'ctype' not in v:
+                    LogError('Comp is missing the ctype.')
                 else:
-                    ctype = v['type']
+                    ctype = v['ctype']
                     CompClass = getattr(compmodule,ctype)
                     comp = CompClass(v)
                     sim.addComponent(comp)

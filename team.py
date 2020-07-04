@@ -5,16 +5,18 @@ class Team:
     def __init__(self,data):
         self.data={}
         self.required_data=[]
-        self.agents = {}
 
         self.setData(data)
 
-        self.setAgents()
+        self.createAgents()
 
     def setData(self,data):
 
+        # Agents are created later based on agent_defs read from the json
+        self.data['agents']={}
+
         req_data = [
-            'name','size','agents'
+            'name','size','agent_defs'
         ]
 
         for rd in req_data:
@@ -32,16 +34,23 @@ class Team:
         else:
             return None
 
-    def setAgents(self):
-        agents = self.getData('agents')
-        
-        if agents == None:
-            LogError("AGENT: Agent data is missing.")
+    def getNumberOfAgents(self):
+        if 'agents' in self.data:
+            return len(self.data['agents'])
         else:
-            for ID,data in agents.items():
+            0
+
+    def createAgents(self):
+        agent_defs = self.getData('agent_defs')
+        
+        if agent_defs == None:
+            LogError("AGENT: Agent definition data is missing.")
+        else:
+            for ID,data in agent_defs.items():
                 ID = int(ID)
                 objid = data['object']
                 ai_filename = data['AI_file']
 
                 _agent = agent.Agent(ID,objid,ai_filename)
+                self.data['agents'][ID]=_agent
                 

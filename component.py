@@ -19,14 +19,7 @@ class Component:
         self.parent = parent
         self.required_data = []
         self.data = {}
-        self.setData(data)
-    def getData(self,key):
-        if key in self.data:
-            return self.data[key]
-        else:
-            return None
-        
-    def setData(self,data):
+        print("COMPONENT setData()")
 
         # Fill out self.data with None values
         req_data = [
@@ -42,6 +35,12 @@ class Component:
                 self.LogMissingData(rd)
 
         self.required_data += req_data
+    def getData(self,key):
+        if key in self.data:
+            return self.data[key]
+        else:
+            print("Component: getData() key "+str(key)+" does not exist.")
+            return None
 
     def update(self,time,command):
         return None
@@ -56,8 +55,7 @@ class Component:
 class FixedGun(Component):
     def __init__(self,data,parent=None):
         super().__init__(data,parent)
-        self.setData(data)
-    def setData(self,data):
+        print("FIXEDGUN setData()")
 
         self.data['prev_update_time'] = 0.0
         self.data['reload_timer']=0.0
@@ -75,6 +73,7 @@ class FixedGun(Component):
                 self.LogMissingData(rd)
 
         self.required_data += local_data
+
     
     def update(self,time,command):
         # Update timers
@@ -104,22 +103,19 @@ class FixedGun(Component):
 class Engine(Component):
     def __init__(self,data,parent=None):
         super().__init__(data,parent)
-        self.setData(data)
-
-    def setData(self,data):
+        
         self.data['throttle']=0.0
         self.data['turn']=0.0
 
         local_data = [
             'speed','turn_rate'
         ]
-
-        for rd in local_data:
-            self.data[rd]=None
+            
         for rd in local_data:
             if rd in data:
                 self.data[rd]=data[rd]
             else:
+                self.data[rd]=None
                 self.LogMissingData(rd)
 
         self.required_data += local_data
