@@ -21,7 +21,7 @@ class App(tk.Frame):
         
 
         self.team_names = self.sim.getTeamNames()
-        self.team_names_to_play = []
+        self.team_names_to_play = {}
         self.map_names = self.sim.getMapNames()
         self.map_selection = None
         self.combat_log = []
@@ -61,7 +61,7 @@ class App(tk.Frame):
         self.lblTeamPool = tk.Label(self.teamPoolFrame,text="Team Pool")
         self.lblTeamPool.pack(fill=tk.BOTH,side=tk.TOP,expand=True)
 
-        self.lbTeams = tk.Listbox(self.teamPoolFrame,selectmode=tk.SINGLE)
+        self.lbTeams = tk.Listbox(self.teamPoolFrame,selectmode=tk.SINGLE,exportselection=0)
         self.lbTeams.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
 
         self.playPoolFrame = tk.Frame(self.teamFrame)
@@ -70,8 +70,14 @@ class App(tk.Frame):
         self.lblPlayPool = tk.Label(self.playPoolFrame,text="Play Pool")
         self.lblPlayPool.pack(fill=tk.BOTH,side=tk.TOP,expand=True)
 
-        self.lbTeamsToPlay = tk.Listbox(self.playPoolFrame,selectmode=tk.SINGLE)
-        self.lbTeamsToPlay.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
+        self.subPlayPoolFrame = tk.Frame(self.playPoolFrame)
+        self.subPlayPoolFrame.pack(fill=tk.BOTH,side=tk.BOTTOM,expand=True)
+
+        self.lbSideNames = tk.Listbox(self.subPlayPoolFrame,selectmode=tk.SINGLE,exportselection=0)
+        self.lbSideNames.pack(side=tk.LEFT,fill=tk.BOTH,expand=True)
+
+        self.lbTeamAssignments = tk.Listbox(self.subPlayPoolFrame,selectmode=tk.NONE)
+        self.lbTeamAssignments.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True)
 
         self.updateTeamNames()
 
@@ -96,11 +102,13 @@ class App(tk.Frame):
 
     def updateTeamNames(self):
         self.lbTeams.delete(0,tk.END)
-        self.lbTeamsToPlay.delete(0,tk.END)
+        self.lbSideNames.delete(0,tk.END)
+        self.lbTeamAssignments.delete(0,tk.END)
         for name in self.team_names:
             self.lbTeams.insert(tk.END,name)
-        for name in self.team_names_to_play:
-            self.lbTeamsToPlay.insert(tk.END,name)
+        for name,team_name in self.team_names_to_play.items():
+            self.lbSideNames.insert(tk.END,name)
+            self.lbTeamAssignments.insert(tk.END,str(team_name))
 
     def updateMapNames(self):
         self.lbMaps.delete(0,tk.END)
@@ -109,23 +117,44 @@ class App(tk.Frame):
 
     def addTeam(self):
         if self.sim.isMapReady():
+            
             teams = self.map_selection.getData('teams')
-            if teams > len(self.team_names_to_play):
-                curselection = self.lbTeams.curselection()
-                if len(curselection) > 0:
-                    name_to_add = self.team_names.pop(curselection[0])
-                    self.team_names_to_play.append(name_to_add)
-                    self.updateTeamNames()
+            #if list(self.team_names_to_play.value()).count(None) > 0:
+            team_index = self.lbTeams.curselection()
+            side_index = self.lbSideNames.curselection()
+            if len(team_index) > 0 and len(side_index) > 0:
+
+                all_sides = self.lbSideNames.get(0,tk.END)
+                side_selection = all_sides[side_index[0]]
+                name_to_add = self.team_names.pop(team_index[0])
+
+                # Do nothing if we're adding a team the side it has
+                # already been assigned.
+                if name_to_add == self.team_names_to_play[side_selection]:
+                    return
+                
+                # Check if there's already a team in this slot
+                # If so, remove it and reset
+                if self.team_names_to_play[side_selection] != None:
+                    self.team_names.append(self.team_names_to_play[side_selection])
+                    self.team_names_to_play[side_selection]=None
+
+                self.team_names_to_play[side_selection]=name_to_add
+                self.updateTeamNames()
     def removeTeam(self):
-        curselection = self.lbTeamsToPlay.curselection()
-        if len(curselection) > 0:
-            name_to_remove = self.team_names_to_play.pop(curselection[0])
-            self.team_names.append(name_to_remove)
+        side_index = self.lbSideNames.curselection()
+        if len(side_index) > 0:
+            all_sides = self.lbSideNames.get(0,tk.END)
+            side_selection = all_sides[side_index[0]]
+            team_removed = self.team_names_to_play[side_selection]
+            self.team_names_to_play[side_selection]=None
+            self.team_names.append(team_removed)
             self.updateTeamNames()
     def removeAllTeams(self):
-        while len(self.team_names_to_play) > 0:
-            t = self.team_names_to_play.pop()
-            self.team_names.append(t)
+        for k,v in self.team_names_to_play.items():
+            if v != None:
+                self.team_names.append(v)
+                self.team_names_to_play[k]=None
 
     def selectMap(self):
         curselection = self.lbMaps.curselection()
@@ -154,6 +183,11 @@ class App(tk.Frame):
             self.txtMapInfo.insert(tk.END,mapInfoString)
 
             self.removeAllTeams()
+
+            for side_label in self.map_selection.getTeamLabels():
+                self.team_names_to_play[side_label] = None
+
+            
             self.updateTeamNames()
 
     def buildSim(self):

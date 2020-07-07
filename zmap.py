@@ -19,15 +19,13 @@ from log import *
 class Map:
     def __init__(self, data):
         self.objects = []
-        self.setData(data)
         self.open_starting_positions = {}
 
-    def setData(self,data):
         self.data = {}
         self.required_data = []
 
         req_data = [
-            'name','desc','width','height','teams','agents','starting_positions'
+            'name','desc','width','height','teams','agents'
         ]
             
         for rd in req_data:
@@ -40,24 +38,29 @@ class Map:
         self.required_data += req_data
 
         opt_data = [
-            'rand_objects','placed_objects'
+            'placed_objects'
         ]
         for od in opt_data:
             if od in data:
                 self.data[od] = data[od]
                 self.required_data.append(od)
 
-        for k,v in self.data['starting_positions'].items():
-            self.open_starting_positions[int(k)]=[]
+        starting_positions = {}
+        for k,v in data['starting_positions'].items():
+            starting_positions[k]=[]
             for pos in v:
                 vec = vec2.Vec2(pos[0],pos[1])
-                self.open_starting_positions[int(k)].append(vec)
+                starting_positions[k].append(vec)
+        self.data['starting_positions']=starting_positions
 
     def getData(self,key):
         if key in self.data:
             return self.data[key]
         else:
             return None
+
+    def getTeamLabels(self):
+        return list(self.data['starting_positions'].keys())
 
     def getOpenStartingPosition(self,team_index):
         if team_index in self.open_starting_positions:
@@ -71,7 +74,7 @@ class Map:
     def addObject(self,obj):
         for o in self.objects:
             
-        self.objects.append(obj)
+            self.objects.append(obj)
 
 
     def addTeam(self,team,team_index):
@@ -98,15 +101,15 @@ class Map:
                     self.addObject(thisObj)
         
         # rand objects
-        if 'rand_objects' in self.data:
-            for k,v in self.data['rand_objects'].items():
-                for i in range(v):
-                    thisObj = sim.getObject(int(k))
-                    x = random.uniform(0.0,self.data['width'])
-                    y = random.uniform(0.0,self.data['height'])
-                    thisObj.setPosition(vec2.Vec2(x,y))
-                    thisObj.randomize()
-                    self.addObject(thisObj)
+        # if 'rand_objects' in self.data:
+        #     for k,v in self.data['rand_objects'].items():
+        #         for i in range(v):
+        #             thisObj = sim.getObject(int(k))
+        #             x = random.uniform(0.0,self.data['width'])
+        #             y = random.uniform(0.0,self.data['height'])
+        #             thisObj.setPosition(vec2.Vec2(x,y))
+        #             thisObj.randomize()
+        #             self.addObject(thisObj)
 
         
 

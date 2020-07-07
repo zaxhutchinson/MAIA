@@ -21,18 +21,16 @@ class Loader:
         self.loadTeamData("settings/teams.json",sim)
 
     def loadShape(self,shapeData):
-        name = shapeData['name']
 
         shape = None
         
-        if name == 'CYLINDER':
-            radius = shapeData['radius']
-            shape = obj.Cylinder(name,radius)
+        if shapeData['name'] == 'CYLINDER':
+            shape = obj.Cylinder(shapeData)
 
-        elif name == "RECTANGLE":
-            width = shapeData['width']
-            height = shapeData['height']
-            shape = obj.Rectangle(name,width,height)
+        # elif name == "RECTANGLE":
+        #     width = shapeData['width']
+        #     height = shapeData['height']
+        #     shape = obj.Rectangle(name,width,height)
         
         return shape
 
@@ -51,12 +49,9 @@ class Loader:
         with open(filename,'r') as f:
             jsonObjs = json.load(f)
             for k,v in jsonObjs.items():
-                shape = self.loadShape(v['shape'])
-                if shape != None:
-                    o = obj.Object(v,shape)
-                    sim.addObject(o)
-                else:
-                    LogError('OBJECT is missing shape.')
+                v['shape'] = self.loadShape(v['shape'])
+                o = obj.Object(v)
+                sim.addObject(o)
 
     def loadMaps(self,filename,sim):
         with open(filename,'r') as f:

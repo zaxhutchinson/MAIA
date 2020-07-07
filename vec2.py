@@ -2,8 +2,13 @@ import math
 
 class Vec2:
     def __init__(self,_x,_y):
-        self.x = float(_x)
-        self.y = float(_y)
+        self.x = int(_x)
+        self.y = int(_y)
+    def __eq__(self,other):
+        if isinstance(other,Vec2):
+            return self.x==other.x and self.y==other.y
+        else:
+            return False
 
     def getX(self):
         return self.x
@@ -13,6 +18,10 @@ class Vec2:
         self.x = _x
     def setY(self,_y):
         self.y = _y
+
+
+    def intersectsLineSeg(self,lineseg):
+        return lineseg.intersectsPoint(self)
 
 
     def distanceToPoint(self,otherVec):

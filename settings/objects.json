@@ -11,17 +11,6 @@
     },
     "1" : {
         "id": 1,
-        "name": "Box",
-        "health": 100.0,
-        "heading":0.0,
-        "shape" : {
-            "name": "RECTANGLE",
-            "width": 1.0,
-            "height": 1.0
-        }
-    },
-    "2" : {
-        "id": 2,
         "name" : "Round Tank",
         "health" : 10.0,
         "heading" : 0.0,
