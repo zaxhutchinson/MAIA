@@ -25,7 +25,7 @@ class Map:
         self.required_data = []
 
         req_data = [
-            'name','desc','width','height','teams','agents'
+            'name','desc','width','height','teams','agents','starting_regions'
         ]
             
         for rd in req_data:
@@ -45,13 +45,13 @@ class Map:
                 self.data[od] = data[od]
                 self.required_data.append(od)
 
-        starting_positions = {}
-        for k,v in data['starting_positions'].items():
-            starting_positions[k]=[]
-            for pos in v:
-                vec = vec2.Vec2(pos[0],pos[1])
-                starting_positions[k].append(vec)
-        self.data['starting_positions']=starting_positions
+        # starting_positions = {}
+        # for k,v in data['starting_positions'].items():
+        #     starting_positions[k]=[]
+        #     for pos in v:
+        #         vec = vec2.Vec2(pos[0],pos[1])
+        #         starting_positions[k].append(vec)
+        # self.data['starting_positions']=starting_positions
 
     def getData(self,key):
         if key in self.data:
@@ -60,7 +60,7 @@ class Map:
             return None
 
     def getTeamLabels(self):
-        return list(self.data['starting_positions'].keys())
+        return list(self.data['starting_regions'].keys())
 
     def getOpenStartingPosition(self,team_index):
         if team_index in self.open_starting_positions:

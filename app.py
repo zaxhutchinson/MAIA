@@ -193,8 +193,8 @@ class App(tk.Frame):
     def buildSim(self):
         if self.sim.isMapReady():
             self.sim.clearTeamsInPlay()
-            for t in self.team_names_to_play:
-                self.sim.buildTeam(t)
+            for k,v in self.team_names_to_play.items():
+                self.sim.buildTeam(k,v)
 
     def runSim(self):
         pass

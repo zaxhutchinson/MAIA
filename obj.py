@@ -160,6 +160,8 @@ class Object:
         self.data['shape'].turn(angle)
     def collidesWith(self,other):
         return self.data['shape'].collidesWith(other)
+    def setPosition(self,pos):
+        self.data['shape'].setData('pos',pos)
 
 
     def LogMissingData(self,rd):
@@ -190,7 +192,7 @@ class Object:
         
     def getObjProfile(self):
         obj_prof = {}
-        obj_prof['shape_name']=self.getData('shape').name
+        obj_prof['shape_name']=self.getData('name')
         obj_prof['loc_x']=self.getData('pos').getX()
         obj_prof['loc_y']=self.getData('pos').getY()
         return obj_prof

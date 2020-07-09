@@ -9,6 +9,8 @@ class Vec2:
             return self.x==other.x and self.y==other.y
         else:
             return False
+    def __str__(self):
+        return str(self.x) + "," + str(self.y)
 
     def getX(self):
         return self.x

@@ -57,7 +57,7 @@ class Sim:
 
             return _obj
         else:
-            print("Obj key "+key+" not in dict")
+            print("Obj key "+str(key)+" not in dict")
             return None
 
     def buildComponent(self,key):
@@ -73,30 +73,70 @@ class Sim:
         self.teamsInPlay.clear()
     
 
-    def buildTeam(self,key):
-        if key in self.teamDict:
-            _team = self.getTeamCopy(key)
+    def buildTeam(self,side_key,team_key):
+        if team_key in self.teamDict:
+            _team = self.getTeamCopy(team_key)
 
             teamName = _team.getData('name')
             _agents = _team.getData('agents')
+
+
+            starting_regions = self.mapInPlay.getData('starting_regions')
+            starting_region = None
+            if side_key in starting_regions:
+                starting_region = starting_regions[side_key]
+            else:
+                LogError("Side key "+side_key+" not in starting regions.")
+
             for k,v in _agents.items():
-                self.buildAgent(v,teamName)
+                pos = self.buildAgent(v,teamName,starting_region)
+                
+            for k,v in _agents.items():
+                for k2,v2 in _agents.items():
+                    if k == k2:
+                        continue
+                    else:
+                        if v.getData('obj').collidesWith(v2):
+                            LogError('Team: '+teamName+" agents "+k+" and "+k2+" have selected colliding starting positions of" +\
+                                str(v.getData('obj').getData('pos')) + " and " + str(v2.getData('obj').getData('pos')))
 
-            self.teamsInPlay[key]=_team
 
-    def buildAgent(self,_agent,teamName):
+            self.teamsInPlay[side_key]=_team
+
+    def buildAgent(self,_agent,teamName,starting_region):
         if _agent != None:
             objid = _agent.getData('objid')
             ai_filename = _agent.getData('ai_filename')
-            _agent.setObj(self.buildObject(objid))
+            _agent.setData('obj',self.buildObject(objid))
 
-
-            print(ai_filename,'teams/'+teamName+"/"+ai_filename)
+            
             ai_spec = importlib.util.spec_from_file_location(ai_filename,'teams/'+teamName+"/"+ai_filename)
             ai_module = importlib.util.module_from_spec(ai_spec)
             ai_spec.loader.exec_module(ai_module)
 
-            _agent.setAI(ai_module.AI(teamName,self.getSimProfile(),_agent.getObjProfile()))
+            ai = ai_module.AI()
+            
+            pos = ai.initData(teamName,self.getSimProfile(), starting_region)
+
+            if type(pos) != tuple or type(pos) != list:
+                LogError("Team: "+teamName+" - Agent: "+ai_filename+" did not return a tuple or list from initData().")
+                return None
+            try:
+                pos_vec2 = vec2.Vec2(pos[0],pos[1])
+            except:
+                LogError("Team: "+teamName+" - Agent: "+ai_filename+" initData() returned a list or tuple of something other than int/float for its starting location.")
+                return None
+
+            if pos[0] < starting_region['left'] or pos[0] >= starting_region['right'] or \
+                pos[1] < starting_region['top'] or pos[1] >= starting_region['bottom']:
+                LogError("Team: "+teamName+" - Agent: "+ai_filename+" starting location is outside the starting region.")
+                return None
+
+            _agent.getData('obj').setPosition(pos_vec2)
+
+            _agent.setData('ai',ai)
+
+            return pos_vec2
 
             #self.mapInPlay.addAgentObject(_agent.getObj())
             

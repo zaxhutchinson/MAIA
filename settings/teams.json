@@ -4,7 +4,7 @@
         "name" : "TeamAlpha",
         "agent_defs" : {
             "0" : {
-                "object" : 2,
+                "object" : 1,
                 "AI_file" : "AI_file0.py"
             }
         }
@@ -14,7 +14,7 @@
         "name" : "TeamBeta",
         "agent_defs" : {
             "0" : {
-                "object" : 2,
+                "object" : 1,
                 "AI_file" : "AI_file1.py"
             }
         }
@@ -24,8 +24,8 @@
         "name" : "TeamGamma",
         "agent_defs" : {
             "0" : {
-                "object" : 2,
-                "AI_file" : "AI_file1.py"
+                "object" : 1,
+                "AI_file" : "AI_file2.py"
             }
         }
     }

@@ -1,3 +1,8 @@
+Version 0.04
+July 8, 2020
+- Adds starting_regions. This defines a box (left, right, top, bottom) for each
+side in which they must pick a starting location.
+
 Version 0.03
 July 7, 2020
 - Reworked Object and Shape moving data members around.
