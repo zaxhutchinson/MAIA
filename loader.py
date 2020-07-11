@@ -6,90 +6,113 @@ import importlib
 import obj
 import copy
 import zmap
-import component
+import comp
 import vec2
 from log import *
 import team
 
 class Loader:
-    def __init__(self,sim):
+    def __init__(self):
 
-        self.loadMainConfig('settings/main.json',sim)
-        self.loadComponents('settings/components.json',sim)
-        self.loadObjectTemplates("settings/objects.json",sim)
-        self.loadMaps("settings/maps.json",sim)
-        self.loadTeamData("settings/teams.json",sim)
+        self.main_config={}
+        self.obj_templates={}
+        self.comp_templates={}
+        self.map_templates={}
+        self.team_templates={}
 
-    def loadShape(self,shapeData):
+        self.loadMainConfig('settings/main.json')
+        self.loadCompTemplates('settings/components.json')
+        self.loadObjTemplates("settings/objects.json")
+        self.loadMapTemplates("settings/maps.json")
+        self.loadTeamTemplates("settings/teams.json")
 
-        shape = None
         
-        if shapeData['name'] == 'CYLINDER':
-            shape = obj.Cylinder(shapeData)
-
-        # elif name == "RECTANGLE":
-        #     width = shapeData['width']
-        #     height = shapeData['height']
-        #     shape = obj.Rectangle(name,width,height)
-        
-        return shape
-
-    def loadTeamData(self,filename,sim):
+    ##########################################################################
+    # LOAD/COPY OBJ
+    def loadObjTemplates(self,filename):
+        with open(filename,'r') as f:
+            jsonObjs = json.load(f)
+            for k,v in jsonObjs.items():
+                self.obj_templates[k] = obj.Object(v)
+    def copyObjTemplate(self,_id):
+        return copy.deepcopy(self.obj_templates[_id])
+    ##########################################################################
+    # LOAD/COPY COMPS
+    def loadCompTemplates(self,filename):
+        with open(filename,'r') as f:
+            jsonObjs = json.load(f)
+            for k,v in jsonObjs.items():
+                self.comp_templates[k]=comp.Comp(v)
+    def copyCompTemplates(self,_id):
+        return copy.deepcopy(self.comp_templates[_id])
+    ##########################################################################
+    # LOAD/COPY MAPS
+    def loadMapTemplates(self,filename):
+        with open(filename,'r') as f:
+            jsonObjs = json.load(f)
+            for k,v in jsonObjs.items():
+                self.map_templates[k]=zmap.Map(v)
+    def copyMapTemplate(self,_id):
+        return copy.deepcopy(self.map_templates[_id])
+    def getMapIDs(self):
+        return list(self.map_templates.keys())
+    ##########################################################################
+    # LOAD/COPY TEAMS
+    def loadTeamTemplates(self,filename):
         with open(filename,'r') as f:
             jsonObj = json.load(f)
             for k,v in jsonObj.items():
-                _team = team.Team(v)
-                sim.addTeam(_team)
-
-    def loadMainConfig(self,filename,sim):
+                v['team']=None
+                self.team_templates[k]=v
+    def copyTeamTemplate(self,_id):
+        return copy.deepcopy(self.team_templates[_id])
+    def getTeamIDs(self):
+        return list(self.team_templates.keys())
+    ##########################################################################
+    # LOAD/COPY Mainconfig
+    def loadMainConfig(self,filename):
         with open(filename,'r') as f:
-            sim.mainConfigDict = json.load(f)
+            self.main_config = json.load(f)
+    def getMainConfig(self):
+        return self.main_config
 
-    def loadObjectTemplates(self,filename,sim):
-        with open(filename,'r') as f:
-            jsonObjs = json.load(f)
-            for k,v in jsonObjs.items():
-                v['shape'] = self.loadShape(v['shape'])
-                o = obj.Object(v)
-                sim.addObject(o)
+    # def loadMaps(self,filename,sim):
+    #     with open(filename,'r') as f:
+    #         jsonObjs = json.load(f)
+    #         for k,v in jsonObjs.items():
+    #             _map = zmap.Map(v)
 
-    def loadMaps(self,filename,sim):
-        with open(filename,'r') as f:
-            jsonObjs = json.load(f)
-            for k,v in jsonObjs.items():
-                _map = zmap.Map(v)
-
-                # try:
-                #     for k2,v2 in v['rand_objects'].items():
-                #         mS.rand_objects[int(k2)]=int(v2)
-                # except(KeyError):
-                #     mS.rand_percent=None
-                #     mS.rand_objects={}
+    #             # try:
+    #             #     for k2,v2 in v['rand_objects'].items():
+    #             #         mS.rand_objects[int(k2)]=int(v2)
+    #             # except(KeyError):
+    #             #     mS.rand_percent=None
+    #             #     mS.rand_objects={}
 
 
-                # try:
-                #     for k2,v2 in v['placed_objects'].items():
-                #         for d in v2:
-                #             if 'pos' in d:
-                #                 coords = d['pos']
-                #                 d['pos'] = vec2.Vec2(coords[0],coords[1])
+    #             # try:
+    #             #     for k2,v2 in v['placed_objects'].items():
+    #             #         for d in v2:
+    #             #             if 'pos' in d:
+    #             #                 coords = d['pos']
+    #             #                 d['pos'] = vec2.Vec2(coords[0],coords[1])
 
-                #         mS.placed_objects[int(k2)]=v2
-                # except(KeyError):
-                #     mS.placed_objects={}
+    #             #         mS.placed_objects[int(k2)]=v2
+    #             # except(KeyError):
+    #             #     mS.placed_objects={}
 
-                sim.addMap(_map)
+    #             sim.addMap(_map)
 
-    def loadComponents(self,filename,sim):
-        with open(filename,'r') as f:
-            jsonObjs = json.load(f)
-            compmodule = importlib.import_module('component')
-            for k,v in jsonObjs.items():
-                if 'ctype' not in v:
-                    LogError('Comp is missing the ctype.')
-                else:
-                    ctype = v['ctype']
-                    CompClass = getattr(compmodule,ctype)
-                    comp = CompClass(v)
-                    sim.addComponent(comp)
+    # def loadComponents(self,filename,sim):
+    #     with open(filename,'r') as f:
+    #         jsonObjs = json.load(f)
+    #         compmodule = importlib.import_module('component')
+    #         for k,v in jsonObjs.items():
+    #             if 'ctype' not in v:
+    #                 LogError('Comp is missing the ctype.')
+    #             else:
+    #                 ctype = v['ctype']
+    #                 CompClass = getattr(compmodule,ctype)
+    #                 comp = CompClass(v)
+    #                 sim.addComponent(comp)
 

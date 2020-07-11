@@ -7,6 +7,7 @@ import os
 
 import sim
 import loader
+from log import *
 
 class App(tk.Frame):
     def __init__(self,master=None):
@@ -15,15 +16,9 @@ class App(tk.Frame):
         self.pack()
         self.master.title("MAIA - Maine AI Arena")
 
+        self.ldr = loader.Loader()
         self.sim = sim.Sim()
-        self.loader = loader.Loader(self.sim)
 
-        
-
-        self.team_names = self.sim.getTeamNames()
-        self.team_names_to_play = {}
-        self.map_names = self.sim.getMapNames()
-        self.map_selection = None
         self.combat_log = []
 
         self.BuildUI()
@@ -104,97 +99,89 @@ class App(tk.Frame):
         self.lbTeams.delete(0,tk.END)
         self.lbSideNames.delete(0,tk.END)
         self.lbTeamAssignments.delete(0,tk.END)
-        for name in self.team_names:
+        for name in self.ldr.getTeamIDs():
             self.lbTeams.insert(tk.END,name)
-        for name,team_name in self.team_names_to_play.items():
-            self.lbSideNames.insert(tk.END,name)
-            self.lbTeamAssignments.insert(tk.END,str(team_name))
+        for k,v in self.sim.getSides().items():
+            self.lbSideNames.insert(tk.END,k)
+            self.lbTeamAssignments.insert(tk.END,str(self.sim.getTeam(k)))
 
     def updateMapNames(self):
         self.lbMaps.delete(0,tk.END)
-        for name in self.map_names:
+        for name in self.ldr.getMapIDs():
             self.lbMaps.insert(tk.END,name)
 
-    def addTeam(self):
-        if self.sim.isMapReady():
+    def selectMap(self):
+        curselection = self.lbMaps.curselection()
+        if len(curselection) > 0:
+            # Reset the sim
+            self.sim.reset()
+
+            # Locate the map, copy and give to sim
+            map_ids = self.ldr.getMapIDs()
+            selected_map = self.ldr.copyMapTemplate(map_ids[curselection[0]])
+            self.sim.setMap(selected_map)
+
+            # Construct the map info string
+            mapInfoString =  "NAME:   "+selected_map.getData('name')+'\n'
+            mapInfoString += "DESC:   "+selected_map.getData('desc')+'\n'
+            mapInfoString += "WIDTH:  "+str(selected_map.getData('width'))+'\n'
+            mapInfoString += "HEIGHT: "+str(selected_map.getData('height'))+'\n'
+            mapInfoString += "TEAMS:  "+str(selected_map.getData('teams'))+'\n'
+            mapInfoString += "AGENTS: "+str(selected_map.getData('agents'))+'\n'
+            mapInfoString += "RANDOMLY PLACED OBJECTS:\n"
+            if 'rand_objects' in selected_map.data:
+                for k,v in selected_map.data['rand_objects'].items():
+                    mapInfoString +='   ID:' + str(k) + ' AMT:'+str(v) + '\n'
+            else:
+                mapInfoString += '   NONE\n'
+            mapInfoString += "HAND-PLACED OBJECTS\n"
+            if 'placed_objects' in selected_map.data:
+                for k,v in selected_map.data['placed_objects'].items():
+                    mapInfoString += '   ID:' + str(k) + ' AMT:' + str(len(v)) + '\n'
+            else:
+                mapInfoString += '   NONE\n'
+
+            # Add string to the info text box
+            self.txtMapInfo.delete('1.0',tk.END)
+            self.txtMapInfo.insert(tk.END,mapInfoString)
             
-            teams = self.map_selection.getData('teams')
-            #if list(self.team_names_to_play.value()).count(None) > 0:
+            self.updateTeamNames()
+
+    def addTeam(self):
+        if self.sim.hasMap():
             team_index = self.lbTeams.curselection()
             side_index = self.lbSideNames.curselection()
             if len(team_index) > 0 and len(side_index) > 0:
 
                 all_sides = self.lbSideNames.get(0,tk.END)
                 side_selection = all_sides[side_index[0]]
-                name_to_add = self.team_names.pop(team_index[0])
-
-                # Do nothing if we're adding a team the side it has
-                # already been assigned.
-                if name_to_add == self.team_names_to_play[side_selection]:
-                    return
+                team_name = self.ldr.getTeamIDs()[team_index[0]]
                 
-                # Check if there's already a team in this slot
-                # If so, remove it and reset
-                if self.team_names_to_play[side_selection] != None:
-                    self.team_names.append(self.team_names_to_play[side_selection])
-                    self.team_names_to_play[side_selection]=None
-
-                self.team_names_to_play[side_selection]=name_to_add
+                self.sim.addTeam(side_selection,team_name)
                 self.updateTeamNames()
+            else:
+                LogError("App::addTeam() - No side or team selected.")
+        else:
+            LogError("App::addTeam() - Sim is missing the map.")
     def removeTeam(self):
         side_index = self.lbSideNames.curselection()
         if len(side_index) > 0:
             all_sides = self.lbSideNames.get(0,tk.END)
-            side_selection = all_sides[side_index[0]]
-            team_removed = self.team_names_to_play[side_selection]
-            self.team_names_to_play[side_selection]=None
-            self.team_names.append(team_removed)
+            side_ID = all_sides[side_index[0]]
+            self.sim.delTeam(side_ID)
             self.updateTeamNames()
-    def removeAllTeams(self):
-        for k,v in self.team_names_to_play.items():
-            if v != None:
-                self.team_names.append(v)
-                self.team_names_to_play[k]=None
 
-    def selectMap(self):
-        curselection = self.lbMaps.curselection()
-        if len(curselection) > 0:
-            self.sim.setMapInPlay(self.sim.getMapNames()[curselection[0]])
-            self.map_selection = self.sim.mapInPlay
-            mapInfoString =  "NAME:   "+self.map_selection.getData('name')+'\n'
-            mapInfoString += "DESC:   "+self.map_selection.getData('desc')+'\n'
-            mapInfoString += "WIDTH:  "+str(self.map_selection.getData('width'))+'\n'
-            mapInfoString += "HEIGHT: "+str(self.map_selection.getData('height'))+'\n'
-            mapInfoString += "TEAMS:  "+str(self.map_selection.getData('teams'))+'\n'
-            mapInfoString += "AGENTS: "+str(self.map_selection.getData('agents'))+'\n'
-            mapInfoString += "RANDOMLY PLACED OBJECTS:\n"
-            if 'rand_objects' in self.map_selection.data:
-                for k,v in self.map_selection.data['rand_objects'].items():
-                    mapInfoString +='   ID:' + str(k) + ' AMT:'+str(v) + '\n'
-            else:
-                mapInfoString += '   NONE\n'
-            mapInfoString += "HAND-PLACED OBJECTS\n"
-            if 'placed_objects' in self.map_selection.data:
-                for k,v in self.map_selection.data['placed_objects'].items():
-                    mapInfoString += '   ID:' + str(k) + ' AMT:' + str(len(v)) + '\n'
-            else:
-                mapInfoString += '   NONE\n'
-            self.txtMapInfo.delete('1.0',tk.END)
-            self.txtMapInfo.insert(tk.END,mapInfoString)
 
-            self.removeAllTeams()
 
-            for side_label in self.map_selection.getTeamLabels():
-                self.team_names_to_play[side_label] = None
-
-            
-            self.updateTeamNames()
 
     def buildSim(self):
-        if self.sim.isMapReady():
-            self.sim.clearTeamsInPlay()
-            for k,v in self.team_names_to_play.items():
-                self.sim.buildTeam(k,v)
+        self.sim.buildSim()
+
+
+        # if self.sim.isMapReady():
+        #     self.sim.clearTeamsInPlay()
+        #     for k,v in self.team_names_to_play.items():
+        #         self.sim.buildTeam(k,v)
 
     def runSim(self):
         pass

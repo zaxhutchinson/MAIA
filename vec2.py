@@ -28,8 +28,8 @@ class Vec2:
 
     def distanceToPoint(self,otherVec):
         return math.sqrt(
-            math.pow(otherVec.getX()-x,2.0) +
-            math.pow(otherVec.getY()-y,2.0)
+            math.pow(otherVec.getX()-self.x,2.0) +
+            math.pow(otherVec.getY()-self.y,2.0)
         )
 
     # Borrowed from:
@@ -40,8 +40,8 @@ class Vec2:
     #    ) / math.sqrt(
     #        l[0]**2 + 1
     #    )
-        A = x - lseg.v1.getX()
-        B = y - lseg.v1.getY()
+        A = self.x - lseg.v1.getX()
+        B = self.y - lseg.v1.getY()
         C = lseg.v2.getX() - lseg.v1.getX()
         D = lseg.v2.getY() - lseg.v1.getY()
 
@@ -64,15 +64,19 @@ class Vec2:
             XX = lseg.v1.getX() + PARAM * C
             YY = lseg.v1.getY() + PARAM * D
 
-        DX = x - XX
-        DY = y - YY
+        DX = self.x - XX
+        DY = self.y - YY
 
         return math.sqrt(DX*DX + DY*DY)
 
     def lineEqFromAngle(self,angle):
         m = math.tan(angle)
-        n = y - m * x
+        n = self.y - m * self.x
         return (m,n)
+
+    def getPointAtDistanceAndAngle(self,angle,distance):
+        self.x = self.x + distance * math.cos(angle)
+        self.y = self.y + distance * math.sin(angle)
 
     def move(self,angle,distance):
         self.x = self.x + distance * math.cos(angle)
@@ -85,12 +89,12 @@ class Vec2:
         S = math.sin(angle)
         C = math.cos(angle)
 
-        x=x-point.x
-        y=y-point.y
-        xnew = x * C - y * S
-        ynew = x * S + y * C
+        self.x=self.x-point.x
+        self.y=self.y-point.y
+        xnew = self.x * C - self.y * S
+        ynew = self.x * S + self.y * C
 
-        x = xnew + point.x
-        y = ynew + point.y
+        self.x = xnew + point.x
+        self.y = ynew + point.y
         
 

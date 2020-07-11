@@ -1,23 +1,14 @@
 {
     "0" : {
         "id": 0,
-        "name" : "Barrel",
-        "health" : 100.0,
-        "heading" : 0.0,
-        "shape" : {
-            "name" : "CYLINDER",
-            "radius" : 1.0
-        }
+        "name" : "Box",
+        "health" : 10,
+        "components" : []
     },
     "1" : {
         "id": 1,
-        "name" : "Round Tank",
-        "health" : 10.0,
-        "heading" : 0.0,
-        "shape" : {
-            "name" : "CYLINDER",
-            "radius" : 1.0
-        },
-        "component_ids" : [0,100]
+        "name" : "Tank",
+        "health" : 100,
+        "components" : [0,100]
     }
 }

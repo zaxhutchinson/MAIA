@@ -2,18 +2,19 @@
     "0": {
         "id":0,
         "name":"Paintball Cannon",
-        "ctype":"FixedGun",
-        "reload_duration":1.0,
+        "ctype":"Gun",
+        "reload_ticks":1,
+        "reload_ticks_remaining":0,
         "ammunition":100,
-        "damage":1.0,
-        "velocity":1.0
+        "min_damage":1,
+        "max_damage":1
     },
 
     "100" : {
         "id":100,
         "name":"Small Engine",
         "ctype":"Engine",
-        "speed":1.0,
-        "turn_rate":90.0
+        "speed":1,
+        "turn_rate":1
     }
 }

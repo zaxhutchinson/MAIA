@@ -12,7 +12,7 @@ class AI:
 
         # MUST PICK STARTING LOCATION BASED ON THE STARTING_REGION INFO
         # MUST RETURN THE STARTING X,Y COORD as tuple
-        return (0.0,0.0)
+        return (-100.0,-100.0)
 
 
     # Implement AI here.

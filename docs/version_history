@@ -1,3 +1,9 @@
+Version 0.05
+July 10, 2020
+- Major rework. Converted from a continuous space to discrete grid.
+- Moves sim building into Sim from App
+- Fixes error with agent starting position
+
 Version 0.04
 July 8, 2020
 - Adds starting_regions. This defines a box (left, right, top, bottom) for each

@@ -8,52 +8,21 @@
             "0" : [
                 {
                     "pos":[40.0,20.0],
-                    "damage":0.0,
-                    "radius":1.0
+                    "damage":0.0
                 }
             ]
         },
-        "teams":2,
-        "agents":1,
-        "starting_regions": {
+        "sides": {
             "blue" : {
-                "left":1,
-                "right":6,
-                "top":5,
-                "bottom":15
+                "0": {
+                    "pos": [0,0]
+                }
             },
             "red" : {
-                "left":34,
-                "right":39,
-                "top":5,
-                "bottom":15
-            }
-        }
-    },
-
-    "1" : {
-        "name" : "Map 1",
-        "desc" : "This is a test map used during development of the initial code. And this string is long so that I can test how it is displayed inside the Tkinter window.",
-        "width" : 20,
-        "height" : 20,
-        "placed_objects" : {
-            "0" : [
-                {
-                    "pos":[10.0,10.0],
-                    "damage":0.0,
-                    "radius":1.0
+                "0": {
+                    "pos": [19,19]
                 }
-            ]
-        },
-        "teams":2,
-        "agents":1,
-        "starting_regions": {
-            "0" : [
-                [0,9]
-            ],
-            "1" : [
-                [19,9]
-            ]
+            }
         }
     }
 }
