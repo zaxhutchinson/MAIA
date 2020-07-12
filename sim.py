@@ -9,11 +9,13 @@ import comp
 import vec2
 import loader
 import zmath
+import msgs
 #from log import *
 
 class Sim:
-    def __init__(self):
+    def __init__(self, imsgr):
         self.reset()
+        self.imsgr = imsgr
 
         self.action_dispatch_table = {}
         self.buildActionDispatchTable()
@@ -50,18 +52,18 @@ class Sim:
         self.sides[ID]=None
     def addSide(self,ID,side):
         self.sides[ID]=side
-        self.sides[ID]['team']=None
+        self.sides[ID]['teamname']=None
     def getSides(self):
         return self.sides
     
     ##########################################################################
     # TEAMS
-    def addTeam(self,ID,team):
-        self.sides[ID]['team']=team
-    def getTeam(self,ID):
-        return self.sides[ID]['team']
-    def delTeam(self,ID):
-        self.sides[ID]['team']=None
+    def addTeamName(self,ID,teamname):
+        self.sides[ID]['teamname']=teamname
+    def getTeamName(self,ID):
+        return self.sides[ID]['teamname']
+    def delTeamName(self,ID):
+        self.sides[ID]['teamname']=None
 
     ##########################################################################
     # VIEWS
@@ -116,8 +118,9 @@ class Sim:
 
         # Add teams and ai-controlled objs
         for k,v in self.sides.items():
-            team_data = ldr.copyTeamTemplate(v['team'])
+            team_data = ldr.copyTeamTemplate(v['teamname'])
             team_data['side']=k
+            team_data['agents']={}
             team_name = team_data['name']
             # Copy so we don't f-up the original
             starting_locations = list(v['starting_locations'])
@@ -128,6 +131,7 @@ class Sim:
                 data['side']=k
                 data['ticks_per_turn']=config['ticks_per_turn']
                 data['callsign']=agent['callsign']
+                data['teamname']=team_data['name']
                 data['squad']=agent['squad']
                 data['object']=agent['object']
                 data['uuid']=uuid.uuid4()
@@ -157,6 +161,12 @@ class Sim:
                 newobj.place(data)
                 self.objs[data['uuid']]=newobj
                 self.map.addObj(data['x'],data['y'],data['uuid'])
+
+                # Add agent obj to team dictionary of agents
+                team_data['agents'][data['uuid']]=newobj
+
+            # Add the team data to the side entry
+            v['team']=team_data
 
 
 
@@ -193,6 +203,8 @@ class Sim:
             # Run each tick
             for tick in range(self.ticks_per_turn):
 
+                self.imsgr.addMsg(msgs.Msg(self.tick,"---NEW TICK---",""))
+
                 # Check all commands to see if there is
                 # something to do this tick.
                 for objuuid,objcmds in cmds_by_uuid.items():
@@ -227,9 +239,6 @@ class Sim:
 
     # High-speed projectile action
     def ACTN_HighspeedProjectile(self,obj,actn):
-
-        # view={}
-        # view['compname']=actn.getData('compname')
         
         # Get list of cells through which the shell travels.
         cells_hit = zmath.getCellsAlongTrajectory(
@@ -247,15 +256,10 @@ class Sim:
         for cell in cells_hit:
             id_in_cell = self.map.getCellOccupant(cell[0].cell[1])
             if id_in_cell != None:
-                self.objs[id_in_cell].damage(damage)
-                
-                
-                # view['result']='hit'
-                # view['objname']=self.objs[id_in_cell].getData('objname')
-                break
 
-        # if 'result' not in view:
-        #     view['result']='miss'
+                self.damageObj(id_in_cell,damage)
+
+                break
 
             
     # Regular object move action
@@ -341,3 +345,27 @@ class Sim:
 
 
         self.addObjView(obj.getData('uuid'),view)
+
+
+    ##########################################################################
+    # ADDITIONAL HELPER FUNCTIONS
+    # Some of the ACTN function do similar work.
+    ##########################################################################
+    def damageObj(self,_uuid,damage):
+        # Damage object
+        self.objs[_uuid].damage(damage)
+        
+        # If obj is dead, remove it.
+        if self.objs[_uuid].getData('alive')==False:
+
+            dead_obj = self.objs[_uuid]
+            # Remove from map
+            self.map.removeObj(dead_obj.getData('x'),dead_obj.getData('y'),dead_obj.getData('uuid'))
+            # Remove from obj dict
+            del self.objs[_uuid]
+            # Remove from team
+            side = dead_obj.getData('side')
+            del self.sides[side]['agents'][_uuid]
+
+            # NOTE: Maybe at some point I'll need to do something with
+            # dead objects. For now, the reference will just go out of scope.

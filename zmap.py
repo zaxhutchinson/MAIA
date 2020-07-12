@@ -36,8 +36,9 @@ class Map:
 
     def addObj(self,x,y,_uuid):
         self.data['grid'][x][y]=_uuid
-    def removeObj(self,x,y):
-        self.data['grid'][x][y]=None
+    def removeObj(self,x,y,_uuid):
+        if self.data['grid'][x][y]==_uuid:
+            self.data['grid'][x][y]=None
 
     # Creates a list of the coordinates of the world edge.
     def getListOfEdgeCoordinates(self):

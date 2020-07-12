@@ -4,11 +4,13 @@ import tkinter.scrolledtext as scrolltext
 import importlib.util
 import sys
 import os
+import queue
 
 import sim
 import loader
 from log import *
 import ui_map
+import msgs
 
 class App(tk.Frame):
     def __init__(self,master=None):
@@ -17,8 +19,15 @@ class App(tk.Frame):
         self.pack()
         self.master.title("MAIA - Maine AI Arena")
 
+        # Create the msgr objs
+        self.msg_queue = queue.Queue()
+        self.imsgr = msgs.IMsgr(self.msg_queue)
+        self.omsgr = msgs.OMsgr(self.msg_queue)
+
         self.ldr = loader.Loader()
-        self.sim = sim.Sim()
+        self.sim = sim.Sim(self.imsgr)
+
+        
 
         self.combat_log = []
 
@@ -109,7 +118,7 @@ class App(tk.Frame):
             self.lbTeams.insert(tk.END,name)
         for k,v in self.sim.getSides().items():
             self.lbSideNames.insert(tk.END,k)
-            self.lbTeamAssignments.insert(tk.END,str(self.sim.getTeam(k)))
+            self.lbTeamAssignments.insert(tk.END,str(self.sim.getTeamName(k)))
 
     def updateMapNames(self):
         self.lbMaps.delete(0,tk.END)
@@ -163,7 +172,7 @@ class App(tk.Frame):
                 side_selection = all_sides[side_index[0]]
                 team_name = self.ldr.getTeamIDs()[team_index[0]]
                 
-                self.sim.addTeam(side_selection,team_name)
+                self.sim.addTeamName(side_selection,team_name)
                 self.updateTeamNames()
             else:
                 LogError("App::addTeam() - No side or team selected.")
@@ -174,7 +183,7 @@ class App(tk.Frame):
         if len(side_index) > 0:
             all_sides = self.lbSideNames.get(0,tk.END)
             side_ID = all_sides[side_index[0]]
-            self.sim.delTeam(side_ID)
+            self.sim.delTeamName(side_ID)
             self.updateTeamNames()
 
 
@@ -186,7 +195,7 @@ class App(tk.Frame):
     def runSimWithUI(self):
         map_width=self.sim.getMap().getData('width')
         map_height=self.sim.getMap().getData('height')
-        self.UIMap = ui_map.UIMap(map_width,map_height,self)
+        self.UIMap = ui_map.UIMap(map_width,map_height,self.sim,self.omsgr,self)
 
     def runSimWithoutUI(self):
-        self.sim.runSim()
+        self.sim.runSim(self.ldr.getMainConfigData('no_ui_max_turns'))

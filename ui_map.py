@@ -1,15 +1,17 @@
 import tkinter as tk
 from tkinter.font import Font
 import tkinter.scrolledtext as scrolltext
-
+import queue
 
 class UIMap(tk.Toplevel):
-    def __init__(self,map_width,map_height,master=None):
+    def __init__(self,map_width,map_height,sim,omsgr,master=None):
         super().__init__(master)
         self.master = master
         self.title("MAIA - Sim UI")
 
         # Store data
+        self.sim = sim
+        self.omsgr = omsgr
         self.map_width=map_width
         self.map_height=map_height
 
@@ -36,13 +38,14 @@ class UIMap(tk.Toplevel):
         # Create the log
         self.scrollLog = tk.scrolledtext.ScrolledText(self.logFrame,wrap=tk.WORD,width=80)
         self.scrollLog.pack(fill=tk.BOTH,expand=True,side=tk.TOP)
+        self.scrollLog.configure(state='disabled')
 
         self.dataFrame1 = tk.Frame(self.logFrame,relief=tk.RAISED,borderwidth=2)
         self.dataFrame1.pack(fill=tk.BOTH,expand=True,side=tk.TOP)
         self.lbTurnsToRun = tk.Label(self.dataFrame1,text="Turns To Run")
         self.lbTurnsToRun.pack(fill=tk.BOTH,expand=True,side=tk.LEFT)
-        self.txtTurnsToRun = tk.Text(self.dataFrame1)
-        self.txtTurnsToRun.pack(fill=tk.BOTH,expand=True,side=tk.LEFT)
+        self.tbTurnsToRun = tk.Entry(self.dataFrame1)
+        self.tbTurnsToRun.pack(fill=tk.BOTH,expand=True,side=tk.LEFT)
 
 
         
@@ -53,12 +56,33 @@ class UIMap(tk.Toplevel):
         self.btnFrame1.pack(fill=tk.BOTH,expand=True,side=tk.TOP)
         self.btnRunXTurns = tk.Button(self.btnFrame1,text="Run X Turns",command=self.runXTurns)
         self.btnRunXTurns.pack(fill=tk.BOTH,expand=True,side=tk.LEFT)
+
+        self.logFrame.after(100, self.updateLog)
         
         #TEST JUNK
         # self.canvas.create_text(50,50,text="Hello world")
         #self.canvas.create_rectangle(50,50,450,450,fill="green")
+    def displayMsg(self,msg):
+        m = msg.getText()
+        self.scrollLog.configure(state='normal')
+        self.scrollLog.insert(tk.END,m+"\n")
+        self.scrollLog.configure(state='disabled')
+        self.scrollLog.yview(tk.END)
+
+    def updateLog(self):
+        while True:
+            try:
+                m=self.omsgr.getMsg()
+            except queue.Empty:
+                break
+            else:
+                self.displayMsg(m)
+        self.logFrame.after(100,self.updateLog)
 
     def runXTurns(self):
-        pass
+        turns_to_run = self.tbTurnsToRun.get()
+        if turns_to_run.isdigit():
+            turns_to_run = int(turns_to_run)
+            self.sim.runSim(turns_to_run)
 
         

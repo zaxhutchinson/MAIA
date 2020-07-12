@@ -1,6 +1,7 @@
 {
     "team_dir":"teams",
     
-    "ticks_per_turn" : 1
+    "ticks_per_turn" : 1,
 
+    "no_ui_max_turns": 100
 }

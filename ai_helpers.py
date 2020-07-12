@@ -31,6 +31,15 @@ def CMD_SetSpeed(speed):
     return cmd
 
 ##############################################################################
+# SCANNER COMMAND FUNCTIONS
+#
+# Initiate a scan
+def CMD_Scan():
+    cmd = {}
+    cmd['command']='SCAN'
+    return cmd
+
+##############################################################################
 # GENERIC COMMAND FUNCTIONS
 #
 # Activates the component,

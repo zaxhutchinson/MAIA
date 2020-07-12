@@ -80,6 +80,11 @@ class Loader:
             self.main_config = json.load(f)
     def copyMainConfig(self):
         return copy.deepcopy(self.main_config)
+    def getMainConfigData(self,key):
+        if key in self.main_config:
+            return self.main_config[key]
+        else:
+            return None
 
     # def loadMaps(self,filename,sim):
     #     with open(filename,'r') as f:

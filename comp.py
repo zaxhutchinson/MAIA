@@ -112,26 +112,27 @@ class Comp:
 
         actions = []
 
-        if 'command' in cmd:
-            if cmd['command']=='ACTIVATE':
-                self.setData('active',True)
-            elif cmd['command']=='DEACTIVATE':
-                self.setData('active',False)
+        # if 'command' in cmd:
+        #     if cmd['command']=='ACTIVATE':
+        #         self.setData('active',True)
+        #     elif cmd['command']=='DEACTIVATE':
+        #         self.setData('active',False)
 
-        if self.isScanning():
-            a = action.Action()
-            a.setType('SCAN')
-            a.addData('compname',self.getData('name'))
-            a.addData('range',self.getData('range'))
-            a.addData('x',self.getData('parent').getData('x'))
-            a.addData('y',self.getData('parent').getData('y'))
-            facing = self.getData('parent').getData('facing')+self.getData('offset_angle')
-            a.addData('facing',facing)
-            a.addData('level',self.getData('level'))
-            a.addData('visarc',self.getData('visarc'))
-            a.addData('offset_angle',self.getData('offset_angle'))
-            a.addData('resolution',self.getData('resolution'))
-            actions.append(a)
+        if 'command' in cmd:
+            if cmd['command']=='SCAN':
+                a = action.Action()
+                a.setType('SCAN')
+                a.addData('compname',self.getData('name'))
+                a.addData('range',self.getData('range'))
+                a.addData('x',self.getData('parent').getData('x'))
+                a.addData('y',self.getData('parent').getData('y'))
+                facing = self.getData('parent').getData('facing')+self.getData('offset_angle')
+                a.addData('facing',facing)
+                a.addData('level',self.getData('level'))
+                a.addData('visarc',self.getData('visarc'))
+                a.addData('offset_angle',self.getData('offset_angle'))
+                a.addData('resolution',self.getData('resolution'))
+                actions.append(a)
 
         return actions
 

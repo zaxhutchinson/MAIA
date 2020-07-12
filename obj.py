@@ -139,6 +139,7 @@ class Object:
         self.data['comps']={}
         self.data['uuid']=None
         self.data['ai']=None
+        self.data['alive']=True
 
     def getData(self,key):
         if key in self.data:
@@ -163,19 +164,38 @@ class Object:
             return None
 
     def damageObj(self,amt):
-        pass
+        # Add damage to current total
+        new_damage = self.getData('damage') + amt
+        self.setData('damage',new_damage)
+
+        # If damage is greater than health
+        if new_damage >= self.getData('health'):
+            self.setData('alive',False)
 
 
     def processCommands(self,cmds):
         actions = []
 
-        # If I implement the idea of a commander comp
-        # I'll need to limit commands here based on that comp's ability.
+        # Find number of commands that can be ordered.
+        max_cmds = 0
+        for comp in self.getData('comps').values():
+            if comp.getData('ctype')=='CnC':
+                max_cmds += comp.getData('max_cmds_per_tick')
 
         for compid,cmd in cmds.items():
+            
+            # Check and reduce commands remaining
+            # Having this outside the if-statment below
+            # means that even badly formed commands count.
+            if max_cmds==0:
+                break
+            else:
+                max_cmds-=1
+
             if compid in self.data['comps']:
                 comp_actions = self.data['comps'][compid].Update(cmd)
                 actions += comp_actions
+            
 
         return actions
 
