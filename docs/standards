@@ -1,9 +1,0 @@
-Command Standard
-{
-    "<TICK>": {
-        "<COMP_ID>": {
-            "command":"<COMMAND>",
-            "OTHER_DATA": <VALUE>
-        }
-    }
-}

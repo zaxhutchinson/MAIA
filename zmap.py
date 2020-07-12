@@ -43,8 +43,8 @@ class Map:
     # Creates a list of the coordinates of the world edge.
     def getListOfEdgeCoordinates(self):
         edge_coords = []
-        wide=self.data['width']+2
-        high=self.data['height']+2
+        wide=self.data['width']
+        high=self.data['height']
         for x in range(wide):
             edge_coords.append((x,0))
             edge_coords.append((x,high-1))
@@ -73,14 +73,17 @@ class Map:
         cells = zmath.getCellsAlongTrajectory(x,y,angle,distance)
 
         for cell in cells:
-            if grid[cell[0]][cell[1]] != None:
-                _uuid = grid[cell[0]][cell[1]]
-                ping = {}
-                ping['x']=cell[0]
-                ping['y']=cell[1]
-                ping['distance']=zmath.distance(x,y,cell[0],cell[1])
-                ping['uuid']=_uuid
-                found_objs.append(ping)
+            if 0 <= cell[0] < self.getData('width') and 0<=cell[1]<self.getData('height'):
+                if grid[cell[0]][cell[1]] != None:
+                    _uuid = grid[cell[0]][cell[1]]
+                    ping = {}
+                    ping['x']=cell[0]
+                    ping['y']=cell[1]
+                    ping['distance']=zmath.distance(x,y,cell[0],cell[1])
+                    ping['uuid']=_uuid
+                    found_objs.append(ping)
+            else:
+                break
 
         return found_objs
 

@@ -20,5 +20,22 @@ class AI:
     # specifications. Can return empty dictionary or None if there are no
     # commands.
     def runAI(self,data):
-        return {}
+        pass
+        # for k,v in data.items():
+        #     print("KEY ",k)
+        #     print(v)
+
+        # print(data['self']['x'],data['self']['y'])
+
+        # cmds_0={}
+        # # cmd={}
+        # # cmd['command']='SET_SPEED'
+        # # cmd['speed']=1.0
+        # # cmds_0['2']=cmd
+
+        # cmds_0['3'] = {}
+        # cmds_0['3']['command']='SCAN'
+
+        # return {'0':cmds_0}
+
 

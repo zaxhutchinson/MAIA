@@ -31,12 +31,12 @@
 
     "3000": {
         "id":"3000",
-        "name": "Simple 360/30 Scanner",
+        "name": "Simple 120/20/10 Scanner",
         "ctype": "Scanner",
         "active": false,
-        "range":10,
+        "range":20,
         "level":1,
-        "visarc":180,
+        "visarc":120,
         "offset_angle":0,
         "resolution":10
     }

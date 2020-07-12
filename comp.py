@@ -8,17 +8,24 @@ class Comp:
     def __init__(self,data):
         self.data=data
 
-        self.Update = None
+        self.Update = self.NoUpdate
+        self.view_keys = []
+        self.setViewKeysBasic()
 
         ctype = self.data['ctype']
         if ctype=='FixedGun':
             self.Update = self.FixedGunUpdate
+            self.setViewKeysFixedGun()
         elif ctype=='Engine':
             self.Update = self.EngineUpdate
+            self.setViewKeysEngine()
         elif ctype=='Scanner':
             self.Update = self.ScannerUpdate
-        else:
-            self.Update = self.NoUpdate
+            self.setViewKeysScanner()
+        elif ctype=='CnC':
+            self.Update = self.CnCUpdate
+            self.setViewKeysCnC()
+
 
     def getData(self,key):
         if key in self.data:
@@ -27,6 +34,36 @@ class Comp:
             return None
     def setData(self,key,value):
         self.data[key]=value
+    
+    ###########################################################################
+    # Self View dispatch
+    def setViewKeysBasic(self):
+        self.view_keys += [
+            'id','ctype','name','slot_id'
+        ]
+    def setViewKeysFixedGun(self):
+        self.view_keys += [
+            'reload_ticks','reload_ticks_remaining','reloading',
+            'ammunition','min_damage','max_damage','range'
+        ]
+    def setViewKeysEngine(self):
+        self.view_keys += [
+            'min_speed','max_speed','cur_speed','max_turnrate','cur_turnrate'
+        ]
+    def setViewKeysScanner(self):
+        self.view_keys += [
+            'active','range','level','visarc','offset_angle','resolution'
+        ]
+    def setViewKeysCnC(self):
+        self.view_keys += [
+            'max_cmds_per_tick'
+        ]
+
+    def getSelfView(self):
+        view = {}
+        for key in self.view_keys:
+            view[key] = self.getData(key)
+        return view
 
     ###########################################################################
     # Default Update: does nothing.
@@ -122,6 +159,7 @@ class Comp:
             if cmd['command']=='SCAN':
                 a = action.Action()
                 a.setType('SCAN')
+                a.addData('slot_id',self.getData('slot_id'))
                 a.addData('compname',self.getData('name'))
                 a.addData('range',self.getData('range'))
                 a.addData('x',self.getData('parent').getData('x'))
@@ -136,6 +174,10 @@ class Comp:
 
         return actions
 
+    ###########################################################################
+    # CnC Udpate
+    def CnCUpdate(self,cmd):
+        return []
 
     ###########################################################################
     ## WEAPON RELATED FUNCTIONS

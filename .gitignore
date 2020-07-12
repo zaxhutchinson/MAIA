@@ -2,6 +2,7 @@
 /teams/*.json
 /log/*.log
 /unused_code
+/notes
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

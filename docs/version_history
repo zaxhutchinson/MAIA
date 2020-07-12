@@ -3,6 +3,8 @@ July 12, 2020
 - Some readme work
 - Adds CnC components which primarily limit the number of commands an object can make.
 - Adds a message queue to update the log
+- Adds the start of several instruction files for users.
+- First actual tests of the simulation in operation completed.
 
 Version 0.06
 July 11, 2020

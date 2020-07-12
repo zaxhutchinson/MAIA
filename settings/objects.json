@@ -2,6 +2,8 @@
     "0" : {
         "id": "0",
         "objname" : "Indestructible Block",
+        "color":"gray1",
+        "char":"X",
         "health" : 100000000000000000000,
         "density":1000,
         "comp_ids" : []
@@ -9,6 +11,8 @@
     "1" : {
         "id": "1",
         "objname" : "Box",
+        "color":"tan4",
+        "char":"B",
         "health" : 10,
         "density":1000,
         "comp_ids" : []
@@ -16,6 +20,8 @@
     "2" : {
         "id": "2",
         "objname" : "Tank",
+        "color":"purple",
+        "char":"@",
         "health" : 100,
         "density":1000,
         "comp_ids" : ["0","1000","2000","3000"]

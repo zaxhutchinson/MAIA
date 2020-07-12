@@ -128,9 +128,12 @@ class Object:
         self.data = {}
         self.data['id']=data['id']
         self.data['objname']=data['objname']
+        self.data['char']=data['char']
+        self.data['color']=data['color']
         self.data['health']=data['health']
         self.data['damage']=0.0
         self.data['facing']=0.0
+        self.data['density']=data['density']
         self.data['x']=0
         self.data['y']=0
         self.data['cell_x']=0.5
@@ -140,6 +143,10 @@ class Object:
         self.data['uuid']=None
         self.data['ai']=None
         self.data['alive']=True
+        
+        self.view_keys = [
+            'health','damage','facing','x','y','cell_x','cell_y','objname'
+        ]
 
     def getData(self,key):
         if key in self.data:
@@ -151,15 +158,18 @@ class Object:
 
     def addComp(self,comp):
         next_id = str(len(self.data['comps']))
+        comp.setData('slot_id',next_id)
         self.data['comps'][next_id]=comp
 
     def place(self,data):
         for k,v in data.items():
             self.data[k]=v
 
-    def update(self,data):
+    def update(self,my_view,world_view):
         if self.data['ai'] != None:
-            return self.data['ai'](data)
+            my_view['self']=self.getSelfView()
+            my_view['world']=world_view
+            return self.data['ai'].runAI(my_view)
         else:
             return None
 
@@ -171,6 +181,12 @@ class Object:
         # If damage is greater than health
         if new_damage >= self.getData('health'):
             self.setData('alive',False)
+
+    def getDrawData(self):
+        return {
+            'x':self.getData('x'),'y':self.getData('y'),
+            'char':self.getData('char'), 'color':self.getData('color')
+        }
 
 
     def processCommands(self,cmds):
@@ -199,3 +215,16 @@ class Object:
 
         return actions
 
+
+    def getSelfView(self):
+        view = {}
+        
+        for key in self.view_keys:
+            view[key]=self.getData(key)
+
+        comp_view = {}
+        for k,v in self.getData('comps').items():
+            comp_view[k]=v.getSelfView()
+        view['comps']=comp_view
+
+        return view

@@ -9,6 +9,9 @@ class UIMap(tk.Toplevel):
         self.master = master
         self.title("MAIA - Sim UI")
 
+        self.map_cell_size=30
+        self.map_font = tk.font.Font(family='TkFixedFont',size=self.map_cell_size)
+
         # Store data
         self.sim = sim
         self.omsgr = omsgr
@@ -29,7 +32,7 @@ class UIMap(tk.Toplevel):
                                 yscrollcommand=self.ybar.set)
         self.ybar.configure(command=self.canvas.yview)
         self.xbar.configure(command=self.canvas.xview)
-        self.canvas.configure(scrollregion=(0,0,map_width*20,map_height*20))
+        self.canvas.configure(scrollregion=(0,0,self.map_width*self.map_cell_size+self.map_cell_size,self.map_height*self.map_cell_size+self.map_cell_size))
         self.canvas.configure(background='white')
         self.ybar.pack(side=tk.RIGHT,fill=tk.Y)
         self.xbar.pack(side=tk.BOTTOM,fill=tk.X)
@@ -58,6 +61,8 @@ class UIMap(tk.Toplevel):
         self.btnRunXTurns.pack(fill=tk.BOTH,expand=True,side=tk.LEFT)
 
         self.logFrame.after(100, self.updateLog)
+
+        self.updateMap()
         
         #TEST JUNK
         # self.canvas.create_text(50,50,text="Hello world")
@@ -68,6 +73,14 @@ class UIMap(tk.Toplevel):
         self.scrollLog.insert(tk.END,m+"\n")
         self.scrollLog.configure(state='disabled')
         self.scrollLog.yview(tk.END)
+
+    def updateMap(self):
+        self.canvas.delete(tk.ALL)
+        draw_data = self.sim.getObjDrawData()
+        for dd in draw_data:
+            x = dd['x']*self.map_cell_size+self.map_cell_size
+            y = dd['y']*self.map_cell_size+self.map_cell_size
+            self.canvas.create_text(x,y,text=dd['char'],fill=dd['color'],font=self.map_font)
 
     def updateLog(self):
         while True:
@@ -84,5 +97,7 @@ class UIMap(tk.Toplevel):
         if turns_to_run.isdigit():
             turns_to_run = int(turns_to_run)
             self.sim.runSim(turns_to_run)
+
+        self.updateMap()
 
         

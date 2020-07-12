@@ -67,10 +67,10 @@ class Sim:
 
     ##########################################################################
     # VIEWS
-    def addObjView(self,_uuid,view):
+    def addObjView(self,_uuid,viewname,view):
         if _uuid not in self.obj_views:
-            self.obj_views[_uuid]=[]
-        self.obj_views[_uuid].append(view)
+            self.obj_views[_uuid]={}
+        self.obj_views[_uuid][viewname]=view
 
     ##########################################################################
     # BUILD SIM
@@ -170,7 +170,10 @@ class Sim:
 
 
 
-
+    def getWorldView(self):
+        view = {}
+        view['tick']=self.tick
+        return view
 
 
     ##########################################################################
@@ -185,14 +188,16 @@ class Sim:
             # A place to store the commands by uuid and tick
             cmds_by_uuid = {}
             
+            # get the world view to pass onto objects.
+            world_view = self.getWorldView()
 
             # Run all obj's updates, storing the returned commands
             for objuuid,obj in self.objs.items():
                 cmd = None
                 if objuuid in self.obj_views:
-                    cmd = obj.Update(self.obj_views[objuuid])
+                    cmd = obj.update(self.obj_views[objuuid],world_view)
                 else:
-                    cmd = obj.Update({})
+                    cmd = obj.update({},world_view)
                 if cmd != None:
                     cmds_by_uuid[objuuid]=cmd
 
@@ -274,7 +279,7 @@ class Sim:
         x = old_x + old_cell_x
         y = old_y + old_cell_y
         # translate and new data
-        new_position = zmath.translatePoint(x,y,cur_speed,direction)
+        new_position = zmath.translatePoint(x,y,direction,cur_speed)
         new_x = int(new_position[0])
         new_y = int(new_position[1])
         new_cell_x = abs(new_position[0]-abs(new_x))
@@ -289,11 +294,23 @@ class Sim:
                 obj.setData('cell_y',new_cell_y)
             else:
                 # CRASH INTO SOMETHING
-                # Eventually we'll include crash code.
-                pass
+                
+                # We're still in the same cell but we need to move the obj to the edge
+                # of the old cell to simulate that they reached the edge of it before
+                # crashing.
+                if new_x != old_x:
+                    if new_x > old_x:
+                        obj.setData('cell_x',0.99)
+                    else:
+                        obj.setData('cell_x',0.0)
+                if new_y != old_y:
+                    if new_y > old_y:
+                        obj.setData('cell_y',0.99)
+                    else:
+                        obj.setData('cell_y',0.0)
         else:
-            # We haven't moved out of the current cell
-            # Do nothing
+            obj.setData('cell_x',new_cell_x)
+            obj.setData('cell_y',new_cell_y)
             pass
 
 
@@ -310,17 +327,22 @@ class Sim:
 
     # Performs a scan
     def ACTN_Scan(self,obj,actn):
+        print("Performing Scan")
         view = {}
         view['compname']=actn.getData('compname')
+        view['pings']={}
 
         # Set up the necessary data for easy access
-        start = actn.getData('facing')-actn.getData('offset_angle')
-        end = actn.getData('facing')+actn.getData('offset_angle')
+        scan_facing = actn.getData('facing')+actn.getData('offset_angle')
+        start = scan_facing-actn.getData('visarc')
+        end = scan_facing+actn.getData('visarc')
         angle = start
         jump = actn.getData('resolution')
         x = actn.getData('x')
         y = actn.getData('y')
         _range = actn.getData('range')
+
+        temp_view = {}
 
         # While we're in our arc of visibility
         while angle <= end:
@@ -331,20 +353,30 @@ class Sim:
             # Pings should be in order. Start adding if they're not there.
             # If the scanner's level is less than the obj's density, stop. We can't see through.
             # Else keep going.
+
+            
             for ping in pings:
-                if ping['uuid'] not in view:
-                    # For now all we're giving the scanning player
-                    # the object name. Up to the player to figure out
-                    # if this is a teammate.
-                    ping['objname']=self.objs[ping['uuid']].getData('objname')
-                    view[ping['uuid']]=ping
-                if actn.getData('level') < self.objs[ping['uuid']].getData('density'):
-                    break
+
+                # Scanned ourself
+                if ping['x']==x and ping['y']==y:
+                    pass
+                else:
+                    if ping['uuid'] not in temp_view:
+                        # For now all we're giving the scanning player
+                        # the object name. Up to the player to figure out
+                        # if this is a teammate.
+                        ping['objname']=self.objs[ping['uuid']].getData('objname')
+                        temp_view[str(angle)]=ping
+                    if actn.getData('level') < self.objs[ping['uuid']].getData('density'):
+                        break
 
             angle += jump
 
+        for angl,ping in temp_view.items():
+            del ping['uuid']
+            view['pings'][angl]=ping
 
-        self.addObjView(obj.getData('uuid'),view)
+        self.addObjView(obj.getData('uuid'),actn.getData('slot_id'),view)
 
 
     ##########################################################################
@@ -369,3 +401,16 @@ class Sim:
 
             # NOTE: Maybe at some point I'll need to do something with
             # dead objects. For now, the reference will just go out of scope.
+
+
+    ##########################################################################
+    # DRAWING DATA
+    # This gets and returns a list of all drawing necessary data from the
+    # live objects.
+    ##########################################################################
+
+    def getObjDrawData(self):
+        dd = []
+        for obj in self.objs.values():
+            dd.append(obj.getDrawData())
+        return dd

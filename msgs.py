@@ -7,7 +7,7 @@ class Msg:
         self.title = str(title)
         self.text = str(text)
     def getText(self):
-        return "["+self.tick+"] "+self.title+": "+self.text
+        return "["+self.tick+"] "+self.title+"  "+self.text
 
 class IMsgr:
     def __init__(self,q):
