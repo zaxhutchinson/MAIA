@@ -1,6 +1,16 @@
+Version 0.06
+July 11, 2020
+- UI Updates
+- Implements starting commands and actions.
+- Adds first scanner comp and support code.
+- Adds zmath
+- Adds ai_helpers
+
 Version 0.05
 July 10, 2020
-- Major rework. Converted from a continuous space to discrete grid.
+- Major rework. Converted from a continuous space to discrete grid. 
+- Rewrote most of the storage and classes. 
+- Moves toward a dictionary structure for all data.
 - Moves sim building into Sim from App
 - Fixes error with agent starting position
 

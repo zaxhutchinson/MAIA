@@ -1,20 +1,37 @@
 {
     "0": {
-        "id":0,
-        "name":"Paintball Cannon",
-        "ctype":"Gun",
+        "id":"0",
+        "name":"Main Cannon",
+        "ctype":"FixedGun",
         "reload_ticks":1,
         "reload_ticks_remaining":0,
+        "reloading":false,
         "ammunition":100,
         "min_damage":1,
-        "max_damage":1
+        "max_damage":1,
+        "range":10
     },
 
     "100" : {
-        "id":100,
+        "id":"100",
         "name":"Small Engine",
         "ctype":"Engine",
-        "speed":1,
-        "turn_rate":1
+        "min_speed":-1,
+        "max_speed":1,
+        "cur_speed":0,
+        "max_turnrate":90.0,
+        "cur_turnrate":0.0
+    },
+
+    "200": {
+        "id":"200",
+        "name": "Simple 360/30 Scanner",
+        "ctype": "Scanner",
+        "active": false,
+        "range":10,
+        "level":1,
+        "visarc":180,
+        "offset_angle":0,
+        "resolution":10
     }
 }

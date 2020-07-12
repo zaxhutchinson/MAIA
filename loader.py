@@ -43,7 +43,7 @@ class Loader:
             jsonObjs = json.load(f)
             for k,v in jsonObjs.items():
                 self.comp_templates[k]=comp.Comp(v)
-    def copyCompTemplates(self,_id):
+    def copyCompTemplate(self,_id):
         return copy.deepcopy(self.comp_templates[_id])
     ##########################################################################
     # LOAD/COPY MAPS
@@ -68,13 +68,18 @@ class Loader:
         return copy.deepcopy(self.team_templates[_id])
     def getTeamIDs(self):
         return list(self.team_templates.keys())
+    def getTeamNames(self):
+        names = []
+        for t in self.team_templates.values():
+            names.append(t['name'])
+        return names
     ##########################################################################
     # LOAD/COPY Mainconfig
     def loadMainConfig(self,filename):
         with open(filename,'r') as f:
             self.main_config = json.load(f)
-    def getMainConfig(self):
-        return self.main_config
+    def copyMainConfig(self):
+        return copy.deepcopy(self.main_config)
 
     # def loadMaps(self,filename,sim):
     #     with open(filename,'r') as f:

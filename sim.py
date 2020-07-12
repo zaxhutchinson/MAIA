@@ -1,4 +1,6 @@
 import importlib
+import uuid
+import random
 
 import obj
 import copy
@@ -6,15 +8,29 @@ import zmap
 import comp
 import vec2
 import loader
+import zmath
 #from log import *
 
 class Sim:
     def __init__(self):
-        self.map = None
-        self.sides={}
+        self.reset()
+
+        self.action_dispatch_table = {}
+        self.buildActionDispatchTable()
     def reset(self):
-        self.map=None
+        self.map = None
+        self.objs = {}
         self.sides={}
+        self.ticks_per_turn=1
+        self.tick = 0
+
+        self.obj_views={}
+
+    def buildActionDispatchTable(self):
+        self.action_dispatch_table['HIGHSPEED_PROJECTILE'] = self.ACTN_HighspeedProjectile
+        self.action_dispatch_table['MOVE']=self.ACTN_Move
+        self.action_dispatch_table['TURN']=self.ACTN_Turn
+        self.action_dispatch_table['SCAN']=self.ACTN_Scan
 
     ##########################################################################
     # MAP
@@ -47,203 +63,281 @@ class Sim:
     def delTeam(self,ID):
         self.sides[ID]['team']=None
 
+    ##########################################################################
+    # VIEWS
+    def addObjView(self,_uuid,view):
+        if _uuid not in self.obj_views:
+            self.obj_views[_uuid]=[]
+        self.obj_views[_uuid].append(view)
 
     ##########################################################################
     # BUILD SIM
-    def buildSim(self):
-        pass
+    def buildSim(self, ldr):
+
+        config = ldr.copyMainConfig()
+        team_dir = config['team_dir']
+
+        # Set the number of ticks per turn
+        self.ticks_per_turn = config['ticks_per_turn']
+        self.tick=0
+
+        # Build the map grid
+        self.map.buildMapGrid()
+
+        # Create the map border
+        edge_obj_id = self.map.getData('edge_obj_id')
+        edge_coords = self.map.getListOfEdgeCoordinates()
+        for ec in edge_coords:
+            # Copy the obj
+            newobj = ldr.copyObjTemplate(edge_obj_id)
+            # Create obj place data
+            data = {}
+            data['x']=ec[0]
+            data['y']=ec[1]
+            data['uuid']=uuid.uuid4()
+            # Place, add to objDict and add to map
+            newobj.place(data)
+            self.objs[data['uuid']]=newobj
+            self.map.addObj(data['x'],data['y'],data['uuid'])
+
+        # Add all placed objects
+        pl_objs = self.map.getData('placed_objects')
+        for oid,lst in pl_objs.items():
+            for o in lst:
+                # If an object entry in placed_objs does not
+                # have a position, it is ignored.
+                if 'x' in o and 'y' in o:
+                    newobj = ldr.copyObjTemplate(oid)
+                    data=o
+                    data['uuid']=uuid.uuid4()
+                    newobj.place(data)
+                    self.objs[data['uuid']]=newobj
+                    self.map.addObj(data['x'],data['y'],data['uuid'])
+
+        # Add teams and ai-controlled objs
+        for k,v in self.sides.items():
+            team_data = ldr.copyTeamTemplate(v['team'])
+            team_data['side']=k
+            team_name = team_data['name']
+            # Copy so we don't f-up the original
+            starting_locations = list(v['starting_locations'])
+
+            for agent in team_data['agent_defs']:
+                newobj = ldr.copyObjTemplate(agent['object'])
+                data={}
+                data['side']=k
+                data['ticks_per_turn']=config['ticks_per_turn']
+                data['callsign']=agent['callsign']
+                data['squad']=agent['squad']
+                data['object']=agent['object']
+                data['uuid']=uuid.uuid4()
+
+                # Randomly choose a starting location
+                sl = random.randint(0,len(starting_locations)-1)
+                data['x'] = starting_locations[sl][0]
+                data['y'] = starting_locations[sl][1]
+                # Delete the chosen location so no other team mate gets it.
+                del starting_locations[sl]
+
+                # Load and set AI
+                ai_filename = agent['AI_file']
+                # Load AI module
+                ai_spec = importlib.util.spec_from_file_location(ai_filename,team_dir+'/'+team_name+'/'+ai_filename)
+                ai_module = importlib.util.module_from_spec(ai_spec)
+                ai_spec.loader.exec_module(ai_module)
+                data['ai']=ai_module.AI()
+
+                # Create and store components
+                for c in newobj.getData('comp_ids'):
+                    newcomp = ldr.copyCompTemplate(c)
+                    newcomp.setData('parent',newobj)
+                    newobj.addComp(newcomp)
+
+                # Place and store and add to map
+                newobj.place(data)
+                self.objs[data['uuid']]=newobj
+                self.map.addObj(data['x'],data['y'],data['uuid'])
+
+
+
+
+
 
     ##########################################################################
     # RUN SIM
-    def runSim(self):
-        pass
+    def runSim(self, turns):
+
+        objuuids_list = list(self.objs.keys())
+        # Shuffle the obj uuids
+        random.shuffle(objuuids_list)
+        
+        for turn in range(turns):
+            # A place to store the commands by uuid and tick
+            cmds_by_uuid = {}
+            
+
+            # Run all obj's updates, storing the returned commands
+            for objuuid,obj in self.objs.items():
+                cmd = None
+                if objuuid in self.obj_views:
+                    cmd = obj.Update(self.obj_views[objuuid])
+                else:
+                    cmd = obj.Update({})
+                if cmd != None:
+                    cmds_by_uuid[objuuid]=cmd
 
 
+            # Flush the obj_views, so no one gets old data.
+            self.obj_views = {}
+            
+            # Run each tick
+            for tick in range(self.ticks_per_turn):
 
-    # def addObject(self,_obj):
-    #     key = _obj.getData('id')
-    #     if key != None:
-    #         self.objectDict[key]=_obj
+                # Check all commands to see if there is
+                # something to do this tick.
+                for objuuid,objcmds in cmds_by_uuid.items():
+                    
+                    if str(tick) in objcmds:
 
-    # def addComponent(self,comp):
-    #     key = comp.getData('id')
-    #     if key != None:
-    #         self.componentDict[key] = comp
-    #     else:
-    #         print("Sim: Adding component, comp has not data member id.")
+                        cmds_this_tick = objcmds[str(tick)]
+                        self.processCommands(objuuid,cmds_this_tick)
 
-    # def addMap(self,_map):
-    #     key = _map.getData('name')
-    #     if key != None:
-    #         self.mapDict[key] = _map
-    #     else:
-    #         LogError("LOADER: Map has no name.")
-
-    # def addTeam(self,team):
-    #     key = team.getData('name')
-    #     if key != None:
-    #         self.teamDict[key]=team
+                self.tick += 1
 
 
-    # def buildObject(self,key):
-    #     if key in self.objectDict:
-    #         _obj = copy.deepcopy(self.objectDict[key])
+    def processCommands(self,objuuid,cmds):
 
-    #         comps = _obj.getData('component_ids')
-    #         if comps != None:
+        obj = self.objs[objuuid]
+        
+        # Send the commands to the object so they can be
+        # processed. This returns a list of actions.
+        actions = self.objs[objuuid].processCommands(cmds)
+
+        # Dispatch each action to the function that
+        # handles its execution.
+        for a in actions:
+
+            self.action_dispatch_table[a.getType()](obj,a)
+
+    ##########################################################################
+    # ACTION PROCESSING FUNCTIONS
+    # These handle the meat of turning actions into world changes.
+    # All the sexy happens here.
+    ##########################################################################
+
+    # High-speed projectile action
+    def ACTN_HighspeedProjectile(self,obj,actn):
+
+        # view={}
+        # view['compname']=actn.getData('compname')
+        
+        # Get list of cells through which the shell travels.
+        cells_hit = zmath.getCellsAlongTrajectory(
+            obj.getData('x'),
+            obj.getData('y'),
+            actn.getData('direction'),
+            actn.getData('range')
+        )
+
+        # Get the list of cells through which the shell travels.
+        damage = random.randint(actn.getData('min_damage'),actn.getData('max_damage'))
+
+        # If there's something in a cell, damage the first thing
+        # along the path and quit.
+        for cell in cells_hit:
+            id_in_cell = self.map.getCellOccupant(cell[0].cell[1])
+            if id_in_cell != None:
+                self.objs[id_in_cell].damage(damage)
                 
-    #             for c in comps:
-    #                 newComp = self.buildComponent(c)
-    #                 _obj.addComponent(newComp)
-
-    #         return _obj
-    #     else:
-    #         print("Obj key "+str(key)+" not in dict")
-    #         return None
-
-    # def buildComponent(self,key):
-    #     if key in self.componentDict:
-    #         comp = copy.deepcopy(self.componentDict[key])
-
-    #         return comp
-    #     else:
-    #         print("Comp "+str(key)+" not in comp dict.")
-    #         return None
-
-    # def clearTeamsInPlay(self):
-    #     self.teamsInPlay.clear()
-    
-    # def buildSim(self, teams):
-    #     if self.isMapReady():
-    #         self.clearTeamsInPlay()
-    #         for k,v in teams.items():
-    #             if v == None:
-    #                 return (False,"Team " + str(k) + " is None.")
-    #             else:
-    #                 self.buildTeam(k,v)
-    #         return (True,"OK")
-    #     else:
-    #         return (False, "Map isn't ready.")
-
-    # def buildTeam(self,side_key,team_key):
-    #     if team_key in self.teamDict:
-    #         _team = self.getTeamCopy(team_key)
-
-    #         teamName = _team.getData('name')
-    #         _agents = _team.getData('agents')
-
-
-    #         starting_regions = self.mapInPlay.getData('starting_regions')
-    #         starting_region = None
-    #         if side_key in starting_regions:
-    #             starting_region = starting_regions[side_key]
-    #         else:
-    #             LogError("Side key "+side_key+" not in starting regions.")
-
-    #         for k,v in _agents.items():
-    #             pos = self.buildAgent(v,teamName,starting_region)
                 
-    #         for k,v in _agents.items():
-    #             for k2,v2 in _agents.items():
-    #                 if k == k2:
-    #                     continue
-    #                 else:
-    #                     if v.getData('obj').collidesWith(v2):
-    #                         LogError('Team: '+teamName+" agents "+k+" and "+k2+" have selected colliding starting positions of" +\
-    #                             str(v.getData('obj').getData('pos')) + " and " + str(v2.getData('obj').getData('pos')))
+                # view['result']='hit'
+                # view['objname']=self.objs[id_in_cell].getData('objname')
+                break
 
-
-    #         self.teamsInPlay[side_key]=_team
-
-    # def buildAgent(self,_agent,teamName,starting_region):
-    #     if _agent != None:
-    #         objid = _agent.getData('objid')
-    #         ai_filename = _agent.getData('ai_filename')
-    #         _agent.setData('obj',self.buildObject(objid))
+        # if 'result' not in view:
+        #     view['result']='miss'
 
             
-    #         ai_spec = importlib.util.spec_from_file_location(ai_filename,'teams/'+teamName+"/"+ai_filename)
-    #         ai_module = importlib.util.module_from_spec(ai_spec)
-    #         ai_spec.loader.exec_module(ai_module)
-
-    #         ai = ai_module.AI()
-            
-    #         pos = ai.initData(teamName,self.getSimProfile(), starting_region)
-
-    #         if type(pos) != tuple and type(pos) != list:
-    #             LogError("Team: "+teamName+" - Agent: "+ai_filename+" did not return a tuple or list from initData().")
-    #             return None
-    #         try:
-    #             pos_vec2 = vec2.Vec2(pos[0],pos[1])
-    #         except:
-    #             LogError("Team: "+teamName+" - Agent: "+ai_filename+" initData() returned a list or tuple of something other than int/float for its starting location.")
-    #             return None
-
-    #         if pos[0] < starting_region['left'] or pos[0] >= starting_region['right'] or \
-    #             pos[1] < starting_region['top'] or pos[1] >= starting_region['bottom']:
-    #             LogError("Team: "+teamName+" - Agent: "+ai_filename+" starting location is outside the starting region.")
-    #             return None
-
-    #         _agent.getData('obj').setPosition(pos_vec2)
-
-    #         _agent.setData('ai',ai)
-
-    #         return pos_vec2
-
-    #         #self.mapInPlay.addAgentObject(_agent.getObj())
-            
-    #     else:
-    #         LogError("SIM: Agent is None")
-
-    # def getObject(self,ID):
-    #     return copy.deepcopy(self.objectDict[ID])
-
-    # def getMapCopy(self,ID):
-    #     if ID in self.mapDict:
-    #         return copy.deepcopy(self.mapDict[ID])
-    #     else:
-    #         return None
-
-    # def getMap(self,ID):
-    #     if ID in self.mapDict:
-    #         return self.mapDict[ID]
-    #     else:
-    #         return None
-
-    # def getTeam(self,key):
-    #     if key in self.teamDict:
-    #         return self.teamDict[key]
-    #     else:
-    #         return None
-
-    # def getTeamCopy(self,key):
-    #     if key in self.teamDict:
-    #         return copy.deepcopy(self.teamDict[key])
-    #     else:
-    #         return None
-
-    # def getTeamNames(self):
-    #     return list(self.teamDict.keys())
-    # def getMapNames(self):
-    #     return list(self.mapDict.keys())
+    # Regular object move action
+    def ACTN_Move(self,obj,actn):
+        # Get current data
+        direction = actn.getData('direction')
+        cur_speed = actn.getData('speed')
+        old_x = obj.getData('x')
+        old_y = obj.getData('y')
+        old_cell_x = obj.getData('cell_x')
+        old_cell_y = obj.getData('cell_y')
+        x = old_x + old_cell_x
+        y = old_y + old_cell_y
+        # translate and new data
+        new_position = zmath.translatePoint(x,y,cur_speed,direction)
+        new_x = int(new_position[0])
+        new_y = int(new_position[1])
+        new_cell_x = abs(new_position[0]-abs(new_x))
+        new_cell_y = abs(new_position[1]-abs(new_y))
+        # see if move is possible.
+        if new_x != old_x or new_y != old_y:
+            if self.map.isCellEmpty(new_x,new_y):
+                self.map.moveObjFromTo(obj.getData('uuid'),old_x,old_y,new_x,new_y)
+                obj.setData('x',new_x)
+                obj.setData('y',new_y)
+                obj.setData('cell_x',new_cell_x)
+                obj.setData('cell_y',new_cell_y)
+            else:
+                # CRASH INTO SOMETHING
+                # Eventually we'll include crash code.
+                pass
+        else:
+            # We haven't moved out of the current cell
+            # Do nothing
+            pass
 
 
-    # def getSimProfile(self):
-    #     simdata = {}
-    #     simdata['map_name']=self.mapInPlay.getData('name')
-    #     simdata['map_width']=self.mapInPlay.getData('width')
-    #     simdata['map_height']=self.mapInPlay.getData('height')
-    #     return simdata
-
-    # def setMapInPlay(self,name):
-    #     self.mapInPlay = self.getMapCopy(name)
-    #     if self.mapInPlay != None:
-    #         self.mapInPlay.generateMap(self)
-
-    # def isMapReady(self):
-    #     return self.mapInPlay != None
+    # Turns the obj
+    def ACTN_Turn(self,obj,actn):
+        cur_facing = obj.getData('facing')
+        new_facing = cur_facing + actn.getData('turnrate')
+        while new_facing < -360:
+            new_facing += 360
+        while new_facing > 360:
+            new_facing -= 360
+        obj.setData('facing',new_facing)
 
 
-    # def runSim(self):
-    #     self.simData = {}
-    #     self.simData['tick'] = 0
+    # Performs a scan
+    def ACTN_Scan(self,obj,actn):
+        view = {}
+        view['compname']=actn.getData('compname')
+
+        # Set up the necessary data for easy access
+        start = actn.getData('facing')-actn.getData('offset_angle')
+        end = actn.getData('facing')+actn.getData('offset_angle')
+        angle = start
+        jump = actn.getData('resolution')
+        x = actn.getData('x')
+        y = actn.getData('y')
+        _range = actn.getData('range')
+
+        # While we're in our arc of visibility
+        while angle <= end:
+            # Get all objects along this angle
+            pings = self.map.getAllObjUUIDAlongTrajectory(
+                x,y,angle,_range
+            )
+            # Pings should be in order. Start adding if they're not there.
+            # If the scanner's level is less than the obj's density, stop. We can't see through.
+            # Else keep going.
+            for ping in pings:
+                if ping['uuid'] not in view:
+                    # For now all we're giving the scanning player
+                    # the object name. Up to the player to figure out
+                    # if this is a teammate.
+                    ping['objname']=self.objs[ping['uuid']].getData('objname')
+                    view[ping['uuid']]=ping
+                if actn.getData('level') < self.objs[ping['uuid']].getData('density'):
+                    break
+
+            angle += jump
+
+
+        self.addObjView(obj.getData('uuid'),view)

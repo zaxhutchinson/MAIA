@@ -31,8 +31,9 @@ class Agent:
     #     self.ai = ai
 
     # Returns a list of commands
-    def Update(self,world_state):
-        if self.ai != None:
-            return self.ai(world_state)
-        else:
-            return []
+    
+    # def Update(self,world_state):
+    #     if self.ai != None:
+    #         return self.ai(world_state)
+    #     else:
+    #         return []

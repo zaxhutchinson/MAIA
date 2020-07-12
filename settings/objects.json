@@ -1,14 +1,23 @@
 {
     "0" : {
-        "id": 0,
-        "name" : "Box",
-        "health" : 10,
-        "components" : []
+        "id": "0",
+        "objname" : "Indestructible Block",
+        "health" : 100000000000000000000,
+        "density":1000,
+        "comp_ids" : []
     },
     "1" : {
-        "id": 1,
-        "name" : "Tank",
+        "id": "1",
+        "objname" : "Box",
+        "health" : 10,
+        "density":1000,
+        "comp_ids" : []
+    },
+    "2" : {
+        "id": "2",
+        "objname" : "Tank",
         "health" : 100,
-        "components" : [0,100]
+        "density":1000,
+        "comp_ids" : ["0","100","200"]
     }
 }

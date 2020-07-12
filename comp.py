@@ -2,159 +2,164 @@ import math
 
 import vec2
 from log import *
-
+import action
 
 class Comp:
     def __init__(self,data):
         self.data=data
+
         self.Update = None
 
         ctype = self.data['ctype']
-        if ctype=='Gun':
-            self.Update = self.GunUpdate
+        if ctype=='FixedGun':
+            self.Update = self.FixedGunUpdate
         elif ctype=='Engine':
             self.Update = self.EngineUpdate
+        elif ctype=='Scanner':
+            self.Update = self.ScannerUpdate
+        else:
+            self.Update = self.NoUpdate
 
-    def GunUpdate(self, **kwargs):
-        pass
-    def EngineUpdate(self, **kwargs):
-        pass
+    def getData(self,key):
+        if key in self.data:
+            return self.data[key]
+        else:
+            return None
+    def setData(self,key,value):
+        self.data[key]=value
+
+    ###########################################################################
+    # Default Update: does nothing.
+    #   Intended for use in comps that never produce actions
+    def NoUpdate(self,cmd):
+        return []
+
+    ###########################################################################
+    # FixedGun Update:
+    #   Commands: FIRE, RELOAD
+    def FixedGunUpdate(self, cmd):
+
+        actions = []
+
+        # See if we were reloading
+        self.updateReloading()        
+
+        if 'command' in cmd:
+            if cmd['command']=='FIRE':
+
+                if self.isLoaded():
+                    # Reset the reload ticks
+                    self.setReloadTicksToFull()
+
+                    a = action.Action()
+                    a.setType('HIGHSPEED_PROJECTILE')
+                    a.addData('compname',self.getData('name'))
+                    a.addData('direction',self.getData('parent').getData('facing'))
+                    a.addData('min_damage',self.getData('min_damage'))
+                    a.addData('max_damage',self.getData('max_damage'))
+                    a.addData('range',self.getData('range'))
+                    actions.append(a)
+
+            elif cmd['command']=='RELOAD':
+                
+                if not self.data['reloading'] and not self.isLoaded():
+                    self.data['reloading']=True
+
+        return actions
 
 
-# COMPONENT TYPES
-#   'WEAPON' = can be fired.
-
-# class Projectile:
-#     def __init__(self,owner,damage,velocity,heading):
-#         self.owner = owner
-#         self.damage = damage
-#         self.velocity = velocity
-#         self.position = owner.getData('pos')
-#         self.heading = heading
-
-# class Component:
-#     def __init__(self,data,parent=None):
-#         self.parent = parent
-#         self.required_data = []
-#         self.data = {}
-#         print("COMPONENT setData()")
-
-#         # Fill out self.data with None values
-#         req_data = [
-#             'id','name','ctype'
-#         ]
+    ###########################################################################
+    # Engine Update:
+    def EngineUpdate(self, cmd):
         
-#         # Populate with actual data.
-#         for rd in req_data:
-#             if rd in data:
-#                 self.data[rd] = data[rd]
-#             else:
-#                 self.data[rd]=None
-#                 self.LogMissingData(rd)
+        actions = []
 
-#         self.required_data += req_data
-#     def getData(self,key):
-#         if key in self.data:
-#             return self.data[key]
-#         else:
-#             print("Component: getData() key "+str(key)+" does not exist.")
-#             return None
+        if 'command' in cmd:
 
-#     def update(self,time,command):
-#         return None
-#     def getHeading(self):
-#         return self.parent.heading
-#     def LogMissingData(self,rd):
-#         LogError("COMP is missing "+rd)
-#     # Will update when component destruction can happen
-#     def isAlive(self):
-#         return True
-    
-# class FixedGun(Component):
-#     def __init__(self,data,parent=None):
-#         super().__init__(data,parent)
-#         print("FIXEDGUN setData()")
+            if cmd['command']=='SET_SPEED':
 
-#         self.data['prev_update_time'] = 0.0
-#         self.data['reload_timer']=0.0
+                if 'speed' in cmd:
+                    newspeed = cmd['speed']
+                    if newspeed >= self.getData('min_speed') and newspeed <= self.getData('max_speed'):
+                        self.data['cur_speed']=newspeed
 
-#         local_data = [
-#             'reload_duration','ammunition','damage','velocity'
-#         ]
-#         for rd in local_data:
-#             self.data[rd] = None
+            elif cmd['command']=='SET_TURNRATE':
+                if 'turnrate' in cmd:
+                    newturnrate = cmd['data']['turnrate']
+                    if abs(newturnrate) <= self.getData('max_turnrate'):
+                        self.data['cur_turnrate']=newturnrate
 
-#         for rd in local_data:
-#             if rd in data:
-#                 self.data[rd]=data[rd]
-#             else:
-#                 self.LogMissingData(rd)
 
-#         self.required_data += local_data
 
-    
-#     def update(self,time,command):
-#         # Update timers
-#         if self.data['reload_timer'] > 0.0:
-#             self.data['reload_timer'] -= (time - self.data['prev_update_time'])
-#             if self.data['reload_timer'] < 0.0:
-#                 self.data['reload_timer'] = 0.0
-#         self.data['prev_update_time'] = time
-
-#         rtn = None
-#         if not self.parent.isAlive() or not self.isAlive():
-#             rtn = None
-#         elif command == None:
-#             rtn = None
-#         elif command['name'] == 'FIRE':
-#             if self.data['ammunition'] > 0 and self.data['reload_timer'] <= 0.0:
-#                 self.data['reload_timer'] = self.data['reload_duration']
-#                 self.data['ammunition'] -= 1
-#                 p = Projectile(
-#                     self.parent,self.data['damage'],
-#                     self.data['velocity'],self.getHeading()
-#                 )
-#                 rtn = ('PROJECTILE',p)
-
-#         return rtn
-
-# class Engine(Component):
-#     def __init__(self,data,parent=None):
-#         super().__init__(data,parent)
+        if self.isMoving():
+            a = action.Action()
+            a.setType('MOVE')
+            a.addData('direction',self.getData('parent').getData('facing'))
+            a.addData('speed',self.getData('cur_speed'))
+            actions.append(a)
         
-#         self.data['throttle']=0.0
-#         self.data['turn']=0.0
+        if self.isTurning():
+            a = action.Action()
+            a.setType('TURN')
+            a.addData('turnrate',self.getData('cur_turnrate'))
+            actions.append(a)
 
-#         local_data = [
-#             'speed','turn_rate'
-#         ]
-            
-#         for rd in local_data:
-#             if rd in data:
-#                 self.data[rd]=data[rd]
-#             else:
-#                 self.data[rd]=None
-#                 self.LogMissingData(rd)
+        return actions
 
-#         self.required_data += local_data
+    ###########################################################################
+    # Scanner Update
+    def ScannerUpdate(self, cmd):
 
-#     def update(self,time,command):
+        actions = []
 
-#         rtn = None
-#         if not self.parent.isAlive() or not self.isAlive():
-#             rtn = None
-#         elif command == None:
-#             rtn = None
-#         elif command['name'] == 'TURN':
-#             self.data['turn'] = min(max(command['value'],-1.0),1.0)
-#         elif command['name'] == 'THROTTLE':
-#             self.data['throttle'] = min(max(command['value'],-1.0),1.0)
-        
+        if 'command' in cmd:
+            if cmd['command']=='ACTIVATE':
+                self.setData('active',True)
+            elif cmd['command']=='DEACTIVATE':
+                self.setData('active',False)
 
-#         distance = self.data['speed']*self.data['throttle']
-#         self.parent.move(distance)
+        if self.isScanning():
+            a = action.Action()
+            a.setType('SCAN')
+            a.addData('compname',self.getData('name'))
+            a.addData('range',self.getData('range'))
+            a.addData('x',self.getData('parent').getData('x'))
+            a.addData('y',self.getData('parent').getData('y'))
+            facing = self.getData('parent').getData('facing')+self.getData('offset_angle')
+            a.addData('facing',facing)
+            a.addData('level',self.getData('level'))
+            a.addData('visarc',self.getData('visarc'))
+            a.addData('offset_angle',self.getData('offset_angle'))
+            a.addData('resolution',self.getData('resolution'))
+            actions.append(a)
 
-#         turn = self.data['turn_rate']*math.radians(self.data['turn'])
-#         self.parent.turn(turn)
+        return actions
 
-    
+
+    ###########################################################################
+    ## WEAPON RELATED FUNCTIONS
+    def setReloadTicksToFull(self):
+        self.data['reload_ticks_remaining']=self.data['reload_ticks']
+    def isLoaded(self):
+        return self.data['reload_ticks_remaining']==0
+    def updateReloading(self):
+        if self.data['reloading']:
+            if self.data['reload_ticks_remaining'] > 0:
+                self.data['reload_ticks_remaining'] -= 1
+                if self.data['reload_ticks_remaining']==0:
+                    self.data['reloading']=False
+
+
+    ###########################################################################
+    ## ENGINE RELATED FUNCTIONS
+    def isMoving(self):
+        return self.data['cur_speed'] != 0.0
+    def isTurning(self):
+        return self.data['cur_turnrate']!=0.0
+
+
+
+    ###########################################################################
+    ## SCANNER RELATED FUCNTIONS
+    def isScanning(self):
+        return self.getData('active')

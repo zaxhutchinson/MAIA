@@ -8,6 +8,7 @@ import os
 import sim
 import loader
 from log import *
+import ui_map
 
 class App(tk.Frame):
     def __init__(self,master=None):
@@ -22,6 +23,8 @@ class App(tk.Frame):
         self.combat_log = []
 
         self.BuildUI()
+
+        self.UIMap = None
 
     def Run(self):
         self.mainloop()
@@ -92,8 +95,11 @@ class App(tk.Frame):
         self.btnBuildSim = tk.Button(self.fmSimUI,text="Build Sim",command=self.buildSim)
         self.btnBuildSim.pack(side=tk.LEFT,fill=tk.BOTH,expand=True)
 
-        self.btnRunSim = tk.Button(self.fmSimUI,text="Run Sim",command=self.runSim)
-        self.btnRunSim.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True)
+        self.btnRunSimWithUI = tk.Button(self.fmSimUI,text="Run Sim With UI",command=self.runSimWithUI)
+        self.btnRunSimWithUI.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True)
+
+        self.btnRunSimWithoutUI = tk.Button(self.fmSimUI,text="Run Sim Without UI",command=self.runSimWithoutUI)
+        self.btnRunSimWithoutUI.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True)
 
     def updateTeamNames(self):
         self.lbTeams.delete(0,tk.END)
@@ -175,13 +181,12 @@ class App(tk.Frame):
 
 
     def buildSim(self):
-        self.sim.buildSim()
+        self.sim.buildSim(self.ldr)
 
+    def runSimWithUI(self):
+        map_width=self.sim.getMap().getData('width')
+        map_height=self.sim.getMap().getData('height')
+        self.UIMap = ui_map.UIMap(map_width,map_height,self)
 
-        # if self.sim.isMapReady():
-        #     self.sim.clearTeamsInPlay()
-        #     for k,v in self.team_names_to_play.items():
-        #         self.sim.buildTeam(k,v)
-
-    def runSim(self):
-        pass
+    def runSimWithoutUI(self):
+        self.sim.runSim()
