@@ -1,3 +1,8 @@
+Version 0.08b
+July 13, 2020
+- More docs.
+- Fixes ammunition check on reload command.
+
 Version 0.08a
 July 13, 2020
 - Adds end of sim check. If only objects from a single team remain, sim ends.

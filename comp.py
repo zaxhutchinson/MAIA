@@ -99,7 +99,10 @@ class Comp:
 
             elif cmd['command']=='RELOAD':
                 
-                if not self.data['reloading'] and not self.isLoaded():
+                # We can reload if we aren't reload,
+                #   we are not currently loaded
+                #   and we have ammo left.
+                if not self.data['reloading'] and not self.isLoaded() and self.getData('ammunition')>0:
                     self.data['reloading']=True
 
         return actions
