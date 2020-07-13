@@ -62,7 +62,6 @@ class Loader:
         with open(filename,'r') as f:
             jsonObj = json.load(f)
             for k,v in jsonObj.items():
-                v['team']=None
                 self.team_templates[k]=v
     def copyTeamTemplate(self,_id):
         return copy.deepcopy(self.team_templates[_id])

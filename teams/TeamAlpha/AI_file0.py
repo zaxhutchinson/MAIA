@@ -10,10 +10,6 @@ class AI:
         print(sim_data)
         print(starting_region)
 
-        # MUST PICK STARTING LOCATION BASED ON THE STARTING_REGION INFO
-        # MUST RETURN THE STARTING X,Y COORD as tuple
-        return (-100.0,-100.0)
-
 
     # Implement AI here.
     # IMPORTANT: Must return commands a dictionary that follows the command

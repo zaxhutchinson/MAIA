@@ -2,8 +2,12 @@
 Maine AI Arena
 
 ## Table of contents
+* [Current State](#current-state)
 * [Description](#description)
 * [Running](#running)
+
+## Current State
+Working toward the first usable version.
 
 ## Description
 MAIA is a platform designed for AI competitions that provides a modular 2D simulation environment for which students write AI to control competing agents. The goal is to give coders all the tools necessary so that they can focus primarily on analysis of information and decision-making. 

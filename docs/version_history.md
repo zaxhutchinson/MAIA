@@ -1,3 +1,8 @@
+Version 0.08a
+July 13, 2020
+- Adds end of sim check. If only objects from a single team remain, sim ends.
+- Adds in more documentation.
+
 Version 0.07
 July 12, 2020
 - Some readme work

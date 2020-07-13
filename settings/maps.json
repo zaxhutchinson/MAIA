@@ -1,5 +1,5 @@
 {
-    "0" : {
+    "Map 0" : {
         "name" : "Map 0",
         "edge_obj_id": "0",
         "desc" : "This is a test map used during development of the initial code. And this string is long so that I can test how it is displayed inside the Tkinter window.",
@@ -30,7 +30,7 @@
             }
         }
     },
-    "1" : {
+    "Map 1" : {
         "name" : "Map 1",
         "edge_obj_id": "0",
         "desc" : "This is a test map used during development of the initial code. And this string is long so that I can test how it is displayed inside the Tkinter window.",

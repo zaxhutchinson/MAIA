@@ -22,6 +22,7 @@ class Sim:
     def reset(self):
         self.map = None
         self.objs = {}
+        self.destroyed_objs={}
         self.sides={}
         self.ticks_per_turn=1
         self.tick = 0
@@ -169,12 +170,37 @@ class Sim:
             v['team']=team_data
 
 
-
+    ##########################################################################
+    # Get the world view
     def getWorldView(self):
         view = {}
         view['tick']=self.tick
         return view
 
+
+    ##########################################################################
+    # CHECK END OF GAME
+    def checkEndOfSim(self):
+
+        # Only 1 team remaining
+        teams_remaining = []
+        for name,data in self.sides.items():
+            team_eliminated = True
+            print(data)
+            for uuid,obj in data['team']['agents'].items():
+                if obj.getData('alive'):
+                    team_eliminated=False
+                    break
+            if not team_eliminated:
+                teams_remaining.append(name)
+        
+        if len(teams_remaining) == 1:
+            self.imsgr.addMsg(msgs.Msg(self.tick,"---GAME OVER---","The winning side is: " + teams_remaining[0]))
+            return True
+        if len(teams_remaining) == 0:
+            self.imsgr.addMsg(msgs.Msg(self.tick,"---GAME OVER---","All teams are dead???"))
+            return True
+        return False
 
     ##########################################################################
     # RUN SIM
@@ -199,7 +225,8 @@ class Sim:
                 else:
                     cmd = obj.update({},world_view)
                 if cmd != None:
-                    cmds_by_uuid[objuuid]=cmd
+                    if type(cmd) == dict and len(cmd) > 0:
+                        cmds_by_uuid[objuuid]=cmd
 
 
             # Flush the obj_views, so no one gets old data.
@@ -219,7 +246,12 @@ class Sim:
                         cmds_this_tick = objcmds[str(tick)]
                         self.processCommands(objuuid,cmds_this_tick)
 
+                # Check if the sim is over.
+                if self.checkEndOfSim():
+                    return
+
                 self.tick += 1
+
 
 
     def processCommands(self,objuuid,cmds):
@@ -262,7 +294,13 @@ class Sim:
             id_in_cell = self.map.getCellOccupant(cell[0].cell[1])
             if id_in_cell != None:
 
+                damage_str = obj.getData('callsign')+" shot "+self.objs[id_in_cell].getData('callsign') + \
+                    " for "+str(damage)+" points of damage."
+                self.logMsg("DAMAGE",damage_str)
+
                 self.damageObj(id_in_cell,damage)
+
+
 
                 break
 
@@ -396,11 +434,14 @@ class Sim:
             # Remove from obj dict
             del self.objs[_uuid]
             # Remove from team
-            side = dead_obj.getData('side')
-            del self.sides[side]['agents'][_uuid]
+            # side = dead_obj.getData('side')
+            # del self.sides[side]['agents'][_uuid]
 
-            # NOTE: Maybe at some point I'll need to do something with
-            # dead objects. For now, the reference will just go out of scope.
+            # Add to destroyed objs
+            self.destroyed_objs[_uuid]=dead_obj
+
+            # Log destruction
+            self.logMsg("DESTROYED",dead_obj.getData('callsign')+" was destroyed.")
 
 
     ##########################################################################
@@ -414,3 +455,11 @@ class Sim:
         for obj in self.objs.values():
             dd.append(obj.getDrawData())
         return dd
+
+
+    ##########################################################################
+    # SEND MESSAGE TO HANDLER
+    ##########################################################################
+    # Convenience function to create a message for the UI's log
+    def logMsg(self,title,text):
+        self.imsgr.addMsg(msgs.Msg(self.tick,title,text))
