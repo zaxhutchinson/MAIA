@@ -10,6 +10,7 @@ import vec2
 import loader
 import zmath
 import msgs
+from zexceptions import *
 #from log import *
 
 class Sim:
@@ -77,8 +78,19 @@ class Sim:
     # BUILD SIM
     def buildSim(self, ldr):
 
+
+        if not self.hasMap():
+            raise BuildException("No map was selected.")
+
+        for k,v in self.sides.items():
+            if v['teamname']==None:
+                raise BuildException("Side "+k+" has no team assignment.")
+
+
         config = ldr.copyMainConfig()
         team_dir = config['team_dir']
+
+        
 
         # Set the number of ticks per turn
         self.ticks_per_turn = config['ticks_per_turn']
@@ -186,7 +198,7 @@ class Sim:
         teams_remaining = []
         for name,data in self.sides.items():
             team_eliminated = True
-            print(data)
+
             for uuid,obj in data['team']['agents'].items():
                 if obj.getData('alive'):
                     team_eliminated=False

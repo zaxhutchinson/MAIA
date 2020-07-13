@@ -1,3 +1,7 @@
+Version 0.08c
+July 13, 2020
+- UI work on the Sim setup UI. Will eventually duplicate to the Sim itself. First stab at it.
+
 Version 0.08b
 July 13, 2020
 - More docs.
