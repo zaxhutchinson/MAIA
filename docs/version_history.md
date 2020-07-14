@@ -1,8 +1,15 @@
-Version 0.08c
+**Version 0.08d**
+July 14,2020
+- Adds in the radio component ctype and a simple BROADCAST command. BROADCAST sends out a message to all objects on the map. Currently allowing the message to be almost anything. Might need changing.
+- Adds an initial command validator. This will weed out malformed commands so the rest of the code does have be so damned paranoid about users sending back garbage. Will undoubtly need continual additions. Need to think about limiting sizes...possibly. Currently prints a mesage when the command is malformed. Need to move to a log.
+
+**Version 0.08c**
 July 13, 2020
 - UI work on the Sim setup UI. Will eventually duplicate to the Sim itself. First stab at it.
+- More cleaning of the docs.
+- Adds initial exception handling. God that needs more work.
 
-Version 0.08b
+**Version 0.08b**
 July 13, 2020
 - More docs.
 - Fixes ammunition check on reload command.

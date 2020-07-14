@@ -40,6 +40,21 @@ def CMD_Scan():
     return cmd
 
 ##############################################################################
+# RADIO FUNCTIONS
+#
+# Broadcast message
+def CMD_Broadcast(message):
+    cmd = {}
+    cmd['command']='BROADCAST'
+    cmd['message']=message
+    return cmd
+def CMD_SetRange(_range):
+    cmd = {}
+    cmd['command']='SET_RANGE'
+    cmd['message']=_range
+    return cmd
+
+##############################################################################
 # GENERIC COMMAND FUNCTIONS
 #
 # Activates the component,

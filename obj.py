@@ -165,11 +165,10 @@ class Object:
         for k,v in data.items():
             self.data[k]=v
 
-    def update(self,my_view,world_view):
+    def update(self,view):
         if self.data['ai'] != None:
-            my_view['self']=self.getSelfView()
-            my_view['world']=world_view
-            return self.data['ai'].runAI(my_view)
+            view['self']=self.getSelfView()
+            return self.data['ai'].runAI(view)
         else:
             return None
 

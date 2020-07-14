@@ -25,6 +25,9 @@ class Comp:
         elif ctype=='CnC':
             self.Update = self.CnCUpdate
             self.setViewKeysCnC()
+        elif ctype=='Radio':
+            self.Update = self.RadioUpdate
+            self.setViewKeysRadio()
 
 
     def getData(self,key):
@@ -58,6 +61,10 @@ class Comp:
         self.view_keys += [
             'max_cmds_per_tick'
         ]
+    def setViewKeysRadio(self):
+        self.view_keys += [
+            'range'
+        ]
 
     def getSelfView(self):
         view = {}
@@ -65,13 +72,17 @@ class Comp:
             view[key] = self.getData(key)
         return view
 
-    ###########################################################################
+    ##########################################################################
+    # UPDATE METHODS
+    ##########################################################################
+
+    ###################################
     # Default Update: does nothing.
     #   Intended for use in comps that never produce actions
     def NoUpdate(self,cmd):
         return []
 
-    ###########################################################################
+    ###################################
     # FixedGun Update:
     #   Commands: FIRE, RELOAD
     def FixedGunUpdate(self, cmd):
@@ -108,7 +119,7 @@ class Comp:
         return actions
 
 
-    ###########################################################################
+    ###################################
     # Engine Update:
     def EngineUpdate(self, cmd):
         
@@ -146,7 +157,7 @@ class Comp:
 
         return actions
 
-    ###########################################################################
+    ###################################
     # Scanner Update
     def ScannerUpdate(self, cmd):
 
@@ -177,10 +188,31 @@ class Comp:
 
         return actions
 
-    ###########################################################################
+    ##################################
     # CnC Udpate
     def CnCUpdate(self,cmd):
         return []
+
+    ###################################
+    # Radio Update
+    def RadioUpdate(self,cmd):
+        actions = []
+
+        if 'command' in cmd:
+            if cmd['command']=='BROADCAST' and 'message' in cmd:
+                a = action.Action()
+                a.setType('BROADCAST')
+                a.addData('message',cmd['message'])
+                a.addData('range',self.getData('cur_range'))
+                actions.append(a)
+
+            elif cmd['command']=='SET_RANGE' and 'range' in cmd:
+                newrange = cmd['range']
+                if 0 <= newrange <= self.getData('max_range'):
+                    self.setData('cur_range',newrange)
+        
+
+        return actions
 
     ###########################################################################
     ## WEAPON RELATED FUNCTIONS

@@ -19,7 +19,7 @@ A CnC component models the command and control unit of the object (the brains).
 
 ```json
 "0": {
-    "id":0,
+    "id":"0",
     "name":"Basic Command Module",
     "ctype":"CnC",
     "max_cmds_per_tick":1
@@ -94,3 +94,18 @@ A fixed gun cannot move left and right. It points always in the direction of the
 * min_damage [INT/FLOAT]: The minimum damage inflicted by this weapon. Damage calculation is a random die roll [min_damage,max_damage]. If you want a non-random value, set both min and max to the same value.
 * max_damage [INT/FLOAT]: Max damage of the weapon.
 * range [INT/FLOAT]: Maximum range the gun can fire.
+
+## Radio
+A very basic radio with transmission and reception capabilities. It can broadcast a message. Cannot send targeted messages to a specific object.
+
+```json
+"4000": {
+    "id": "4000",
+    "name": "Basic Radio",
+    "ctype": "Radio",
+    "range": 100
+    
+}
+```
+* max_range [INT/FLOAT]: The maximum range setting of the radio.
+* cur_range [INT/FLOAT]: The current range setting. Beyond this range, messages will not be heard.

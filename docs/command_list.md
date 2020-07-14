@@ -30,5 +30,14 @@ a non-zero number will cause the object to move.
     * 'command':'SCAN'
     * action: 'SCAN'
 
+## Radio
+* **BROADCAST** Sends out a map-wide broadcast out to the range of the radio.
+    * 'command':'BROADCAST'
+    * action: 'BROADCAST'
+
+* **SET_RANGE** Set the range of the radio up to the max_range.
+    * 'command':'SET_RANGE'
+    * 'range':[FLOAT]
+    * action: None
 
         

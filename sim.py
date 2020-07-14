@@ -11,12 +11,14 @@ import loader
 import zmath
 import msgs
 from zexceptions import *
+import valid
 #from log import *
 
 class Sim:
     def __init__(self, imsgr):
         self.reset()
         self.imsgr = imsgr
+        self.command_validator = valid.CommandValidator()
 
         self.action_dispatch_table = {}
         self.buildActionDispatchTable()
@@ -28,13 +30,14 @@ class Sim:
         self.ticks_per_turn=1
         self.tick = 0
 
-        self.obj_views={}
+        self.comp_views=[]
 
     def buildActionDispatchTable(self):
         self.action_dispatch_table['HIGHSPEED_PROJECTILE'] = self.ACTN_HighspeedProjectile
         self.action_dispatch_table['MOVE']=self.ACTN_Move
         self.action_dispatch_table['TURN']=self.ACTN_Turn
         self.action_dispatch_table['SCAN']=self.ACTN_Scan
+        self.action_dispatch_table['BROADCAST']=self.ACTN_BroadcastMessage
 
     ##########################################################################
     # MAP
@@ -69,10 +72,14 @@ class Sim:
 
     ##########################################################################
     # VIEWS
-    def addObjView(self,_uuid,viewname,view):
-        if _uuid not in self.obj_views:
-            self.obj_views[_uuid]={}
-        self.obj_views[_uuid][viewname]=view
+    # def addSelfView(self,_uuid,view):
+    #     if _uuid not in self.self_views:
+    #         self.self_views[_uuid]=[]
+    #     self.self_views[_uuid].append(view)
+    def addCompView(self,_uuid,view):
+        if _uuid not in self.comp_views:
+            self.comp_views[_uuid]=[]
+        self.comp_views[_uuid].append(view)
 
     ##########################################################################
     # BUILD SIM
@@ -184,7 +191,7 @@ class Sim:
 
     ##########################################################################
     # Get the world view
-    def getWorldView(self):
+    def getGeneralView(self):
         view = {}
         view['tick']=self.tick
         return view
@@ -226,16 +233,23 @@ class Sim:
             # A place to store the commands by uuid and tick
             cmds_by_uuid = {}
             
-            # get the world view to pass onto objects.
-            world_view = self.getWorldView()
+            # get the general view to pass onto objects.
+            general_view = self.getGeneralView()
 
             # Run all obj's updates, storing the returned commands
             for objuuid,obj in self.objs.items():
                 cmd = None
-                if objuuid in self.obj_views:
-                    cmd = obj.update(self.obj_views[objuuid],world_view)
-                else:
-                    cmd = obj.update({},world_view)
+                view = {}
+                view['general']=general_view
+                if objuuid in self.comp_views:
+                    view['comp']=self.comp_views[objuuid]
+                
+                # Call update and get commands
+                cmd = obj.update(view)
+
+                # Validate commands
+                cmd = self.command_validator.validateCommands(cmd)
+
                 if cmd != None:
                     if type(cmd) == dict and len(cmd) > 0:
                         cmds_by_uuid[objuuid]=cmd
@@ -243,6 +257,8 @@ class Sim:
 
             # Flush the obj_views, so no one gets old data.
             self.obj_views = {}
+            self.comp_views = []
+            self.msg_views = []
             
             # Run each tick
             for tick in range(self.ticks_per_turn):
@@ -380,6 +396,7 @@ class Sim:
         print("Performing Scan")
         view = {}
         view['compname']=actn.getData('compname')
+        view['slot_id']=actn.getData('slot_id')
         view['pings']={}
 
         # Set up the necessary data for easy access
@@ -426,8 +443,27 @@ class Sim:
             del ping['uuid']
             view['pings'][angl]=ping
 
-        self.addObjView(obj.getData('uuid'),actn.getData('slot_id'),view)
+        self.addCompView(obj.getData('uuid'),view)
 
+
+    def ACTN_BroadcastMessage(self,obj,actn):
+
+        view = {}
+        view['message']=actn.getData('message')
+
+        for uuid,other_obj in self.objs.items():
+            if uuid != obj.getData('uuid'):
+
+                distance = zmath.distance(
+                    obj.getData('x'),obj.getData('y'),
+                    other_obj.getData('x'),other_obj.getData('y')
+                )
+                
+                # if the distance to the other obj is less than
+                # the broadcast range, add the view.
+                if distance <= actn.getData('range'):
+                    self.addCompView(uuid,view)
+        
 
     ##########################################################################
     # ADDITIONAL HELPER FUNCTIONS

@@ -39,5 +39,14 @@
         "visarc":120,
         "offset_angle":0,
         "resolution":10
+    },
+
+    "4000": {
+        "id": "4000",
+        "name": "Basic Radio",
+        "ctype": "Radio",
+        "max_range": 100,
+        "cur_range": 100
+
     }
 }
