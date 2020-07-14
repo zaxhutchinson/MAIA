@@ -1,6 +1,6 @@
 {
     "0": {
-        "id":0,
+        "id":"0",
         "name":"Basic Command Module",
         "ctype":"CnC",
         "max_cmds_per_tick":1

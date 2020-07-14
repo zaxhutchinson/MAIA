@@ -1,3 +1,9 @@
+**Version 0.09**
+July 14, 2020
+- Changes UI names.
+- Adds custom UI widgets to keep style consistent.
+- Unifies the look of the AI.
+
 **Version 0.08d**
 July 14,2020
 - Adds in the radio component ctype and a simple BROADCAST command. BROADCAST sends out a message to all objects on the map. Currently allowing the message to be almost anything. Might need changing.

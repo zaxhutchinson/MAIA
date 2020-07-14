@@ -10,19 +10,18 @@ import queue
 import sim
 import loader
 from log import *
-import ui_map
+import ui_sim
 import msgs
 from zexceptions import *
+from ui_widgets import *
 
-class App(tk.Frame):
+
+class UISetup(tk.Frame):
     def __init__(self,master=None):
         super().__init__(master)
         self.master = master
-
-        self.main_bgcolor='gray10'
-        self.main_fgcolor='LightBlue1'
         
-        self.configure(bg=self.main_bgcolor)
+        self.configure(bg=DARKCOLOR)
         self.pack()
         self.master.title("MAIA - Maine AI Arena")
 
@@ -49,16 +48,16 @@ class App(tk.Frame):
         #######################################################################
         ## MAP UI
         #######################################################################
-        self.mapSelectFrame = tk.Frame(self,relief=tk.FLAT,borderwidth=0,highlightthickness=0,highlightbackground="black")
+        self.mapSelectFrame = uiQuietFrame(master=self)
         self.mapSelectFrame.pack(fill=tk.BOTH,expand=True,padx=10,pady=10)
 
-        self.lbMaps = tk.Listbox(self.mapSelectFrame,selectmode=tk.SINGLE,bg=self.main_bgcolor,fg=self.main_fgcolor,highlightthickness=0,highlightbackground="black",relief=tk.FLAT,selectforeground=self.main_bgcolor,selectbackground=self.main_fgcolor)
+        self.lbMaps = uiListBox(self.mapSelectFrame)
         self.lbMaps.pack(side=tk.LEFT,fill=tk.BOTH,expand=True)
 
-        self.btnSelectMap = tk.Button(self.mapSelectFrame,text="Select Map",command=self.selectMap,bg='midnight blue',fg='light sky blue',activeforeground='midnight blue',activebackground='light sky blue',highlightthickness=0,highlightbackground="black",relief=tk.FLAT)
+        self.btnSelectMap = uiButton(master=self.mapSelectFrame,command=self.selectMap,text="Select Map")
         self.btnSelectMap.pack(side=tk.LEFT,fill=tk.BOTH,expand=False)
 
-        self.txtMapInfo = tk.scrolledtext.ScrolledText(self.mapSelectFrame,wrap = tk.WORD,relief=tk.FLAT,bg=self.main_bgcolor,fg=self.main_fgcolor,highlightthickness=0,highlightbackground="black")
+        self.txtMapInfo = uiScrollText(self.mapSelectFrame)
         self.txtMapInfo.pack(side=tk.LEFT,fill=tk.BOTH,expand=True)
         self.txtMapInfo.insert(tk.END,"No map info")
 
@@ -66,28 +65,28 @@ class App(tk.Frame):
         #######################################################################
         ## TEAM UI
         ######################################################################
-        self.teamFrame = tk.Frame(self,relief=tk.FLAT,borderwidth=0)
+        self.teamFrame = uiQuietFrame(master=self)
         self.teamFrame.pack(fill=tk.BOTH,expand=True,padx=10,pady=10)
 
-        self.teamPoolFrame = tk.Frame(self.teamFrame)
+        self.teamPoolFrame = uiQuietFrame(master=self.teamFrame)
         self.teamPoolFrame.pack(side=tk.LEFT,fill=tk.BOTH,expand=True)
 
-        self.teamPoolLeftFrame = tk.Frame(self.teamPoolFrame)
+        self.teamPoolLeftFrame = uiQuietFrame(master=self.teamPoolFrame)
         self.teamPoolLeftFrame.pack(side=tk.LEFT,fill=tk.BOTH,expand=True)
 
-        self.lblTeamPool = tk.Label(self.teamPoolLeftFrame,text="TEAM POOL",bg=self.main_bgcolor,fg=self.main_fgcolor)
+        self.lblTeamPool = uiLabel(master=self.teamPoolLeftFrame,text="TEAM POOL")
         self.lblTeamPool.pack(fill=tk.BOTH,side=tk.TOP,expand=True)
 
-        self.lbTeams = tk.Listbox(self.teamPoolLeftFrame,selectmode=tk.SINGLE,exportselection=0,relief=tk.FLAT,bg=self.main_bgcolor,fg=self.main_fgcolor,highlightthickness=0,highlightbackground="black",selectforeground=self.main_bgcolor,selectbackground=self.main_fgcolor)
+        self.lbTeams = uiListBox(self.teamPoolLeftFrame)
         self.lbTeams.pack(side=tk.TOP,fill=tk.BOTH,expand=True)
 
-        self.teamPoolRightFrame = tk.Frame(self.teamPoolFrame)
+        self.teamPoolRightFrame = uiQuietFrame(master=self.teamPoolFrame)
         self.teamPoolRightFrame.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True)
 
-        self.lblSides= tk.Label(self.teamPoolRightFrame,text="SIDES",bg=self.main_bgcolor,fg=self.main_fgcolor)
+        self.lblSides= uiLabel(master=self.teamPoolRightFrame,text="SIDES")
         self.lblSides.pack(fill=tk.BOTH,side=tk.TOP,expand=True)
 
-        self.lbSideNames = tk.Listbox(self.teamPoolRightFrame,selectmode=tk.SINGLE,exportselection=0,relief=tk.FLAT,bg=self.main_bgcolor,fg=self.main_fgcolor,highlightthickness=0,highlightbackground="black",selectforeground=self.main_bgcolor,selectbackground=self.main_fgcolor)
+        self.lbSideNames = uiListBox(self.teamPoolRightFrame)
         self.lbSideNames.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
 
 
@@ -96,39 +95,39 @@ class App(tk.Frame):
 
         
 
-        self.playPoolFrame = tk.Frame(self.teamFrame)
+        self.playPoolFrame = uiQuietFrame(master=self.teamFrame)
         self.playPoolFrame.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True)
 
-        self.lblPlayPool = tk.Label(self.playPoolFrame,text="ASSIGNED TEAMS",bg=self.main_bgcolor,fg=self.main_fgcolor)
+        self.lblPlayPool = uiLabel(master=self.playPoolFrame,text="ASSIGNED TEAMS")
         self.lblPlayPool.pack(fill=tk.BOTH,side=tk.TOP,expand=True)
 
-        self.subPlayPoolFrame = tk.Frame(self.playPoolFrame)
+        self.subPlayPoolFrame = uiQuietFrame(master=self.playPoolFrame)
         self.subPlayPoolFrame.pack(fill=tk.BOTH,side=tk.BOTTOM,expand=True)
 
         
 
-        self.lbTeamAssignments = tk.Listbox(self.subPlayPoolFrame,selectmode=tk.NONE,bg=self.main_bgcolor,fg=self.main_fgcolor,relief=tk.FLAT,highlightthickness=0,highlightbackground="black",selectforeground=self.main_bgcolor,selectbackground=self.main_fgcolor)
+        self.lbTeamAssignments = uiListBox(self.subPlayPoolFrame)
         self.lbTeamAssignments.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True)
 
         self.updateTeamNames()
 
         self.pack(fill=tk.BOTH,expand=True)
 
-        self.btnAddTeam = tk.Button(self.teamFrame, text="Add Team >>>",command=self.addTeam,bg='dark green',fg='pale green',activeforeground='dark green',activebackground='pale green',highlightthickness=0,highlightbackground="black",relief=tk.FLAT)
+        self.btnAddTeam = uiButton(master=self.teamFrame, text="Add Team >>>",command=self.addTeam)
         self.btnAddTeam.pack(side=tk.TOP,fill=tk.BOTH,expand=True)
 
-        self.btnRemoveTeam = tk.Button(self.teamFrame,text="<<< Remove Team", command=self.removeTeam,bg='red4',fg='tomato2',activeforeground='red4',activebackground='tomato2',highlightthickness=0,highlightbackground="black",relief=tk.FLAT)
+        self.btnRemoveTeam = uiButton(master=self.teamFrame,text="<<< Remove Team", command=self.removeTeam)
         self.btnRemoveTeam.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
         #######################################################################
         ## SIM UI
         #######################################################################
-        self.fmSimUI = tk.Frame(self,relief=tk.FLAT,borderwidth=0)
+        self.fmSimUI = uiQuietFrame(master=self)
         self.fmSimUI.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True,padx=10,pady=10)
 
-        self.btnBuildSim = tk.Button(self.fmSimUI,text="Build Sim",command=self.buildSim,bg='midnight blue',fg='light sky blue',activeforeground='midnight blue',activebackground='light sky blue',highlightthickness=0,highlightbackground="black",relief=tk.FLAT)
+        self.btnBuildSim = uiButton(master=self.fmSimUI,command=self.buildSim,text="Build Sim")
         self.btnBuildSim.pack(side=tk.LEFT,fill=tk.BOTH,expand=True)
 
-        self.btnRunSimWithUI = tk.Button(self.fmSimUI,text="Run Sim With UI",command=self.runSimWithUI,bg='midnight blue',fg='light sky blue',activeforeground='midnight blue',activebackground='light sky blue',highlightthickness=0,highlightbackground="black",relief=tk.FLAT)
+        self.btnRunSimWithUI = uiButton(master=self.fmSimUI,command=self.runSimWithUI,text="Run Sim With UI")
         self.btnRunSimWithUI.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True)
 
         # self.btnRunSimWithoutUI = tk.Button(self.fmSimUI,text="Run Sim Without UI",command=self.runSimWithoutUI)
@@ -229,7 +228,7 @@ class App(tk.Frame):
     def runSimWithUI(self):
         map_width=self.sim.getMap().getData('width')
         map_height=self.sim.getMap().getData('height')
-        self.UIMap = ui_map.UIMap(map_width,map_height,self.sim,self.omsgr,self)
+        self.UIMap = ui_sim.UISim(map_width,map_height,self.sim,self.omsgr,self)
 
     def runSimWithoutUI(self):
         self.sim.runSim(self.ldr.getMainConfigData('no_ui_max_turns'))

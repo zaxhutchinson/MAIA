@@ -1,7 +1,7 @@
 import tkinter as tk
 import sys
 
-import app
+import ui_setup
 import vec2
 import math
 import zmap
@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     # Start App
     root = tk.Tk()
-    maia_app = app.App(master=root)
+    maia_app = ui_setup.UISetup(master=root)
     maia_app.Run()
 
 

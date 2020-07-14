@@ -128,7 +128,7 @@ class Object:
         self.data = {}
         self.data['id']=data['id']
         self.data['objname']=data['objname']
-        self.data['char']=data['char']
+        self.data['text']=data['text']
         self.data['color']=data['color']
         self.data['health']=data['health']
         self.data['damage']=0.0
@@ -184,7 +184,7 @@ class Object:
     def getDrawData(self):
         return {
             'x':self.getData('x'),'y':self.getData('y'),
-            'char':self.getData('char'), 'color':self.getData('color')
+            'text':self.getData('text'), 'fill':self.getData('color')
         }
 
 
