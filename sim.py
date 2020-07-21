@@ -30,7 +30,7 @@ class Sim:
         self.ticks_per_turn=1
         self.tick = 0
 
-        self.comp_views=[]
+        self.comp_views={}
 
     def buildActionDispatchTable(self):
         self.action_dispatch_table['HIGHSPEED_PROJECTILE'] = self.ACTN_HighspeedProjectile
@@ -79,12 +79,12 @@ class Sim:
     def addCompView(self,_uuid,view):
         if _uuid not in self.comp_views:
             self.comp_views[_uuid]=[]
+
         self.comp_views[_uuid].append(view)
 
     ##########################################################################
     # BUILD SIM
     def buildSim(self, ldr):
-
 
         if not self.hasMap():
             raise BuildException("No map was selected.")
@@ -93,11 +93,8 @@ class Sim:
             if v['teamname']==None:
                 raise BuildException("Side "+k+" has no team assignment.")
 
-
         config = ldr.copyMainConfig()
         team_dir = config['team_dir']
-
-        
 
         # Set the number of ticks per turn
         self.ticks_per_turn = config['ticks_per_turn']
@@ -165,11 +162,16 @@ class Sim:
 
                 # Load and set AI
                 ai_filename = agent['AI_file']
-                # Load AI module
                 ai_spec = importlib.util.spec_from_file_location(ai_filename,team_dir+'/'+team_name+'/'+ai_filename)
                 ai_module = importlib.util.module_from_spec(ai_spec)
                 ai_spec.loader.exec_module(ai_module)
-                data['ai']=ai_module.AI()
+                AI=ai_module.AI()
+                AI.initData(data)
+
+                # Store the AI object after initialization
+                # to avoid including it in the data dict passed
+                # to the AI itself.
+                data['ai'] = AI
 
                 # Create and store components
                 for c in newobj.getData('comp_ids'):
@@ -187,7 +189,6 @@ class Sim:
 
             # Add the team data to the side entry
             v['team']=team_data
-
 
     ##########################################################################
     # Get the world view
@@ -256,9 +257,7 @@ class Sim:
 
 
             # Flush the obj_views, so no one gets old data.
-            self.obj_views = {}
-            self.comp_views = []
-            self.msg_views = []
+            self.comp_views = {}
             
             # Run each tick
             for tick in range(self.ticks_per_turn):
@@ -270,7 +269,6 @@ class Sim:
                 for objuuid,objcmds in cmds_by_uuid.items():
                     
                     if str(tick) in objcmds:
-
                         cmds_this_tick = objcmds[str(tick)]
                         self.processCommands(objuuid,cmds_this_tick)
 
@@ -304,6 +302,10 @@ class Sim:
 
     # High-speed projectile action
     def ACTN_HighspeedProjectile(self,obj,actn):
+
+        view = {}
+        view['vtype']='weapon_fired'
+        view['compname']=actn.getData('compname')
         
         # Get list of cells through which the shell travels.
         cells_hit = zmath.getCellsAlongTrajectory(
@@ -313,24 +315,32 @@ class Sim:
             actn.getData('range')
         )
 
+        print("CELLS HIT: ",cells_hit,actn.getData('direction'))
+
         # Get the list of cells through which the shell travels.
         damage = random.randint(actn.getData('min_damage'),actn.getData('max_damage'))
 
         # If there's something in a cell, damage the first thing
         # along the path and quit.
         for cell in cells_hit:
-            id_in_cell = self.map.getCellOccupant(cell[0].cell[1])
-            if id_in_cell != None:
+            id_in_cell = self.map.getCellOccupant(cell[0],cell[1])
+            if id_in_cell == obj.getData('uuid'):
+                continue
+            elif id_in_cell != None:
 
-                damage_str = obj.getData('callsign')+" shot "+self.objs[id_in_cell].getData('callsign') + \
+                view['hit_x']=cell[0]
+                view['hit_y']=cell[1]
+                view['objname']=self.objs[id_in_cell].getData('objname')
+
+                damage_str = obj.getBestDisplayName()+" shot "+self.objs[id_in_cell].getBestDisplayName() + \
                     " for "+str(damage)+" points of damage."
                 self.logMsg("DAMAGE",damage_str)
 
                 self.damageObj(id_in_cell,damage)
 
-
-
                 break
+
+        self.addCompView(obj.getData('uuid'),view)
 
             
     # Regular object move action
@@ -382,22 +392,26 @@ class Sim:
 
     # Turns the obj
     def ACTN_Turn(self,obj,actn):
+
         cur_facing = obj.getData('facing')
         new_facing = cur_facing + actn.getData('turnrate')
-        while new_facing < -360:
+        while new_facing < 0:
             new_facing += 360
-        while new_facing > 360:
+        while new_facing >= 360:
             new_facing -= 360
         obj.setData('facing',new_facing)
 
 
     # Performs a scan
     def ACTN_Scan(self,obj,actn):
-        print("Performing Scan")
+
         view = {}
+        view['tick']=self.tick
+        view['vtype']='scan'
+        view['ctype']=actn.getData('ctype')
         view['compname']=actn.getData('compname')
         view['slot_id']=actn.getData('slot_id')
-        view['pings']={}
+        view['pings']=[]
 
         # Set up the necessary data for easy access
         scan_facing = actn.getData('facing')+actn.getData('offset_angle')
@@ -409,7 +423,9 @@ class Sim:
         y = actn.getData('y')
         _range = actn.getData('range')
 
-        temp_view = {}
+    
+
+        temp_view = []
 
         # While we're in our arc of visibility
         while angle <= end:
@@ -428,20 +444,34 @@ class Sim:
                 if ping['x']==x and ping['y']==y:
                     pass
                 else:
-                    if ping['uuid'] not in temp_view:
-                        # For now all we're giving the scanning player
-                        # the object name. Up to the player to figure out
-                        # if this is a teammate.
-                        ping['objname']=self.objs[ping['uuid']].getData('objname')
-                        temp_view[str(angle)]=ping
+                    # For now all we're giving the scanning player
+                    # the object name. Up to the player to figure out
+                    # if this is a teammate.
+                    ping['objname']=self.objs[ping['uuid']].getData('objname')
+                    
+                    # Make sure the reported direction is 0-360
+                    direction = angle
+                    if direction < 0:
+                        direction += 360
+                    if direction >= 360:
+                        direction -= 360
+
+                    ping['direction']=direction
+                    ping['cell_x']=self.objs[ping['uuid']].getData('cell_x')
+                    ping['cell_y']=self.objs[ping['uuid']].getData('cell_y')
+                    temp_view.append(ping)
+                    
+                    # If our scan level can't penetrate the object, stop.
                     if actn.getData('level') < self.objs[ping['uuid']].getData('density'):
                         break
 
             angle += jump
 
-        for angl,ping in temp_view.items():
+
+
+        for ping in temp_view:
             del ping['uuid']
-            view['pings'][angl]=ping
+            view['pings'].append(ping)
 
         self.addCompView(obj.getData('uuid'),view)
 
@@ -449,6 +479,8 @@ class Sim:
     def ACTN_BroadcastMessage(self,obj,actn):
 
         view = {}
+        view['vtype']='message'
+        view['tick']=self.tick
         view['message']=actn.getData('message')
 
         for uuid,other_obj in self.objs.items():
@@ -469,9 +501,10 @@ class Sim:
     # ADDITIONAL HELPER FUNCTIONS
     # Some of the ACTN function do similar work.
     ##########################################################################
+
     def damageObj(self,_uuid,damage):
         # Damage object
-        self.objs[_uuid].damage(damage)
+        self.objs[_uuid].damageObj(damage)
         
         # If obj is dead, remove it.
         if self.objs[_uuid].getData('alive')==False:

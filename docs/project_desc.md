@@ -1,6 +1,5 @@
 
-# PROJECT DESCRIPTION #
-by zax              
+# PROJECT DESCRIPTION #            
 
 ## MAIA Breakdown
 
@@ -59,3 +58,11 @@ MAIA expects to find a directory in the *teams* directory matching the "name" fi
 AI for objects is given by .py files stored under team directories. MAIA, using the teams.json file, loads the AI module for each agent of a participating team (See the file *ai.txt* for a precise reading of the AI class). MAIA creates an object of the AI class and uses the required routines to hook into user defined AI.
 
 The simulation passes each AI object several views of the state of the world via a dictionary. It is up to the AI to parse the dictionary, interpret the data and send back commands.
+
+
+## FAQ
+* Q: How are errors in user-created AI scripts handled?
+* A: The call to the AI script's ```runAI``` method is inside a catch-all try-except block. If exceptions occur within that method, they are caught, logged in the *error.log* file and ignored. They will not impair the continuation of the simulation. Errors outside the ```runAI``` method are not. Users can freely re-raise exceptions back to this entry point or take steps to ensure exceptions in their own code do not crash the simulation. As I expect, under most rules of operation, crashing the simulation is equal to a forfeit.
+
+* Q: What about infinite loops?
+* A: Obviously, preventing them is impossible from the outside. An earlier version of MAIA used detached processes with timeouts in order to handle long-running AI scripts; however, this prevents (unless the AI script reads/writes all data to a file each turn) storing state. So we opted to load modules and call methods from the main process.

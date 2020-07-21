@@ -3,8 +3,8 @@
         "name" : "Map 0",
         "edge_obj_id": "0",
         "desc" : "This is a test map used during development of the initial code. And this string is long so that I can test how it is displayed inside the Tkinter window.",
-        "width" : 100,
-        "height" : 100,
+        "width" : 20,
+        "height" : 20,
         "placed_objects" : {
             "1" : [
                 {
@@ -40,20 +40,38 @@
         "name" : "Map 1",
         "edge_obj_id": "0",
         "desc" : "This is a test map used during development of the initial code. And this string is long so that I can test how it is displayed inside the Tkinter window.",
-        "width" : 20,
-        "height" : 20,
+        "width" : 10,
+        "height" : 10,
         "placed_objects" : {},
         "sides": {
             "blue" : {
                 "starting_locations": [
-                    [1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[1,8],[1,9],
-                    [1,10],[1,11],[1,12],[1,13],[1,14],[1,15],[1,16],[1,17],[1,18]
+                    [1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[1,8]
                 ]
             },
             "red" : {
                 "starting_locations": [
-                    [18,1],[18,2],[18,3],[18,4],[18,5],[18,6],[18,7],[18,8],[18,9],
-                    [18,10],[18,11],[18,12],[18,13],[18,14],[18,15],[18,16],[18,17],[18,18]
+                    [8,1],[8,2],[8,3],[8,4],[8,5],[8,6],[8,7],[8,8]
+                ]
+            }
+        }
+    },
+    "Map 2" : {
+        "name" : "Map 2",
+        "edge_obj_id": "0",
+        "desc" : "This is a test map used during development of the initial code. And this string is long so that I can test how it is displayed inside the Tkinter window.",
+        "width" : 10,
+        "height" : 10,
+        "placed_objects" : {},
+        "sides": {
+            "blue" : {
+                "starting_locations": [
+                    [1,1]
+                ]
+            },
+            "red" : {
+                "starting_locations": [
+                    [8,7]
                 ]
             }
         }

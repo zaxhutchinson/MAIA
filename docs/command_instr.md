@@ -8,6 +8,7 @@ by zax
 This document gives an overview how AI routines should construct commands. Commands
 are basically elaborate dictionaries and they follow a general template:
 
+```json
 {
     "<TICK>": {
         "<SLOT_ID>": {
@@ -17,6 +18,7 @@ are basically elaborate dictionaries and they follow a general template:
         }
     }
 }
+```
 
 "<TICK>" : indicates on which iterative tick the commands stored under it are supposed to execute.
     This value is different from the global tick. Each turn of play can consist of more than

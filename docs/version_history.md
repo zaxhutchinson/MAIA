@@ -1,3 +1,14 @@
+**Version 0.11**
+July 20, 2020
+- Adds todo.md.
+- Adds very cluttery example AI. Just a test case for the various systems.
+- First public version
+
+**Version 0.10**
+July 17, 2020
+- Documentation work, specifically on views.
+- AI helper functions and classes.
+
 **Version 0.09**
 July 14, 2020
 - Changes UI names.

@@ -67,3 +67,11 @@ def getCellsAlongTrajectory(x,y,angle,distance):
         traversed.append((dx,dy))
 
     return traversed
+
+###############################################################################
+# Get vector to
+def vectorTo(x0,y0,x1,y1):
+    bearing = math.degrees(math.atan2(y1-y0,x1-x0))
+    if bearing < 0:
+        bearing += 360
+    return bearing

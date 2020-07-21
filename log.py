@@ -1,3 +1,5 @@
+import traceback
+
 LOG_MAIN = 'log/main.log'
 LOG_ERROR = 'log/error.log'
 LOG_COMBAT = 'log/combat.log'
@@ -21,3 +23,9 @@ def LogError(msg):
 def LogCombat(time,msg):
     with open(LOG_COMBAT,'a') as f:
         f.write(str(time)+" "+msg)
+
+def LogMostRecentException(msg):
+    with open(LOG_ERROR,'a') as f:
+        f.write("##### EXCEPTION #####\n")
+        f.write(msg+"\n")
+        traceback.print_exc(file=f)

@@ -135,10 +135,12 @@ class Comp:
                         self.data['cur_speed']=newspeed
 
             elif cmd['command']=='SET_TURNRATE':
+
                 if 'turnrate' in cmd:
-                    newturnrate = cmd['data']['turnrate']
+                    newturnrate = cmd['turnrate']
                     if abs(newturnrate) <= self.getData('max_turnrate'):
                         self.data['cur_turnrate']=newturnrate
+                        print("NEW TURN RATE SET",newturnrate)
 
 
 
@@ -175,6 +177,7 @@ class Comp:
                 a.setType('SCAN')
                 a.addData('slot_id',self.getData('slot_id'))
                 a.addData('compname',self.getData('name'))
+                a.addData('ctype',self.getData('ctype'))
                 a.addData('range',self.getData('range'))
                 a.addData('x',self.getData('parent').getData('x'))
                 a.addData('y',self.getData('parent').getData('y'))

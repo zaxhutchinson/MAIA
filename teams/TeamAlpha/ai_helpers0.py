@@ -37,68 +37,12 @@ def getSubView(view, *args):
         return getSubView(subview, *args[1:])
     except IndexError:
         return view
+    except TypeError:
+        return None
     except:
         return None
 
 
-##################################################
-# GETTERS FOR SELF VIEW DATA
-def getSelf(view):
-    return getSubView(view,'self')
-def getFacing(view):
-    return getSubView(view,'self','facing')
-def getHealth(view):
-    return getSubView(view,'self','health')
-def getDamage(view):
-    return getSubView(view,'self','damage')
-def getX(view):
-    return getSubView(view,'self','x')
-def getY(view):
-    return getSubView(view,'self','y')
-def getCellX(view):
-    return getSubView(view,'self','cell_x')
-def getCellY(view):
-    return getSubView(view,'self','cell_y')
-def getTeamName(view):
-    return getSubView(view,'self','teamname')
-def getCallSign(view):
-    return getSubView(view,'self','callsign')
-def getSquad(view):
-    return getSubView(view,'self','squad')
-def getComps(view):
-    return getSubView(view,'self','comps')
-def getCompBySlotID(view,slot_id):
-    return getSubView(view,'self','comps',slot_id)
-
-# Returns a dictionary where k=ctype and v=[slot_ids]
-# Good use is to call and store on T0 for future reference
-def getSlotIDsByCtype(view):
-    comps_by_ctype={}
-
-    comps = getComps(view)
-
-    for slot_id,comp in comps.items():
-
-        ctype = comp['ctype']
-
-        if ctype not in comps_by_ctype:
-            comps_by_ctype[ctype]=[]
-        
-        comps_by_ctype[ctype].append(slot_id)
-
-    return comps_by_ctype
-
-#####################################################
-# Gun related functions
-def canWeaponFire(view,slotID):
-    comp = getCompBySlotID(view,slotID)
-    return comp['reload_ticks_remaining']==0 and comp['ammunition']>0
-def doesWeaponNeedReloading(view, slotID):
-    comp = getCompBySlotID(view,slotID)
-    return comp['reload_ticks_remaining'] > 0 and not comp['reloading']
-def isWeaponReloading(view, slotID):
-    comp = getCompBySlotID(view,slotID)
-    return comp['reloading']
 
 ##################################
 # Search scan view for pings containing specific objnames.
@@ -137,19 +81,6 @@ def searchScanForObjname(view,name):
 
 
 
-##############################################################################
-# COMP VIEW
-
-# getCompViewsOfVtype
-# Returns a list of all the views within the comp view with a specific vtype.
-def getCompViewsOfVtype(view, vtype):
-    views = []
-    comp_subview = getSubView(view,'comp')
-    if comp_subview != None:
-        for cv in comp_subview:
-            if cv['vtype'] == vtype:
-                views.append(cv)
-    return views
 
 
 
@@ -200,7 +131,6 @@ def CMD_Turn(turnrate):
     cmd['turnrate']=turnrate
     return cmd
 
-
 # Creates a set speed command
 def CMD_SetSpeed(speed):
     cmd = {}
@@ -248,10 +178,4 @@ def CMD_Deactivate():
     return cmd
 
 ##############################################################################
-# JUNK STUFF
-
-def sign(value):
-    if value==0:
-        return 1
-    else:
-        return value / abs(value)
+# 
