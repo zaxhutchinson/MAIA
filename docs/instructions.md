@@ -53,6 +53,6 @@ Now, let's assume your AI class file is called: *AIfile_7.py*. The directory str
 
 - teams
     - TeamZero
-        - __init__.py
+        - \__init\__.py
         - AIfile_7.py
         - myscript.py
