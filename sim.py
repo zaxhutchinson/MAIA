@@ -157,8 +157,20 @@ class Sim:
                 sl = random.randint(0,len(starting_locations)-1)
                 data['x'] = starting_locations[sl][0]
                 data['y'] = starting_locations[sl][1]
+
                 # Delete the chosen location so no other team mate gets it.
                 del starting_locations[sl]
+
+                # Add the agent's initial facing. If it's set to 999
+                # select a random facing.
+                facing = v['facing']
+                if facing == "None":
+                    facing = random.random()*360.0
+                else:
+                    facing = float(facing)
+
+                data['facing'] = facing
+                
 
                 # Load and set AI
                 ai_filename = agent['AI_file']

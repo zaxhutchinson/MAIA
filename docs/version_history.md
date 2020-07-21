@@ -1,3 +1,7 @@
+**Version 0.11a**
+July 20, 2020
+- Adds the agent facing entry to the maps.json to give agents a logical default facing. Setting the facing to "None" results in a random selection [0,360).
+
 **Version 0.11**
 July 20, 2020
 - Adds todo.md.
