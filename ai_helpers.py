@@ -101,30 +101,30 @@ def isWeaponReloading(view, slotID):
     return comp['reloading']
 
 ##################################
-# Search scan view for pings containing specific objnames.
+# Search radar view for pings containing specific objnames.
 # Returns a dictionary of pings that contain the objname.
 # Each entry in the returned dict is a list keyed by direction.
 # 
-def searchScanForObjname(view,name):
+def searchRadarForObjname(view,name):
     found_pings = {}
 
     comp_views = getSubView(view,'comp')
 
     if comp_views != None:
 
-        scan_views = {}
+        radar_views = {}
 
         for k,v in comp_views.items():
 
-            scan_views=[]
+            radar_views=[]
 
-            # Find all comp views from scanner components
+            # Find all comp views from radar components
             for cv in v:
-                if cv['ctype']=="Scanner":
-                    scan_views.append(cv)
+                if cv['ctype']=="Radar":
+                    radar_views.append(cv)
 
-            # Search the scan views for pings with a matching obj name.
-            for sv in scan_views:
+            # Search the radar views for pings with a matching obj name.
+            for sv in radar_views:
                 for vec,data in sv['pings'].items():
                     if data['objname']==name:
                         if k not in found_pings:
@@ -209,12 +209,12 @@ def CMD_SetSpeed(speed):
     return cmd
 
 ##############################################################################
-# SCANNER COMMAND FUNCTIONS
+# RADAR COMMAND FUNCTIONS
 #
-# Initiate a scan
-def CMD_Scan():
+# Initiate a radar transmission
+def CMD_TransmitRadar():
     cmd = {}
-    cmd['command']='SCAN'
+    cmd['command']='TRANSMIT_RADAR'
     return cmd
 
 ##############################################################################

@@ -31,8 +31,8 @@
 
     "3000": {
         "id":"3000",
-        "name": "Simple 120/20/10 Scanner",
-        "ctype": "Scanner",
+        "name": "Simple 120/20/10 Radar",
+        "ctype": "Radar",
         "active": false,
         "range":20,
         "level":1,

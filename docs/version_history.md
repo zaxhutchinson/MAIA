@@ -1,3 +1,10 @@
+**Version 0.12**
+July 23, 2020
+- Adds ViewManager which creates a single place to template views. This will help creating views when there are more than one action capable of creating the same type of view.
+- Adds the view.md file to document view templates.
+- Renames the 'scanner' component to 'radar'. Makes slightly more sense. Can use the name 'scanner' to mean things that scan a 2d area, rather than just raycasts.
+- Begins the process of adding the Item concept to MAIA. Items will have a location on the map, but not limit movement, like objects. They will not have components or AI. Necessary (perhaps) to introduce capture the flag mechanics, soccer, etc.
+
 **Version 0.11a**
 July 20, 2020
 - Adds the agent facing entry to the maps.json to give agents a logical default facing. Setting the facing to "None" results in a random selection [0,360).

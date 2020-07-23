@@ -3,6 +3,7 @@
 /log/*.log
 /unused_code
 /notes
+/old_json_files
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -12,7 +12,7 @@ class AI:
     def initData(self, sim_data):
         self.sim_data = sim_data
 
-        print("SIM DATA",sim_data)
+        #print("SIM DATA",sim_data)
 
 
 
@@ -41,6 +41,8 @@ class AI:
     # commands.
     def runAI(self,view):
 
+        #print (view)
+
         #print("THE FULL VIEW: ",view)
 
         if self.first_turn:
@@ -59,20 +61,20 @@ class AI:
         my_facing = aih.getFacing(view)
         my_x = aih.getX(view)
         my_y = aih.getY(view)
-        print("FACING: ",my_facing)
+        #print("FACING: ",my_facing)
 
         # Reload all weapons that need it
         for gun in self.by_ctype['FixedGun']:
             if aih.doesWeaponNeedReloading(view,gun):
-                print("Reloading"+str(gun))
+                #print("Reloading"+str(gun))
                 self.cmd_maker.addCmd(0,gun,aih.CMD_Reload())
 
         
 
-        # Scan every turn
-        for scanner in self.by_ctype['Scanner']:
-            #print("Requesting scan")
-            self.cmd_maker.addCmd(0,scanner,aih.CMD_Scan())
+        # Transmit radar every turn
+        for radar in self.by_ctype['Radar']:
+
+            self.cmd_maker.addCmd(0,radar,aih.CMD_TransmitRadar())
 
         # Be default send a stop turning command. If we still want to turn
         # That can happen below
@@ -80,14 +82,14 @@ class AI:
             self.cmd_maker.addCmd(0,engine_slot,aih.CMD_Turn(0.0))
 
 
-        # If we scanned last turn, inspect the scan for opponent
+        # If we ran the radar last turn, inspect the radar for opponent
         # And update the world around us.
-        scan_views = aih.getCompViewsOfVtype(view,'scan')
-        #print("SCAN_VIEW",scan_views)
+        radar_views = aih.getCompViewsOfVtype(view,'radar')
+
 
         # Search for enemy tanks.
         enemy_pings = []
-        for sv in scan_views:
+        for sv in radar_views:
             for ping in sv['pings']:
                 if ping['objname']=='Tank':
                     enemy_pings.append(ping)
@@ -97,7 +99,7 @@ class AI:
         # If we can see the enemy.
         if len(enemy_pings) > 0:
 
-            weapon_results = aih.getCompViewsOfVtype(view,'weapon_fired')
+            weapon_results = aih.getCompViewsOfVtype(view,'projectile')
             for wr in weapon_results:
                 if wr['objname'] != 'Tank':
                     jitter = random.randint(-5,5)
@@ -166,10 +168,7 @@ class AI:
                             theta -= turn_rate
                     
 
-        # # Else we don't see an enemy so, drive...somewhere.
-        # else:
-        #     # Update our surroundings dict
-        #     for sv in scan_views:
+
 
         print("COMMANDS: ",self.cmd_maker.getCmds())
         return self.cmd_maker.getCmds()

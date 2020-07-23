@@ -17,7 +17,7 @@ class CommandValidator:
         self.commands['SET_TURNRATE'] = {
             'turnrate':[int,float]
         }
-        self.commands['SCAN'] = {}
+        self.commands['TRANSMIT_RADAR'] = {}
         self.commands['BROADCAST'] = {
             'message':[int,float,str,list,tuple,dict]
         }

@@ -47,14 +47,14 @@ An engine has two jobs: 1) move the object around and 2) turn the object. Engine
 * cur_speed [INT/FLOAT]: The current speed setting. Allows setting a starting speed. By default it should be 0.
 * max_turnrate [INT/FLOAT]: This is the turn rate given in degrees. In the example above, the value is 90.0. This means that in a single tick, the engine can turn the object left or right by 90.0. So the useable values are -max_turnrate to max_turnrate. Negative values = left turn. Positive = right.
 
-## Scanner
-By default objects and components receive no world state except what they know about themselves. Scanners return external information. A scan consists of a series of raycasts at certain intervals. These simple scanners scan, by default, in the direction of the object. A ray will return object views for all objects it encounters. To be more precise, if a ray would encounter two objects, but the first blocks visibility of the second, only the first is returned.
+## Radar
+By default objects and components receive no world state except what they know about themselves. Radars return external information. A radar consists of a series of raycasts at certain intervals. These simple radars transmit, by default, in the direction of the object. A ray will return object views for all objects it encounters. To be more precise, if a ray would encounter two objects, but the first blocks visibility of the second, only the first is returned.
 
 ```json
 "3000": {
     "id":"3000",
-    "name": "Simple 120/20/10 Scanner",
-    "ctype": "Scanner",
+    "name": "Simple 120/20/10 Radar",
+    "ctype": "Radar",
     "active": false,
     "range":20,
     "level":1,
@@ -64,11 +64,11 @@ By default objects and components receive no world state except what they know a
 }
 ```
 * active [BOOLEAN]: Currently unused. Might be removed in the future.
-* range [INT/FLOAT]: The distance from the object the scanner will return object information.
-* level [INT]: The scan penetration value. Scan rays will penetrate any object with a *density* strictly less than their *level*, allowing scans to see behind objects.
-* visarc [INT/FLOAT]: This is half the arc degrees scanned by the scanner. In the above example, the scanner's *visarc* is 120. This means is scans 120 degrees to the left and right of the object's facing.
-* offset_angle [INT/FLOAT]: This swings the scanner to point N degrees away from the facing of the object. For example, an *offset_angle* of 180 degrees would mean the scanner points to the rear of the object.
-* resolution [INT]: The interval at which scan rays are emitted to cover the visible arc. For example, if the *visarc* were 10 and the *resolution* 10 as well, a scan command would produce three scan rays at -10, 0, and 10.
+* range [INT/FLOAT]: The distance from the object the radar will return object information.
+* level [INT]: The radar penetration value. Radar rays will penetrate any object with a *density* strictly less than their *level*, allowing radars to see behind objects.
+* visarc [INT/FLOAT]: This is half the arc degrees transmitted by the radar. In the above example, the radar's *visarc* is 120. This means is transmits 120 degrees to the left and right of the object's facing.
+* offset_angle [INT/FLOAT]: This swings the radar to point N degrees away from the facing of the object. For example, an *offset_angle* of 180 degrees would mean the radar points to the rear of the object.
+* resolution [INT]: The interval at which transmit rays are emitted to cover the visible arc. For example, if the *visarc* were 10 and the *resolution* 10 as well, a radar command would produce three transmission rays at -10, 0, and 10.
 
 ## FixedGun
 A fixed gun cannot move left and right. It points always in the direction of the vehicle.

@@ -12,6 +12,7 @@ import zmath
 import msgs
 from zexceptions import *
 import valid
+import views
 #from log import *
 
 class Sim:
@@ -22,6 +23,8 @@ class Sim:
 
         self.action_dispatch_table = {}
         self.buildActionDispatchTable()
+
+        self.view_manager = views.ViewManager()
     def reset(self):
         self.map = None
         self.objs = {}
@@ -36,7 +39,7 @@ class Sim:
         self.action_dispatch_table['HIGHSPEED_PROJECTILE'] = self.ACTN_HighspeedProjectile
         self.action_dispatch_table['MOVE']=self.ACTN_Move
         self.action_dispatch_table['TURN']=self.ACTN_Turn
-        self.action_dispatch_table['SCAN']=self.ACTN_Scan
+        self.action_dispatch_table['TRANSMIT_RADAR']=self.ACTN_TransmitRadar
         self.action_dispatch_table['BROADCAST']=self.ACTN_BroadcastMessage
 
     ##########################################################################
@@ -161,7 +164,7 @@ class Sim:
                 # Delete the chosen location so no other team mate gets it.
                 del starting_locations[sl]
 
-                # Add the agent's initial facing. If it's set to 999
+                
                 # select a random facing.
                 facing = v['facing']
                 if facing == "None":
@@ -315,8 +318,7 @@ class Sim:
     # High-speed projectile action
     def ACTN_HighspeedProjectile(self,obj,actn):
 
-        view = {}
-        view['vtype']='weapon_fired'
+        view = self.view_manager.getViewTemplate('projectile')
         view['compname']=actn.getData('compname')
         
         # Get list of cells through which the shell travels.
@@ -326,8 +328,6 @@ class Sim:
             actn.getData('direction'),
             actn.getData('range')
         )
-
-        print("CELLS HIT: ",cells_hit,actn.getData('direction'))
 
         # Get the list of cells through which the shell travels.
         damage = random.randint(actn.getData('min_damage'),actn.getData('max_damage'))
@@ -414,21 +414,19 @@ class Sim:
         obj.setData('facing',new_facing)
 
 
-    # Performs a scan
-    def ACTN_Scan(self,obj,actn):
+    # Performs a radar transmission
+    def ACTN_TransmitRadar(self,obj,actn):
 
-        view = {}
+        view = self.view_manager.getViewTemplate('radar')
         view['tick']=self.tick
-        view['vtype']='scan'
         view['ctype']=actn.getData('ctype')
         view['compname']=actn.getData('compname')
         view['slot_id']=actn.getData('slot_id')
-        view['pings']=[]
 
         # Set up the necessary data for easy access
-        scan_facing = actn.getData('facing')+actn.getData('offset_angle')
-        start = scan_facing-actn.getData('visarc')
-        end = scan_facing+actn.getData('visarc')
+        radar_facing = actn.getData('facing')+actn.getData('offset_angle')
+        start = radar_facing-actn.getData('visarc')
+        end = radar_facing+actn.getData('visarc')
         angle = start
         jump = actn.getData('resolution')
         x = actn.getData('x')
@@ -446,17 +444,17 @@ class Sim:
                 x,y,angle,_range
             )
             # Pings should be in order. Start adding if they're not there.
-            # If the scanner's level is less than the obj's density, stop. We can't see through.
+            # If the radar's level is less than the obj's density, stop. We can't see through.
             # Else keep going.
 
             
             for ping in pings:
 
-                # Scanned ourself
+                # Pinged ourself
                 if ping['x']==x and ping['y']==y:
                     pass
                 else:
-                    # For now all we're giving the scanning player
+                    # For now all we're giving the transmitting player
                     # the object name. Up to the player to figure out
                     # if this is a teammate.
                     ping['objname']=self.objs[ping['uuid']].getData('objname')
@@ -473,7 +471,7 @@ class Sim:
                     ping['cell_y']=self.objs[ping['uuid']].getData('cell_y')
                     temp_view.append(ping)
                     
-                    # If our scan level can't penetrate the object, stop.
+                    # If our radar level can't penetrate the object, stop.
                     if actn.getData('level') < self.objs[ping['uuid']].getData('density'):
                         break
 

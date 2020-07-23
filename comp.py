@@ -19,9 +19,9 @@ class Comp:
         elif ctype=='Engine':
             self.Update = self.EngineUpdate
             self.setViewKeysEngine()
-        elif ctype=='Scanner':
-            self.Update = self.ScannerUpdate
-            self.setViewKeysScanner()
+        elif ctype=='Radar':
+            self.Update = self.RadarUpdate
+            self.setViewKeysRadar()
         elif ctype=='CnC':
             self.Update = self.CnCUpdate
             self.setViewKeysCnC()
@@ -53,7 +53,7 @@ class Comp:
         self.view_keys += [
             'min_speed','max_speed','cur_speed','max_turnrate','cur_turnrate'
         ]
-    def setViewKeysScanner(self):
+    def setViewKeysRadar(self):
         self.view_keys += [
             'active','range','level','visarc','offset_angle','resolution'
         ]
@@ -160,11 +160,10 @@ class Comp:
         return actions
 
     ###################################
-    # Scanner Update
-    def ScannerUpdate(self, cmd):
+    # Radar Update
+    def RadarUpdate(self, cmd):
 
         actions = []
-
         # if 'command' in cmd:
         #     if cmd['command']=='ACTIVATE':
         #         self.setData('active',True)
@@ -172,9 +171,9 @@ class Comp:
         #         self.setData('active',False)
 
         if 'command' in cmd:
-            if cmd['command']=='SCAN':
+            if cmd['command']=='TRANSMIT_RADAR':
                 a = action.Action()
-                a.setType('SCAN')
+                a.setType('TRANSMIT_RADAR')
                 a.addData('slot_id',self.getData('slot_id'))
                 a.addData('compname',self.getData('name'))
                 a.addData('ctype',self.getData('ctype'))
@@ -241,6 +240,6 @@ class Comp:
 
 
     ###########################################################################
-    ## SCANNER RELATED FUCNTIONS
-    def isScanning(self):
+    ## RADAR RELATED FUCNTIONS
+    def isTransmitting(self):
         return self.getData('active')

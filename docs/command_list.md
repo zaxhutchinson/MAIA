@@ -25,10 +25,10 @@ a non-zero number will cause the object to move.
     * 'turnrate': [FLOAT]
     * action: None
 
-## Scanner
-* **SCAN:** Initiates a one-time scan of the environment.
-    * 'command':'SCAN'
-    * action: 'SCAN'
+## Radar
+* **TRANSMIT_RADAR:** Initiates a one-time transmission.
+    * 'command':'TRANSMIT_RADAR'
+    * action: 'TRANSMIT_RADAR'
 
 ## Radio
 * **BROADCAST** Sends out a map-wide broadcast out to the range of the radio.
