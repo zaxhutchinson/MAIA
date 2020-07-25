@@ -9,7 +9,7 @@ import queue
 
 import sim
 import loader
-from log import *
+import log
 import ui_sim
 import msgs
 from zexceptions import *
@@ -33,6 +33,11 @@ class UISetup(tk.Frame):
         self.ldr = loader.Loader()
         self.sim = sim.Sim(self.imsgr)
 
+        log.LogInit()
+        log_setting = self.ldr.getMainConfigData('debug')
+        if type(log_setting)==bool:
+            log.LogSetDebug(log_setting)
+            log.LogDebug("DEBUG IS ON")
         
 
         self.combat_log = []
@@ -198,9 +203,9 @@ class UISetup(tk.Frame):
                 self.sim.addTeamName(side_selection,team_name)
                 self.updateTeamNames()
             else:
-                LogError("App::addTeam() - No side or team selected.")
+                log.LogError("App::addTeam() - No side or team selected.")
         else:
-            LogError("App::addTeam() - Sim is missing the map.")
+            log.LogError("App::addTeam() - Sim is missing the map.")
     def removeTeam(self):
         # side_index = self.lbSideNames.curselection()
         # if len(side_index) > 0:

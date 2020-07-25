@@ -89,8 +89,7 @@ class Comp:
 
         actions = []
 
-        # See if we were reloading
-        self.updateReloading()        
+               
 
         if 'command' in cmd:
             if cmd['command']=='FIRE':
@@ -110,11 +109,14 @@ class Comp:
 
             elif cmd['command']=='RELOAD':
                 
-                # We can reload if we aren't reload,
+                # We can reload if we aren't reloading,
                 #   we are not currently loaded
                 #   and we have ammo left.
                 if not self.data['reloading'] and not self.isLoaded() and self.getData('ammunition')>0:
                     self.data['reloading']=True
+
+        # See if we were reloading
+        self.updateReloading() 
 
         return actions
 
@@ -228,6 +230,8 @@ class Comp:
                 self.data['reload_ticks_remaining'] -= 1
                 if self.data['reload_ticks_remaining']==0:
                     self.data['reloading']=False
+            else:
+                self.data['reloading']=False
 
 
     ###########################################################################

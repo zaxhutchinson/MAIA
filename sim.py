@@ -28,6 +28,7 @@ class Sim:
     def reset(self):
         self.map = None
         self.objs = {}
+        self.items = {}
         self.destroyed_objs={}
         self.sides={}
         self.ticks_per_turn=1
@@ -135,6 +136,19 @@ class Sim:
                     newobj.place(data)
                     self.objs[data['uuid']]=newobj
                     self.map.addObj(data['x'],data['y'],data['uuid'])
+
+        # Add all placed items
+        pl_items = self.map.getData('placed_items')
+        for iid,lst in pl_items.items():
+            for i in lst:
+                # If an item entry does not have a position, ignore.
+                if 'x' in i and 'y' in i:
+                    newitem = ldr.copyItemTemplate(iid)
+                    data=i
+                    data['uuid']=uuid.uuid4()
+                    newitem.place(data)
+                    self.items[data['uuid']]=newitem
+                    self.map.addItem(data['x'],data['y'],data['uuid'])
 
         # Add teams and ai-controlled objs
         for k,v in self.sides.items():
@@ -297,17 +311,21 @@ class Sim:
 
     def processCommands(self,objuuid,cmds):
 
-        obj = self.objs[objuuid]
-        
-        # Send the commands to the object so they can be
-        # processed. This returns a list of actions.
-        actions = self.objs[objuuid].processCommands(cmds)
+        # Prevents commands from objs destroyed in this tick
+        # from taking place.
+        if objuuid in self.objs:
 
-        # Dispatch each action to the function that
-        # handles its execution.
-        for a in actions:
+            obj = self.objs[objuuid]
+            
+            # Send the commands to the object so they can be
+            # processed. This returns a list of actions.
+            actions = self.objs[objuuid].processCommands(cmds)
 
-            self.action_dispatch_table[a.getType()](obj,a)
+            # Dispatch each action to the function that
+            # handles its execution.
+            for a in actions:
+
+                self.action_dispatch_table[a.getType()](obj,a)
 
     ##########################################################################
     # ACTION PROCESSING FUNCTIONS
@@ -469,6 +487,7 @@ class Sim:
                     ping['direction']=direction
                     ping['cell_x']=self.objs[ping['uuid']].getData('cell_x')
                     ping['cell_y']=self.objs[ping['uuid']].getData('cell_y')
+                    ping['alive']=self.objs[ping['uuid']].isAlive()
                     temp_view.append(ping)
                     
                     # If our radar level can't penetrate the object, stop.
@@ -517,22 +536,19 @@ class Sim:
         self.objs[_uuid].damageObj(damage)
         
         # If obj is dead, remove it.
-        if self.objs[_uuid].getData('alive')==False:
+        # if self.objs[_uuid].isAlive()==False:
 
-            dead_obj = self.objs[_uuid]
-            # Remove from map
-            self.map.removeObj(dead_obj.getData('x'),dead_obj.getData('y'),dead_obj.getData('uuid'))
-            # Remove from obj dict
-            del self.objs[_uuid]
-            # Remove from team
-            # side = dead_obj.getData('side')
-            # del self.sides[side]['agents'][_uuid]
+        #     dead_obj = self.objs[_uuid]
+        #     # Remove from map
+        #     self.map.removeObj(dead_obj.getData('x'),dead_obj.getData('y'),dead_obj.getData('uuid'))
+        #     # Remove from obj dict
+        #     del self.objs[_uuid]
 
-            # Add to destroyed objs
-            self.destroyed_objs[_uuid]=dead_obj
+        #     # Add to destroyed objs
+        #     self.destroyed_objs[_uuid]=dead_obj
 
-            # Log destruction
-            self.logMsg("DESTROYED",dead_obj.getData('callsign')+" was destroyed.")
+        #     # Log destruction
+        #     self.logMsg("DESTROYED",dead_obj.getData('callsign')+" was destroyed.")
 
 
     ##########################################################################
@@ -547,6 +563,11 @@ class Sim:
             dd.append(obj.getDrawData())
         return dd
 
+    def getItemDrawData(self):
+        dd = []
+        for item in self.items.values():
+            dd.append(item.getDrawData())
+        return dd
 
     ##########################################################################
     # SEND MESSAGE TO HANDLER

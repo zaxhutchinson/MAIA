@@ -1,0 +1,10 @@
+{
+    "0": {
+        "id":"0",
+        "name":"blue flag",
+        "weight":1,
+        "bulk":100,
+        "text":"o",
+        "fill":"white"
+    }
+}

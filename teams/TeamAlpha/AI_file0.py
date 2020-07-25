@@ -1,3 +1,10 @@
+##########################################################
+# TEST AI
+#
+# This file is meant to test the various features of MAIA.
+# And to test the methods in ai_helpers.py file.
+###########################################################
+
 #import teams.TeamAlpha.ai_helpers0 as aih
 import ai_helpers as aih
 import math
@@ -54,7 +61,7 @@ class AI:
                 self.total_turn_rate += engine['max_turnrate']
             self.first_turn=False
         else:
-            pass
+            self.cmd_maker.reset()
         
         
         # Get some things we'll need
@@ -65,6 +72,7 @@ class AI:
 
         # Reload all weapons that need it
         for gun in self.by_ctype['FixedGun']:
+            print("DOES IT NEED RELOADING: ",aih.doesWeaponNeedReloading(view,gun))
             if aih.doesWeaponNeedReloading(view,gun):
                 #print("Reloading"+str(gun))
                 self.cmd_maker.addCmd(0,gun,aih.CMD_Reload())
@@ -91,7 +99,7 @@ class AI:
         enemy_pings = []
         for sv in radar_views:
             for ping in sv['pings']:
-                if ping['objname']=='Tank':
+                if ping['objname']=='Tank' and ping['alive']:
                     enemy_pings.append(ping)
 
 

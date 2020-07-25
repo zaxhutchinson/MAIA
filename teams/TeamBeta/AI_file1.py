@@ -7,7 +7,7 @@ class AI:
     def initData(self,sim_data):
         self.sim_data = sim_data
 
-
+        self.cmd_maker = aih.CmdMaker()
 
 
     # Implement AI here.
@@ -15,5 +15,7 @@ class AI:
     # specifications. Can return empty dictionary or None if there are no
     # commands.
     def runAI(self,data):
-        pass#aih.prettyPrintView(data)
+        print(data['self'])
+        self.cmd_maker.addCmd(0,2,aih.CMD_SetSpeed(1.0))
 
+        return self.cmd_maker.getCmds()

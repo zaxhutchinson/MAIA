@@ -1,3 +1,11 @@
+**Version 0.13**
+July 25, 2020
+- Restructures tile and object tkinter drawing code to be more efficient. Large maps (200x200) have very little, if any, lag in redrawing now.
+- Fixes major bug where sim tries to execute the commands of destroyed objects.
+- Adds debug log. Debug log, when on, tracks user errors, e.g. ill-formed commands. This is different from the Error log, which tracks states into which MAIA should not find itself. They have been separated to provide a cleaner way for users to debug AI code.
+- Destroyed objects now remain on the map. runAI and other methods are not called for destroyed objects. They become, in essence, a heap of indestructible rubble that prevents movement. So it is possible to block paths by destroying objects. Another data point was added to make a graphical change to destroyed objects by changing the color. Still needs more testing.
+- Formally adds items. They are currently non-functional. They do not impede movement, but they do appear on the map. Functionality will require adding a new component type capable of picking up and storing items.
+
 **Version 0.12**
 July 23, 2020
 - Adds ViewManager which creates a single place to template views. This will help creating views when there are more than one action capable of creating the same type of view.

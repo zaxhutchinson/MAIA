@@ -3,5 +3,7 @@
     
     "ticks_per_turn" : 1,
 
-    "no_ui_max_turns": 100
+    "no_ui_max_turns": 100,
+
+    "debug": true
 }

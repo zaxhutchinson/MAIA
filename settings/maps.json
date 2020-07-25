@@ -3,9 +3,32 @@
         "name" : "Map 2",
         "edge_obj_id": "0",
         "desc" : "This is a test map used during development of the initial code. And this string is long so that I can test how it is displayed inside the Tkinter window.",
-        "width" : 10,
-        "height" : 10,
-        "placed_objects" : {},
+        "width" : 200,
+        "height" : 200,
+        "placed_objects" : {
+            "1" : [
+                {
+                    "x": 10,
+                    "y":10,
+                    "damage":0.0,
+                    "facing":0
+                },
+                {
+                    "x": 10,
+                    "y":11,
+                    "damage":0.0,
+                    "facing":0
+                }
+            ]
+        },
+        "placed_items" : {
+            "0" : [
+                {
+                    "x":5,
+                    "y":5
+                }
+            ]
+        },
         "sides": {
             "blue" : {
                 "starting_locations": [

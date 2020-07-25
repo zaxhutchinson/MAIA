@@ -95,6 +95,7 @@ def canWeaponFire(view,slotID):
     return comp['reload_ticks_remaining']==0 and comp['ammunition']>0
 def doesWeaponNeedReloading(view, slotID):
     comp = getCompBySlotID(view,slotID)
+    print(comp['reload_ticks_remaining'], comp['reloading'])
     return comp['reload_ticks_remaining'] > 0 and not comp['reloading']
 def isWeaponReloading(view, slotID):
     comp = getCompBySlotID(view,slotID)
@@ -161,9 +162,16 @@ def getCompViewsOfVtype(view, vtype):
 ##############################################################################
 ##############################################################################
 
+# Command Maker helps creating the command dictionary the simulation expects
+# to be returned from the runAI method. Create the object and store.
+# Add commands use addCmd. Use getCmds() as your return from runAI().
+# At the start of your runAI(), include a call to reset().
 class CmdMaker:
     def __init__(self):
         self.cmds = {}
+
+    def reset(self):
+        self.cmds.clear()
 
     def getCmds(self):
         return self.cmds

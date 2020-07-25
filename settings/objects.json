@@ -2,7 +2,8 @@
     "0" : {
         "id": "0",
         "objname" : "Indestructible Block",
-        "color":"gray1",
+        "fill_alive":"gray1",
+        "fill_dead":"black",
         "text":"X",
         "health" : 100000000000000000000,
         "density":1000,
@@ -11,7 +12,8 @@
     "1" : {
         "id": "1",
         "objname" : "Box",
-        "color":"tan4",
+        "fill_alive":"tan4",
+        "fill_dead":"black",
         "text":"B",
         "health" : 10,
         "density":1000,
@@ -20,7 +22,8 @@
     "2" : {
         "id": "2",
         "objname" : "Tank",
-        "color":"purple1",
+        "fill_alive":"purple1",
+        "fill_dead":"black",
         "text":"&",
         "health" : 100,
         "density":1000,

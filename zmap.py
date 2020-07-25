@@ -4,7 +4,7 @@ import random
 import loader
 import obj
 import vec2
-from log import *
+import log
 import zmath
 
 class Map:
@@ -25,20 +25,34 @@ class Map:
     # it means we do not have to worry about accounting for edge
     # boundries as they cannot be reached (if the edge obj is indestructible).
     def buildMapGrid(self):
-        newmap=[]
+        obj_grid=[]
+        item_grid=[]
         for x in range(self.data['width']+2):
-            newcol = []
+            obj_newcol = []
+            item_newcol = []
             for y in range(self.data['height']+2):
-                newcol.append(None)
-            newmap.append(newcol)
+                obj_newcol.append(None)
+                item_newcol.append([])
+            obj_grid.append(obj_newcol)
+            item_grid.append(item_newcol)
 
-        self.data['grid']=newmap
+        self.data['obj_grid']=obj_grid
+        self.data['item_grid']=item_grid
 
     def addObj(self,x,y,_uuid):
-        self.data['grid'][x][y]=_uuid
+        self.data['obj_grid'][x][y]=_uuid
     def removeObj(self,x,y,_uuid):
-        if self.data['grid'][x][y]==_uuid:
-            self.data['grid'][x][y]=None
+        if self.data['obj_grid'][x][y]==_uuid:
+            self.data['obj_grid'][x][y]=None
+
+    def addItem(self,x,y,_uuid):
+        if _uuid not in self.data['item_grid'][x][y]:
+            self.data['item_grid'][x][y].append(_uuid)
+    def removeItem(self,x,y,_uuid):
+        if _uuid in self.data['item_grid'][x][y]:
+            self.data['item_grid'][x][y].remove(_uuid)
+    def getItemsInCell(self,x,y):
+        return self.data['item_grid'][x][y]
 
     # Creates a list of the coordinates of the world edge.
     def getListOfEdgeCoordinates(self):
@@ -54,12 +68,12 @@ class Map:
         return edge_coords
 
     def isCellEmpty(self,x,y):
-        return self.getData('grid')[x][y]==None
+        return self.getData('obj_grid')[x][y]==None
     def getCellOccupant(self,x,y):
-        return self.getData('grid')[x][y]
+        return self.getData('obj_grid')[x][y]
 
     def moveObjFromTo(self,objuuid,from_x,from_y,to_x,to_y):
-        grid = self.getData('grid')
+        grid = self.getData('obj_grid')
         if grid[from_x][from_y]==objuuid:
             grid[from_x][from_y]=None
             grid[to_x][to_y]=objuuid
@@ -68,7 +82,7 @@ class Map:
 
         found_objs = []
 
-        grid = self.getData('grid')
+        grid = self.getData('obj_grid')
 
         cells = zmath.getCellsAlongTrajectory(x,y,angle,distance)
 
