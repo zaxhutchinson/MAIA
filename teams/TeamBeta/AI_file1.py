@@ -15,7 +15,6 @@ class AI:
     # specifications. Can return empty dictionary or None if there are no
     # commands.
     def runAI(self,data):
-        print(data['self'])
         self.cmd_maker.addCmd(0,2,aih.CMD_SetSpeed(1.0))
 
         return self.cmd_maker.getCmds()

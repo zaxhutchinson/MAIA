@@ -100,7 +100,7 @@ class CommandValidator:
                         break
 
             # Delete all the malformed component commands
-            #print("deleting2",bad_cmds2)
+
             for bc in bad_cmds2:
                 del cmds[tick][bc]
 
@@ -112,7 +112,7 @@ class CommandValidator:
                 continue
 
         # Delete all commands for this tick.
-        #print("deleting1",bad_cmds1)
+
         for bc in bad_cmds1:
             del cmds[bc]
 
@@ -124,8 +124,5 @@ if __name__ == "__main__":
 
     cmd = {'0': {'0': {'command': 'BROADCAST', 'message': []}},'1': {'5': {'commad': 'SET_RANGE', 'range': 1.0}}}
 
-    print(cmd)
 
     newcmd = cv.validateCommands(cmd)
-
-    print(newcmd)

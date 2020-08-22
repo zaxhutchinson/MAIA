@@ -30,7 +30,7 @@
             ]
         },
         "sides": {
-            "blue" : {
+            "Blue" : {
                 "starting_locations": [
                     [1,1]
                 ],
@@ -39,9 +39,9 @@
                     [2,1]
                 ]
             },
-            "red" : {
+            "Red" : {
                 "starting_locations": [
-                    [8,7]
+                    [2,1]
                 ],
                 "facing":180,
                 "goal_locations":[

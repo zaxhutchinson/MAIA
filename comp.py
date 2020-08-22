@@ -142,7 +142,6 @@ class Comp:
                     newturnrate = cmd['turnrate']
                     if abs(newturnrate) <= self.getData('max_turnrate'):
                         self.data['cur_turnrate']=newturnrate
-                        print("NEW TURN RATE SET",newturnrate)
 
 
 

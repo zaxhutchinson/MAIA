@@ -19,10 +19,6 @@ class AI:
     def initData(self, sim_data):
         self.sim_data = sim_data
 
-        #print("SIM DATA",sim_data)
-
-
-
         # AI data structures
 
         # How far are the obstacles N,E,S,W
@@ -48,10 +44,6 @@ class AI:
     # commands.
     def runAI(self,view):
 
-        #print (view)
-
-        #print("THE FULL VIEW: ",view)
-
         if self.first_turn:
             self.by_ctype = aih.getSlotIDsByCtype(view)
 
@@ -68,13 +60,10 @@ class AI:
         my_facing = aih.getFacing(view)
         my_x = aih.getX(view)
         my_y = aih.getY(view)
-        #print("FACING: ",my_facing)
 
         # Reload all weapons that need it
         for gun in self.by_ctype['FixedGun']:
-            print("DOES IT NEED RELOADING: ",aih.doesWeaponNeedReloading(view,gun))
             if aih.doesWeaponNeedReloading(view,gun):
-                #print("Reloading"+str(gun))
                 self.cmd_maker.addCmd(0,gun,aih.CMD_Reload())
 
         
@@ -137,8 +126,6 @@ class AI:
                 # Shift the values to make it easier for knowing
                 # if a left or right turn is closer.
 
-                print("Closest enemy is "+str(closest_dist)+" away at heading "+str(dir_to_turn))
-
                 # if dir_to_turn > 180:
                 #     dir_to_turn -= 360
                 theta = dir_to_turn - my_facing
@@ -146,21 +133,16 @@ class AI:
                     theta += 360
                 if theta > 180:
                     theta -= 360
-                #print("THETA: ",theta)
                 
                 # If we're within the targeting_epsilon, fire what we can.
                 if abs(theta) < self.targeting_epislon:
                     for gun in self.by_ctype['FixedGun']:
                         if aih.canWeaponFire(view,gun):
-                            print("FixedGun",gun,"fired.")
                             self.cmd_maker.addCmd(0,gun,aih.CMD_Fire())
 
                 # If we can't turn all the way in one tick
                 # turn the max amount.
                 if abs(theta) > 0:
-                    # if abs(theta) > self.total_turn_rate:
-                    #     theta = self.total_turn_rate * aih.sign(theta)
-                    #print("Turning",theta,"degrees")
 
                     for engine_slot in self.by_ctype['Engine']:
                         engine_comp = aih.getCompBySlotID(view,engine_slot)
@@ -174,11 +156,12 @@ class AI:
                             turn_rate = aih.sign(theta) * engine_comp['max_turnrate']
                             self.cmd_maker.addCmd(0,engine_slot,aih.CMD_Turn(turn_rate))
                             theta -= turn_rate
+
+        else:
+            for engine_slot in self.by_ctype['Engine']:
+                self.cmd_maker.addCmd(0,engine_slot,aih.CMD_SetSpeed(1.0))
                     
 
-
-
-        print("COMMANDS: ",self.cmd_maker.getCmds())
         return self.cmd_maker.getCmds()
 
 

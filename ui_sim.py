@@ -85,6 +85,8 @@ class UISim(tk.Toplevel):
         self.btnFrame1.pack(fill=tk.BOTH,expand=True,side=tk.TOP)
         self.btnRunXTurns = uiButton(master=self.btnFrame1,text="Run X Turns",command=self.runXTurns)
         self.btnRunXTurns.pack(fill=tk.BOTH,expand=True,side=tk.LEFT)
+        self.btnDisplayPoints = uiButton(master=self.btnFrame1,text="Display Points",command=self.displayPoints)
+        self.btnDisplayPoints.pack(fill=tk.BOTH,expand=True,side=tk.LEFT)
 
         self.logFrame.after(100, self.updateLog)
 
@@ -216,5 +218,9 @@ class UISim(tk.Toplevel):
 
         self.updateObjects()
         self.updateItems()
+
+    def displayPoints(self):
+        self.sim.getPointsData()
+
 
         

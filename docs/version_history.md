@@ -1,3 +1,9 @@
+**Version 0.14**
+August 22, 2020
+- Reworked the destruction of objs. Destroyed objs can change color and are removed from the internal map list, but still show up on the map. However, they do not impede movement or lines of fire. Other objects cannot see them.
+- Points have been added to objects. If points_count is true, then any damage done to objects of that type will award the damage amount as points to the damaging object. Damage as points cuts off when the total damage done to an object reaches the health amount.
+- The order in which commands are carried out each tick is randomized.
+
 **Version 0.13**
 July 25, 2020
 - Restructures tile and object tkinter drawing code to be more efficient. Large maps (200x200) have very little, if any, lag in redrawing now.

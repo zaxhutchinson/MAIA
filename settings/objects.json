@@ -7,7 +7,8 @@
         "text":"X",
         "health" : 100000000000000000000,
         "density":1000,
-        "comp_ids" : []
+        "comp_ids" : [],
+        "points_count" : false
     },
     "1" : {
         "id": "1",
@@ -17,7 +18,8 @@
         "text":"B",
         "health" : 10,
         "density":1000,
-        "comp_ids" : []
+        "comp_ids" : [],
+        "points_count" : false
     },
     "2" : {
         "id": "2",
@@ -27,6 +29,7 @@
         "text":"&",
         "health" : 100,
         "density":1000,
-        "comp_ids" : ["0","1000","2000","3000","4000"]
+        "comp_ids" : ["0","1000","2000","3000","4000"],
+        "points_count" : true
     }
 }

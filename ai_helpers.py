@@ -95,7 +95,6 @@ def canWeaponFire(view,slotID):
     return comp['reload_ticks_remaining']==0 and comp['ammunition']>0
 def doesWeaponNeedReloading(view, slotID):
     comp = getCompBySlotID(view,slotID)
-    print(comp['reload_ticks_remaining'], comp['reloading'])
     return comp['reload_ticks_remaining'] > 0 and not comp['reloading']
 def isWeaponReloading(view, slotID):
     comp = getCompBySlotID(view,slotID)

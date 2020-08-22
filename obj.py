@@ -10,19 +10,12 @@ _2PI = 2.0*math.pi
 class Object:
     def __init__(self,data):
         self.data = data
-        #self.data['id']=data['id']
-        #self.data['objname']=data['objname']
-        #self.data['text']=data['text']
-        #self.data['fill']=data['fill']
-        #self.data['health']=data['health']
         self.data['damage']=0.0
         self.data['facing']=0.0
-        #self.data['density']=data['density']
         self.data['x']=None
         self.data['y']=None
         self.data['cell_x']=0.5
         self.data['cell_y']=0.5
-        #self.data['comp_ids']=data['comp_ids']
         self.data['comps']={}
         self.data['uuid']=None
         self.data['ai']=None
@@ -31,6 +24,7 @@ class Object:
         self.data['callsign']=None
         self.data['squad']=None
         self.data['redraw']=True
+        self.data['points']=0
         
         self.view_keys = [
             'health','damage','facing','x','y','cell_x','cell_y','objname','teamname',
@@ -76,13 +70,22 @@ class Object:
 
     def damageObj(self,amt):
         # Add damage to current total
-        new_damage = self.getData('damage') + amt
+        old_damage = self.getData('damage')
+        new_damage = old_damage + amt
         self.setData('damage',new_damage)
+
+        points = 0
+        if self.getData('points_count'):
+            points = amt
 
         # If it's still alive and damage is greater than health,
         # OBJECT IS DESTROYED.
         if self.isAlive() and new_damage >= self.getData('health'):
             self.setData('alive',False)
+
+            points = self.getData('health')-old_damage
+
+        return points
 
     def getDrawData(self):
         fill = self.getData('fill_alive')

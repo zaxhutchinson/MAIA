@@ -236,7 +236,7 @@ class Sim:
         for name,data in self.sides.items():
             team_eliminated = True
 
-            for uuid,obj in data['team']['agents'].items():
+            for obj in data['team']['agents'].values():
                 if obj.getData('alive'):
                     team_eliminated=False
                     break
@@ -251,13 +251,26 @@ class Sim:
             return True
         return False
 
+    def getPointsData(self):
+        msg = ""
+        for name,data in self.sides.items():
+            msg += "  TEAM: "+name+"\n"
+            total = 0
+            for obj in data['team']['agents'].values():
+                msg += "    "+obj.getBestDisplayName()+": "+str(obj.getData('points'))+"\n"
+                total += obj.getData('points')
+            msg += "    TOTAL: "+str(total)+"\n"
+
+        m=msgs.Msg(str(self.tick),"CURRENT POINTS",msg)
+        self.imsgr.addMsg(m)
+                
+
     ##########################################################################
     # RUN SIM
     def runSim(self, turns):
 
-        objuuids_list = list(self.objs.keys())
-        # Shuffle the obj uuids
-        random.shuffle(objuuids_list)
+        
+        
         
         for turn in range(turns):
             # A place to store the commands by uuid and tick
@@ -267,7 +280,9 @@ class Sim:
             general_view = self.getGeneralView()
 
             # Run all obj's updates, storing the returned commands
+            # Don't need to shuffle order while getting commands
             for objuuid,obj in self.objs.items():
+
                 cmd = None
                 view = {}
                 view['general']=general_view
@@ -288,15 +303,21 @@ class Sim:
             # Flush the obj_views, so no one gets old data.
             self.comp_views = {}
             
+            # Get the list of obj uuids which have issued cmds.
+            objuuids_list = list(cmds_by_uuid.keys())
+
             # Run each tick
             for tick in range(self.ticks_per_turn):
-
                 self.imsgr.addMsg(msgs.Msg(self.tick,"---NEW TICK---",""))
+
+                # Shuffle turn order.
+                random.shuffle(objuuids_list)
 
                 # Check all commands to see if there is
                 # something to do this tick.
-                for objuuid,objcmds in cmds_by_uuid.items():
-                    
+                #for objuuid,objcmds in cmds_by_uuid.items():
+                for objuuid in objuuids_list:
+                    objcmds = cmds_by_uuid[objuuid]
                     if str(tick) in objcmds:
                         cmds_this_tick = objcmds[str(tick)]
                         self.processCommands(objuuid,cmds_this_tick)
@@ -366,7 +387,9 @@ class Sim:
                     " for "+str(damage)+" points of damage."
                 self.logMsg("DAMAGE",damage_str)
 
-                self.damageObj(id_in_cell,damage)
+                points = self.damageObj(id_in_cell,damage)
+
+                obj.setData('points',points)
 
                 break
 
@@ -533,22 +556,26 @@ class Sim:
 
     def damageObj(self,_uuid,damage):
         # Damage object
-        self.objs[_uuid].damageObj(damage)
+        points = self.objs[_uuid].damageObj(damage)
         
         # If obj is dead, remove it.
-        # if self.objs[_uuid].isAlive()==False:
+        if not self.objs[_uuid].isAlive():
 
-        #     dead_obj = self.objs[_uuid]
-        #     # Remove from map
-        #     self.map.removeObj(dead_obj.getData('x'),dead_obj.getData('y'),dead_obj.getData('uuid'))
-        #     # Remove from obj dict
-        #     del self.objs[_uuid]
+            dead_obj = self.objs[_uuid]
+            # Remove from map
+            
+            self.map.removeObj(dead_obj.getData('x'),dead_obj.getData('y'),dead_obj.getData('uuid'))
+            
+            # Remove from obj dict
+            del self.objs[_uuid]
 
-        #     # Add to destroyed objs
-        #     self.destroyed_objs[_uuid]=dead_obj
+            # # Add to destroyed objs
+            self.destroyed_objs[_uuid]=dead_obj
 
-        #     # Log destruction
-        #     self.logMsg("DESTROYED",dead_obj.getData('callsign')+" was destroyed.")
+            # # Log destruction
+            # self.logMsg("DESTROYED",dead_obj.getData('callsign')+" was destroyed.")
+
+        return points
 
 
     ##########################################################################
@@ -559,6 +586,8 @@ class Sim:
 
     def getObjDrawData(self):
         dd = []
+        for obj in self.destroyed_objs.values():
+            dd.append(obj.getDrawData())
         for obj in self.objs.values():
             dd.append(obj.getDrawData())
         return dd
