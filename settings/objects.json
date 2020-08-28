@@ -1,7 +1,7 @@
 {
     "0" : {
         "id": "0",
-        "objname" : "Indestructible Block",
+        "name" : "Indestructible Block",
         "fill_alive":"gray1",
         "fill_dead":"black",
         "text":"X",
@@ -12,7 +12,7 @@
     },
     "1" : {
         "id": "1",
-        "objname" : "Box",
+        "name" : "Box",
         "fill_alive":"tan4",
         "fill_dead":"black",
         "text":"B",
@@ -23,7 +23,7 @@
     },
     "2" : {
         "id": "2",
-        "objname" : "Tank",
+        "name" : "Tank",
         "fill_alive":"purple1",
         "fill_dead":"black",
         "text":"&",

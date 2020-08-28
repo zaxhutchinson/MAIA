@@ -80,23 +80,42 @@ class Map:
 
     def getAllObjUUIDAlongTrajectory(self,x,y,angle,distance):
 
-        found_objs = []
+        found = {}
+        found['objects']=[]
+        found['items']=[]
 
-        grid = self.getData('obj_grid')
+        # Get refs to the two grids
+        obj_grid = self.getData('obj_grid')
+        item_grid = self.getData('item_grid')
 
+        # Get the cells
         cells = zmath.getCellsAlongTrajectory(x,y,angle,distance)
 
+        # So long as we're in the map,
+        # If the obj or item grid cell is not None
+        # create a ping and save it.
         for cell in cells:
             if 0 <= cell[0] < self.getData('width') and 0<=cell[1]<self.getData('height'):
-                if grid[cell[0]][cell[1]] != None:
-                    _uuid = grid[cell[0]][cell[1]]
+                if obj_grid[cell[0]][cell[1]] != None:
+                    _uuid = obj_grid[cell[0]][cell[1]]
                     ping = {}
                     ping['x']=cell[0]
                     ping['y']=cell[1]
                     ping['distance']=zmath.distance(x,y,cell[0],cell[1])
                     ping['uuid']=_uuid
-                    found_objs.append(ping)
+                    ping['type']='object'
+                    found['objects'].append(ping)
+                if len(item_grid[cell[0]][cell[1]]) > 0:
+                    for i in item_grid[cell[0]][cell[1]]:
+                        ping={}
+                        ping['x']=cell[0]
+                        ping['y']=cell[1]
+                        ping['distance']=zmath.distance(x,y,cell[0],cell[1])
+                        ping['uuid']=i
+                        ping['type']='item'
+                        found['items'].append(ping)
+                
             else:
                 break
 
-        return found_objs
+        return found

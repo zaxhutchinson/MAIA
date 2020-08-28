@@ -126,7 +126,7 @@ def searchRadarForObjname(view,name):
             # Search the radar views for pings with a matching obj name.
             for sv in radar_views:
                 for vec,data in sv['pings'].items():
-                    if data['objname']==name:
+                    if data['name']==name:
                         if k not in found_pings:
                             found_pings[k]={}
                             found_pings[k][vec]=[]

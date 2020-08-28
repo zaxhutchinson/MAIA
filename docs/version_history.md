@@ -1,3 +1,8 @@
+**Version 0.15**
+August 23, 2020
+- Items are now visible in radar views. Items cannot block scans like objects.
+- Renamed 'objname' data point to 'name'.
+
 **Version 0.14**
 August 22, 2020
 - Reworked the destruction of objs. Destroyed objs can change color and are removed from the internal map list, but still show up on the map. However, they do not impede movement or lines of fire. Other objects cannot see them.

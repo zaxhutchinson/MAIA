@@ -381,7 +381,7 @@ class Sim:
 
                 view['hit_x']=cell[0]
                 view['hit_y']=cell[1]
-                view['objname']=self.objs[id_in_cell].getData('objname')
+                view['name']=self.objs[id_in_cell].getData('name')
 
                 damage_str = obj.getBestDisplayName()+" shot "+self.objs[id_in_cell].getBestDisplayName() + \
                     " for "+str(damage)+" points of damage."
@@ -480,16 +480,17 @@ class Sim:
 
         # While we're in our arc of visibility
         while angle <= end:
-            # Get all objects along this angle
+            # Get all object/item pings along this angle
             pings = self.map.getAllObjUUIDAlongTrajectory(
                 x,y,angle,_range
             )
             # Pings should be in order. Start adding if they're not there.
             # If the radar's level is less than the obj's density, stop. We can't see through.
             # Else keep going.
-
+            obj_pings = pings['objects']
+            item_pings = pings['items']
             
-            for ping in pings:
+            for ping in obj_pings:
 
                 # Pinged ourself
                 if ping['x']==x and ping['y']==y:
@@ -498,7 +499,7 @@ class Sim:
                     # For now all we're giving the transmitting player
                     # the object name. Up to the player to figure out
                     # if this is a teammate.
-                    ping['objname']=self.objs[ping['uuid']].getData('objname')
+                    ping['name']=self.objs[ping['uuid']].getData('name')
                     
                     # Make sure the reported direction is 0-360
                     direction = angle
@@ -516,6 +517,24 @@ class Sim:
                     # If our radar level can't penetrate the object, stop.
                     if actn.getData('level') < self.objs[ping['uuid']].getData('density'):
                         break
+
+            for ping in item_pings:
+
+                item = self.items[ping['uuid']]
+
+                # Make sure the reported direction is 0-360
+                direction = angle
+                if direction < 0:
+                    direction += 360
+                if direction >= 360:
+                    direction -= 360
+
+                ping['direction']=direction
+                ping['name']=item.getData('name')
+                ping['weight']=item.getData('weight')
+                ping['bulk']=item.getData('bulk')
+                ping['owner']=item.getData('owner')
+                temp_view.append(ping)
 
             angle += jump
 

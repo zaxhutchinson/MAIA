@@ -27,7 +27,7 @@ class Object:
         self.data['points']=0
         
         self.view_keys = [
-            'health','damage','facing','x','y','cell_x','cell_y','objname','teamname',
+            'health','damage','facing','x','y','cell_x','cell_y','name','teamname',
             'callsign','squad'
         ]
 
@@ -148,4 +148,4 @@ class Object:
         if self.data['callsign'] != None:
             return self.data['callsign']
         else:
-            return self.data['objname']
+            return self.data['name']

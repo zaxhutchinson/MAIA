@@ -24,7 +24,7 @@ Top-level Contents:
 * y: current y grid coordinate
 * cell_x: current within grid-cell x coordinate [0-1)
 * cell_y: current within grid-cell y coordinate [0-1)
-* objname: name of the object given in the objects.json file.
+* name: name of the object given in the objects.json file.
 * comps: a view of the current components
 
 Comps View Contents
@@ -42,7 +42,7 @@ Values listed for each key are a mix of types: string, float, int, None. The val
     'compname': None # STRING: name of the component that caused this view to be created.
     'hit_x': None # INT: x-grid cell coordinate of the hit object. Default: None if no object was hit.
     'hit_y': None #INT: y-grid cell coordinate of the hit object. Default: None if no object was hit.
-    'objname': None #STRING: objname of the object hit. Default: None if no object was hit.
+    'name': None #STRING: name of the object hit. Default: None if no object was hit.
 }
 ```
 
@@ -64,7 +64,7 @@ All pings will contained filled in values for the following keys.
 {
     'x': # INT:  The grid cell x-coordinate of the pinged object.
     'y': # INT: The grid cell y-coordinate of the pinged object.
-    'objname': # STRING: The object name of the object pinged.
+    'name': # STRING: The object name of the object pinged.
     'direction': # FLOAT: The direction [0-360) in degrees along which the object was detected.
     'cell_x': # FLOAT: The within cell x-coordiate.
     'cell_y': # FLAOT: The within cell y-coordiate.

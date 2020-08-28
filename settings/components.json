@@ -48,5 +48,13 @@
         "max_range": 100,
         "cur_range": 100
 
+    },
+
+    "5000": {
+        "id": "5000",
+        "name": "Robotic Arm",
+        "ctype": "Arm",
+        "max_weight": 1000,
+        "max_bulk": 1000
     }
 }

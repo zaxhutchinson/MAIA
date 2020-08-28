@@ -19,7 +19,7 @@ class ViewManager:
         v['compname']=None
         v['hit_x']=None
         v['hit_y']=None
-        v['objname']=None
+        v['name']=None
         self.view_templates[v['vtype']]=v
         #####################
         # radar

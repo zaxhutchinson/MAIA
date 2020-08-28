@@ -44,6 +44,8 @@ class AI:
     # commands.
     def runAI(self,view):
 
+        aih.prettyPrintView(view)
+
         if self.first_turn:
             self.by_ctype = aih.getSlotIDsByCtype(view)
 
@@ -88,7 +90,7 @@ class AI:
         enemy_pings = []
         for sv in radar_views:
             for ping in sv['pings']:
-                if ping['objname']=='Tank' and ping['alive']:
+                if ping['name']=='Tank' and ping['alive']:
                     enemy_pings.append(ping)
 
 
@@ -98,7 +100,7 @@ class AI:
 
             weapon_results = aih.getCompViewsOfVtype(view,'projectile')
             for wr in weapon_results:
-                if wr['objname'] != 'Tank':
+                if wr['name'] != 'Tank':
                     jitter = random.randint(-5,5)
                     self.cmd_maker.addCmd(0,self.by_ctype['Engine'][0],aih.CMD_Turn(jitter))
             
