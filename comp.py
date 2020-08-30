@@ -28,6 +28,9 @@ class Comp:
         elif ctype=='Radio':
             self.Update = self.RadioUpdate
             self.setViewKeysRadio()
+        elif ctype=='Arm':
+            self.Update = self.ArmUpdate
+            self.setViewKeysArm()
 
 
     def getData(self,key):
@@ -65,6 +68,10 @@ class Comp:
         self.view_keys += [
             'range'
         ]
+    def setViewKeysArm(self):
+        self.view_keys += [
+            'max_bulk', 'max_weight'
+        ]
 
     def getSelfView(self):
         view = {}
@@ -89,8 +96,6 @@ class Comp:
 
         actions = []
 
-               
-
         if 'command' in cmd:
             if cmd['command']=='FIRE':
 
@@ -100,6 +105,7 @@ class Comp:
 
                     a = action.Action()
                     a.setType('HIGHSPEED_PROJECTILE')
+                    a.addData('slot_id',self.getData('slot_id'))
                     a.addData('compname',self.getData('name'))
                     a.addData('direction',self.getData('parent').getData('facing'))
                     a.addData('min_damage',self.getData('min_damage'))
@@ -148,6 +154,7 @@ class Comp:
         if self.isMoving():
             a = action.Action()
             a.setType('MOVE')
+            a.addData('slot_id',self.getData('slot_id'))
             a.addData('direction',self.getData('parent').getData('facing'))
             a.addData('speed',self.getData('cur_speed'))
             actions.append(a)
@@ -155,6 +162,7 @@ class Comp:
         if self.isTurning():
             a = action.Action()
             a.setType('TURN')
+            a.addData('slot_id',self.getData('slot_id'))
             a.addData('turnrate',self.getData('cur_turnrate'))
             actions.append(a)
 
@@ -205,6 +213,7 @@ class Comp:
             if cmd['command']=='BROADCAST' and 'message' in cmd:
                 a = action.Action()
                 a.setType('BROADCAST')
+                a.addData('slot_id',self.getData('slot_id'))
                 a.addData('message',cmd['message'])
                 a.addData('range',self.getData('cur_range'))
                 actions.append(a)
@@ -215,6 +224,38 @@ class Comp:
                     self.setData('cur_range',newrange)
         
 
+        return actions
+
+    ###################################
+    # Arm Update
+    def ArmUpdate(self,cmd):
+        actions = []
+
+        if 'command' in cmd:
+            if cmd['command']=='TAKE_ITEM':
+                a = action.Action()
+                a.setType('TAKE_ITEM')
+                a.addData('slot_id',self.getData('slot_id'))
+                if 'item_name' in cmd:
+                    a.addData('item_name',cmd['item_name'])
+                else:
+                    a.addData('item_name',None)
+                if 'item_index' in cmd:
+                    if cmd['item_index'] is None:
+                        a.addData('item_index',0)
+                    else:
+                        a.addData('item_index',cmd['item_index'])
+                else:
+                    a.addData('item_index',0)
+                actions.append(a)
+
+            elif cmd['command']=='DROP_ITEM':
+                a = action.Action()
+                a.setType('DROP_ITEM')
+                a.addData('slot_id',self.getData('slot_id'))
+                a.addData('location',cmd['location'])
+                actions.append(a)
+        
         return actions
 
     ###########################################################################
@@ -246,3 +287,11 @@ class Comp:
     ## RADAR RELATED FUCNTIONS
     def isTransmitting(self):
         return self.getData('active')
+
+
+    ###########################################################################
+    ## ARM RELATED FUNCTIONS
+    def isHoldingItem(self):
+        return self.getData('item')!=None
+    def canTakeItem(self,weight,bulk):
+        return self.getData('max_weight') >= weight and self.getData('max_bulk') >= bulk

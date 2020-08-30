@@ -55,6 +55,7 @@
         "name": "Robotic Arm",
         "ctype": "Arm",
         "max_weight": 1000,
-        "max_bulk": 1000
+        "max_bulk": 1000,
+        "item": null
     }
 }

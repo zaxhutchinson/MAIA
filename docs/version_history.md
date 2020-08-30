@@ -1,3 +1,9 @@
+**Version 0.16**
+August 30, 2020
+- Adds a new component type (ctype) called 'Arm'. An arm can take and drop an item in the object's current cell. Arms can only hold 1 item at a time. Items will not be picked up if they are too heavy, bulky or if the arm is already holding an object.
+- Changes held items remain graphically visible and retain, internally, their location; however, they are removed from the map cell. This prevents other objects from detecting them. TODO: Held items need to appear in a scanned object's view.
+- Changes items so that their cell location is updated when the holding object moves.
+
 **Version 0.15**
 August 23, 2020
 - Items are now visible in radar views. Items cannot block scans like objects.

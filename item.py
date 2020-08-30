@@ -24,3 +24,8 @@ class Item:
             'text':self.getData('text'),
             'fill':self.getData('fill')
         }
+
+    def takeItem(self,owner_uuid):
+        self.data['owner']=owner_uuid
+    def dropItem(self):
+        self.data['owner']=None

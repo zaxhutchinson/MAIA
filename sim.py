@@ -42,6 +42,8 @@ class Sim:
         self.action_dispatch_table['TURN']=self.ACTN_Turn
         self.action_dispatch_table['TRANSMIT_RADAR']=self.ACTN_TransmitRadar
         self.action_dispatch_table['BROADCAST']=self.ACTN_BroadcastMessage
+        self.action_dispatch_table['TAKE_ITEM']=self.ACTN_TakeItem
+        self.action_dispatch_table['DROP_ITEM']=self.ACTN_DropItem
 
     ##########################################################################
     # MAP
@@ -85,6 +87,7 @@ class Sim:
             self.comp_views[_uuid]=[]
 
         self.comp_views[_uuid].append(view)
+
 
     ##########################################################################
     # BUILD SIM
@@ -269,9 +272,6 @@ class Sim:
     # RUN SIM
     def runSim(self, turns):
 
-        
-        
-        
         for turn in range(turns):
             # A place to store the commands by uuid and tick
             cmds_by_uuid = {}
@@ -421,6 +421,13 @@ class Sim:
                 obj.setData('y',new_y)
                 obj.setData('cell_x',new_cell_x)
                 obj.setData('cell_y',new_cell_y)
+
+                # Update held item's locations
+                item_uuids = obj.getAllHeldStoredItems()
+                for _uuid in item_uuids:
+                    i = self.items[_uuid]
+                    i.setData('x',new_x)
+                    i.setData('y',new_y)
             else:
                 # CRASH INTO SOMETHING
                 
@@ -567,6 +574,82 @@ class Sim:
                 if distance <= actn.getData('range'):
                     self.addCompView(uuid,view)
         
+    def ACTN_TakeItem(self,obj,actn):
+        print('TAKE ACTION')
+
+        obj_x = obj.getData('x')
+        obj_y = obj.getData('y')
+        items_in_obj_cell = self.map.getItemsInCell(obj_x,obj_y)
+
+        if len(items_in_obj_cell) > 0:
+            print('There are objects here.')
+            item_name = actn.getData('item_name')
+            item_index = actn.getData('item_index')
+
+            matching_items = []
+
+            for item_id in items_in_obj_cell:
+                item = self.items[item_id]
+
+                # If the AI did not provide an item name (None),
+                # we match all items. Else, use the name.
+                if item_name==None:
+                    matching_items.append(item_id)
+                elif item.getData('name')==item_name:
+                    matching_items.append(item_id)
+
+            
+            if len(matching_items) > item_index:
+                print('Objects matched.')
+                item_to_take = self.items[matching_items[item_index]]
+                
+                # Get the arm component and make sure it isn't None
+                arm_comp = obj.getComp(actn.getData('slot_id'))
+                if arm_comp == None:
+                    print('ArmComp is None')
+                    return
+
+                if not arm_comp.isHoldingItem():
+                    if arm_comp.canTakeItem(item_to_take.getData('weight'),item_to_take.getData('bulk')):
+                        arm_comp.setData('item',matching_items[item_index])
+                        self.map.removeItem(obj_x,obj_y,matching_items[item_index])
+                        item_to_take.takeItem(obj.getData('uuid'))
+                        print('Take successful.')
+                    else:
+                        print('Item too heavy or bulky.')
+                        pass
+                else:
+                    print('Arm is already packing.')
+                    pass
+
+            
+                
+
+
+    def ACTN_DropItem(self,obj,actn):
+        print('Dropping item')
+        obj_x = obj.getData('x')
+        obj_y = obj.getData('y')
+
+        arm_comp = obj.getComp(actn.getData('slot_id'))
+        if arm_comp == None:
+            return
+
+        if arm_comp.isHoldingItem():
+            held_item_uuid = arm_comp.getData('item')
+            held_item = self.items[held_item_uuid]
+
+            drop_location = actn.getData('location')
+
+            # Action must specify a valid drop location before
+            # the item is dropped.
+            if drop_location=='cell':
+                print('Drop successful')
+                self.map.addItem(obj_x,obj_y,held_item_uuid)
+                arm_comp.setData('item',None)
+                held_item.dropItem()
+
+
 
     ##########################################################################
     # ADDITIONAL HELPER FUNCTIONS
@@ -581,8 +664,13 @@ class Sim:
         if not self.objs[_uuid].isAlive():
 
             dead_obj = self.objs[_uuid]
+
+            # Check for held/stored items
+            held_items_uuids = dead_obj.getAndRemoveAllHeldStoredItems()
+            for i in held_items_uuids:
+                self.map.addItem(dead_obj.getData('x'),dead_obj.getData('y'),i)
+
             # Remove from map
-            
             self.map.removeObj(dead_obj.getData('x'),dead_obj.getData('y'),dead_obj.getData('uuid'))
             
             # Remove from obj dict
@@ -591,8 +679,8 @@ class Sim:
             # # Add to destroyed objs
             self.destroyed_objs[_uuid]=dead_obj
 
-            # # Log destruction
-            # self.logMsg("DESTROYED",dead_obj.getData('callsign')+" was destroyed.")
+            
+            
 
         return points
 

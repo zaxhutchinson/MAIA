@@ -34,7 +34,7 @@ def LogSetDebug(val):
 def LogDebug(msg):
     if DEBUG:
         with open(LOG_DEBUG,'a') as f:
-            f.write(msg)
+            f.write(msg+'\n')
 
 def LogMostRecentException(msg):
     with open(LOG_ERROR,'a') as f:

@@ -26,6 +26,13 @@ class CommandValidator:
         self.commands['SET_RANGE'] = {
             'range':[int,float]
         }
+        self.commands['TAKE_ITEM'] = {
+            'item_name':[str,type(None)],
+            'item_index':[int,type(None)]
+        }
+        self.commands['DROP_ITEM'] = {
+            'location':[str]
+        }
 
     def validateCommands(self,cmds):
 

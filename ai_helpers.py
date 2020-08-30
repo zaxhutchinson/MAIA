@@ -240,6 +240,21 @@ def CMD_SetRange(_range):
     return cmd
 
 ##############################################################################
+# ARM FUNCTIONS
+def CMD_TakeItem(name,index):
+    cmd = {}
+    cmd['command']='TAKE_ITEM'
+    cmd['item_name']=name
+    cmd['item_index']=index
+    return cmd
+def CMD_DropItem(location):
+    cmd={}
+    cmd['command']='DROP_ITEM'
+    cmd['location']=location
+    return cmd
+
+
+##############################################################################
 # GENERIC COMMAND FUNCTIONS
 #
 # Activates the component,

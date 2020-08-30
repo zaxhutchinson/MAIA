@@ -47,6 +47,12 @@ class Object:
         comp.setData('slot_id',next_id)
         self.data['comps'][next_id]=comp
 
+    def getComp(self,slot_id):
+        if slot_id in self.getData('comps'):
+            return self.getData('comps')[slot_id]
+        else:
+            return None
+
     def place(self,data):
         for k,v in data.items():
             self.data[k]=v
@@ -114,7 +120,7 @@ class Object:
                 if comp.getData('ctype')=='CnC':
                     max_cmds += comp.getData('max_cmds_per_tick')
 
-            for compid,cmd in cmds.items():
+            for slot_id,cmd in cmds.items():
                 
                 # Check and reduce commands remaining
                 # Having this outside the if-statment below
@@ -124,8 +130,8 @@ class Object:
                 else:
                     max_cmds-=1
 
-                if compid in self.data['comps']:
-                    comp_actions = self.data['comps'][compid].Update(cmd)
+                if slot_id in self.data['comps']:
+                    comp_actions = self.data['comps'][slot_id].Update(cmd)
                     actions += comp_actions  
 
         return actions
@@ -149,3 +155,24 @@ class Object:
             return self.data['callsign']
         else:
             return self.data['name']
+
+    def getAllHeldStoredItems(self):
+        item_uuids=[]
+
+        for c in self.data['comps'].values():
+            if c.getData('ctype')=='Arm':
+                if c.isHoldingItem():
+                    item_uuids.append(c.getData('item'))
+
+        return item_uuids
+
+    def getAndRemoveAllHeldStoredItems(self):
+        item_uuids=[]
+
+        for c in self.data['comps'].values():
+            if c.getData('ctype')=='Arm':
+                if c.isHoldingItem():
+                    item_uuids.append(c.getData('item'))
+                    c.setData('item',None)
+
+        return item_uuids

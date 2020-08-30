@@ -49,5 +49,62 @@
                 ]
             }
         }
+    },
+    "Map 3" : {
+        "name" : "Map 3",
+        "edge_obj_id": "0",
+        "desc" : "Take test map.",
+        "width" : 20,
+        "height" : 20,
+        "placed_objects" : {
+            "1" : [
+                {
+                    "x": 10,
+                    "y":10,
+                    "damage":0.0,
+                    "facing":0
+                },
+                {
+                    "x": 10,
+                    "y":11,
+                    "damage":0.0,
+                    "facing":0
+                }
+            ]
+        },
+        "placed_items" : {
+            "0" : [
+                {
+                    "x":1,
+                    "y":1
+                }
+            ],
+            "1": [
+                {
+                    "x":1,
+                    "y":1
+                }
+            ]
+        },
+        "sides": {
+            "Blue" : {
+                "starting_locations": [
+                    [1,1]
+                ],
+                "facing":0,
+                "goal_locations":[
+                    [2,1]
+                ]
+            },
+            "Red" : {
+                "starting_locations": [
+                    [9,9]
+                ],
+                "facing":180,
+                "goal_locations":[
+                    [7,6]
+                ]
+            }
+        }
     }
 }

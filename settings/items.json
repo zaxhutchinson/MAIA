@@ -3,8 +3,16 @@
         "id":"0",
         "name":"blue flag",
         "weight":1,
-        "bulk":100,
-        "text":"o",
-        "fill":"white"
+        "bulk":1,
+        "text":"B",
+        "fill":"blue"
+    },
+    "1": {
+        "id":"1",
+        "name":"red flag",
+        "weight":1,
+        "bulk":1,
+        "text":"R",
+        "fill":"red"
     }
 }
