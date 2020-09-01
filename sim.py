@@ -577,50 +577,62 @@ class Sim:
     def ACTN_TakeItem(self,obj,actn):
         print('TAKE ACTION')
 
-        obj_x = obj.getData('x')
-        obj_y = obj.getData('y')
-        items_in_obj_cell = self.map.getItemsInCell(obj_x,obj_y)
+        take_location = actn.getData('location')
 
-        if len(items_in_obj_cell) > 0:
-            print('There are objects here.')
-            item_name = actn.getData('item_name')
-            item_index = actn.getData('item_index')
+        # If we're taking from the cell,
+        # or if a take location was not provided, take from cell.
+        if take_location=='cell' or take_location is None:
 
-            matching_items = []
+            obj_x = obj.getData('x')
+            obj_y = obj.getData('y')
+            items_in_obj_cell = self.map.getItemsInCell(obj_x,obj_y)
 
-            for item_id in items_in_obj_cell:
-                item = self.items[item_id]
-
-                # If the AI did not provide an item name (None),
-                # we match all items. Else, use the name.
-                if item_name==None:
-                    matching_items.append(item_id)
-                elif item.getData('name')==item_name:
-                    matching_items.append(item_id)
-
-            
-            if len(matching_items) > item_index:
-                print('Objects matched.')
-                item_to_take = self.items[matching_items[item_index]]
+            if len(items_in_obj_cell) > 0:
+                print('There are objects here.')
+                item_name = actn.getData('item_name')
+                item_index = actn.getData('item_index')
+                item_uuid = actn.getData('item_uuid')
                 
-                # Get the arm component and make sure it isn't None
-                arm_comp = obj.getComp(actn.getData('slot_id'))
-                if arm_comp == None:
-                    print('ArmComp is None')
-                    return
 
-                if not arm_comp.isHoldingItem():
-                    if arm_comp.canTakeItem(item_to_take.getData('weight'),item_to_take.getData('bulk')):
-                        arm_comp.setData('item',matching_items[item_index])
-                        self.map.removeItem(obj_x,obj_y,matching_items[item_index])
-                        item_to_take.takeItem(obj.getData('uuid'))
-                        print('Take successful.')
+                matching_item = None
+
+                # If the action provided a specific uuid,
+                # look only for that and ignore the other info.
+                if item_uuid is not None:
+                    if item_uuid in items_in_obj_cell:
+                        matching_item=item_uuid
+                
+                elif item_name is not None:
+                    for item_id in items_in_obj_cell:
+                        item = self.items[item_id]
+                        if item.getData('name')==item_name:
+                            matching_item=item_id
+                            break
+                elif item_index is not None:
+                    if len(items_in_obj_cell) > item_index:
+                        matching_item = items_in_obj_cell[item_index]
+
+                if matching_item is not None:
+                    item_to_take = self.items[matching_item]
+                    
+                    # Get the arm component and make sure it isn't None
+                    arm_comp = obj.getComp(actn.getData('slot_id'))
+                    if arm_comp == None:
+                        print('ArmComp is None')
+                        return
+
+                    if not arm_comp.isHoldingItem():
+                        if arm_comp.canTakeItem(item_to_take.getData('weight'),item_to_take.getData('bulk')):
+                            arm_comp.setData('item',matching_item)
+                            self.map.removeItem(obj_x,obj_y,matching_item)
+                            item_to_take.takeItem(obj.getData('uuid'))
+                            print('Take successful.')
+                        else:
+                            print('Item too heavy or bulky.')
+                            pass
                     else:
-                        print('Item too heavy or bulky.')
+                        print('Arm is already packing.')
                         pass
-                else:
-                    print('Arm is already packing.')
-                    pass
 
             
                 

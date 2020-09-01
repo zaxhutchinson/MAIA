@@ -1,3 +1,7 @@
+**Version 0.17**
+August 31, 2020
+- Reworks TakeItem so that AI can provide the object name, index or uuid.
+
 **Version 0.16**
 August 30, 2020
 - Adds a new component type (ctype) called 'Arm'. An arm can take and drop an item in the object's current cell. Arms can only hold 1 item at a time. Items will not be picked up if they are too heavy, bulky or if the arm is already holding an object.

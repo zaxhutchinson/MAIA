@@ -241,11 +241,29 @@ def CMD_SetRange(_range):
 
 ##############################################################################
 # ARM FUNCTIONS
-def CMD_TakeItem(name,index):
+def CMD_TakeItemByUUID(_uuid,location=None):
+    cmd = {}
+    cmd['command']='TAKE_ITEM'
+    cmd['item_name']=None
+    cmd['item_index']=None
+    cmd['item_uuid']=_uuid
+    cmd['location']=location
+    return cmd
+def CMD_TakeItemByName(name,location=None):
     cmd = {}
     cmd['command']='TAKE_ITEM'
     cmd['item_name']=name
+    cmd['item_index']=None
+    cmd['item_uuid']=None
+    cmd['location']=location
+    return cmd
+def CMD_TakeItemByIndex(index,location=None):
+    cmd = {}
+    cmd['command']='TAKE_ITEM'
+    cmd['item_name']=None
     cmd['item_index']=index
+    cmd['item_uuid']=None
+    cmd['location']=location
     return cmd
 def CMD_DropItem(location):
     cmd={}

@@ -70,7 +70,7 @@ class Comp:
         ]
     def setViewKeysArm(self):
         self.view_keys += [
-            'max_bulk', 'max_weight'
+            'max_bulk', 'max_weight', 'item'
         ]
 
     def getSelfView(self):
@@ -236,17 +236,27 @@ class Comp:
                 a = action.Action()
                 a.setType('TAKE_ITEM')
                 a.addData('slot_id',self.getData('slot_id'))
+
                 if 'item_name' in cmd:
                     a.addData('item_name',cmd['item_name'])
                 else:
                     a.addData('item_name',None)
+                
                 if 'item_index' in cmd:
-                    if cmd['item_index'] is None:
-                        a.addData('item_index',0)
-                    else:
-                        a.addData('item_index',cmd['item_index'])
+                    a.addData('item_index',cmd['item_index'])
                 else:
-                    a.addData('item_index',0)
+                    a.addData('item_index',None)
+
+                if 'item_uuid' in cmd:
+                    a.addData('item_uuid',cmd['item_uuid'])
+                else:
+                    a.addData('item_uuid',None)
+
+                if 'location' in cmd:
+                    a.addData('location', cmd['location'])
+                else:
+                    a.addData('location',None)
+
                 actions.append(a)
 
             elif cmd['command']=='DROP_ITEM':

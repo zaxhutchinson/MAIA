@@ -28,10 +28,12 @@ class CommandValidator:
         }
         self.commands['TAKE_ITEM'] = {
             'item_name':[str,type(None)],
-            'item_index':[int,type(None)]
+            'item_index':[int,type(None)],
+            'item_uuid':[str,type(None)],
+            'location':[str,type(None)]
         }
         self.commands['DROP_ITEM'] = {
-            'location':[str]
+            'location':[str,type(None)]
         }
 
     def validateCommands(self,cmds):
