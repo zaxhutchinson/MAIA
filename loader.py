@@ -11,6 +11,7 @@ import comp
 import vec2
 import log
 import team
+import gstate
 
 class Loader:
     def __init__(self):
@@ -21,6 +22,7 @@ class Loader:
         self.comp_templates={}
         self.map_templates={}
         self.team_templates={}
+        self.gstate_templates={}
 
         self.loadMainConfig('settings/main.json')
         self.loadCompTemplates('settings/components.json')
@@ -28,7 +30,23 @@ class Loader:
         self.loadItemTemplates("settings/items.json")
         self.loadMapTemplates("settings/maps.json")
         self.loadTeamTemplates("settings/teams.json")
-
+        self.loadGStateTemplates("settings/state.json")
+        
+    ##########################################################################
+    # LOAD/COPY GSTATE
+    def loadGStateTemplates(self,filename):
+        with open(filename,'r') as f:
+            jsonObjs = json.load(f)
+            for k,v in jsonObjs.items():
+                self.gstate_templates[k] = []
+                for g in v:
+                    gs = gstate.GState(g)
+                    self.gstate_templates[k].append(gs)
+    def copyGStateTemplate(self,_id):
+        try:
+            return copy.deepcopy(self.gstate_templates[_id])
+        except KeyError:
+            log.LogError("LOADER: copyGStateTemplate() KeyError "+str(_id))
         
     ##########################################################################
     # LOAD/COPY OBJ

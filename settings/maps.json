@@ -48,7 +48,8 @@
                     [7,6]
                 ]
             }
-        }
+        },
+        "win_states": ["domination"]
     },
     "Map 3" : {
         "name" : "Map 3",
@@ -98,13 +99,14 @@
             },
             "Red" : {
                 "starting_locations": [
-                    [9,9]
+                    [9,1]
                 ],
                 "facing":180,
                 "goal_locations":[
                     [7,6]
                 ]
             }
-        }
+        },
+        "win_states": ["domination"]
     }
 }

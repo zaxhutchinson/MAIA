@@ -1,0 +1,46 @@
+{
+    "touchdown": [
+        {
+            "type": "ITEM_TOUCH",
+            "tags":["red_flag","red_base"],
+            "state":false,
+            "msg": "Red Wins"
+        },
+        {
+            "type": "ITEM_TOUCH",
+            "tags":["blue_flag","blue_base"],
+            "state":false,
+            "msg": "Blue wins"
+        }
+    ],
+    "domination": [
+        {
+            "type": "ALL_OBJS_DESTROYED",
+            "tags": ["blue_player"],
+            "state":false,
+            "msg": "Red wins"
+        },
+        {
+            "type": "ALL_OBJS_DESTROYED",
+            "tags": ["red_player"],
+            "state":false,
+            "msg":"Blue wins"
+        }
+    ],
+    "destroy_1": [
+        {
+            "type": "N_OBJS_DESTROYED",
+            "number": 1,
+            "tags": ["blue_player"],
+            "state":false,
+            "msg":"Red wins"
+        },
+        {
+            "type": "N_OBJS_DESTROYED",
+            "number": 1,
+            "tags": ["red_player"],
+            "state":false,
+            "msg": "Blue wins"
+        }
+    ]
+}

@@ -36,9 +36,9 @@
         "active": false,
         "range":20,
         "level":1,
-        "visarc":120,
+        "visarc":0,
         "offset_angle":0,
-        "resolution":10
+        "resolution":1
     },
 
     "4000": {

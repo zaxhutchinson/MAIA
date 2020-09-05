@@ -13,6 +13,7 @@ import msgs
 from zexceptions import *
 import valid
 import views
+import gstate
 #from log import *
 
 class Sim:
@@ -33,6 +34,7 @@ class Sim:
         self.sides={}
         self.ticks_per_turn=1
         self.tick = 0
+        self.win_states=[]
 
         self.comp_views={}
 
@@ -52,6 +54,7 @@ class Sim:
         sides = self.map.getData('sides')
         for k,v in sides.items():
             self.addSide(k,v)
+
     def getMap(self):
         return self.map
     def hasMap(self):
@@ -87,6 +90,21 @@ class Sim:
             self.comp_views[_uuid]=[]
 
         self.comp_views[_uuid].append(view)
+
+    ##########################################################################
+    # WIN STATE
+    def setAllWinStates(self,ldr,ws_names):
+        for wsname in ws_names:
+            # Copy gstate
+            win_states = ldr.copyGStateTemplate(wsname)
+            # Init using the objects/items on hand
+            for ws in win_states:
+                ws.initState(self.objs,self.items)
+                # Add
+                self.addWinState(ws)
+
+    def addWinState(self,ws):
+        self.win_states.append(ws)
 
 
     ##########################################################################
@@ -222,6 +240,9 @@ class Sim:
             # Add the team data to the side entry
             v['team']=team_data
 
+        # Set the Global States
+        self.setAllWinStates(ldr, self.map.getData("win_states"))
+
     ##########################################################################
     # Get the world view
     def getGeneralView(self):
@@ -234,25 +255,41 @@ class Sim:
     # CHECK END OF GAME
     def checkEndOfSim(self):
 
-        # Only 1 team remaining
-        teams_remaining = []
-        for name,data in self.sides.items():
-            team_eliminated = True
+        rtn = False
 
-            for obj in data['team']['agents'].values():
-                if obj.getData('alive'):
-                    team_eliminated=False
-                    break
-            if not team_eliminated:
-                teams_remaining.append(name)
+        # Run through all win conditions even if one is True.
+        # Two win conditions could come up True in the same turn.
+        for win_state in self.win_states:
+
+            r = win_state.checkState()
+
+            if r:
+                self.imsgr.addMsg(msgs.Msg(self.tick,"GAME OVER",win_state.getData('msg')))
+                
+            rtn = rtn or r
+
+        return rtn
+
+
+        # Only 1 team remaining
+        # teams_remaining = []
+        # for name,data in self.sides.items():
+        #     team_eliminated = True
+
+        #     for obj in data['team']['agents'].values():
+        #         if obj.getData('alive'):
+        #             team_eliminated=False
+        #             break
+        #     if not team_eliminated:
+        #         teams_remaining.append(name)
         
-        if len(teams_remaining) == 1:
-            self.imsgr.addMsg(msgs.Msg(self.tick,"---GAME OVER---","The winning side is: " + teams_remaining[0]))
-            return True
-        if len(teams_remaining) == 0:
-            self.imsgr.addMsg(msgs.Msg(self.tick,"---GAME OVER---","All teams are dead???"))
-            return True
-        return False
+        # if len(teams_remaining) == 1:
+        #     self.imsgr.addMsg(msgs.Msg(self.tick,"---GAME OVER---","The winning side is: " + teams_remaining[0]))
+        #     return True
+        # if len(teams_remaining) == 0:
+        #     self.imsgr.addMsg(msgs.Msg(self.tick,"---GAME OVER---","All teams are dead???"))
+        #     return True
+        # return False
 
     def getPointsData(self):
         msg = ""
@@ -472,7 +509,7 @@ class Sim:
         view['slot_id']=actn.getData('slot_id')
 
         # Set up the necessary data for easy access
-        radar_facing = actn.getData('facing')+actn.getData('offset_angle')
+        radar_facing = actn.getData('facing')#+actn.getData('offset_angle')
         start = radar_facing-actn.getData('visarc')
         end = radar_facing+actn.getData('visarc')
         angle = start

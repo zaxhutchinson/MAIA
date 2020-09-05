@@ -90,7 +90,7 @@ class AI:
         enemy_pings = []
         for sv in radar_views:
             for ping in sv['pings']:
-                if ping['name']=='Tank' and ping['alive']:
+                if ping['name']!='Blue Tank' and ping['alive']:
                     enemy_pings.append(ping)
 
 
@@ -98,11 +98,11 @@ class AI:
         # If we can see the enemy.
         if len(enemy_pings) > 0:
 
-            weapon_results = aih.getCompViewsOfVtype(view,'projectile')
-            for wr in weapon_results:
-                if wr['name'] != 'Tank':
-                    jitter = random.randint(-5,5)
-                    self.cmd_maker.addCmd(0,self.by_ctype['Engine'][0],aih.CMD_Turn(jitter))
+            # weapon_results = aih.getCompViewsOfVtype(view,'projectile')
+            # for wr in weapon_results:
+            #     if wr['name'] != 'Blue Tank':
+            #         jitter = random.randint(-5,5)
+            #         self.cmd_maker.addCmd(0,self.by_ctype['Engine'][0],aih.CMD_Turn(jitter))
             
             # Search through pings for the closest one.
             closest_ping = None

@@ -1,3 +1,11 @@
+**Version 0.18**
+- Adds gstates (Game States). gstates are defined in state.json. A map must reference which gstate(s) it uses to declare victory.
+- Reworks victory conditions so they use gstates.
+- Adds in three victory conditions:
+    - ItemTouch: All items with the listed tags must be in the same map cell.
+    - AllObjsDestroyed: All objects with the tags must be destroyed.
+    - NObjsDestroyed: N objects with the tags must be destroyed.
+
 **Version 0.17**
 August 31, 2020
 - Reworks TakeItem so that AI can provide the object name, index or uuid.
