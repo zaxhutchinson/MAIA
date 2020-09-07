@@ -1,10 +1,10 @@
 **Version 0.19**
+Sept 7, 2020
 - Fixes a bug with moving. Previously, not all intervening cells were checked for occupancy.
 - Fixes a feature of engine speed. Now engine speed commands which exceed the min or max speed will default to the min or max. Previously the command was ignored. Same with turn rate.
 - Some work on the docs.
 - Sim UI: Log interface has been converted to a tabbed notebook. Currently, there is still only 1 tab with the main log; however, future versions will add more logs.
 - Adds *items.md* which gives the template for items.json entries.
-
 
 **Version 0.18**
 - Adds gstates (Game States). gstates are defined in state.json. A map must reference which gstate(s) it uses to declare victory.
