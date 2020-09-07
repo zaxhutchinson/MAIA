@@ -68,7 +68,7 @@ By default objects and components receive no world state except what they know a
 * level [INT]: The radar penetration value. Radar rays will penetrate any object with a *density* strictly less than their *level*, allowing radars to see behind objects.
 * visarc [INT/FLOAT]: This is half the arc degrees transmitted by the radar. In the above example, the radar's *visarc* is 120. This means is transmits 120 degrees to the left and right of the object's facing.
 * offset_angle [INT/FLOAT]: This swings the radar to point N degrees away from the facing of the object. For example, an *offset_angle* of 180 degrees would mean the radar points to the rear of the object.
-* resolution [INT]: The interval at which transmit rays are emitted to cover the visible arc. For example, if the *visarc* were 10 and the *resolution* 10 as well, a radar command would produce three transmission rays at -10, 0, and 10.
+* resolution [INT]: The interval at which transmit rays are emitted to cover the visible arc. For example, if the *visarc* were 10 and the *resolution* 10 as well, a radar command would produce three transmission rays at -10, 0, and 10. If you wish to has a radar point only forward, set *visarc* to 0 and *resolution* to 1.
 
 ## FixedGun
 A fixed gun cannot move left and right. It points always in the direction of the vehicle.
@@ -109,3 +109,20 @@ A very basic radio with transmission and reception capabilities. It can broadcas
 ```
 * max_range [INT/FLOAT]: The maximum range setting of the radio.
 * cur_range [INT/FLOAT]: The current range setting. Beyond this range, messages will not be heard.
+
+## Arm
+A basic robotic arm capable of picking up, holding and dropping items.
+
+```json
+"5000": {
+        "id": "5000",
+        "name": "Robotic Arm",
+        "ctype": "Arm",
+        "max_weight": 1000,
+        "max_bulk": 1000,
+        "item": null
+    }
+```
+* max_weight [INT/FLOAT]: The maximum weight the arm can lift.
+* max_bulk [INT/FLOAT]: The maximum bulk the arm can handle.
+* item []: Should be null by default. This insures the comp has such a field in its data dict.

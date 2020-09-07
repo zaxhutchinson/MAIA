@@ -106,7 +106,6 @@ class Sim:
     def addWinState(self,ws):
         self.win_states.append(ws)
 
-
     ##########################################################################
     # BUILD SIM
     def buildSim(self, ldr):
@@ -450,25 +449,48 @@ class Sim:
         new_y = int(new_position[1])
         new_cell_x = abs(new_position[0]-abs(new_x))
         new_cell_y = abs(new_position[1]-abs(new_y))
+
         # see if move is possible.
         if new_x != old_x or new_y != old_y:
-            if self.map.isCellEmpty(new_x,new_y):
-                self.map.moveObjFromTo(obj.getData('uuid'),old_x,old_y,new_x,new_y)
-                obj.setData('x',new_x)
-                obj.setData('y',new_y)
-                obj.setData('cell_x',new_cell_x)
-                obj.setData('cell_y',new_cell_y)
 
-                # Update held item's locations
-                item_uuids = obj.getAllHeldStoredItems()
-                for _uuid in item_uuids:
-                    i = self.items[_uuid]
-                    i.setData('x',new_x)
-                    i.setData('y',new_y)
-            else:
+            # Might be moving more than 1 cell. Get trajectory.
+            cell_path = zmath.getCellsAlongTrajectory(old_x,old_y,direction,cur_speed)
+
+            cur_cell = (old_x,old_y)
+            collision = False
+
+            # for all cells in the path, update if empty.
+            for cell in cell_path:
+                if cell == (old_x,old_y):
+                    continue
+                else:
+                    if self.map.isCellEmpty(cell[0],cell[1]):
+                        cur_cell = cell
+                    else:
+                        collision=True
+                        break
+            
+            new_x = cur_cell[0]
+            new_y = cur_cell[1]
+
+            # Move the object
+            self.map.moveObjFromTo(obj.getData('uuid'),old_x,old_y,new_x, new_y)
+            obj.setData('x',new_x)
+            obj.setData('y',new_y)
+            obj.setData('cell_x',new_cell_x)
+            obj.setData('cell_y',new_cell_y)
+
+            # Update held item's locations
+            item_uuids = obj.getAllHeldStoredItems()
+            for _uuid in item_uuids:
+                i = self.items[_uuid]
+                i.setData('x',new_x)
+                i.setData('y',new_y)
+
+            if collision:
                 # CRASH INTO SOMETHING
                 
-                # We're still in the same cell but we need to move the obj to the edge
+                # We need to move the obj to the edge
                 # of the old cell to simulate that they reached the edge of it before
                 # crashing.
                 if new_x != old_x:
@@ -481,6 +503,8 @@ class Sim:
                         obj.setData('cell_y',0.99)
                     else:
                         obj.setData('cell_y',0.0)
+
+        # Didn't leave the cell, update in-cell coords.      
         else:
             obj.setData('cell_x',new_cell_x)
             obj.setData('cell_y',new_cell_y)
@@ -648,6 +672,10 @@ class Sim:
                 elif item_index is not None:
                     if len(items_in_obj_cell) > item_index:
                         matching_item = items_in_obj_cell[item_index]
+
+                else:
+                    if len(items_in_obj_cell) > 0:
+                        matching_item = items_in_obj_cell[0]
 
                 if matching_item is not None:
                     item_to_take = self.items[matching_item]

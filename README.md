@@ -4,10 +4,14 @@ Maine AI Arena
 ## Table of contents
 * [Current State](#current-state)
 * [Description](#description)
-* [Running](#running)
+* [Requirements](#requirements)
+* [BasicUse](#basicuse)
+* [Contributors](#contributors)
 
 ## Current State
 Working, with bugs. All commands have had limited testing. See *todo.md* under docs for a list of known bugs and planned (short-term) features. See *version_history.md* for recent changes.
+
+The teams under the team directory are just examples. They will change over time as I test things. Eventually, I will write a more comprehensive AI example.
 
 ## Description
 MAIA is a platform designed for AI competitions that provides a modular 2D simulation environment for which students write AI to control competing agents. The goal is to give coders all the tools necessary so that they can focus primarily on analysis of information and decision-making. 
@@ -46,3 +50,7 @@ Documentation can be found in the *docs* directory. It is constantly under const
 * version_history.md: Exactly what it sounds like.
 * views.md: Breakdown of *views* which are the dictionary-based way information is fed to AI scripts from the simulation.
 
+## Contributors
+* Zachary Hutchinson - University of Maine - <zachary.s.hutchinson@maine.edu> - ACTIVE
+
+If you would like to contribute to this project, or simply have a comment or criticism, send an email to one of the *ACTIVE* contributors.

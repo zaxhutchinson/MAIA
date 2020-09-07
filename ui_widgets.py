@@ -9,6 +9,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from tkinter.font import Font
+from tkinter import ttk
 import tkinter.scrolledtext as scrolltext
 
 DARKCOLOR='gray10'
@@ -87,6 +88,15 @@ class uiQuietFrame(tk.Frame):
             highlightbackground=DARKCOLOR
         )
 
+class uiNotebook(ttk.Notebook):
+    def __init__(self,**kwargs):
+        super().__init__(kwargs['master'])
+        #self.config(
+            #relief=tk.FLAT,
+            #borderwidth=0,
+            #highlightthickness=0,
+            #highlightbackground=DARKCOLOR
+        #)
 
 class uiEntry(tk.Entry):
     def __init__(self,**kwargs):

@@ -64,11 +64,17 @@ class UISim(tk.Toplevel):
         self.canvas.yview_moveto(0.0)
         self.canvas.xview_moveto(0.0)
         
-        # Create the log
-        self.scrollLog = uiScrollText(master=self.logFrame)
-        self.scrollLog.pack(fill=tk.BOTH,expand=True,side=tk.TOP)
-        self.scrollLog.configure(state='disabled')
+        # Create the log notebook and tabs
+        self.logNotebook = uiNotebook(master=self.logFrame)
+        self.logNotebook.pack(fill=tk.BOTH,expand=True,side=tk.TOP)
 
+        self.mainLogFrame = uiQuietFrame(master=self.logNotebook)
+        self.logNotebook.add(self.mainLogFrame,text='Main')
+        self.mainScrollLog = uiScrollText(master=self.mainLogFrame)
+        self.mainScrollLog.pack(fill=tk.BOTH,expand=True,side=tk.TOP)
+        self.mainScrollLog.configure(state='disabled')
+
+        # Add the buttons
         self.dataFrame1 = uiQuietFrame(master=self.logFrame)
         self.dataFrame1.pack(fill=tk.BOTH,expand=True,side=tk.TOP)
         self.lbTurnsToRun = uiLabel(master=self.dataFrame1,text="Turns To Run")
@@ -104,12 +110,12 @@ class UISim(tk.Toplevel):
         #TEST JUNK
         # self.canvas.create_text(50,50,text="Hello world")
         #self.canvas.create_rectangle(50,50,450,450,fill="green")
-    def displayMsg(self,msg):
+    def displayMsgMain(self,msg):
         m = msg.getText()
-        self.scrollLog.configure(state='normal')
-        self.scrollLog.insert(tk.END,m+"\n")
-        self.scrollLog.configure(state='disabled')
-        self.scrollLog.yview(tk.END)
+        self.mainScrollLog.configure(state='normal')
+        self.mainScrollLog.insert(tk.END,m+"\n")
+        self.mainScrollLog.configure(state='disabled')
+        self.mainScrollLog.yview(tk.END)
 
     def drawTiles(self):
         
@@ -206,7 +212,7 @@ class UISim(tk.Toplevel):
             except queue.Empty:
                 break
             else:
-                self.displayMsg(m)
+                self.displayMsgMain(m)
         self.logFrame.after(100,self.updateLog)
 
     def runXTurns(self):

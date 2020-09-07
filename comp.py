@@ -139,7 +139,11 @@ class Comp:
 
                 if 'speed' in cmd:
                     newspeed = cmd['speed']
-                    if newspeed >= self.getData('min_speed') and newspeed <= self.getData('max_speed'):
+                    if newspeed < self.getData('min_speed'):
+                        self.data['cur_speed']=self.getData('min_speed')
+                    elif newspeed > self.getData('max_speed'):
+                        self.data['cur_speed']=self.getData('max_speed')
+                    else:
                         self.data['cur_speed']=newspeed
 
             elif cmd['command']=='SET_TURNRATE':
@@ -148,6 +152,8 @@ class Comp:
                     newturnrate = cmd['turnrate']
                     if abs(newturnrate) <= self.getData('max_turnrate'):
                         self.data['cur_turnrate']=newturnrate
+                    else:
+                        self.data['cur_turnrate']=self.getData('max_turnrate')
 
 
 

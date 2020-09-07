@@ -19,7 +19,7 @@ class AI:
         if self.state==0:
             # self.cmd_maker.addCmd(0,5,aih.CMD_TakeItemByName('blue flag'))
             self.cmd_maker.addCmd(0,5,aih.CMD_TakeItemByIndex(1,'cell'))
-            self.cmd_maker.addCmd(0,2,aih.CMD_SetSpeed(1.0))
+            self.cmd_maker.addCmd(0,2,aih.CMD_SetSpeed(10.0))
             self.state +=1
         elif self.state == 5:
             self.cmd_maker.addCmd(0,5,aih.CMD_DropItem('cell'))

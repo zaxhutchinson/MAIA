@@ -41,4 +41,18 @@ a non-zero number will cause the object to move.
     * 'range':[FLOAT]
     * action: None
 
-        
+## Arm
+* **TAKE_ITEM** Requests that the arm pick up an item.
+    * 'command':'TAKE_ITEM'
+    * 'location':'cell' or None
+    * 'item_name':[STR] The name of the item to take.
+    * 'item_index':[INT] The index of the item in the view list.
+    * 'item_uuid':[STR] The assigned uuid of the item.
+
+NOTES: If *location* is None, the arm will try to take from the current cell. Commands should only specify one item aspect (name, index or uuid). If more than 1 is provided, they are examined in the order (uuid, name, and index) taking the first match. If all are None, the arm tries to take the first item in the cell (default: *item_index*=0). In other words, unless the a cell contains a lot of items, a call to 'TAKE_ITEM' with all other data points set to None will cause the arm to pick up the only item in a cell.
+
+* **DROP_ITEM** Requests that the arm drop the item it is holding.
+    * 'command':'DROP_ITEM'
+    * 'location': 'cell' or None
+
+NOTES: Just like *TAKE_ITEM*, location determines were the item will be dropped. Currently, the only place to take or drop an item is the map cell. Eventually, I plan on adding storage compartments, so objects can store items.

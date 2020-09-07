@@ -15,15 +15,15 @@
         "ammunition":100,
         "min_damage":100,
         "max_damage":100,
-        "range":10
+        "range":20
     },
 
     "2000" : {
         "id":"2000",
         "name":"Small Engine",
         "ctype":"Engine",
-        "min_speed":-1.0,
-        "max_speed":1.0,
+        "min_speed":-3.0,
+        "max_speed":3.0,
         "cur_speed":0.0,
         "max_turnrate":90.0,
         "cur_turnrate":0.0
