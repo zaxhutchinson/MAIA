@@ -14,7 +14,10 @@ class GState:
         self.initState = None
         self.checkState = None
 
-        if self.data['type']=='ITEM_TOUCH':
+        if self.data['type']=='OBJ_ITEMS_TOUCH':
+            self.checkState = self.checkObjItemsTouch
+            self.initState = self.initObjItemsTouch
+        elif self.data['type']=='ITEMS_TOUCH':
             self.checkState = self.checkItemTouch
             self.initState = self.initItemTouch
         elif self.data['type']=='ALL_OBJS_DESTROYED':
@@ -27,14 +30,51 @@ class GState:
         return self.data[key]
 
     ############################################################
+    # OBJ_ITEM_TOUCH
+    # One of the objects must touch all items simultaneously.
+
+    def initObjItemsTouch(self,objs,items):
+        for i in items.values():
+            if i.getData('name') in self.data['items']:
+                self.items.append(i)
+        for o in objs.values():
+            if o.getData('name') in self.data['objs']:
+                self.objs.append(o)
+
+    def checkObjItemsTouch(self):
+        # First see if all items are in the same location
+        prev_x = None
+        prev_y = None
+        state_x=True
+        state_y=True
+        for i in self.items:
+            if prev_x==None:
+                prev_x=i.getData('x')
+                prev_y=i.getData('y')
+            else:
+                state_x = state_x and prev_x == i.getData('x')
+                state_y = state_y and prev_y == i.getData('y')
+
+        # If all items are in the same place...
+        if state_x and state_y:
+            # Assume obj is not...
+            self.data['state']=False
+            # If 1 obj is, set state to true
+            for o in self.objs:
+                if prev_x == o.getData('x') and prev_y == o.getData('y'):
+                    self.data['state']=True
+        else:
+            self.data['state']=False
+
+        return self.data['state']
+
+    ############################################################
     # ITEM TOUCH
     def initItemTouch(self,objs,items):
         for i in items.values():
-            tags=i.getData('tags')
-            for t in tags:
-                if t in self.data['tags']:
-                    self.items.append(i)
-                    break # So that we only add it once even if it matches more than one tag.
+            if i.getData('name') in self.data['items']:
+                self.items.append(i)
+                
 
     def checkItemTouch(self):
 
@@ -50,8 +90,8 @@ class GState:
                 prev_x=i.getData('x')
                 prev_y=i.getData('y')
             else:
-                xstate = prev_x == i.getData('x')
-                ystate = prev_y == i.getData('y')
+                xstate = xstate and prev_x == i.getData('x')
+                ystate = ystate and prev_y == i.getData('y')
         
         self.data['state'] = xstate and ystate
 
@@ -61,12 +101,9 @@ class GState:
     # ALL OBJS DESTROYED
     def initAllObjsDestroyed(self,objs,items):
         for o in objs.values():
-            tags = o.getData('tags')
-            for t in tags:
-                if t in self.data['tags']:
-                    self.objs.append(o)
-                    break
-
+            if o.getData('name') in self.data['objs']:
+                self.objs.append(o)
+                
     def checkAllObjsDestroyed(self):
         
         all_dead = True
@@ -82,11 +119,8 @@ class GState:
     # N OBJS DESTROYED
     def initNObjsDestroyed(self,objs,items):
         for o in objs.values():
-            tags = o.getData('tags')
-            for t in tags:
-                if t in self.data['tags']:
-                    self.objs.append(o)
-                    break
+            if o.getData('name') in self.data['objs']:
+                self.objs.append(o)
 
     def checkNObjsDestroyed(self):
 

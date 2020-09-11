@@ -9,7 +9,7 @@ Maine AI Arena
 * [Contributors](#contributors)
 
 ## Current State
-Working, with bugs. All commands have had limited testing. See *todo.md* under docs for a list of known bugs and planned (short-term) features. See *version_history.md* for recent changes.
+MAIA is still in early, early development and new versions will break content tailored to previous versions. All commands have had limited testing. See *todo.md* under docs for a list of known bugs and planned (short-term) features. See *version_history.md* for recent changes.
 
 The teams under the team directory are just examples. They will change over time as I test things. Eventually, I will write a more comprehensive AI example.
 

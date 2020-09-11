@@ -18,7 +18,7 @@
             {
                 "callsign": "Leader",
                 "squad" : "A",
-                "object" : "blue_tank",
+                "object" : "player",
                 "AI_file" : "AI_file1.py"
             }
         ]

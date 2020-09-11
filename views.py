@@ -40,3 +40,6 @@ class ViewManager:
         v['tick']=None
         v['message']=""
         self.view_templates[v['vtype']]=v
+        #####################
+        # 
+        #####################

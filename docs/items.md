@@ -12,8 +12,7 @@ The data of items is the same across all items (currently). Items are in essence
         "weight":1,
         "bulk":1,
         "text":"B",
-        "fill":"blue",
-        "tags":["blue_flag"]
+        "fill":"blue"
     }
 ```
 
@@ -23,4 +22,3 @@ The data of items is the same across all items (currently). Items are in essence
 * bulk [INT/FLOAT]: Bulk of the item (or the physical size).
 * text [STR]: The char displayed on the map.
 * fill [STR]: The color of the 'text' on the map. Should be a color name recognized by tkinter.
-* tags [LISTofSTR]: Tags are used by the State manager to track objects of this type.

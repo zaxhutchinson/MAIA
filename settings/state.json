@@ -1,28 +1,37 @@
 {
     "touchdown": [
         {
-            "type": "ITEM_TOUCH",
-            "tags":["red_flag","red_base"],
+            "type": "ITEMS_TOUCH",
+            "items":["red_flag","red_base"],
             "state":false,
             "msg": "Red Wins"
         },
         {
-            "type": "ITEM_TOUCH",
-            "tags":["blue_flag","blue_base"],
+            "type": "ITEMS_TOUCH",
+            "items":["blue_flag","blue_base"],
             "state":false,
             "msg": "Blue wins"
+        }
+    ],
+    "reach_goal": [
+        {
+            "type": "OBJ_ITEMS_TOUCH",
+            "items": ["goal"],
+            "objs": ["player"],
+            "state": false,
+            "msg":"Goal was reached!"
         }
     ],
     "domination": [
         {
             "type": "ALL_OBJS_DESTROYED",
-            "tags": ["blue_player"],
+            "objs": ["Blue Tank"],
             "state":false,
             "msg": "Red wins"
         },
         {
             "type": "ALL_OBJS_DESTROYED",
-            "tags": ["red_player"],
+            "objs": ["Red Tank"],
             "state":false,
             "msg":"Blue wins"
         }
@@ -31,14 +40,14 @@
         {
             "type": "N_OBJS_DESTROYED",
             "number": 1,
-            "tags": ["blue_player"],
+            "objs": ["Blue Tank"],
             "state":false,
             "msg":"Red wins"
         },
         {
             "type": "N_OBJS_DESTROYED",
             "number": 1,
-            "tags": ["red_player"],
+            "objs": ["Red Tank"],
             "state":false,
             "msg": "Blue wins"
         }

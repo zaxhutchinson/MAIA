@@ -1,20 +1,26 @@
 {
     "0": {
         "id":"0",
-        "name":"blue flag",
+        "name":"blue_flag",
         "weight":1,
         "bulk":1,
         "text":"B",
-        "fill":"blue",
-        "tags":[]
+        "fill":"blue"
     },
     "1": {
         "id":"1",
-        "name":"red flag",
+        "name":"red_flag",
         "weight":1,
         "bulk":1,
         "text":"R",
-        "fill":"red",
-        "tags":[]
+        "fill":"red"
+    },
+    "goal": {
+        "id":"goal",
+        "name":"goal",
+        "weight":1000000,
+        "bulk":100000000,
+        "text":"G",
+        "fill":"yellow"
     }
 }

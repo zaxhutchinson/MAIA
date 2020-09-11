@@ -361,8 +361,8 @@ class Sim:
                 # Check if the sim is over.
                 if self.checkEndOfSim():
                     return
-
-                self.tick += 1
+                else:
+                    self.tick += 1
 
 
 

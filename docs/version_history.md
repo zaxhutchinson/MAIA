@@ -1,3 +1,8 @@
+**Version 0.20**
+Sept 11, 2020
+- Alters how gstate objects track items and objects. The tag entries were unnecessary. Now, gstate looks at the name field of objects and items to determine a match.
+- Added a new victory state type: OBJ_ITEMS_TOUCH. To satisfy this victory, all items matching the list of item names must be in the same cell as any of the objects matching the object names. In other words, all matching items must be in the same cell with only ONE matching object.
+
 **Version 0.19**
 Sept 7, 2020
 - Fixes a bug with moving. Previously, not all intervening cells were checked for occupancy.
