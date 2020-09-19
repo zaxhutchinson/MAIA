@@ -35,8 +35,10 @@ class Sim:
         self.ticks_per_turn=1
         self.tick = 0
         self.win_states=[]
-
         self.comp_views={}
+        self.actions={}
+        self.action_priority={}
+        self.action_priority_keys=[]
 
     def buildActionDispatchTable(self):
         self.action_dispatch_table['HIGHSPEED_PROJECTILE'] = self.ACTN_HighspeedProjectile
@@ -92,6 +94,20 @@ class Sim:
         self.comp_views[_uuid].append(view)
 
     ##########################################################################
+    # ACTIONS
+    def buildActionPriority(self,config):
+        ap = config['action_priority']
+        for k,v in ap.items():
+            self.action_priority_keys.append(v)
+            self.action_priority[v]=k
+            self.actions[k]=[]
+        self.action_priority_keys=sorted(self.action_priority_keys)
+
+    def resetActionDict(self):
+        for v in self.actions.values():
+            v.clear()
+
+    ##########################################################################
     # WIN STATE
     def setAllWinStates(self,ldr,ws_names):
         for wsname in ws_names:
@@ -117,8 +133,14 @@ class Sim:
             if v['teamname']==None:
                 raise BuildException("Side "+k+" has no team assignment.")
 
+        # Get the main config dict
         config = ldr.copyMainConfig()
+
+        # Set the team directory
         team_dir = config['team_dir']
+
+        # Set the action Priority and sorted keys.
+        self.buildActionPriority(config)
 
         # Set the number of ticks per turn
         self.ticks_per_turn = config['ticks_per_turn']
@@ -358,6 +380,20 @@ class Sim:
                         cmds_this_tick = objcmds[str(tick)]
                         self.processCommands(objuuid,cmds_this_tick)
 
+                # Run all actions by type in the order specified in the main
+                # config's action_priority
+                for ap in self.action_priority_keys:
+                    action_type = self.action_priority[ap]
+                    
+                    cur_actions = self.actions[action_type]
+                    
+                    # act is a tuple: (obj,action)
+                    for act in cur_actions:
+                        self.action_dispatch_table[action_type](act[0],act[1])
+
+                # All actions have been run, now clear action dict.
+                self.resetActionDict()
+
                 # Check if the sim is over.
                 if self.checkEndOfSim():
                     return
@@ -382,7 +418,10 @@ class Sim:
             # handles its execution.
             for a in actions:
 
-                self.action_dispatch_table[a.getType()](obj,a)
+                # Add obj ref and action as a tuple.
+                self.actions[a.getType()].append( (obj,a) )
+
+                #self.action_dispatch_table[a.getType()](obj,a)
 
     ##########################################################################
     # ACTION PROCESSING FUNCTIONS
@@ -435,7 +474,7 @@ class Sim:
     # Regular object move action
     def ACTN_Move(self,obj,actn):
         # Get current data
-        direction = actn.getData('direction')
+        facing = obj.getData('facing')
         cur_speed = actn.getData('speed')
         old_x = obj.getData('x')
         old_y = obj.getData('y')
@@ -444,7 +483,7 @@ class Sim:
         x = old_x + old_cell_x
         y = old_y + old_cell_y
         # translate and new data
-        new_position = zmath.translatePoint(x,y,direction,cur_speed)
+        new_position = zmath.translatePoint(x,y,facing,cur_speed)
         new_x = int(new_position[0])
         new_y = int(new_position[1])
         new_cell_x = abs(new_position[0]-abs(new_x))
@@ -454,7 +493,7 @@ class Sim:
         if new_x != old_x or new_y != old_y:
 
             # Might be moving more than 1 cell. Get trajectory.
-            cell_path = zmath.getCellsAlongTrajectory(old_x,old_y,direction,cur_speed)
+            cell_path = zmath.getCellsAlongTrajectory(x,y,facing,cur_speed)
 
             cur_cell = (old_x,old_y)
             collision = False
@@ -522,7 +561,6 @@ class Sim:
             new_facing -= 360
         obj.setData('facing',new_facing)
 
-
     # Performs a radar transmission
     def ACTN_TransmitRadar(self,obj,actn):
 
@@ -533,13 +571,13 @@ class Sim:
         view['slot_id']=actn.getData('slot_id')
 
         # Set up the necessary data for easy access
-        radar_facing = actn.getData('facing')#+actn.getData('offset_angle')
+        radar_facing = obj.getData('facing')+actn.getData('offset_angle')
         start = radar_facing-actn.getData('visarc')
         end = radar_facing+actn.getData('visarc')
         angle = start
         jump = actn.getData('resolution')
-        x = actn.getData('x')
-        y = actn.getData('y')
+        x = obj.getData('x')
+        y = obj.getData('y')
         _range = actn.getData('range')
 
     
@@ -561,7 +599,7 @@ class Sim:
             for ping in obj_pings:
 
                 # Pinged ourself
-                if ping['x']==x and ping['y']==y:
+                if ping['x']==obj.getData('x') and ping['y']==obj.getData('y'):
                     pass
                 else:
                     # For now all we're giving the transmitting player
@@ -604,7 +642,10 @@ class Sim:
                 ping['owner']=item.getData('owner')
                 temp_view.append(ping)
 
-            angle += jump
+            if jump == 0:
+                break
+            else:
+                angle += jump
 
 
 
@@ -636,7 +677,6 @@ class Sim:
                     self.addCompView(uuid,view)
         
     def ACTN_TakeItem(self,obj,actn):
-        print('TAKE ACTION')
 
         take_location = actn.getData('location')
 
@@ -649,7 +689,6 @@ class Sim:
             items_in_obj_cell = self.map.getItemsInCell(obj_x,obj_y)
 
             if len(items_in_obj_cell) > 0:
-                print('There are objects here.')
                 item_name = actn.getData('item_name')
                 item_index = actn.getData('item_index')
                 item_uuid = actn.getData('item_uuid')

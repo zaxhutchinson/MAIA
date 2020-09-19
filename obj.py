@@ -131,8 +131,12 @@ class Object:
                     max_cmds-=1
 
                 if slot_id in self.data['comps']:
-                    comp_actions = self.data['comps'][slot_id].Update(cmd)
-                    actions += comp_actions  
+                    actions += self.data['comps'][slot_id].Command(cmd)
+
+
+            for comp in self.data['comps'].values():
+                actions += comp.Update()
+
 
         return actions
 

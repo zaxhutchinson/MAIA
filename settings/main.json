@@ -1,9 +1,15 @@
 {
     "team_dir":"teams",
-    
     "ticks_per_turn" : 1,
-
     "no_ui_max_turns": 100,
-
-    "debug": true
+    "debug": true,
+    "action_priority":{
+        "TAKE_ITEM":1,
+        "DROP_ITEM":2,
+        "HIGHSPEED_PROJECTILE":3,
+        "BROADCAST":4,
+        "TURN":5,
+        "MOVE":6,
+        "TRANSMIT_RADAR":7
+    }
 }

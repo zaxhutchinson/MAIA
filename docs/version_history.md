@@ -1,7 +1,16 @@
+**Version 0.21**
+Sept 15, 2020
+- Component updates now happen separately from command processing.
+- Adds action priority to main.json. Actions are now collected from all objects and then executed in order by type. The order is defined in main.json. This aids in disconnecting commands and comp updates from the execution of the resulting actions within a tick.
+- TRANSMIT_RADAR command has been split into ACTIVATE_RADAR and DEACTIVATE_RADAR. Radar components, when active, will produce a TRANSMIT_RADAR action each tick.
+- Fixed bug in moving objects using the MOVE action.
+- Removes the clutter of previous test maps and teams.
+- Adds the *scenarios.md* file describing the example scenarios included in MAIA. Work in progress.
+
 **Version 0.20**
 Sept 11, 2020
 - Alters how gstate objects track items and objects. The tag entries were unnecessary. Now, gstate looks at the name field of objects and items to determine a match.
-- Added a new victory state type: OBJ_ITEMS_TOUCH. To satisfy this victory, all items matching the list of item names must be in the same cell as any of the objects matching the object names. In other words, all matching items must be in the same cell with only ONE matching object.
+- Added a new victory state type: OBJ_ITEMS_TOUCH. To satisfy this victory, all items matching the list of item names must be in the same cell as any of the objects matching the object names. In other words, all matching items must be in the same cell with only ONE matching object. This victory state is intended to model scenarios such as a treasure hunt or, more simply, an agent reaching a goal.
 
 **Version 0.19**
 Sept 7, 2020

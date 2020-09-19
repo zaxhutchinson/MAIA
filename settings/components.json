@@ -38,7 +38,7 @@
         "level":1,
         "visarc":0,
         "offset_angle":0,
-        "resolution":1
+        "resolution":0
     },
 
     "4000": {
@@ -46,7 +46,8 @@
         "name": "Basic Radio",
         "ctype": "Radio",
         "max_range": 100,
-        "cur_range": 100
+        "cur_range": 100,
+        "message": null
 
     },
 

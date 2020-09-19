@@ -4,6 +4,8 @@
 /unused_code
 /notes
 /old_json_files
+/old_teams
+/old_maps
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

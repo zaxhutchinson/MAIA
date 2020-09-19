@@ -21,7 +21,7 @@ def sign(_n):
 # Distance
 def distance(x0,y0,x1,y1):
     return math.sqrt(
-        (x1-x0)**2 + (y1-y0)**2
+        (x1-x0)**2.0 + (y1-y0)**2.0
     )
 
 ###############################################################################
@@ -32,7 +32,6 @@ def distance(x0,y0,x1,y1):
 #       passed down through several of my projects and I've lost the
 #       original citation. Hats off to whomever wrote it.
 def getCellsAlongTrajectory(x,y,angle,distance):
-
     A=(x,y)
     B=translatePoint(x,y,angle,distance)
     B = (int(B[0]),int(B[1]))

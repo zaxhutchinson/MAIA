@@ -1,16 +1,4 @@
 {
-    "TeamBlue" : {
-        "size" : 1,
-        "name" : "TeamBlue",
-        "agent_defs" : [
-            {
-                "callsign": "Leader",
-                "squad" : "A",
-                "object" : "blue_tank",
-                "AI_file" : "AI_file0.py"
-            }
-        ]
-    },
     "TeamBeta" : {
         "size" : 1,
         "name" : "TeamBeta",
@@ -20,18 +8,6 @@
                 "squad" : "A",
                 "object" : "player",
                 "AI_file" : "AI_file1.py"
-            }
-        ]
-    },
-    "TeamRed" : {
-        "size" : 1,
-        "name" : "TeamRed",
-        "agent_defs" : [
-            {
-                "callsign": "Leader",
-                "squad" : "A",
-                "object" : "red_tank",
-                "AI_file" : "AI_file2.py"
             }
         ]
     }

@@ -219,9 +219,13 @@ def CMD_SetSpeed(speed):
 # RADAR COMMAND FUNCTIONS
 #
 # Initiate a radar transmission
-def CMD_TransmitRadar():
+def CMD_ActivateRadar():
     cmd = {}
-    cmd['command']='TRANSMIT_RADAR'
+    cmd['command']='ACTIVATE_RADAR'
+    return cmd
+def CMD_DeactivateRadar():
+    cmd = {}
+    cmd['command']='DEACTIVATE_RADAR'
     return cmd
 
 ##############################################################################
