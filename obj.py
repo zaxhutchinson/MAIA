@@ -1,9 +1,10 @@
 import random
 import math
+import logging
 
 import vec2
 import line
-import log
+import zfunctions
 
 _2PI = 2.0*math.pi
 
@@ -25,6 +26,8 @@ class Object:
         self.data['squad']=None
         self.data['redraw']=True
         self.data['points']=0
+
+        self.logger = None
         
         self.view_keys = [
             'health','damage','facing','x','y','cell_x','cell_y','name','teamname',
@@ -56,6 +59,40 @@ class Object:
     def place(self,data):
         for k,v in data.items():
             self.data[k]=v
+        self.initLogger()
+
+    def initLogger(self):
+        if self.getData('ai') != None:
+            self.logger = logging.getLogger(
+                self.getData('teamname')+"."+self.getData('callsign')
+            )
+            self.logger.setLevel(logging.DEBUG)
+            self.handler = logging.FileHandler(
+                'log/'+self.logger.name+'.log', 
+                mode='w'
+            )
+            self.formatter = logging.Formatter(
+                '%(name)s - %(message)s'
+            )
+            self.handler.setFormatter(self.formatter)
+            self.logger.addHandler(self.handler)
+
+    # Obj-level pass through functions to the logger
+    def logDebug(self,msg):
+        if self.logger != None:
+            self.logger.debug(msg)
+    def logInfo(self,msg):
+        if self.logger != None:
+            self.logger.info(msg)
+    def logWarning(self,msg):
+        if self.logger != None:
+            self.logger.warning(msg)
+    def logError(self,msg):
+        if self.logger != None:
+            self.logger.error(msg)
+    def logCritical(self,msg):
+        if self.logger != None:
+            self.logger.critical(msg)
 
     def update(self,view):
         if self.isAlive():
@@ -66,19 +103,25 @@ class Object:
                 else:
                     return None
             except Exception as e:
-                log.LogMostRecentException(
-                    "AI script for team "+
-                    self.getData('teamname') +
-                    " agent " + self.getData('callsign') +
-                    " raised the exception: " + str(e)
-
+                self.logError(
+                    "runAI() raised an exception: " +
+                    str(e)
                 )
+                # log.LogMostRecentException(
+                #     "AI script for team "+
+                #     self.getData('teamname') +
+                #     " agent " + self.getData('callsign') +
+                #     " raised the exception: " + str(e)
+
+                # )
 
     def damageObj(self,amt):
         # Add damage to current total
         old_damage = self.getData('damage')
         new_damage = old_damage + amt
         self.setData('damage',new_damage)
+
+        self.logInfo("Damaged for "+str(amt)+" - Total Damage: "+str(new_damage))
 
         points = 0
         if self.getData('points_count'):
@@ -88,6 +131,8 @@ class Object:
         # OBJECT IS DESTROYED.
         if self.isAlive() and new_damage >= self.getData('health'):
             self.setData('alive',False)
+
+            self.logInfo("DESTROYED!!!")
 
             points = self.getData('health')-old_damage
 
@@ -132,6 +177,9 @@ class Object:
 
                 if slot_id in self.data['comps']:
                     actions += self.data['comps'][slot_id].Command(cmd)
+                    self.logInfo(zfunctions.CmdToString(cmd))
+                else:
+                    self.logError(zfunctions.CmdToString(cmd))
 
 
             for comp in self.data['comps'].values():

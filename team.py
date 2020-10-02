@@ -1,9 +1,21 @@
-from log import *
+import logging
 import agent
 
 class Team:
     def __init__(self,data):
         self.data={}
+        self.logger = None
+
+        if 'name' in data:
+            self.logger = logging.getLogger(data['name'])
+            self.handler = logging.FileHandler('log/'+self.logger.name+'.log',mode='w')
+            self.formatter = logging.Formatter('%(name)s - %(message)s')
+            self.handler.setFormatter(self.formatter)
+            self.logger.addHandler(self.handler)
+        else:
+            raise KeyError('name')
+
+
         self.required_data=[]
 
         self.setData(data)
@@ -16,7 +28,7 @@ class Team:
         self.data['agents']={}
 
         req_data = [
-            'name','size','agent_defs'
+            'size','agent_defs'
         ]
 
         for rd in req_data:
@@ -24,7 +36,7 @@ class Team:
                 self.data[rd] = data[rd]
             else:
                 self.data[rd] = None
-                LogError("TEAM: Missing data "+rd)
+                self.logger.error("TEAM: Missing data "+rd)
 
         self.required_data += req_data
 
@@ -44,7 +56,7 @@ class Team:
         agent_defs = self.getData('agent_defs')
         
         if agent_defs == None:
-            LogError("AGENT: Agent definition data is missing.")
+            self.logger.error("AGENT: Agent definition data is missing.")
         else:
             for ID,data in agent_defs.items():
                 ID = int(ID)

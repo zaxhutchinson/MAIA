@@ -1,7 +1,6 @@
 import math
 
 import vec2
-# from log import *
 import action
 
 class Comp:

@@ -8,16 +8,17 @@ from tkinter.font import Font
 import tkinter.scrolledtext as scrolltext
 import queue
 import cProfile
+import logging
 
 from ui_widgets import *
-import log
 
 class UISim(tk.Toplevel):
-    def __init__(self,map_width,map_height,sim,omsgr,master=None):
+    def __init__(self,map_width,map_height,sim,omsgr,master=None,logger=None):
         super().__init__(master)
         self.master = master
         self.configure(bg=DARKCOLOR)
         self.title("MAIA - Sim UI")
+        self.logger=logger
 
         self.cell_size=32
         self.map_obj_char_size=24
@@ -156,7 +157,7 @@ class UISim(tk.Toplevel):
         try:
             return self.obj_drawIDs[_uuid]
         except KeyError:
-            log.LogError("UISim: KeyError "+str(_uuid)+" in getObjectDrawID().")
+            self.logger.error("UISim: KeyError "+str(_uuid)+" in getObjectDrawID().")
             return None
     def removeObjectDrawID(self,_uuid):
         objID = self.getObjectDrawID(_uuid)
@@ -190,7 +191,7 @@ class UISim(tk.Toplevel):
         try:
             return self.item_drawIDs[_uuid]
         except KeyError:
-            log.LogError("UISim: KeyError "+str(_uuid)+" in getItemDrawID().")
+            self.logger.error("UISim: KeyError "+str(_uuid)+" in getItemDrawID().")
             return None
     def removeItemDrawID(self,_uuid):
         del self.item_drawIDs[_uuid]

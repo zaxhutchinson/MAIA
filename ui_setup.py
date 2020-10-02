@@ -6,10 +6,10 @@ import importlib.util
 import sys
 import os
 import queue
+import logging
 
 import sim
 import loader
-import log
 import ui_sim
 import msgs
 from zexceptions import *
@@ -17,10 +17,11 @@ from ui_widgets import *
 
 
 class UISetup(tk.Frame):
-    def __init__(self,master=None):
+    def __init__(self,master=None,logger=None):
         super().__init__(master)
         self.master = master
-        
+        self.logger = logger
+
         self.configure(bg=DARKCOLOR)
         self.pack()
         self.master.title("MAIA - Maine AI Arena")
@@ -30,14 +31,14 @@ class UISetup(tk.Frame):
         self.imsgr = msgs.IMsgr(self.msg_queue)
         self.omsgr = msgs.OMsgr(self.msg_queue)
 
-        self.ldr = loader.Loader()
+        self.ldr = loader.Loader(self.logger)
         self.sim = sim.Sim(self.imsgr)
 
-        log.LogInit()
-        log_setting = self.ldr.getMainConfigData('debug')
-        if type(log_setting)==bool:
-            log.LogSetDebug(log_setting)
-            log.LogDebug("DEBUG IS ON")
+        # log.LogInit()
+        # log_setting = self.ldr.getMainConfigData('debug')
+        # if type(log_setting)==bool:
+        #     log.LogSetDebug(log_setting)
+        #     log.LogDebug("DEBUG IS ON")
         
 
         self.combat_log = []
@@ -203,9 +204,9 @@ class UISetup(tk.Frame):
                 self.sim.addTeamName(side_selection,team_name)
                 self.updateTeamNames()
             else:
-                log.LogError("App::addTeam() - No side or team selected.")
+                self.logger.error("App::addTeam() - No side or team selected.")
         else:
-            log.LogError("App::addTeam() - Sim is missing the map.")
+            self.logger.error("App::addTeam() - Sim is missing the map.")
     def removeTeam(self):
         # side_index = self.lbSideNames.curselection()
         # if len(side_index) > 0:
@@ -233,7 +234,7 @@ class UISetup(tk.Frame):
     def runSimWithUI(self):
         map_width=self.sim.getMap().getData('width')
         map_height=self.sim.getMap().getData('height')
-        self.UIMap = ui_sim.UISim(map_width,map_height,self.sim,self.omsgr,self)
+        self.UIMap = ui_sim.UISim(map_width,map_height,self.sim,self.omsgr,self,self.logger)
 
     def runSimWithoutUI(self):
         self.sim.runSim(self.ldr.getMainConfigData('no_ui_max_turns'))

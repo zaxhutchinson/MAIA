@@ -28,7 +28,7 @@ class AI:
         # aih.prettyPrintView(view)
 
         # Ping the radar.
-        print("--------------AI TURN--------------")
+        # print("--------------AI TURN--------------")
 
         if self.state == 0:
             self.cmd_maker.addCmd(0,2,aih.CMD_ActivateRadar())

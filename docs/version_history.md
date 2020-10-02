@@ -1,3 +1,9 @@
+**Version 0.22**
+Oct 2, 2020
+- Improves and centralizes logging
+    - MAIA now utilizes Python3's logging module for all simulation related logs with the exception of the UI's message window.
+    - All AI-endowed objects generate their own log files. Currently, they log commands, actions and some damage info. Log messages lack meta info such as the turn on which the message was generated.
+
 **Version 0.21**
 Sept 15, 2020
 - Component updates now happen separately from command processing.

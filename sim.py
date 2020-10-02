@@ -14,7 +14,7 @@ from zexceptions import *
 import valid
 import views
 import gstate
-#from log import *
+import zfunctions
 
 class Sim:
     def __init__(self, imsgr):
@@ -389,6 +389,9 @@ class Sim:
                     
                     # act is a tuple: (obj,action)
                     for act in cur_actions:
+                        # Log the action with the object's logger.
+                        act[0].logInfo(zfunctions.ActionToString(act[1]))
+                        # Execute action.
                         self.action_dispatch_table[action_type](act[0],act[1])
 
                 # All actions have been run, now clear action dict.

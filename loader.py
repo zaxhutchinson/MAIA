@@ -9,12 +9,12 @@ import zmap
 import item
 import comp
 import vec2
-import log
 import team
 import gstate
+import logging
 
 class Loader:
-    def __init__(self):
+    def __init__(self,logger=None):
 
         self.main_config={}
         self.obj_templates={}
@@ -31,6 +31,8 @@ class Loader:
         self.loadMapTemplates("settings/maps.json")
         self.loadTeamTemplates("settings/teams.json")
         self.loadGStateTemplates("settings/state.json")
+
+        self.logger = logger
         
     ##########################################################################
     # LOAD/COPY GSTATE
@@ -46,7 +48,7 @@ class Loader:
         try:
             return copy.deepcopy(self.gstate_templates[_id])
         except KeyError:
-            log.LogError("LOADER: copyGStateTemplate() KeyError "+str(_id))
+            self.logger.error("LOADER: copyGStateTemplate() KeyError "+str(_id))
         
     ##########################################################################
     # LOAD/COPY OBJ
@@ -59,7 +61,7 @@ class Loader:
         try:
             return copy.deepcopy(self.obj_templates[_id])
         except KeyError:
-            log.LogError("LOADER: copyObjTemplate() KeyError "+str(_id))
+            self.logger.error("LOADER: copyObjTemplate() KeyError "+str(_id))
     ##########################################################################
     # LOAD/COPY ITEMS
     def loadItemTemplates(self,filename):
@@ -71,7 +73,7 @@ class Loader:
         try:
             return copy.deepcopy(self.item_templates[_id])
         except KeyError:
-            log.LogError("LOADER: copyItemTemplate() KeyError "+str(_id))
+            self.logger.error("LOADER: copyItemTemplate() KeyError "+str(_id))
     ##########################################################################
     # LOAD/COPY COMPS
     def loadCompTemplates(self,filename):
@@ -83,7 +85,7 @@ class Loader:
         try:
             return copy.deepcopy(self.comp_templates[_id])
         except KeyError:
-            log.LogError("LOADER: copyCompTemplate() KeyError "+str(_id))
+            self.logger.error("LOADER: copyCompTemplate() KeyError "+str(_id))
     ##########################################################################
     # LOAD/COPY MAPS
     def loadMapTemplates(self,filename):
@@ -95,7 +97,7 @@ class Loader:
         try:
             return copy.deepcopy(self.map_templates[_id])
         except KeyError:
-            log.LogError("LOADER: copyMapTemplate() KeyError "+str(_id))
+            self.logger.error("LOADER: copyMapTemplate() KeyError "+str(_id))
     def getMapIDs(self):
         return list(self.map_templates.keys())
     ##########################################################################
@@ -109,7 +111,7 @@ class Loader:
         try:
             return copy.deepcopy(self.team_templates[_id])
         except KeyError:
-            log.LogError("LOADER: copyTeamTemplate() KeyError "+str(_id))
+            self.logger.error("LOADER: copyTeamTemplate() KeyError "+str(_id))
     def getTeamIDs(self):
         return list(self.team_templates.keys())
     def getTeamNames(self):
@@ -128,6 +130,6 @@ class Loader:
         try:
             return self.main_config[key]
         except KeyError:
-            log.LogError("LOADER: getMainConfigData() KeyError "+str(key))
+            self.logger.error("LOADER: getMainConfigData() KeyError "+str(key))
 
 

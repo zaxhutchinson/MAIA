@@ -1,4 +1,4 @@
-from log import *
+
 
 class Agent:
     def __init__(self,ID,obj_id,ai_filename):
