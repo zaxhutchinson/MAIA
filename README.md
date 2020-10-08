@@ -1,4 +1,4 @@
-# MAIA
+![alt text](images/maia.png)
 Maine AI Arena
 
 ## Table of contents
