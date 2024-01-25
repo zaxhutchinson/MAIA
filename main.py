@@ -6,6 +6,7 @@ import ui_setup
 import vec2
 import math
 import zmap
+import ui_homepage
 
 
 
@@ -22,5 +23,5 @@ if __name__ == "__main__":
 
     # Start App
     root = tk.Tk()
-    maia_app = ui_setup.UISetup(master=root, logger=logger)
+    maia_app = ui_homepage.UIHomepage(master=root, logger=logger)
     maia_app.Run()
