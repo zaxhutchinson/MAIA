@@ -78,6 +78,10 @@ class uiLabel(tk.Label):
             highlightcolor=LIGHTCOLOR
         )
 
+class uiTextbox(tk.Text):
+    def __init__(self,**kwargs):
+        super().__init__(kwargs['master'])
+
 class uiQuietFrame(tk.Frame):
     def __init__(self,**kwargs):
         super().__init__(kwargs['master'])
