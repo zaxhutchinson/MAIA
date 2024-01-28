@@ -51,7 +51,13 @@ class UISettings(tk.Toplevel):
         self.componentsIDEntry = uiEntry(master=self.componentsColumn)
         self.componentsNameLabel = uiLabel(master=self.componentsColumn, text="Name:")
         self.componentsNameEntry = uiEntry(master=self.componentsColumn)
+        self.componentsCTypeLabel = uiLabel(master=self.componentsColumn,text="CType:")
+        self.componentsTypeLabel = uiLabel(master=self.componentsColumn,text="")
+        self.componentsCmdPerTickLabel = uiLabel(master=self.componentsColumn,text="Max Commands Per Tick:")
+        self.componentsCmdPerTickEntry = uiEntry(master=self.componentsColumn)
+        self.componentsTypeCombo = uiComboBox(master=self.componentsColumn)
 
+    
         self.objectsLabel = uiLabel(master=self.objectsColumn, text="Objects")
         self.objectsUpdateButton = uiButton(master=self.objectsColumn,command="",text="Update")
         self.objectsIDLabel = uiLabel(master=self.objectsColumn, text="ID:")
@@ -64,6 +70,15 @@ class UISettings(tk.Toplevel):
         self.objectsFillDeadEntry = uiEntry(master=self.objectsColumn)
         self.objectsTextLabel = uiLabel(master=self.objectsColumn, text="Text:")
         self.objectsTextEntry = uiEntry(master=self.objectsColumn)
+        self.objectsHealthLabel = uiLabel(master=self.objectsColumn,text="Health:")
+        self.objectsHealthEntry = uiEntry(master=self.objectsColumn)
+        self.objectsDensityLabel = uiLabel(master=self.objectsColumn,text="Density:")
+        self.objectsDensityEntry = uiEntry(master=self.objectsColumn)
+        self.objectsCompIDsLabel = uiLabel(master=self.objectsColumn,text="Comp IDs:")
+        self.objectsCompIDsEntry = uiEntry(master=self.objectsColumn)
+        self.objectsPointsCountLabel = uiLabel(master=self.objectsColumn,text="Points Count:")
+        self.objectsPointsCountEntry = uiEntry(master=self.objectsColumn)
+
 
         self.mapsLabel = uiLabel(master=self.mapsColumn, text="Maps")
         self.mapsUpdateButton = uiButton(master=self.mapsColumn,command="",text="Update")
@@ -75,6 +90,11 @@ class UISettings(tk.Toplevel):
         self.mapsEdgeObjIDEntry = uiEntry(master=self.mapsColumn)
         self.mapsDescLabel = uiLabel(master=self.mapsColumn,text="Desc:")
         self.mapsDescEntry = uiEntry(master=self.mapsColumn)
+        self.mapsWidthLabel = uiLabel(master=self.mapsColumn,text="Width:")
+        self.mapsWidthEntry = uiEntry(master=self.mapsColumn)
+        self.mapsHeightLabel = uiLabel(master=self.mapsColumn,text="Height:")
+        self.mapsHeightEntry = uiEntry(master=self.mapsColumn)
+
 
 
         #Set locations of widgets in containers
@@ -103,12 +123,11 @@ class UISettings(tk.Toplevel):
         self.agentObjectEntry = uiEntry(master=self.agentFrame)
         self.agentObjectEntry.grid(row=3,column=2,sticky="nsew")
         self.aiFileLabel = uiLabel(master=self.agentFrame,text="AI File:")
-        self.aiFileLabel.grid(row=4,column=1)
+        self.aiFileLabel.grid(row=4,column=1,sticky="nsew")
         self.aiFileEntry = uiEntry(master=self.agentFrame)
-        self.aiFileEntry.grid(row=4,column=2)
+        self.aiFileEntry.grid(row=4,column=2,sticky="nsew")
 
         self.teamData=self.ldr.team_templates
-        print(self.teamData)
         self.teamNames = self.ldr.getTeamNames()
         self.teamNameEntry.insert(0,self.teamNames[0])
         self.teamSizeEntry.insert(0,self.teamData[self.teamNames[0]]['size'])
@@ -127,7 +146,12 @@ class UISettings(tk.Toplevel):
         self.componentsIDEntry.grid(row=3,column=2,sticky="nsew")
         self.componentsNameLabel.grid(row=4,column=1,sticky="nsew")
         self.componentsNameEntry.grid(row=4,column=2,sticky="nsew")
-        self.componentsUpdateButton.grid(row=7,column=1,columnspan=2)
+        self.componentsCTypeLabel.grid(row=5,column=1,sticky="nsew")
+        self.componentsTypeLabel.grid(row=5,column=2,sticky="nsew")
+        self.componentsCmdPerTickLabel.grid(row=6,column=1,sticky="nsew")
+        self.componentsCmdPerTickEntry.grid(row=6,column=2,sticky="nsew")
+        self.componentsTypeCombo.grid(row=7,column=1,columnspan=2,sticky="nsew")
+        self.componentsUpdateButton.grid(row=8,column=1,columnspan=2,sticky="nsew")
 
         self.objectsColumn.pack(side=tk.LEFT,fill=tk.BOTH,expand=True,padx=10,pady=10)
         self.objectsLabel.grid(row=2,column=1,columnspan=2,sticky="nsew")
@@ -141,6 +165,14 @@ class UISettings(tk.Toplevel):
         self.objectsFillDeadEntry.grid(row=6,column=2,sticky="nsew")
         self.objectsTextLabel.grid(row=7,column=1,sticky="nsew")
         self.objectsTextEntry.grid(row=7,column=2,sticky="nsew")
+        self.objectsHealthLabel.grid(row=8,column=1,sticky="nsew")
+        self.objectsHealthEntry.grid(row=8,column=2,sticky="nsew")
+        self.objectsDensityLabel.grid(row=9,column=1,sticky="nsew")
+        self.objectsDensityEntry.grid(row=9,column=2,sticky="nsew")
+        self.objectsCompIDsLabel.grid(row=10,column=1,sticky="nsew")
+        self.objectsCompIDsEntry.grid(row=10,column=2,sticky="nsew")
+        self.objectsPointsCountLabel.grid(row=11,column=1,sticky="nsew")
+        self.objectsPointsCountEntry.grid(row=11,column=2,sticky="nsew")
         self.objectsUpdateButton.grid(row=10,column=1,columnspan=2)
 
         self.mapsColumn.pack(side=tk.LEFT,fill=tk.BOTH,expand=True,padx=10,pady=10)
@@ -153,7 +185,12 @@ class UISettings(tk.Toplevel):
         self.mapsEdgeObjIDEntry.grid(row=4,column=2,sticky="nsew")
         self.mapsDescLabel.grid(row=5,column=1,sticky="nsew")
         self.mapsDescEntry.grid(row=5,column=2,sticky="nsew")
-        self.mapsUpdateButton.grid(row=9,column=1,columnspan=2)
+        self.mapsWidthLabel.grid(row=6,column=1,sticky="nsew")
+        self.mapsWidthEntry.grid(row=6,column=2,sticky="nsew")
+        self.mapsHeightLabel.grid(row=7,column=1,sticky="nsew")
+        self.mapsHeightEntry.grid(row=7,column=2,sticky="nsew")
+        self.mapsUpdateButton.grid(row=8,column=1,columnspan=2)
+
 
 
     def updateTeamsJSON(self): 
