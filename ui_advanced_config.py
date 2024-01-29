@@ -194,7 +194,7 @@ class UISettings(tk.Toplevel):
 
 
     def updateTeamsJSON(self): 
-        self.teamData[self.teamNameEntry.get()]['size'] = self.teamSizeEntry.get()
+        self.teamData[self.teamNameEntry.get()]['size'] = int(self.teamSizeEntry.get())
         self.teamData[self.teamNameEntry.get()]['agent_defs'][0]['callsign'] = self.callsignEntry.get()
         self.teamData[self.teamNameEntry.get()]['name'] = self.teamNameEntry.get()
 
