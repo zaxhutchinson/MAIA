@@ -127,6 +127,7 @@ class UISettings(tk.Toplevel):
         self.aiFileEntry = uiEntry(master=self.agentFrame)
         self.aiFileEntry.grid(row=4,column=2,sticky="nsew")
 
+# TODO: insert current JSON values into all Entry widgets
         self.teamData=self.ldr.team_templates
         self.teamNames = self.ldr.getTeamNames()
         self.teamNameEntry.insert(0,self.teamNames[0])
@@ -192,7 +193,7 @@ class UISettings(tk.Toplevel):
         self.mapsUpdateButton.grid(row=8,column=1,columnspan=2)
 
 
-
+# TODO: update all functions to implement writing to each JSON file
     def updateTeamsJSON(self): 
         self.teamData[self.teamNameEntry.get()]['size'] = int(self.teamSizeEntry.get())
         self.teamData[self.teamNameEntry.get()]['agent_defs'][0]['callsign'] = self.callsignEntry.get()
