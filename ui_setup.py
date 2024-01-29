@@ -11,6 +11,7 @@ import logging
 import sim
 import loader
 import ui_sim
+import ui_advanced_config
 import msgs
 from zexceptions import *
 from ui_widgets import *
@@ -130,6 +131,9 @@ class UISetup(tk.Frame):
         self.fmSimUI = uiQuietFrame(master=self)
         self.fmSimUI.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True,padx=10,pady=10)
 
+        self.btnAdvSettings = uiButton(master=self.fmSimUI,command=self.runAdvancedSettings,text="Advanced Configuration")
+        self.btnAdvSettings.pack(side=tk.LEFT,fill=tk.BOTH,expand=True)
+
         self.btnBuildSim = uiButton(master=self.fmSimUI,command=self.buildSim,text="Build Sim")
         self.btnBuildSim.pack(side=tk.LEFT,fill=tk.BOTH,expand=True)
 
@@ -238,3 +242,6 @@ class UISetup(tk.Frame):
 
     def runSimWithoutUI(self):
         self.sim.runSim(self.ldr.getMainConfigData('no_ui_max_turns'))
+
+    def runAdvancedSettings(self):
+        self.UIMap = ui_advanced_config.UISettings(self,self.logger)
