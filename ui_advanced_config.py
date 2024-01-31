@@ -6,6 +6,8 @@ import cProfile
 import logging
 import loader
 import json
+import comp
+import obj
 
 from ui_widgets import *
 
@@ -38,13 +40,14 @@ class UISettings(tk.Toplevel):
         #Make Widgets
         self.titleLabel = uiLabel(master=self.bottomFrame, text="Advanced Settings")
         
+        self.selectTeamCombo = uiComboBox(master=self.teamsColumn)
         self.teamsLabel = uiLabel(master=self.teamsColumn, text="Teams")
         self.teamSizeLabel = uiLabel(master=self.teamsColumn, text="Size:")
         self.teamSizeEntry = uiEntry(master=self.teamsColumn)
         self.teamNameLabel = uiLabel(master=self.teamsColumn,text="Name:")
         self.teamNameEntry = uiEntry(master=self.teamsColumn)
         
-
+        self.selectComponentCombo = uiComboBox(master=self.componentsColumn)
         self.componentsLabel = uiLabel(master=self.componentsColumn, text="Components")
         self.componentsUpdateButton = uiButton(master=self.componentsColumn,command="",text="Update")
         self.componentsIDLabel = uiLabel(master=self.componentsColumn, text="ID:")
@@ -57,7 +60,7 @@ class UISettings(tk.Toplevel):
         self.componentsCmdPerTickEntry = uiEntry(master=self.componentsColumn)
         self.componentsTypeCombo = uiComboBox(master=self.componentsColumn)
 
-    
+        self.selectObjectsCombo = uiComboBox(master=self.objectsColumn)
         self.objectsLabel = uiLabel(master=self.objectsColumn, text="Objects")
         self.objectsUpdateButton = uiButton(master=self.objectsColumn,command="",text="Update")
         self.objectsIDLabel = uiLabel(master=self.objectsColumn, text="ID:")
@@ -79,7 +82,7 @@ class UISettings(tk.Toplevel):
         self.objectsPointsCountLabel = uiLabel(master=self.objectsColumn,text="Points Count:")
         self.objectsPointsCountEntry = uiEntry(master=self.objectsColumn)
 
-
+        self.selectMapsCombo = uiComboBox(master=self.mapsColumn)
         self.mapsLabel = uiLabel(master=self.mapsColumn, text="Maps")
         self.mapsUpdateButton = uiButton(master=self.mapsColumn,command="",text="Update")
         self.mapsIDLabel = uiLabel(master=self.mapsColumn, text="ID:")
@@ -98,10 +101,17 @@ class UISettings(tk.Toplevel):
 
 
         #Set locations of widgets in containers
+        
         self.bottomFrame.pack(fill=tk.BOTH,expand=True,padx=10,pady=10)
         self.titleLabel.pack(side=tk.TOP,fill=tk.BOTH,expand=False,padx=10,pady=10)
         
+
+        self.selectComponentCombo.pack(side=tk.LEFT,padx=10,pady=10)
+        self.selectObjectsCombo.pack(side=tk.LEFT,padx=10,pady=10)
+        self.selectMapsCombo.pack(side=tk.LEFT,padx=10,pady=10)
+
         self.teamsColumn.pack(side=tk.LEFT,fill=tk.BOTH,expand=True,padx=10,pady=10)
+        self.selectTeamCombo.grid(row=1,column=1,columnspan=2,padx=10,pady=10,ipadx=10,ipady=10)
         self.teamsLabel.grid(row=2,column=1,columnspan=2,sticky="nsew")
         self.teamSizeLabel.grid(row=3,column=1,sticky="nsew")
         self.teamSizeEntry.grid(row=3,column=2,sticky="nsew")
@@ -127,21 +137,12 @@ class UISettings(tk.Toplevel):
         self.aiFileEntry = uiEntry(master=self.agentFrame)
         self.aiFileEntry.grid(row=4,column=2,sticky="nsew")
 
-# TODO: insert current JSON values into all Entry widgets
-        self.teamData=self.ldr.team_templates
-        self.teamNames = self.ldr.getTeamNames()
-        self.teamNameEntry.insert(0,self.teamNames[0])
-        self.teamSizeEntry.insert(0,self.teamData[self.teamNames[0]]['size'])
-        self.callsignEntry.insert(0,self.teamData[self.teamNames[0]]['agent_defs'][0]['callsign'])
-        self.squadEntry.insert(0,self.teamData[self.teamNames[0]]['agent_defs'][0]['squad'])
-        self.agentObjectEntry.insert(0,self.teamData[self.teamNames[0]]['agent_defs'][0]['object'])
-        self.aiFileEntry.insert(0,self.teamData[self.teamNames[0]]['agent_defs'][0]['AI_file'])
-        
         self.teamsUpdateButton = uiButton(master=self.teamsColumn,command=self.updateTeamsJSON, text="update")
-        self.teamsUpdateButton.grid(row=7,column=1,columnspan=2,sticky="nsew")
+        self.teamsUpdateButton.grid(row=7,column=1,columnspan=2,sticky="nsew",ipadx=10,ipady=10,padx=10,pady=10)
 
 
         self.componentsColumn.pack(side=tk.LEFT,fill=tk.BOTH,expand=True,padx=10,pady=10)
+        self.selectComponentCombo.grid(row=1,column=1,columnspan=2,padx=10,pady=10,ipadx=10,ipady=10)
         self.componentsLabel.grid(row=2,column=1,columnspan=2,sticky="nsew")
         self.componentsIDLabel.grid(row=3,column=1,sticky="nsew")
         self.componentsIDEntry.grid(row=3,column=2,sticky="nsew")
@@ -153,8 +154,9 @@ class UISettings(tk.Toplevel):
         self.componentsCmdPerTickEntry.grid(row=6,column=2,sticky="nsew")
         self.componentsTypeCombo.grid(row=7,column=1,columnspan=2,sticky="nsew")
         self.componentsUpdateButton.grid(row=8,column=1,columnspan=2,sticky="nsew")
-
+ 
         self.objectsColumn.pack(side=tk.LEFT,fill=tk.BOTH,expand=True,padx=10,pady=10)
+        self.selectObjectsCombo.grid(row=1,column=1,columnspan=2,padx=10,pady=10,ipadx=10,ipady=10)
         self.objectsLabel.grid(row=2,column=1,columnspan=2,sticky="nsew")
         self.objectsIDLabel.grid(row=3,column=1,sticky="nsew")
         self.objectsIDEntry.grid(row=3,column=2,sticky="nsew")
@@ -175,22 +177,142 @@ class UISettings(tk.Toplevel):
         self.objectsPointsCountLabel.grid(row=11,column=1,sticky="nsew")
         self.objectsPointsCountEntry.grid(row=11,column=2,sticky="nsew")
         self.objectsUpdateButton.grid(row=10,column=1,columnspan=2)
-
+   
         self.mapsColumn.pack(side=tk.LEFT,fill=tk.BOTH,expand=True,padx=10,pady=10)
-        self.mapsLabel.grid(row=1,column=1,columnspan=2,sticky="nsew")
-        self.mapsIDLabel.grid(row=2,column=1,sticky="nsew")
-        self.mapsIDEntry.grid(row=2,column=2,sticky="nsew")
-        self.mapsNameLabel.grid(row=3,column=1,sticky="nsew")
-        self.mapsNameEntry.grid(row=3,column=2,sticky="nsew")
-        self.mapsEdgeObjIDLabel.grid(row=4,column=1,sticky="nsew")
-        self.mapsEdgeObjIDEntry.grid(row=4,column=2,sticky="nsew")
-        self.mapsDescLabel.grid(row=5,column=1,sticky="nsew")
-        self.mapsDescEntry.grid(row=5,column=2,sticky="nsew")
-        self.mapsWidthLabel.grid(row=6,column=1,sticky="nsew")
-        self.mapsWidthEntry.grid(row=6,column=2,sticky="nsew")
-        self.mapsHeightLabel.grid(row=7,column=1,sticky="nsew")
-        self.mapsHeightEntry.grid(row=7,column=2,sticky="nsew")
-        self.mapsUpdateButton.grid(row=8,column=1,columnspan=2)
+        self.selectMapsCombo.grid(row=1,column=1,columnspan=2,padx=10,pady=10,ipadx=10,ipady=10)
+        self.mapsLabel.grid(row=2,column=1,columnspan=2,sticky="nsew")
+        self.mapsIDLabel.grid(row=3,column=1,sticky="nsew")
+        self.mapsIDEntry.grid(row=3,column=2,sticky="nsew")
+        self.mapsNameLabel.grid(row=4,column=1,sticky="nsew")
+        self.mapsNameEntry.grid(row=4,column=2,sticky="nsew")
+        self.mapsEdgeObjIDLabel.grid(row=5,column=1,sticky="nsew")
+        self.mapsEdgeObjIDEntry.grid(row=5,column=2,sticky="nsew")
+        self.mapsDescLabel.grid(row=6,column=1,sticky="nsew")
+        self.mapsDescEntry.grid(row=6,column=2,sticky="nsew")
+        self.mapsWidthLabel.grid(row=7,column=1,sticky="nsew")
+        self.mapsWidthEntry.grid(row=7,column=2,sticky="nsew")
+        self.mapsHeightLabel.grid(row=8,column=1,sticky="nsew")
+        self.mapsHeightEntry.grid(row=8,column=2,sticky="nsew")
+        self.mapsUpdateButton.grid(row=9,column=1,columnspan=2)
+
+        self.initEntryWidgets()
+
+    def initEntryWidgets(self):
+
+        self.teamData=self.ldr.team_templates
+        self.teamNames = self.ldr.getTeamNames()
+        self.selectTeamCombo.configure(values=self.teamNames)
+        self.selectTeamCombo.current(0)
+        self.selectTeamCombo.bind("<<ComboboxSelected>>", self.updateTeamEntryWidgets)
+        self.teamNameEntry.insert(0,self.teamNames[0])
+        self.teamSizeEntry.insert(0,self.teamData[self.teamNames[0]]['size'])
+        self.callsignEntry.insert(0,self.teamData[self.teamNames[0]]['agent_defs'][0]['callsign'])
+        self.squadEntry.insert(0,self.teamData[self.teamNames[0]]['agent_defs'][0]['squad'])
+        self.agentObjectEntry.insert(0,self.teamData[self.teamNames[0]]['agent_defs'][0]['object'])
+        self.aiFileEntry.insert(0,self.teamData[self.teamNames[0]]['agent_defs'][0]['AI_file'])
+
+        self.componentData=self.ldr.comp_templates
+        self.componentIDs=self.ldr.getCompIDs()
+        self.componentTypes=self.ldr.getCompTypes()
+        self.selectComponentCombo.configure(values=self.componentIDs)
+        self.selectComponentCombo.current(0)
+        self.selectComponentCombo.bind("<<ComboboxSelected>>", self.updateComponentsEntryWidgets)
+        self.componentsIDEntry.insert(0,self.componentIDs[0])
+        self.componentsNameEntry.insert(0,self.componentData[self.componentIDs[0]].getData('name'))
+        self.componentsTypeCombo.configure(values=self.componentTypes)
+        self.componentsTypeCombo.set(self.componentData[self.componentIDs[0]].getData('ctype'))
+        self.componentsCmdPerTickEntry.insert(0,self.componentData[self.componentIDs[0]].getData('max_cmds_per_tick'))
+
+        self.objectData = self.ldr.obj_templates
+        self.objectIDs = self.ldr.getObjIDs()
+        self.selectObjectsCombo.configure(values=self.objectIDs, state='readonly')
+        self.selectObjectsCombo.current(0)
+        self.selectObjectsCombo.bind("<<ComboboxSelected>>", self.updateObjectsEntryWidgets)
+        self.objectsIDEntry.insert(0,self.objectData[self.objectIDs[0]].getData('id'))
+        self.objectsNameEntry.insert(0,self.objectData[self.objectIDs[0]].getData('name'))
+        self.objectsFillAliveEntry.insert(0,self.objectData[self.objectIDs[0]].getData('fill_alive'))
+        self.objectsFillDeadEntry.insert(0,self.objectData[self.objectIDs[0]].getData('fill_dead'))
+        self.objectsTextEntry.insert(0,self.objectData[self.objectIDs[0]].getData('text'))
+        self.objectsHealthEntry.insert(0,self.objectData[self.objectIDs[0]].getData('health'))
+        self.objectsDensityEntry.insert(0,self.objectData[self.objectIDs[0]].getData('density'))
+        self.objectsCompIDsEntry.insert(0,self.objectData[self.objectIDs[0]].getData('comp_ids'))
+        self.objectsPointsCountEntry.insert(0,self.objectData[self.objectIDs[0]].getData('points_count'))
+
+        self.mapData = self.ldr.map_templates
+        self.mapIDs = self.ldr.getMapIDs()
+        self.selectMapsCombo.configure(values=self.mapIDs)
+        self.selectMapsCombo.current(0)
+        self.selectMapsCombo.bind("<<ComboboxSelected>>", self.updateMapsEntryWidgets)
+        self.mapsIDEntry.insert(0,self.mapIDs[0])
+        self.mapsNameEntry.insert(0,self.mapData[self.mapIDs[0]].getData('name'))
+        self.mapsEdgeObjIDEntry.insert(0,self.mapData[self.mapIDs[0]].getData('edge_obj_id'))
+        self.mapsDescEntry.insert(0,self.mapData[self.mapIDs[0]].getData('desc'))
+        self.mapsWidthEntry.insert(0,self.mapData[self.mapIDs[0]].getData('width'))
+        self.mapsHeightEntry.insert(0,self.mapData[self.mapIDs[0]].getData('height'))
+
+
+    def updateTeamEntryWidgets(self, v):
+        currentTeamIdx = self.selectTeamCombo.current()
+        self.teamNameEntry.delete(0,tk.END)
+        self.teamNameEntry.insert(0,self.teamNames[currentTeamIdx])
+        self.teamSizeEntry.delete(0,tk.END)
+        self.teamSizeEntry.insert(0,self.teamData[self.teamNames[0]]['size'])
+        self.callsignEntry.delete(0,tk.END)
+        self.callsignEntry.insert(0,self.teamData[self.teamNames[0]]['agent_defs'][0]['callsign'])
+        self.squadEntry.delete(0,tk.END)
+        self.squadEntry.insert(0,self.teamData[self.teamNames[0]]['agent_defs'][0]['squad'])
+        self.agentObjectEntry.delete(0,tk.END)
+        self.agentObjectEntry.insert(0,self.teamData[self.teamNames[0]]['agent_defs'][0]['object'])
+        self.aiFileEntry.delete(0,tk.END)
+        self.aiFileEntry.insert(0,self.teamData[self.teamNames[0]]['agent_defs'][0]['AI_file'])
+   
+    def updateComponentsEntryWidgets(self, v):
+        currentComponentIdx = self.selectComponentCombo.current()
+        self.componentsIDEntry.delete(0,tk.END)
+        self.componentsIDEntry.insert(0,self.componentIDs[currentComponentIdx])
+        self.componentsNameEntry.delete(0,tk.END)
+        self.componentsNameEntry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData('name'))
+        self.componentsTypeCombo.configure(values=self.componentTypes)
+        self.componentsTypeCombo.set(self.componentData[self.componentIDs[currentComponentIdx]].getData('ctype'))
+        self.componentsCmdPerTickEntry.delete(0,tk.END)
+        self.componentsCmdPerTickEntry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData('max_cmds_per_tick'))
+
+    def updateObjectsEntryWidgets(self, v):
+        currentObjectIdx = self.selectObjectsCombo.current()
+        self.objectsIDEntry.delete(0,tk.END)
+        self.objectsIDEntry.insert(0,self.objectData[self.objectIDs[currentObjectIdx]].getData('id'))
+        self.objectsNameEntry.delete(0,tk.END)
+        self.objectsNameEntry.insert(0,self.objectData[self.objectIDs[currentObjectIdx]].getData('name'))
+        self.objectsFillAliveEntry.delete(0,tk.END)
+        self.objectsFillAliveEntry.insert(0,self.objectData[self.objectIDs[currentObjectIdx]].getData('fill_alive'))
+        self.objectsFillDeadEntry.delete(0,tk.END)
+        self.objectsFillDeadEntry.insert(0,self.objectData[self.objectIDs[currentObjectIdx]].getData('fill_dead'))
+        self.objectsTextEntry.delete(0,tk.END)
+        self.objectsTextEntry.insert(0,self.objectData[self.objectIDs[currentObjectIdx]].getData('text'))
+        self.objectsHealthEntry.delete(0,tk.END)
+        self.objectsHealthEntry.insert(0,self.objectData[self.objectIDs[currentObjectIdx]].getData('health'))
+        self.objectsDensityEntry.delete(0,tk.END)
+        self.objectsDensityEntry.insert(0,self.objectData[self.objectIDs[currentObjectIdx]].getData('density'))
+        self.objectsCompIDsEntry.delete(0,tk.END)
+        self.objectsCompIDsEntry.insert(0,self.objectData[self.objectIDs[currentObjectIdx]].getData('comp_ids'))
+        self.objectsPointsCountEntry.delete(0,tk.END)
+        self.objectsPointsCountEntry.insert(0,self.objectData[self.objectIDs[currentObjectIdx]].getData('points_count'))
+
+    def updateMapsEntryWidgets(self, v):
+        currentMapIdx = self.selectMapsCombo.current()
+        self.mapsIDEntry.delete(0,tk.END)
+        self.mapsIDEntry.insert(0,self.mapIDs[currentMapIdx])
+        self.mapsNameEntry.delete(0,tk.END)
+        self.mapsNameEntry.insert(0,self.mapData[self.mapIDs[currentMapIdx]].getData('name'))
+        self.mapsEdgeObjIDEntry.delete(0,tk.END)
+        self.mapsEdgeObjIDEntry.insert(0,self.mapData[self.mapIDs[currentMapIdx]].getData('edge_obj_id'))
+        self.mapsDescEntry.delete(0,tk.END)
+        self.mapsDescEntry.insert(0,self.mapData[self.mapIDs[currentMapIdx]].getData('desc'))
+        self.mapsWidthEntry.delete(0,tk.END)
+        self.mapsWidthEntry.insert(0,self.mapData[self.mapIDs[currentMapIdx]].getData('width'))
+        self.mapsHeightEntry.delete(0,tk.END)
+        self.mapsHeightEntry.insert(0,self.mapData[self.mapIDs[currentMapIdx]].getData('height'))
+
 
 
 # TODO: update all functions to implement writing to each JSON file
