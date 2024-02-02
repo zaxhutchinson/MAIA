@@ -56,9 +56,22 @@ class UISettings(tk.Toplevel):
         self.componentsNameEntry = uiEntry(master=self.componentsColumn)
         self.componentsCTypeLabel = uiLabel(master=self.componentsColumn,text="CType:")
         self.componentsTypeLabel = uiLabel(master=self.componentsColumn,text="")
-        self.componentsCmdPerTickLabel = uiLabel(master=self.componentsColumn,text="Max Commands Per Tick:")
-        self.componentsCmdPerTickEntry = uiEntry(master=self.componentsColumn)
         self.componentsTypeCombo = uiComboBox(master=self.componentsColumn)
+
+        self.componentsTypeAttr1Label = uiLabel(master=self.componentsColumn,text="")
+        self.componentsTypeAttr1Entry = uiEntry(master=self.componentsColumn)
+        self.componentsTypeAttr2Label = uiLabel(master=self.componentsColumn,text="")
+        self.componentsTypeAttr2Entry = uiEntry(master=self.componentsColumn)
+        self.componentsTypeAttr3Label = uiLabel(master=self.componentsColumn,text="")
+        self.componentsTypeAttr3Entry = uiEntry(master=self.componentsColumn)
+        self.componentsTypeAttr4Label = uiLabel(master=self.componentsColumn,text="")
+        self.componentsTypeAttr4Entry = uiEntry(master=self.componentsColumn)
+        self.componentsTypeAttr5Label = uiLabel(master=self.componentsColumn,text="")
+        self.componentsTypeAttr5Entry = uiEntry(master=self.componentsColumn)
+        self.componentsTypeAttr6Label = uiLabel(master=self.componentsColumn,text="")
+        self.componentsTypeAttr6Entry = uiEntry(master=self.componentsColumn)
+        self.componentsTypeAttr7Label = uiLabel(master=self.componentsColumn,text="")
+        self.componentsTypeAttr7Entry = uiEntry(master=self.componentsColumn)
 
         self.selectObjectsCombo = uiComboBox(master=self.objectsColumn)
         self.objectsLabel = uiLabel(master=self.objectsColumn, text="Objects")
@@ -138,7 +151,7 @@ class UISettings(tk.Toplevel):
         self.aiFileEntry.grid(row=4,column=2,sticky="nsew")
 
         self.teamsUpdateButton = uiButton(master=self.teamsColumn,command=self.updateTeamsJSON, text="update")
-        self.teamsUpdateButton.grid(row=7,column=1,columnspan=2,sticky="nsew",ipadx=10,ipady=10,padx=10,pady=10)
+        self.teamsUpdateButton.grid(row=7,column=1,columnspan=2,sticky="nsew",ipadx=2,ipady=2,padx=10,pady=10)
 
 
         self.componentsColumn.pack(side=tk.LEFT,fill=tk.BOTH,expand=True,padx=10,pady=10)
@@ -150,10 +163,22 @@ class UISettings(tk.Toplevel):
         self.componentsNameEntry.grid(row=4,column=2,sticky="nsew")
         self.componentsCTypeLabel.grid(row=5,column=1,sticky="nsew")
         self.componentsTypeLabel.grid(row=5,column=2,sticky="nsew")
-        self.componentsCmdPerTickLabel.grid(row=6,column=1,sticky="nsew")
-        self.componentsCmdPerTickEntry.grid(row=6,column=2,sticky="nsew")
-        self.componentsTypeCombo.grid(row=7,column=1,columnspan=2,sticky="nsew")
-        self.componentsUpdateButton.grid(row=8,column=1,columnspan=2,sticky="nsew")
+        self.componentsTypeCombo.grid(row=6,column=1,columnspan=2,sticky="nsew")
+        self.componentsTypeAttr1Label.grid(row=7,column=1,sticky="nsew")
+        self.componentsTypeAttr1Entry.grid(row=7,column=2,sticky="nsew")
+        self.componentsTypeAttr2Label.grid(row=8,column=1,sticky="nsew")
+        self.componentsTypeAttr2Entry.grid(row=8,column=2,sticky="nsew")
+        self.componentsTypeAttr3Label.grid(row=9,column=1,sticky="nsew")
+        self.componentsTypeAttr3Entry.grid(row=9,column=2,sticky="nsew")
+        self.componentsTypeAttr4Label.grid(row=10,column=1,sticky="nsew")
+        self.componentsTypeAttr4Entry.grid(row=10,column=2,sticky="nsew")
+        self.componentsTypeAttr5Label.grid(row=11,column=1,sticky="nsew")
+        self.componentsTypeAttr5Entry.grid(row=11,column=2,sticky="nsew")
+        self.componentsTypeAttr6Label.grid(row=12,column=1,sticky="nsew")
+        self.componentsTypeAttr6Entry.grid(row=12,column=2,sticky="nsew")
+        self.componentsTypeAttr7Label.grid(row=13,column=1,sticky="nsew")
+        self.componentsTypeAttr7Entry.grid(row=13,column=2,sticky="nsew")
+        self.componentsUpdateButton.grid(row=14,column=1,columnspan=2,sticky="nsew",ipadx=2,ipady=2,padx=10,pady=10)
  
         self.objectsColumn.pack(side=tk.LEFT,fill=tk.BOTH,expand=True,padx=10,pady=10)
         self.selectObjectsCombo.grid(row=1,column=1,columnspan=2,padx=10,pady=10,ipadx=10,ipady=10)
@@ -176,7 +201,7 @@ class UISettings(tk.Toplevel):
         self.objectsCompIDsEntry.grid(row=10,column=2,sticky="nsew")
         self.objectsPointsCountLabel.grid(row=11,column=1,sticky="nsew")
         self.objectsPointsCountEntry.grid(row=11,column=2,sticky="nsew")
-        self.objectsUpdateButton.grid(row=10,column=1,columnspan=2)
+        self.objectsUpdateButton.grid(row=12,column=1,columnspan=2,sticky="nsew",ipadx=2,ipady=2,padx=10,pady=10)
    
         self.mapsColumn.pack(side=tk.LEFT,fill=tk.BOTH,expand=True,padx=10,pady=10)
         self.selectMapsCombo.grid(row=1,column=1,columnspan=2,padx=10,pady=10,ipadx=10,ipady=10)
@@ -193,7 +218,7 @@ class UISettings(tk.Toplevel):
         self.mapsWidthEntry.grid(row=7,column=2,sticky="nsew")
         self.mapsHeightLabel.grid(row=8,column=1,sticky="nsew")
         self.mapsHeightEntry.grid(row=8,column=2,sticky="nsew")
-        self.mapsUpdateButton.grid(row=9,column=1,columnspan=2)
+        self.mapsUpdateButton.grid(row=9,column=1,columnspan=2,sticky="nsew",ipadx=2,ipady=2,padx=10,pady=10)
 
         self.initEntryWidgets()
 
@@ -214,6 +239,7 @@ class UISettings(tk.Toplevel):
         self.componentData=self.ldr.comp_templates
         self.componentIDs=self.ldr.getCompIDs()
         self.componentTypes=self.ldr.getCompTypes()
+        self.componentTypeAttr=self.componentData[self.componentIDs[0]].view_keys
         self.selectComponentCombo.configure(values=self.componentIDs)
         self.selectComponentCombo.current(0)
         self.selectComponentCombo.bind("<<ComboboxSelected>>", self.updateComponentsEntryWidgets)
@@ -221,7 +247,38 @@ class UISettings(tk.Toplevel):
         self.componentsNameEntry.insert(0,self.componentData[self.componentIDs[0]].getData('name'))
         self.componentsTypeCombo.configure(values=self.componentTypes)
         self.componentsTypeCombo.set(self.componentData[self.componentIDs[0]].getData('ctype'))
-        self.componentsCmdPerTickEntry.insert(0,self.componentData[self.componentIDs[0]].getData('max_cmds_per_tick'))
+        self.componentsTypeLabel.config(text=self.componentData[self.componentIDs[0]].getData('ctype'))
+        if self.componentData[self.componentIDs[0]].getData('ctype') == 'CnC':
+            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
+        elif self.componentData[self.componentIDs[0]].getData('ctype') == 'FixedGun':
+            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
+            self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
+            self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
+            self.componentsTypeAttr4Label.config(text=self.componentTypeAttr[7])
+            self.componentsTypeAttr5Label.config(text=self.componentTypeAttr[8])
+            self.componentsTypeAttr6Label.config(text=self.componentTypeAttr[9])
+            self.componentsTypeAttr7Label.config(text=self.componentTypeAttr[10])
+        elif self.componentData[self.componentIDs[0]].getData('ctype') == 'Engine':
+            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
+            self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
+            self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
+            self.componentsTypeAttr4Label.config(text=self.componentTypeAttr[7])
+            self.componentsTypeAttr5Label.config(text=self.componentTypeAttr[8])
+        elif self.componentData[self.componentIDs[0]].getData('ctype') == 'Radar':
+            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
+            self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
+            self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
+            self.componentsTypeAttr4Label.config(text=self.componentTypeAttr[7])
+            self.componentsTypeAttr5Label.config(text=self.componentTypeAttr[8])
+            self.componentsTypeAttr6Label.config(text=self.componentTypeAttr[9])
+        elif self.componentData[self.componentIDs[0]].getData('ctype') == 'Radio':
+            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
+            self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
+            self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
+        elif self.componentData[self.componentIDs[0]].getData('ctype') == 'Arm':
+            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
+            self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
+            self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
 
         self.objectData = self.ldr.obj_templates
         self.objectIDs = self.ldr.getObjIDs()
@@ -250,7 +307,6 @@ class UISettings(tk.Toplevel):
         self.mapsWidthEntry.insert(0,self.mapData[self.mapIDs[0]].getData('width'))
         self.mapsHeightEntry.insert(0,self.mapData[self.mapIDs[0]].getData('height'))
 
-
     def updateTeamEntryWidgets(self, v):
         currentTeamIdx = self.selectTeamCombo.current()
         self.teamNameEntry.delete(0,tk.END)
@@ -268,14 +324,84 @@ class UISettings(tk.Toplevel):
    
     def updateComponentsEntryWidgets(self, v):
         currentComponentIdx = self.selectComponentCombo.current()
+        self.componentTypeAttr=self.componentData[self.componentIDs[currentComponentIdx]].view_keys
         self.componentsIDEntry.delete(0,tk.END)
         self.componentsIDEntry.insert(0,self.componentIDs[currentComponentIdx])
         self.componentsNameEntry.delete(0,tk.END)
         self.componentsNameEntry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData('name'))
         self.componentsTypeCombo.configure(values=self.componentTypes)
         self.componentsTypeCombo.set(self.componentData[self.componentIDs[currentComponentIdx]].getData('ctype'))
-        self.componentsCmdPerTickEntry.delete(0,tk.END)
-        self.componentsCmdPerTickEntry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData('max_cmds_per_tick'))
+        self.componentsTypeLabel.config(text=self.componentData[self.componentIDs[currentComponentIdx]].getData('ctype'))
+        self.componentsTypeAttr1Label.config(text="")
+        self.componentsTypeAttr2Label.config(text="")
+        self.componentsTypeAttr3Label.config(text="")
+        self.componentsTypeAttr4Label.config(text="")
+        self.componentsTypeAttr5Label.config(text="")
+        self.componentsTypeAttr6Label.config(text="")
+        self.componentsTypeAttr7Label.config(text="")
+        self.componentsTypeAttr1Entry.delete(0,tk.END)
+        self.componentsTypeAttr2Entry.delete(0,tk.END)
+        self.componentsTypeAttr3Entry.delete(0,tk.END)
+        self.componentsTypeAttr4Entry.delete(0,tk.END)
+        self.componentsTypeAttr5Entry.delete(0,tk.END)
+        self.componentsTypeAttr6Entry.delete(0,tk.END)
+        self.componentsTypeAttr7Entry.delete(0,tk.END)
+        if self.componentData[self.componentIDs[currentComponentIdx]].getData('ctype') == 'CnC':
+            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
+            self.componentsTypeAttr1Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[4]))
+        elif self.componentData[self.componentIDs[currentComponentIdx]].getData('ctype') == 'FixedGun':
+            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
+            self.componentsTypeAttr1Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[4]))
+            self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
+            self.componentsTypeAttr2Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[5]))
+            self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
+            self.componentsTypeAttr3Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[6]))
+            self.componentsTypeAttr4Label.config(text=self.componentTypeAttr[7])
+            self.componentsTypeAttr4Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[7]))
+            self.componentsTypeAttr5Label.config(text=self.componentTypeAttr[8])
+            self.componentsTypeAttr5Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[8]))
+            self.componentsTypeAttr6Label.config(text=self.componentTypeAttr[9])
+            self.componentsTypeAttr6Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[9]))
+            self.componentsTypeAttr7Label.config(text=self.componentTypeAttr[10])
+            self.componentsTypeAttr7Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[10]))
+        elif self.componentData[self.componentIDs[currentComponentIdx]].getData('ctype') == 'Engine':
+            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
+            self.componentsTypeAttr1Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[4]))
+            self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
+            self.componentsTypeAttr2Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[5]))
+            self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
+            self.componentsTypeAttr3Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[6]))
+            self.componentsTypeAttr4Label.config(text=self.componentTypeAttr[7])
+            self.componentsTypeAttr4Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[7]))
+            self.componentsTypeAttr5Label.config(text=self.componentTypeAttr[8])
+            self.componentsTypeAttr5Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[8]))
+        elif self.componentData[self.componentIDs[currentComponentIdx]].getData('ctype') == 'Radar':
+            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
+            self.componentsTypeAttr1Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[4]))
+            self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
+            self.componentsTypeAttr2Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[5]))
+            self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
+            self.componentsTypeAttr3Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[6]))
+            self.componentsTypeAttr4Label.config(text=self.componentTypeAttr[7])
+            self.componentsTypeAttr4Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[7]))
+            self.componentsTypeAttr5Label.config(text=self.componentTypeAttr[8])
+            self.componentsTypeAttr5Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[8]))
+            self.componentsTypeAttr6Label.config(text=self.componentTypeAttr[9])
+            self.componentsTypeAttr6Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[9]))
+        elif self.componentData[self.componentIDs[currentComponentIdx]].getData('ctype') == 'Radio':
+            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
+            self.componentsTypeAttr1Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[4]))
+            self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
+            self.componentsTypeAttr2Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[5]))
+            self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
+            self.componentsTypeAttr3Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[6]))
+        elif self.componentData[self.componentIDs[currentComponentIdx]].getData('ctype') == 'Arm':
+            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
+            self.componentsTypeAttr1Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[4]))
+            self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
+            self.componentsTypeAttr2Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[5]))
+            self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
+            self.componentsTypeAttr3Entry.insert(0,self.componentData[self.componentIDs[currentComponentIdx]].getData(self.componentTypeAttr[6]))
 
     def updateObjectsEntryWidgets(self, v):
         currentObjectIdx = self.selectObjectsCombo.current()
@@ -312,8 +438,6 @@ class UISettings(tk.Toplevel):
         self.mapsWidthEntry.insert(0,self.mapData[self.mapIDs[currentMapIdx]].getData('width'))
         self.mapsHeightEntry.delete(0,tk.END)
         self.mapsHeightEntry.insert(0,self.mapData[self.mapIDs[currentMapIdx]].getData('height'))
-
-
 
 # TODO: update all functions to implement writing to each JSON file
     def updateTeamsJSON(self): 
