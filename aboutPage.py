@@ -16,15 +16,16 @@ from zexceptions import *
 from ui_widgets import *
 import ui_setup
 import ui_homepage
+from main import *
 
 class aboutPage(tk.Frame):
-    def __init__(self,master=None,logger=None):
-        super().__init__(master)
+    def __init__(self,master=None,logger=None,parent=None):
+        tk.Frame.__init__(self,parent)
         self.master = master
         self.logger = logger
 
         self.configure(bg=DARKCOLOR)
-        self.pack()
+        #self.pack()
         self.master.title("MAIA - About")
         self.master.geometry("700x800")
 
@@ -34,7 +35,7 @@ class aboutPage(tk.Frame):
         self.omsgr = msgs.OMsgr(self.msg_queue)
 
         self.ldr = loader.Loader(self.logger)
-        self.sim = sim.Sim(self.imsgr)
+        #self.sim = sim.Sim(self.imsgr)
 
         self.combat_log = []
 
@@ -42,8 +43,6 @@ class aboutPage(tk.Frame):
 
         self.UIMap = None
 
-    def Run(self):
-        self.mainloop()
 
     def BuildUI(self):
         descText = 'MAIA is a platform designed for AI competitions that provides a modular 2D\nsimulation environment for which students write AI to control competing agents.\nThe goal is to give coders all the tools necessary so that they can focus \nprimarily on analysis of information and decision-making.\n\nMAIA was developed by Dr. Zachary Hutchinson during his graduate studies at the University of Maine, Orono. Version 0.22, the most current version of MAIA, was released in October of 2020.\n\nFurther documentation, including overviews of the AI scripts, can be found in\nthe docs directory.'
@@ -59,4 +58,7 @@ class aboutPage(tk.Frame):
         #TODO Insert logic to remove existing UI elements to avoid clutter. From
         #experimentation, I think best way to do this may be to delete current window,
         #and create a new one
-        self.UIMap = ui_homepage.UIHomepage(master=self.master, logger=self.logger)
+        #self.UIMap = ui_homepage.UIHomepage(master=self.master, logger=self.logger)
+        self.pack_forget()
+        #self.master.setup.tkraise()
+        self.master.homepage.pack(side="top", fill="both", expand=True)

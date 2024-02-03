@@ -17,13 +17,13 @@ from ui_widgets import *
 
 
 class UISetup(tk.Frame):
-    def __init__(self,master=None,logger=None):
-        super().__init__(master)
+    def __init__(self,master=None,logger=None,parent=None):
+        tk.Frame.__init__(self,parent)
         self.master = master
         self.logger = logger
 
         self.configure(bg=DARKCOLOR)
-        self.pack()
+        #self.pack()
         self.master.title("MAIA - Maine AI Arena")
 
         # Create the msgr objs
@@ -47,8 +47,6 @@ class UISetup(tk.Frame):
 
         self.UIMap = None
 
-    def Run(self):
-        self.mainloop()
 
     def BuildUI(self):
         #######################################################################

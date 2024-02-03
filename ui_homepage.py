@@ -16,17 +16,23 @@ from zexceptions import *
 from ui_widgets import *
 import ui_setup
 import aboutPage
+import main
+from main import *
+
 
 class UIHomepage(tk.Frame):
-    def __init__(self,master=None,logger=None):
-        super().__init__(master)
+    def __init__(self,master=None,logger=None,parent=None):
+        tk.Frame.__init__(self,parent)
         self.master = master
         self.logger = logger
 
         self.configure(bg=DARKCOLOR)
-        self.pack()
+        #self.pack()
         self.master.title("MAIA - Maine AI Arena")
         self.master.geometry("700x800")
+
+        #self.startGameFrame = ui_setup.UISetup(master=self.master, logger=self.logger)
+        #self.aboutPageFrame = aboutPage.aboutPage(master=self.master, logger=self.logger)
 
         # Create the msgr objs
         self.msg_queue = queue.Queue()
@@ -39,7 +45,7 @@ class UIHomepage(tk.Frame):
         self.combat_log = []
 
         self.BuildUI()
-
+        #self.tkraise()
         self.UIMap = None
 
     def Run(self):
@@ -56,7 +62,12 @@ class UIHomepage(tk.Frame):
 
 
     def startGame(self):
-        self.UIMap = ui_setup.UISetup(master=self.master, logger=self.logger)
+        self.pack_forget()
+        #self.master.setup.tkraise()
+        self.master.setup.pack(side="top", fill="both", expand=True)
+
     
     def aboutPage(self):
-        self.UIMap = aboutPage.aboutPage(master=self.master, logger=self.logger)
+        self.pack_forget()
+        #self.master.about.tkraise()
+        self.master.about.pack(side="top", fill="both", expand=True)
