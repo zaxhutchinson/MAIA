@@ -62,6 +62,8 @@ class Loader:
             return copy.deepcopy(self.obj_templates[_id])
         except KeyError:
             self.logger.error("LOADER: copyObjTemplate() KeyError "+str(_id))
+    def getObjIDs(self):
+        return list(self.obj_templates.keys())
     ##########################################################################
     # LOAD/COPY ITEMS
     def loadItemTemplates(self,filename):
@@ -86,6 +88,13 @@ class Loader:
             return copy.deepcopy(self.comp_templates[_id])
         except KeyError:
             self.logger.error("LOADER: copyCompTemplate() KeyError "+str(_id))
+    def getCompIDs(self):
+        return list(self.comp_templates.keys())
+    def getCompTypes(self):
+        self.compTypes = []
+        for self.component in self.comp_templates.values():
+            self.compTypes.append(self.component.getData('ctype'))
+        return self.compTypes
     ##########################################################################
     # LOAD/COPY MAPS
     def loadMapTemplates(self,filename):
