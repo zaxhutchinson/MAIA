@@ -33,7 +33,8 @@ class uiListBox(tk.Listbox):
             relief=tk.FLAT,
             selectforeground=DARKCOLOR,
             selectbackground=LIGHTCOLOR,
-            exportselection=0
+            exportselection=0,
+            font = (12)
         )
 
 
@@ -47,7 +48,8 @@ class uiScrollText(tk.scrolledtext.ScrolledText):
             fg=LIGHTCOLOR,
             highlightthickness=1,
             highlightbackground=LIGHTCOLOR,
-            highlightcolor=LIGHTCOLOR
+            highlightcolor=LIGHTCOLOR,
+            font = (12)
         )
 
 class uiButton(tk.Button):
@@ -63,7 +65,8 @@ class uiButton(tk.Button):
             highlightthickness=1,
             highlightbackground=BTN_LIGHT,
             highlightcolor=BTN_LIGHT,
-            relief=tk.FLAT
+            relief=tk.FLAT,
+            font=(12)
         )
 
 class uiLabel(tk.Label):
@@ -75,7 +78,8 @@ class uiLabel(tk.Label):
             fg=LIGHTCOLOR,
             highlightthickness=1,
             highlightbackground=LIGHTCOLOR,
-            highlightcolor=LIGHTCOLOR
+            highlightcolor=LIGHTCOLOR,
+            font=(12) #changed by HK, originally no font parameter
         )
 
 class uiQuietFrame(tk.Frame):

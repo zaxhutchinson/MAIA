@@ -99,6 +99,11 @@ class UISetup(tk.Frame):
 
     def BuildUI(self):
 
+        ## PAGE TITLE
+
+        self.pageTitle = uiLabel(master=self, text = "CONFIGURATION")
+        self.pageTitle.pack(side=tk.TOP)
+
 
         #######################################################################
         ## SIM UI
@@ -135,12 +140,12 @@ class UISetup(tk.Frame):
         ## MAP UI
         #######################################################################
         self.mapFrame = uiQuietFrame(master=self)  #map section 
-        self.mapFrame.pack(side=tk.LEFT,fill=tk.BOTH,expand=True,padx=10,pady=10) #HK set side to left 
+        self.mapFrame.pack(side=tk.LEFT, fill=tk.BOTH,padx=10, pady=10) #HK set side to left 
 
         self.mapListFrame =uiQuietFrame(master=self.mapFrame) 
-        self.mapListFrame.pack(side=tk.TOP)
+        self.mapListFrame.pack(side=tk.TOP, fill = tk.BOTH)
 
-        self.lblMapList = uiLabel(master=self.mapListFrame,text="Maps")
+        self.lblMapList = uiLabel(master=self.mapListFrame,text="MAPS")
         self.lblMapList.pack(side=tk.TOP, fill=tk.BOTH)
 
         self.lbMaps = uiListBox(self.mapListFrame)  #this is the box that says Map 1 lbMaps
@@ -151,7 +156,13 @@ class UISetup(tk.Frame):
         #self.btnSelectMap = uiButton(master=self.mapSelectFrame,command=self.selectMap,text="Select Map") #button 
         #self.btnSelectMap.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=False)
 
-        self.txtMapInfo = uiScrollText(self.mapFrame) #info on selcted frame
+        self.mapInfoFrame = uiQuietFrame(master=self.mapFrame)
+        self.mapInfoFrame.pack(side=tk.BOTTOM)
+
+        self.lblMapInfo = uiLabel(master=self.mapInfoFrame,text="MAP INFORMATION")
+        self.lblMapInfo.pack(side=tk.TOP, fill=tk.BOTH)
+
+        self.txtMapInfo = uiScrollText(self.mapInfoFrame) #info on selcted frame
         self.txtMapInfo.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
         self.txtMapInfo.insert(tk.END,"No map info")
 
@@ -164,7 +175,7 @@ class UISetup(tk.Frame):
         ######################################################################
         self.teamFrame = uiQuietFrame(master=self) #team frame is everything team UI #top line creates frame
         self.teamFrame.pack_propagate(0)
-        self.teamFrame.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True,padx=10,pady=10) #bottom line is frame settings
+        self.teamFrame.pack(side=tk.RIGHT,fill=tk.BOTH, expand=True,padx=10,pady=10) #bottom line is frame settings
 
         self.teamPoolFrame = uiQuietFrame(master=self.teamFrame) #Left half of team frame
         self.teamPoolFrame.pack(side=tk.TOP,fill=tk.BOTH,expand=True)
@@ -198,10 +209,13 @@ class UISetup(tk.Frame):
         self.playPoolFrame = uiQuietFrame(master=self.teamFrame) # Assigned is other half of team frame, "Play pool" is teams that are playing
         self.playPoolFrame.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
 
-        self.lblPlayPool = uiLabel(master=self.playPoolFrame,text="ASSIGNED TEAMS")
+        self.playPoolFrameRight = uiQuietFrame(master=self.playPoolFrame)
+        self.playPoolFrameRight.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, pady = 5)
+
+        self.lblPlayPool = uiLabel(master=self.playPoolFrameRight,text="ASSIGNED TEAMS")
         self.lblPlayPool.pack(fill=tk.BOTH,side=tk.TOP,expand=True)
 
-        self.subPlayPoolFrame = uiQuietFrame(master=self.playPoolFrame)
+        self.subPlayPoolFrame = uiQuietFrame(master=self.playPoolFrameRight)
         self.subPlayPoolFrame.pack(fill=tk.BOTH,side=tk.BOTTOM,expand=True)
 
         
@@ -213,11 +227,14 @@ class UISetup(tk.Frame):
 
         self.pack(fill=tk.BOTH,expand=True)
 
-        self.btnAddTeam = uiButton(master=self.teamFrame, text="Add Team >>>",command=self.addTeam)
-        self.btnAddTeam.pack(side=tk.TOP,fill=tk.BOTH,expand=True)
+        #self.playPoolFrameLeft = uiQuietFrame(master=self.playPoolFrame)
+        #self.playPoolFrameLeft.pack(side=tk.LEFT)
 
-        self.btnRemoveTeam = uiButton(master=self.teamFrame,text="<<< Remove Team", command=self.removeTeam)
-        self.btnRemoveTeam.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
+        self.btnAddTeam = uiButton(master=self.playPoolFrame, text="Add Team >>>",command=self.addTeam)
+        self.btnAddTeam.pack(side=tk.TOP,fill=tk.BOTH,expand=True, pady =5)
+
+        self.btnRemoveTeam = uiButton(master=self.playPoolFrame,text="<<< Remove Team", command=self.removeTeam)
+        self.btnRemoveTeam.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True, pady=5)
 
         
         
