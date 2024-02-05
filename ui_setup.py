@@ -116,16 +116,16 @@ class UISetup(tk.Frame):
         # self.btnRunSimWithUI.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True)
 
         self.startBtnFrame = uiQuietFrame(master=self.fmSimUI)
-        self.startBtnFrame.pack(side=tk.RIGHT)
+        self.startBtnFrame.pack(side=tk.RIGHT,fill=tk.BOTH, expand=True) #expand without fill is a lot of black space
 
         self.advancedConfigBtnFrame = uiQuietFrame(master=self.fmSimUI)
-        self.advancedConfigBtnFrame.pack(side=tk.LEFT)
+        self.advancedConfigBtnFrame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True) #having expand set to false is same as not having it
 
         self.btnBuildAndRunSim = uiButton(master=self.startBtnFrame,command=self.buildAndRunSim,text="Start Game") #Start Game Button
-        self.btnBuildAndRunSim.pack(side=tk.RIGHT,padx=50,fill=tk.BOTH)
+        self.btnBuildAndRunSim.pack(side=tk.RIGHT,padx=50,fill=tk.BOTH, expand=True)
 
         self.btnAdvancedConfig = uiButton(master=self.advancedConfigBtnFrame,command=self.buildAndRunSim,text="Advanced Config") #have to change command later to navigate to advanced config
-        self.btnAdvancedConfig.pack(side=tk.LEFT,padx=50,fill=tk.BOTH)
+        self.btnAdvancedConfig.pack(side=tk.LEFT,padx=50,fill=tk.BOTH, expand =True)
 
         # self.btnRunSimWithoutUI = tk.Button(self.fmSimUI,text="Run Sim Without UI",command=self.runSimWithoutUI)
         # self.btnRunSimWithoutUI.pack(side=tk.RIGHT,fill=tk.BOTH,expand=True)
@@ -134,10 +134,16 @@ class UISetup(tk.Frame):
         #######################################################################
         ## MAP UI
         #######################################################################
-        self.mapSelectFrame = uiQuietFrame(master=self)  #map section 
-        self.mapSelectFrame.pack(side=tk.LEFT,fill=tk.BOTH,expand=True,padx=10,pady=10) #HK set side to left 
+        self.mapFrame = uiQuietFrame(master=self)  #map section 
+        self.mapFrame.pack(side=tk.LEFT,fill=tk.BOTH,expand=True,padx=10,pady=10) #HK set side to left 
 
-        self.lbMaps = uiListBox(self.mapSelectFrame)  #this is the box that says Map 1 lbMaps
+        self.mapListFrame =uiQuietFrame(master=self.mapFrame) 
+        self.mapListFrame.pack(side=tk.TOP)
+
+        self.lblMapList = uiLabel(master=self.mapListFrame,text="Maps")
+        self.lblMapList.pack(side=tk.TOP, fill=tk.BOTH)
+
+        self.lbMaps = uiListBox(self.mapListFrame)  #this is the box that says Map 1 lbMaps
         self.lbMaps.pack(side=tk.TOP,fill=tk.BOTH,expand=True)
 
         self.lbMaps.bind("<<ListboxSelect>>", self.selectMap) #this calls selectMap(self, whateverMapIsSelectedInTheBox)
@@ -145,11 +151,11 @@ class UISetup(tk.Frame):
         #self.btnSelectMap = uiButton(master=self.mapSelectFrame,command=self.selectMap,text="Select Map") #button 
         #self.btnSelectMap.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=False)
 
-        self.txtMapInfo = uiScrollText(self.mapSelectFrame) #info on selcted frame
+        self.txtMapInfo = uiScrollText(self.mapFrame) #info on selcted frame
         self.txtMapInfo.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
         self.txtMapInfo.insert(tk.END,"No map info")
 
-        self.updateMapNames()# this function call gets Map 1 (later other maps) into the box
+        self.updateMapNames()# this function call gets Map 1 (later other maps) into the box   
         
         #self.selectMap()
 
