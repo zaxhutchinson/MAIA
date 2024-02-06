@@ -114,6 +114,11 @@ class uiEntry(tk.Entry):
             insertbackground=LIGHTCOLOR
         )
 
+class uiComboBox(ttk.Combobox):
+    def __init__(self,**kwargs):
+        super().__init__(kwargs['master'])
+
+
 class uiCanvas(tk.Canvas):
     def __init__(self,**kwargs):
         super().__init__(kwargs['master'])

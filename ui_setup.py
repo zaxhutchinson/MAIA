@@ -11,6 +11,7 @@ import logging
 import sim
 import loader
 import ui_sim
+import ui_advanced_config
 import msgs
 from zexceptions import *
 from ui_widgets import *
@@ -57,7 +58,21 @@ class UISetup(tk.Frame):
     def Run(self):
         self.mainloop()
 
-    
+    def updateTeamNames(self):
+        self.lbTeams.delete(0,tk.END)
+        self.lbSideNames.delete(0,tk.END)
+        self.lbTeamAssignments.delete(0,tk.END)
+        for name in self.ldr.getTeamIDs():
+            self.lbTeams.insert(tk.END,name)
+        for k,v in self.sim.getSides().items():
+            self.lbSideNames.insert(tk.END,k)
+            self.lbTeamAssignments.insert(tk.END,str(self.sim.getTeamName(k)))
+
+    def updateMapNames(self):
+        self.lbMaps.delete(0,tk.END)
+        for name in self.ldr.getMapIDs():
+            self.lbMaps.insert(tk.END,name)
+
     def selectMap(self, event): # this function is what happens when you hit button "select map" #moved it up here so that it could be bound to selecting map in BuildUI
         curselection = self.lbMaps.curselection()
         if len(curselection) > 0:
@@ -318,4 +333,6 @@ class UISetup(tk.Frame):
             map_height=self.sim.getMap().getData('height')
             self.UIMap = ui_sim.UISim(map_width,map_height,self.sim,self.omsgr,self,self.logger)
 
-    
+
+    def runAdvancedSettings(self):
+        self.UIMap = ui_advanced_config.UISettings(self,self.logger)
