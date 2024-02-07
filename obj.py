@@ -11,6 +11,7 @@ _2PI = 2.0*math.pi
 class Object:
     def __init__(self,data):
         self.data = data
+        self.JSON_keys =list(self.data.keys())
         self.data['damage']=0.0
         self.data['facing']=0.0
         self.data['x']=None
@@ -200,6 +201,12 @@ class Object:
             comp_view[k]=v.getSelfView()
         view['comps']=comp_view
 
+        return view
+    
+    def getJSONView(self):
+        view = {}
+        for key in self.JSON_keys:
+            view[key] = self.getData(key)
         return view
 
     def getBestDisplayName(self):
