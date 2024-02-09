@@ -144,7 +144,7 @@ class UISetup(tk.Frame):
         self.btnBuildAndRunSim = uiButton(master=self.startBtnFrame,command=self.buildAndRunSim,text="Start Game") #Start Game Button
         self.btnBuildAndRunSim.pack(side=tk.RIGHT,padx=50,fill=tk.BOTH, expand=True)
 
-        self.btnAdvancedConfig = uiButton(master=self.advancedConfigBtnFrame,command=self.buildAndRunSim,text="Advanced Config") #have to change command later to navigate to advanced config
+        self.btnAdvancedConfig = uiButton(master=self.advancedConfigBtnFrame,command=self.runAdvancedSettings,text="Advanced Config") #have to change command later to navigate to advanced config
         self.btnAdvancedConfig.pack(side=tk.LEFT,padx=50,fill=tk.BOTH, expand =True)
 
         # self.btnRunSimWithoutUI = tk.Button(self.fmSimUI,text="Run Sim Without UI",command=self.runSimWithoutUI)
@@ -325,13 +325,16 @@ class UISetup(tk.Frame):
     def buildAndRunSim(self): #combined above two methods
         try:
             self.sim.buildSim(self.ldr)
+            print("try")
         except BuildException as e:
             tk.messagebox.showinfo(title="Build Exception",message=e)
+            print("except")
         else:
             #tk.messagebox.showinfo(title="Success",message="Sim build was successful.")    --this line makes a pop up
             map_width=self.sim.getMap().getData('width')
             map_height=self.sim.getMap().getData('height')
             self.UIMap = ui_sim.UISim(map_width,map_height,self.sim,self.omsgr,self,self.logger)
+            print("else")
 
 
     def runAdvancedSettings(self):
