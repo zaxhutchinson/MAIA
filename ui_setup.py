@@ -51,7 +51,7 @@ class UISetup(tk.Frame):
 
         self.combat_log = []
 
-        self.BuildUI()
+        self.BuildUI() 
 
         self.UIMap = None
 
@@ -72,8 +72,8 @@ class UISetup(tk.Frame):
         self.lbMaps.delete(0,tk.END)
         for name in self.ldr.getMapIDs():
             self.lbMaps.insert(tk.END,name)
-
-    def selectMap(self, event): # this function is what happens when you hit button "select map" #moved it up here so that it could be bound to selecting map in BuildUI
+    # this function is what happens when you hit button "select map" #moved it up here so that it could be bound to selecting map in BuildUI
+    def selectMap(self, event): 
         curselection = self.lbMaps.curselection()
         if len(curselection) > 0:
             # Reset the sim
