@@ -15,7 +15,7 @@ import tkinter.scrolledtext as scrolltext
 BGCOLOR='snow'
 TEXTCOLOR='Black'
 
-BTN_DARK='midnight blue'
+BTN_DARK='navy'
 BTN_LIGHT='light sky blue'
 
 ENTRY_DARK='gray15'
