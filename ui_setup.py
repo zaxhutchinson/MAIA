@@ -30,7 +30,7 @@ class UISetup(tk.Frame):
         self.master = master
         self.logger = logger
 
-        self.configure(bg=DARKCOLOR) #bg is background i think
+        self.configure(bg=BGCOLOR) #bg is background i think
         self.pack() 
         self.master.title("MAIA - Maine AI Arena") #top of window tool bar
 

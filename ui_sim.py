@@ -16,7 +16,7 @@ class UISim(tk.Toplevel):
     def __init__(self,map_width,map_height,sim,omsgr,master=None,logger=None):
         super().__init__(master)
         self.master = master
-        self.configure(bg=DARKCOLOR)
+        self.configure(bg=BGCOLOR)
         self.title("MAIA - Sim UI")
         self.logger=logger
 
@@ -130,7 +130,7 @@ class UISim(tk.Toplevel):
                     tile_id = self.canvas.drawTile(
                         x=x,
                         y=y,
-                        fill='gray25'
+                        fill='snow4'
                     )
                     self.canvas_background_tile_ids.append(tile_id)
 
