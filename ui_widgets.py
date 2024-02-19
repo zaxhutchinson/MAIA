@@ -82,7 +82,7 @@ class uiLabel(tk.Label):
             highlightthickness=1,
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
-            font=(12) #changed by HK, originally no font parameter
+            font=(12) 
         )
 
 class uiQuietFrame(tk.Frame):
