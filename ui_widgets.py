@@ -12,18 +12,16 @@ from tkinter.font import Font
 from tkinter import ttk
 import tkinter.scrolledtext as scrolltext
 
-BGCOLOR='snow'
-TEXTCOLOR='Black'
+BGCOLOR='#E5E5E5'
+TEXTCOLOR='#222222'
 
-BTN_DARK='navy'
-BTN_LIGHT='light sky blue'
+BTN_DARK='#495EA7'
+BTN_LIGHT='#FFFFFF'
 
-ENTRY_DARK='gray15'
+ENTRY_DARK='#222222'
 ENTRY_BG='salmon1'
 
-TESTCOLOR='red2'
-
-BOXFILLCOLOR='skyblue1'
+BOXFILLCOLOR='#B2C1E3'
 
 class uiListBox(tk.Listbox):
     def __init__(self,master=None):
