@@ -10,6 +10,7 @@ from tkinter import messagebox
 from tkinter.font import Font
 from tkinter import ttk
 import tkinter.scrolledtext as scrolltext
+from tkmacosx import Button
 
 BGCOLOR = "#E5E5E5"
 TEXTCOLOR = "#222222"
@@ -56,7 +57,7 @@ class uiScrollText(tk.scrolledtext.ScrolledText):
         )
 
 
-class uiButton(tk.Button):
+class uiButton(Button):
     def __init__(self, **kwargs):
         super().__init__(kwargs["master"])
         self.config(
