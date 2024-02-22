@@ -10,14 +10,19 @@ from tkinter import messagebox
 from tkinter.font import Font
 from tkinter import ttk
 import tkinter.scrolledtext as scrolltext
+from packages.tkmacosx import Button
 
-DARKCOLOR = "gray10"
-LIGHTCOLOR = "LightBlue1"
+BGCOLOR = "#E5E5E5"
+TEXTCOLOR = "#222222"
 
-BTN_DARK = "midnight blue"
-BTN_LIGHT = "light sky blue"
+BTN_DARK = "#495EA7"
+BTN_LIGHT = "#FFFFFF"
 
-ENTRY_DARK = "gray15"
+ENTRY_DARK = "#222222"
+ENTRY_BG = "salmon1"
+
+BOXFILLCOLOR = "#B2C1E3"
+
 
 
 class uiListBox(tk.Listbox):
@@ -25,14 +30,14 @@ class uiListBox(tk.Listbox):
         super().__init__(master)
         self.config(
             selectmode=tk.SINGLE,
-            bg=DARKCOLOR,
-            fg=LIGHTCOLOR,
+            bg=BOXFILLCOLOR,
+            fg=TEXTCOLOR,
             highlightthickness=1,
-            highlightbackground=LIGHTCOLOR,
-            highlightcolor=LIGHTCOLOR,
+            highlightbackground=TEXTCOLOR,
+            highlightcolor=TEXTCOLOR,
             relief=tk.FLAT,
-            selectforeground=DARKCOLOR,
-            selectbackground=LIGHTCOLOR,
+            selectforeground=TEXTCOLOR,
+            selectbackground=ENTRY_BG,
             exportselection=0,
             font=(12),
         )
@@ -44,16 +49,16 @@ class uiScrollText(tk.scrolledtext.ScrolledText):
         self.config(
             wrap=tk.WORD,
             relief=tk.FLAT,
-            bg=DARKCOLOR,
-            fg=LIGHTCOLOR,
+            bg=BOXFILLCOLOR,
+            fg=TEXTCOLOR,
             highlightthickness=1,
-            highlightbackground=LIGHTCOLOR,
-            highlightcolor=LIGHTCOLOR,
+            highlightbackground=TEXTCOLOR,
+            highlightcolor=TEXTCOLOR,
             font=(12),
         )
 
 
-class uiButton(tk.Button):
+class uiButton(Button):
     def __init__(self, **kwargs):
         super().__init__(kwargs["master"])
         self.config(
@@ -76,11 +81,11 @@ class uiLabel(tk.Label):
         super().__init__(kwargs["master"])
         self.config(
             text=kwargs["text"],
-            bg=DARKCOLOR,
-            fg=LIGHTCOLOR,
+            bg=BGCOLOR,
+            fg=TEXTCOLOR,
             highlightthickness=1,
-            highlightbackground=LIGHTCOLOR,
-            highlightcolor=LIGHTCOLOR,
+            highlightbackground=TEXTCOLOR,
+            highlightcolor=TEXTCOLOR,
             font=(12),
         )
 
@@ -92,7 +97,7 @@ class uiQuietFrame(tk.Frame):
             relief=tk.FLAT,
             borderwidth=0,
             highlightthickness=0,
-            highlightbackground=DARKCOLOR,
+            highlightbackground=BGCOLOR,
         )
 
 
@@ -111,12 +116,12 @@ class uiEntry(tk.Entry):
     def __init__(self, **kwargs):
         super().__init__(kwargs["master"])
         self.config(
-            bg=ENTRY_DARK,
-            fg=LIGHTCOLOR,
+            bg=BOXFILLCOLOR,
+            fg=TEXTCOLOR,
             highlightthickness=1,
-            highlightbackground=LIGHTCOLOR,
-            highlightcolor=LIGHTCOLOR,
-            insertbackground=LIGHTCOLOR,
+            highlightbackground=TEXTCOLOR,
+            highlightcolor=TEXTCOLOR,
+            insertbackground=TEXTCOLOR,
         )
 
 
@@ -143,10 +148,10 @@ class uiCanvas(tk.Canvas):
             xscrollcommand=kwargs["xscrollcommand"],
             yscrollcommand=kwargs["yscrollcommand"],
             scrollregion=kwargs["scrollregion"],
-            bg=DARKCOLOR,
+            bg=BOXFILLCOLOR,
             highlightthickness=1,
-            highlightbackground=LIGHTCOLOR,
-            highlightcolor=LIGHTCOLOR,
+            highlightbackground=TEXTCOLOR,
+            highlightcolor=TEXTCOLOR,
         )
 
     def drawTile(self, **kwargs):

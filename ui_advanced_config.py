@@ -16,7 +16,7 @@ class UISettings(tk.Toplevel):
     def __init__(self, master=None, logger=None):
         super().__init__(master)
         self.master = master
-        self.configure(bg=DARKCOLOR)
+        self.configure(bg=BGCOLOR)
         self.title("MAIA - Advanced Configuration")
         self.geometry("800x600")
         self.logger = logger
