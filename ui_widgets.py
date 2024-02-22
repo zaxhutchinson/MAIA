@@ -10,7 +10,7 @@ from tkinter import messagebox
 from tkinter.font import Font
 from tkinter import ttk
 import tkinter.scrolledtext as scrolltext
-from tkmacosx import Button
+from packages.tkmacosx import Button
 
 BGCOLOR = "#E5E5E5"
 TEXTCOLOR = "#222222"
