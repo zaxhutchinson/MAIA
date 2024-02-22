@@ -15,7 +15,7 @@
 import tkinter
 
 # patch to make tkinter.Variable with multiple options of widgets.
-from tkmacosx.utils.colorvar_patches import patch
+from packages.tkmacosx.utils.colorvar_patches import patch
 patch()
 
 

@@ -14,10 +14,10 @@
 
 import re
 import sys
-import colour
 import tkinter
+import packages.colour as colour
 from tkinter import ttk
-from tkmacosx.utils.check_parameter import Check_Common_Parameters, pixels_conv
+from packages.tkmacosx.utils.check_parameter import Check_Common_Parameters, pixels_conv
 
 
 STDOUT_WARNING = True

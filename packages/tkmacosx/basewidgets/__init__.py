@@ -12,8 +12,8 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-from tkmacosx.basewidgets.button_base import ButtonBase
-from tkmacosx.basewidgets.colorscale_base import ColorscaleBase
-from tkmacosx.basewidgets.marquee_base import MarqueeBase
-from tkmacosx.basewidgets.radiobutton_base import RadiobuttonBase
-from tkmacosx.basewidgets.sframe_base import SFrameBase
+from packages.tkmacosx.basewidgets.button_base import ButtonBase
+from packages.tkmacosx.basewidgets.colorscale_base import ColorscaleBase
+from packages.tkmacosx.basewidgets.marquee_base import MarqueeBase
+from packages.tkmacosx.basewidgets.radiobutton_base import RadiobuttonBase
+from packages.tkmacosx.basewidgets.sframe_base import SFrameBase

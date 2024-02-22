@@ -12,7 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-from tkmacosx.basewidgets.sframe_base import SFrameBase
+from packages.tkmacosx.basewidgets.sframe_base import SFrameBase
 
 
 class SFrame(SFrameBase):

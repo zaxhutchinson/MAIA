@@ -12,7 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-from tkmacosx.basewidgets.marquee_base import MarqueeBase
+from packages.tkmacosx.basewidgets.marquee_base import MarqueeBase
 
 
 class Marquee(MarqueeBase):

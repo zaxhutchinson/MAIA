@@ -12,6 +12,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-from tkmacosx.variables.colorvar import ColorVar
-from tkmacosx.variables.dictvar import DictVar
-from tkmacosx.variables.savevar import SaveVar
+from packages.tkmacosx.variables.colorvar import ColorVar
+from packages.tkmacosx.variables.dictvar import DictVar
+from packages.tkmacosx.variables.savevar import SaveVar

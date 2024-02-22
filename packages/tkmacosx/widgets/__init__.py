@@ -12,9 +12,9 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-from tkmacosx.widgets.button import Button
-from tkmacosx.widgets.circlebutton import CircleButton
-from tkmacosx.widgets.colorscale import Colorscale, HEX, RGB
-from tkmacosx.widgets.marquee import Marquee
-from tkmacosx.widgets.radiobutton import Radiobutton
-from tkmacosx.widgets.sframe import SFrame
+from packages.tkmacosx.widgets.button import Button
+from packages.tkmacosx.widgets.circlebutton import CircleButton
+from packages.tkmacosx.widgets.colorscale import Colorscale, HEX, RGB
+from packages.tkmacosx.widgets.marquee import Marquee
+from packages.tkmacosx.widgets.radiobutton import Radiobutton
+from packages.tkmacosx.widgets.sframe import SFrame

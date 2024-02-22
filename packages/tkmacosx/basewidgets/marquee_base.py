@@ -13,7 +13,7 @@
 #    limitations under the License.
 
 import tkinter
-from tkmacosx.utils import (SYSTEM_DEFAULT, _cnfmerge, _bind, check_param)
+from packages.tkmacosx.utils import (SYSTEM_DEFAULT, _cnfmerge, _bind, check_param)
 
 
 MARQUEE_PROPERTIES = [

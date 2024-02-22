@@ -25,7 +25,7 @@ https://github.com/Saadmairaj/tkmacosx#tkmacosx
 __version__ = '1.0.5'
 __author__ = 'Saad Mairaj'
 
-from tkmacosx.variables import ColorVar, DictVar, SaveVar
-from tkmacosx.widgets import Button, CircleButton, Colorscale, Radiobutton, Marquee, SFrame
-from tkmacosx.utils import (check_appearance, check_light_dark,
+from packages.tkmacosx.variables import ColorVar, DictVar, SaveVar
+from packages.tkmacosx.widgets import Button, CircleButton, Colorscale, Radiobutton, Marquee, SFrame
+from packages.tkmacosx.utils import (check_appearance, check_light_dark,
                             delta, hex_to_rgb, get_shade, gradient)

@@ -12,10 +12,10 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import colour
+import packages.colour as colour
 import tkinter
 from tkinter.font import Font
-from tkmacosx.utils import (_cnfmerge, _bind, _Canvas, check_param,
+from packages.tkmacosx.utils import (_cnfmerge, _bind, _Canvas, check_param,
                             check_light_dark, delta, gradient)
 
 HEX = 'hex'

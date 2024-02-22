@@ -13,7 +13,7 @@
 #    limitations under the License.
 
 import tkinter
-from tkmacosx.utils import (_cnfmerge, _bind, delta, check_param)
+from packages.tkmacosx.utils import (_cnfmerge, _bind, delta, check_param)
 
 
 SFRAME_PROPERTIES = [

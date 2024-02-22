@@ -14,11 +14,11 @@
 
 import tkinter
 import tkinter.ttk as ttk
-from tkmacosx.utils import (SYSTEM_DEFAULT, STDOUT_WARNING,
+from packages.tkmacosx.utils import (SYSTEM_DEFAULT, STDOUT_WARNING,
                             _cnfmerge, _bind, _Canvas, check_param,
                             _info_button, _on_press_color, get_hex,
                             get_shade, check_function_equality)
-import tkmacosx.utils.colorvar_patches as cp
+import packages.tkmacosx.utils.colorvar_patches as cp
 
 
 BUTTON_PROPERTIES = [
