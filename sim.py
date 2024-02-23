@@ -381,8 +381,8 @@ class Sim:
             for tick in range(self.ticks_per_turn):
                 self.imsgr.addMsg(msgs.Msg(self.tick, "---NEW TICK---", ""))
 
-                # Shuffle turn order.
-                random.shuffle(objuuids_list)
+                # Advance turn order sequentially by rotating list of all active agents by 1.
+                objuuids_list[1:]
 
                 # Check all commands to see if there is
                 # something to do this tick.
