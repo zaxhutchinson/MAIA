@@ -1,21 +1,19 @@
-
-
 class Agent:
-    def __init__(self,ID,obj_id,ai_filename):
+    def __init__(self, ID, obj_id, ai_filename):
         self.data = {}
-        self.data['id'] = ID
-        self.data['objid'] = obj_id
-        self.data['ai_filename']=ai_filename
-        self.data['ai'] = None
-        self.data['obj'] = None
+        self.data["id"] = ID
+        self.data["objid"] = obj_id
+        self.data["ai_filename"] = ai_filename
+        self.data["ai"] = None
+        self.data["obj"] = None
 
-    def getData(self,key):
+    def getData(self, key):
         if key in self.data:
             return self.data[key]
         else:
             return None
 
-    def setData(self,key,val):
+    def setData(self, key, val):
         self.data[key] = val
 
     # def setObj(self,obj):
@@ -31,7 +29,7 @@ class Agent:
     #     self.ai = ai
 
     # Returns a list of commands
-    
+
     # def Update(self,world_state):
     #     if self.ai != None:
     #         return self.ai(world_state)
