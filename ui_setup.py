@@ -23,7 +23,8 @@ class UISetup(tk.Frame):
         self.master = master
         self.logger = logger
 
-        self.configure(bg=BGCOLOR)  # bg is background i think
+        self.configure(bg=DARKCOLOR)
+
         self.pack()
         self.master.title("MAIA - Maine AI Arena")  # top of window tool bar
 
@@ -59,8 +60,9 @@ class UISetup(tk.Frame):
         for name in self.ldr.getMapIDs():
             self.lbMaps.insert(tk.END, name)
 
-    """this function is what happens when you hit button "select map"
-    moved it up here so that it could be bound to selecting map in BuildUI"""
+
+    '''this function is what happens when you hit button "select map"
+    moved it up here so that it could be bound to selecting map in BuildUI'''
 
     def selectMap(self, event):
         curselection = self.lbMaps.curselection()

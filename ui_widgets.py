@@ -24,6 +24,7 @@ ENTRY_BG = "salmon1"
 BOXFILLCOLOR = "#B2C1E3"
 
 
+
 class uiListBox(tk.Listbox):
     def __init__(self, master=None):
         super().__init__(master)

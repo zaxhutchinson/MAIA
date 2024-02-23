@@ -140,7 +140,9 @@ class UISim(tk.Toplevel):
             for y in range(h):
 
                 if x != 0 and x != w - 1 and y != 0 and y != h - 1:
+
                     tile_id = self.canvas.drawTile(x=x, y=y, fill="snow4")
+
                     self.canvas_background_tile_ids.append(tile_id)
 
                 if (x == 0 and (y != 0 and y != h - 1)) or (
