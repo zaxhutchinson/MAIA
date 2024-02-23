@@ -24,7 +24,6 @@ ENTRY_BG = "salmon1"
 BOXFILLCOLOR = "#B2C1E3"
 
 
-
 class uiListBox(tk.Listbox):
     def __init__(self, master=None):
         super().__init__(master)
@@ -89,9 +88,11 @@ class uiLabel(tk.Label):
             font=(12),
         )
 
+
 class uiTextbox(tk.Text):
-    def __init__(self,**kwargs):
-        super().__init__(kwargs['master'])
+    def __init__(self, **kwargs):
+        super().__init__(kwargs["master"])
+
 
 class uiQuietFrame(tk.Frame):
     def __init__(self, **kwargs):

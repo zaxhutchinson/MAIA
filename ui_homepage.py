@@ -21,8 +21,8 @@ from main import *
 
 
 class UIHomepage(tk.Frame):
-    def __init__(self, controller, master=None,logger=None):
-        tk.Frame.__init__(self,master)
+    def __init__(self, controller, master=None, logger=None):
+        tk.Frame.__init__(self, master)
         self.master = master
         self.logger = logger
         self.controller = controller
@@ -44,12 +44,18 @@ class UIHomepage(tk.Frame):
         self.mainloop()
 
     def BuildUI(self):
-        #self.mainFrame = uiQuietFrame(master=self)
+        # self.mainFrame = uiQuietFrame(master=self)
         self.MAIALabel = uiLabel(master=self, text="Maine AI Arena")
-        self.MAIALabel.pack(side=tk.TOP,fill=tk.BOTH,expand=True)
-        self.btnStartGame = uiButton(master=self,text="Start Game",
-                                     command=lambda: self.controller.show_frame("SetupPage"))
-        self.btnStartGame.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
-        self.btnAbout = uiButton(master=self,text="About MAIA",
-                                 command=lambda: self.controller.show_frame("AboutPage"))
-        self.btnAbout.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
+        self.MAIALabel.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.btnStartGame = uiButton(
+            master=self,
+            text="Start Game",
+            command=lambda: self.controller.show_frame("SetupPage"),
+        )
+        self.btnStartGame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        self.btnAbout = uiButton(
+            master=self,
+            text="About MAIA",
+            command=lambda: self.controller.show_frame("AboutPage"),
+        )
+        self.btnAbout.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)

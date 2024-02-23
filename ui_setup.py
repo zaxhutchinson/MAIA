@@ -18,8 +18,8 @@ from ui_widgets import *
 
 
 class UISetup(tk.Frame):
-    def __init__(self,controller,master=None,logger=None):
-        tk.Frame.__init__(self,master)
+    def __init__(self, controller, master=None, logger=None):
+        tk.Frame.__init__(self, master)
         self.master = master
         self.logger = logger
         self.controller = controller
@@ -38,7 +38,6 @@ class UISetup(tk.Frame):
 
         self.UIMap = None
 
-
     def updateTeamNames(self):
         self.lbTeams.delete(0, tk.END)
         self.lbSideNames.delete(0, tk.END)
@@ -54,9 +53,8 @@ class UISetup(tk.Frame):
         for name in self.ldr.getMapIDs():
             self.lbMaps.insert(tk.END, name)
 
-
-    '''this function is what happens when you hit button "select map"
-    moved it up here so that it could be bound to selecting map in BuildUI'''
+    """this function is what happens when you hit button "select map"
+    moved it up here so that it could be bound to selecting map in BuildUI"""
 
     def selectMap(self, event):
         curselection = self.lbMaps.curselection()
@@ -130,9 +128,7 @@ class UISetup(tk.Frame):
         ## MAP UI
         #######################################################################
         self.mapFrame = uiQuietFrame(master=self)  # map section
-        self.mapFrame.pack(
-            side=tk.LEFT, fill=tk.BOTH, padx=10, pady=10
-        )
+        self.mapFrame.pack(side=tk.LEFT, fill=tk.BOTH, padx=10, pady=10)
 
         self.mapListFrame = uiQuietFrame(master=self.mapFrame)
         self.mapListFrame.pack(side=tk.TOP, fill=tk.BOTH)
