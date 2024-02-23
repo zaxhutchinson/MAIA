@@ -18,14 +18,14 @@ from ui_widgets import *
 
 
 class UISetup(tk.Frame):
-    def __init__(self,master=None,logger=None,parent=None):
-        tk.Frame.__init__(self,parent)
+    def __init__(self,controller,master=None,logger=None):
+        tk.Frame.__init__(self,master)
         self.master = master
         self.logger = logger
+        self.controller = controller
 
-        self.configure(bg=DARKCOLOR)
         #self.pack()
-        self.master.title("MAIA - Maine AI Arena")
+        # self.master.title("MAIA - Maine AI Arena")
 
         # Create the msgr objs
         self.msg_queue = queue.Queue()

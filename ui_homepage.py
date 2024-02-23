@@ -21,15 +21,15 @@ from main import *
 
 
 class UIHomepage(tk.Frame):
-    def __init__(self,master=None,logger=None,parent=None):
-        tk.Frame.__init__(self,parent)
+    def __init__(self, controller, master=None,logger=None):
+        tk.Frame.__init__(self,master)
         self.master = master
         self.logger = logger
+        self.controller = controller
 
-        self.configure(bg=DARKCOLOR)
-        #self.pack()
-        self.master.title("MAIA - Maine AI Arena")
-        self.master.geometry("700x800")
+        # self.pack()
+        # self.master.title("MAIA - Maine AI Arena")
+        # self.master.geometry("700x800")
 
         #self.startGameFrame = ui_setup.UISetup(master=self.master, logger=self.logger)
         #self.aboutPageFrame = aboutPage.aboutPage(master=self.master, logger=self.logger)
@@ -55,19 +55,21 @@ class UIHomepage(tk.Frame):
         #self.mainFrame = uiQuietFrame(master=self)
         self.MAIALabel = uiLabel(master=self, text="Maine AI Arena")
         self.MAIALabel.pack(side=tk.TOP,fill=tk.BOTH,expand=True)
-        self.btnStartGame = uiButton(master=self,command=self.startGame,text="Start Game")
+        self.btnStartGame = uiButton(master=self,text="Start Game",
+                                     command=lambda: self.controller.show_frame("SetupPage"))
         self.btnStartGame.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
-        self.btnAbout = uiButton(master=self,command=self.aboutPage,text="About MAIA")
+        self.btnAbout = uiButton(master=self,text="About MAIA",
+                                 command=lambda: self.controller.show_frame("AboutPage"))
         self.btnAbout.pack(side=tk.BOTTOM,fill=tk.BOTH,expand=True)
 
 
-    def startGame(self):
-        self.pack_forget()
-        #self.master.setup.tkraise()
-        self.master.setup.pack(side="top", fill="both", expand=True)
+    # def startGame(self):
+    #     self.pack_forget()
+    #     #self.master.setup.tkraise()
+    #     self.master.setup.pack(side="top", fill="both", expand=True)
 
     
-    def aboutPage(self):
-        self.pack_forget()
-        #self.master.about.tkraise()
-        self.master.about.pack(side="top", fill="both", expand=True)
+    # def aboutPage(self):
+    #     self.pack_forget()
+    #     #self.master.about.tkraise()
+    #     self.master.about.pack(side="top", fill="both", expand=True)

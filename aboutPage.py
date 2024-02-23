@@ -19,15 +19,15 @@ import ui_homepage
 from main import *
 
 class aboutPage(tk.Frame):
-    def __init__(self,master=None,logger=None,parent=None):
-        tk.Frame.__init__(self,parent)
+    def __init__(self,controller,master=None,logger=None):
+        tk.Frame.__init__(self,master)
         self.master = master
         self.logger = logger
+        self.controller = controller
 
-        self.configure(bg=DARKCOLOR)
         #self.pack()
-        self.master.title("MAIA - About")
-        self.master.geometry("700x800")
+        # self.master.title("MAIA - About")
+        # self.master.geometry("700x800")
 
         # Create the msgr objs
         self.msg_queue = queue.Queue()
@@ -51,14 +51,16 @@ class aboutPage(tk.Frame):
         self.description = uiTextbox(master=self, width=60)
         self.description.insert(1.0, descText)
         self.description.pack(side=tk.TOP,fill=tk.BOTH,expand=True)
-        self.btnHome = uiButton(master=self, command=self.homeRoute, text="Home")
+        self.description.config(state="disabled")
+        self.btnHome = uiButton(master=self,text="Home",
+                                command=lambda: self.controller.show_frame("HomePage"))
         self.btnHome.pack(side=tk.TOP,fill=tk.BOTH,expand=True)
 
-    def homeRoute(self):
-        #TODO Insert logic to remove existing UI elements to avoid clutter. From
-        #experimentation, I think best way to do this may be to delete current window,
-        #and create a new one
-        #self.UIMap = ui_homepage.UIHomepage(master=self.master, logger=self.logger)
-        self.pack_forget()
-        #self.master.setup.tkraise()
-        self.master.homepage.pack(side="top", fill="both", expand=True)
+    # def homeRoute(self):
+    #     #TODO Insert logic to remove existing UI elements to avoid clutter. From
+    #     #experimentation, I think best way to do this may be to delete current window,
+    #     #and create a new one
+    #     #self.UIMap = ui_homepage.UIHomepage(master=self.master, logger=self.logger)
+    #     self.pack_forget()
+    #     #self.master.setup.tkraise()
+    #     self.master.homepage.pack(side="top", fill="both", expand=True)
