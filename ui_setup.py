@@ -24,9 +24,6 @@ class UISetup(tk.Frame):
         self.logger = logger
         self.controller = controller
 
-        #self.pack()
-        # self.master.title("MAIA - Maine AI Arena")
-
         # Create the msgr objs
         self.msg_queue = queue.Queue()
         self.imsgr = msgs.IMsgr(self.msg_queue)
@@ -135,7 +132,7 @@ class UISetup(tk.Frame):
         self.mapFrame = uiQuietFrame(master=self)  # map section
         self.mapFrame.pack(
             side=tk.LEFT, fill=tk.BOTH, padx=10, pady=10
-        )  # HK set side to left
+        )
 
         self.mapListFrame = uiQuietFrame(master=self.mapFrame)
         self.mapListFrame.pack(side=tk.TOP, fill=tk.BOTH)
@@ -255,12 +252,6 @@ class UISetup(tk.Frame):
             self.logger.error("App::addTeam() - Sim is missing the map.")
 
     def removeTeam(self):
-        # side_index = self.lbSideNames.curselection()
-        # if len(side_index) > 0:
-        #     all_sides = self.lbSideNames.get(0,tk.END)
-        #     side_ID = all_sides[side_index[0]]
-        #     self.sim.delTeamName(side_ID)
-        #     self.updateTeamNames()
 
         team_index = self.lbTeamAssignments.curselection()
         if len(team_index) > 0:

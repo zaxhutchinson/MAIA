@@ -25,17 +25,12 @@ class aboutPage(tk.Frame):
         self.logger = logger
         self.controller = controller
 
-        #self.pack()
-        # self.master.title("MAIA - About")
-        # self.master.geometry("700x800")
-
         # Create the msgr objs
         self.msg_queue = queue.Queue()
         self.imsgr = msgs.IMsgr(self.msg_queue)
         self.omsgr = msgs.OMsgr(self.msg_queue)
 
         self.ldr = loader.Loader(self.logger)
-        #self.sim = sim.Sim(self.imsgr)
 
         self.combat_log = []
 
@@ -55,12 +50,3 @@ class aboutPage(tk.Frame):
         self.btnHome = uiButton(master=self,text="Home",
                                 command=lambda: self.controller.show_frame("HomePage"))
         self.btnHome.pack(side=tk.TOP,fill=tk.BOTH,expand=True)
-
-    # def homeRoute(self):
-    #     #TODO Insert logic to remove existing UI elements to avoid clutter. From
-    #     #experimentation, I think best way to do this may be to delete current window,
-    #     #and create a new one
-    #     #self.UIMap = ui_homepage.UIHomepage(master=self.master, logger=self.logger)
-    #     self.pack_forget()
-    #     #self.master.setup.tkraise()
-    #     self.master.homepage.pack(side="top", fill="both", expand=True)
