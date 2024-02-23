@@ -14,10 +14,10 @@ import ui_sim
 import msgs
 from zexceptions import *
 from ui_widgets import *
-import ui_setup
 import aboutPage
 import main
 from main import *
+import ui_advanced_config
 
 
 class UIHomepage(tk.Frame):
@@ -53,6 +53,12 @@ class UIHomepage(tk.Frame):
             command=lambda: self.controller.show_frame("SetupPage"),
         )
         self.btnStartGame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        self.btnAdvancedConfig = uiButton(
+            master=self,
+            command=lambda: ui_advanced_config.UISettings(self, self.logger),
+            text="Advanced Config",
+        )
+        self.btnAdvancedConfig.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
         self.btnAbout = uiButton(
             master=self,
             text="About MAIA",
