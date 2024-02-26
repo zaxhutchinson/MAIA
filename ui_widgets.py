@@ -24,7 +24,6 @@ ENTRY_BG = "salmon1"
 BOXFILLCOLOR = "#B2C1E3"
 
 
-
 class uiListBox(tk.Listbox):
     def __init__(self, master=None):
         super().__init__(master)
@@ -39,7 +38,7 @@ class uiListBox(tk.Listbox):
             selectforeground=TEXTCOLOR,
             selectbackground=ENTRY_BG,
             exportselection=0,
-            font=(12),
+            font=("Arial", 16),
         )
 
 
@@ -54,7 +53,7 @@ class uiScrollText(tk.scrolledtext.ScrolledText):
             highlightthickness=1,
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
-            font=(12),
+            font=("Arial", 16),
         )
 
 
@@ -72,7 +71,7 @@ class uiButton(Button):
             highlightbackground=BTN_LIGHT,
             highlightcolor=BTN_LIGHT,
             relief=tk.FLAT,
-            font=(12),
+            font=("Arial", 14),
         )
 
 
@@ -86,7 +85,7 @@ class uiLabel(tk.Label):
             highlightthickness=1,
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
-            font=(12),
+            font=("Arial", 20),
         )
 
 
