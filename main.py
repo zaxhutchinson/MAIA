@@ -7,7 +7,6 @@ import vec2
 import math
 import zmap
 import ui_homepage
-import ui_setup
 import aboutPage
 
 

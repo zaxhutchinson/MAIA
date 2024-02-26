@@ -91,7 +91,8 @@ class uiLabel(tk.Label):
 
 class uiTextbox(tk.Text):
     def __init__(self, **kwargs):
-        super().__init__(kwargs["master"])
+        super().__init__(kwargs.pop("master"), **kwargs)
+        self.config(wrap="word")
 
 
 class uiQuietFrame(tk.Frame):

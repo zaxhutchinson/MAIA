@@ -9,6 +9,7 @@ import queue
 import logging
 
 import sim
+import re
 import loader
 import ui_sim
 import msgs
@@ -40,7 +41,17 @@ class aboutPage(tk.Frame):
         self.UIMap = None
 
     def BuildUI(self):
-        descText = "MAIA is a platform designed for AI competitions that provides a modular 2D\nsimulation environment for which students write AI to control competing agents.\nThe goal is to give coders all the tools necessary so that they can focus \nprimarily on analysis of information and decision-making.\n\nMAIA was developed by Dr. Zachary Hutchinson during his graduate studies at the University of Maine, Orono. Version 0.22, the most current version of MAIA, was released in October of 2020.\n\nFurther documentation, including overviews of the AI scripts, can be found in\nthe docs directory."
+        descText = "MAIA is a platform designed for AI competitions that provides a modular 2D \
+            simulation environment for which students write AI to control competing agents.\n\
+            The goal is to give coders all the tools necessary so that they can focus \
+            primarily on analysis of information and decision-making.\n\n\
+            MAIA was developed by Dr. Zachary Hutchinson during his graduate studies \
+            at the University of Maine, Orono.\n Version 0.22, the most current version of MAIA,\
+            was released in October of 2020.\n Further documentation, including overviews of the \
+            AI scripts, can be found in the docs directory."
+        # descText = re.sub(r"  +", "", descText)
+        descText2 = descText.replace("            ", "")
+        descText = descText2
         self.MAIALabel = uiLabel(master=self, text="Maine AI Arena")
         self.MAIALabel.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         self.description = uiTextbox(master=self, width=60)
