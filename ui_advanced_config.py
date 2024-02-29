@@ -280,7 +280,6 @@ class UISettings(tk.Toplevel):
         self.objectsDensityLabel = uiLabel(master=self.objectsColumn, text="Density:")
         self.objectsDensityEntry = uiEntry(master=self.objectsColumn)
         self.objectsCompIDsLabel = uiLabel(master=self.objectsColumn, text="Comp IDs:")
-        #self.objectsCompIDsEntry = uiEntry(master=self.objectsColumn)
         self.objectsCompIDsCombo = uiComboBox(master=self.objectsColumn)
         self.objectsPointsCountLabel = uiLabel(
             master=self.objectsColumn, text="Points Count:"
@@ -310,7 +309,6 @@ class UISettings(tk.Toplevel):
         self.objectsDensityLabel.grid(row=9, column=1, sticky="nsew")
         self.objectsDensityEntry.grid(row=9, column=2, sticky="nsew")
         self.objectsCompIDsLabel.grid(row=10, column=1, sticky="nsew")
-        #self.objectsCompIDsEntry.grid(row=10, column=2, sticky="nsew")
         self.objectsCompIDsCombo.grid(row=10, column=2, sticky="nsew")
         self.objectsPointsCountLabel.grid(row=11, column=1, sticky="nsew")
         self.objectsPointsCountEntry.grid(row=11, column=2, sticky="nsew")
@@ -456,7 +454,9 @@ class UISettings(tk.Toplevel):
         print(self.currentObjectData.getSelfView())
         self.selectObjectsCombo.configure(values=self.objectIDs)
         self.selectObjectsCombo.current(0)
-        self.selectObjectsCombo.bind("<<ComboboxSelected>>", self.changeObjectsEntryWidgets)
+        self.selectObjectsCombo.bind(
+            "<<ComboboxSelected>>", self.changeObjectsEntryWidgets
+        )
         self.showObjectEntry(self.currentObjectData)
 
         # MAP
@@ -469,6 +469,131 @@ class UISettings(tk.Toplevel):
         self.selectMapsCombo.current(0)
         self.selectMapsCombo.bind("<<ComboboxSelected>>", self.changeMapsEntryWidgets)
         self.showMapEntry(self.currentMapData)
+
+    def changeTeamEntryWidgets(self, event=None, fromCreate=False):
+        # the answer variable defaults to true
+        self.answer = True
+
+        # if any of the team entry values differ from their starting values,
+        # the user is warned that they could be overwritten
+        if not (
+            (
+                (self.teamNameEntry.get() == self.currentTeamData["name"])
+                and (int(self.teamSizeEntry.get()) == self.currentTeamData["size"])
+                and (
+                    self.callsignEntry.get()
+                    == self.currentTeamData["agent_defs"][0]["callsign"]
+                )
+            )
+            or fromCreate
+        ):
+            self.answer = askyesno(
+                title="confirmation",
+                message="""Warning: You have modified Team values and have not Updated.
+                  Your changes will not be saved. Are you sure you would like continue?""",
+            )
+
+        # the current team is successfully changed if the user made no changes,
+        # or if the user confirms they are fine with their changes being overwritten
+        if self.answer:
+            # currentTeamIdx = self.selectTeamCombo.current()
+            if not (fromCreate):
+                self.currentTeamData = self.teamData[self.selectTeamCombo.get()]
+            self.showTeamEntry(self.currentTeamData)
+
+    def changeComponentsEntryWidgets(self, event=None, fromCreate=False):
+        self.answer = True
+
+        if not (
+            (
+                (
+                    self.componentsIDEntry.get()
+                    == self.currentComponentData.getData("id")
+                )
+                and (
+                    self.componentsNameEntry.get()
+                    == self.currentComponentData.getData("name")
+                )
+                and (
+                    self.componentsTypeCombo.get()
+                    == self.currentComponentData.getData("ctype")
+                )
+            )
+            or fromCreate
+        ):
+            self.answer = askyesno(
+                title="confirmation",
+                message="""Warning: You have modified Component values and have not Updated.
+                 Your changes will not be saved. Are you sure you would like continue?""",
+            )
+
+        if self.answer is True:
+            currentComponentIdx = self.selectComponentCombo.current()
+            if not fromCreate:
+                self.componentTypeAttr = self.componentData[
+                    self.componentIDs[currentComponentIdx]
+                ].view_keys
+                self.currentComponentData = self.componentData[
+                    self.componentIDs[currentComponentIdx]
+                ]
+
+            self.showComponentEntries(self.currentComponentData)
+
+    def changeObjectsEntryWidgets(self, event=None, fromCreate=False):
+        self.answer = True
+
+        if not (
+            (
+                (self.objectsIDEntry.get() == self.currentObjectData.getData("id"))
+                and (
+                    self.objectsNameEntry.get()
+                    == self.currentObjectData.getData("name")
+                )
+                and (
+                    self.objectsFillAliveEntry.get()
+                    == self.currentObjectData.getData("fill_alive")
+                )
+            )
+            or fromCreate
+        ):
+            self.answer = askyesno(
+                title="confirmation",
+                message="""Warning: You have modified Object values and have not Updated.
+                 Your changes will not be saved. Are you sure you would like continue?""",
+            )
+
+        if self.answer:
+            currentObject = self.selectObjectsCombo.get()
+            print(currentObject)
+            if not fromCreate:
+                self.currentObjectData = self.objectData[currentObject]
+
+            self.showObjectEntry(self.currentObjectData)
+
+    def changeMapsEntryWidgets(self, event=None, fromCreate=False):
+        self.answer = True
+
+        if not (
+            (
+                (self.mapsNameEntry == self.currentMapData.getData("name"))
+                and (
+                    self.mapsEdgeObjIDEntry.get()
+                    == self.currentMapData.getData("edge_obj_id")
+                )
+            )
+            or fromCreate
+        ):
+            self.answer = askyesno(
+                title="confirmation",
+                message="""Warning: You have modified Map values and have not Updated.
+                 Your changes will not be saved. Are you sure you would like continue?""",
+            )
+        currentMapID = self.selectMapsCombo.get()
+        print(currentMapID)
+        self.currentMapData = self.mapData[currentMapID]
+        print(self.currentMapData)
+        if self.answer is True:
+            self.showMapEntry(self.currentMapData)
 
     def showComponentEntries(self, currentComp):
         self.componentTypeAttr = currentComp.view_keys
@@ -603,37 +728,6 @@ class UISettings(tk.Toplevel):
                 0, currentComp.getData(self.componentTypeAttr[6])
             )
 
-    def changeTeamEntryWidgets(self, event=None, fromCreate=False):
-        # the answer variable defaults to true
-        self.answer = True
-
-        # if any of the team entry values differ from their starting values,
-        # the user is warned that they could be overwritten
-        if not (
-            (
-                (self.teamNameEntry.get() == self.currentTeamData["name"])
-                and (int(self.teamSizeEntry.get()) == self.currentTeamData["size"])
-                and (
-                    self.callsignEntry.get()
-                    == self.currentTeamData["agent_defs"][0]["callsign"]
-                )
-            )
-            or fromCreate
-        ):
-            self.answer = askyesno(
-                title="confirmation",
-                message="""Warning: You have modified Team values and have not Updated.
-                  Your changes will not be saved. Are you sure you would like continue?""",
-            )
-
-        # the current team is successfully changed if the user made no changes,
-        # or if the user confirms they are fine with their changes being overwritten
-        if self.answer:
-            # currentTeamIdx = self.selectTeamCombo.current()
-            if not (fromCreate):
-                self.currentTeamData = self.teamData[self.selectTeamCombo.get()]
-            self.showTeamEntry(self.currentTeamData)
-
     def showTeamEntry(self, currentTeam):
         self.teamNameEntry.delete(0, tk.END)
         self.teamNameEntry.insert(0, currentTeam["name"])
@@ -648,74 +742,19 @@ class UISettings(tk.Toplevel):
         self.aiFileEntry.delete(0, tk.END)
         self.aiFileEntry.insert(0, currentTeam["agent_defs"][0]["AI_file"])
 
-    def changeComponentsEntryWidgets(self, event=None, fromCreate=False):
-        self.answer = True
-
-        if not (
-            (
-                (
-                    self.componentsIDEntry.get()
-                    == self.currentComponentData.getData("id")
-                )
-                and (
-                    self.componentsNameEntry.get()
-                    == self.currentComponentData.getData("name")
-                )
-                and (
-                    self.componentsTypeCombo.get()
-                    == self.currentComponentData.getData("ctype")
-                )
-            )
-            or fromCreate
-        ):
-            self.answer = askyesno(
-                title="confirmation",
-                message="""Warning: You have modified Component values and have not Updated.
-                 Your changes will not be saved. Are you sure you would like continue?""",
-            )
-
-        if self.answer is True:
-            currentComponentIdx = self.selectComponentCombo.current()
-            if not fromCreate:
-                self.componentTypeAttr = self.componentData[
-                    self.componentIDs[currentComponentIdx]
-                ].view_keys
-                self.currentComponentData = self.componentData[
-                    self.componentIDs[currentComponentIdx]
-                ]
-
-            self.showComponentEntries(self.currentComponentData)
-
-    def changeObjectsEntryWidgets(self, event=None, fromCreate=False):
-        self.answer = True
-
-        if not (
-            (
-                (self.objectsIDEntry.get() == self.currentObjectData.getData("id"))
-                and (
-                    self.objectsNameEntry.get()
-                    == self.currentObjectData.getData("name")
-                )
-                and (
-                    self.objectsFillAliveEntry.get()
-                    == self.currentObjectData.getData("fill_alive")
-                )
-            )
-            or fromCreate
-        ):
-            self.answer = askyesno(
-                title="confirmation",
-                message="""Warning: You have modified Object values and have not Updated.
-                 Your changes will not be saved. Are you sure you would like continue?""",
-            )
-
-        if self.answer:
-            currentObject = self.selectObjectsCombo.get()
-            print(currentObject)
-            if not fromCreate:
-                self.currentObjectData = self.objectData[currentObject]
-
-            self.showObjectEntry(self.currentObjectData)
+    def showMapEntry(self, currentMap):
+        self.mapsIDEntry.delete(0, tk.END)
+        self.mapsIDEntry.insert(0, self.selectMapsCombo.get())
+        self.mapsNameEntry.delete(0, tk.END)
+        self.mapsNameEntry.insert(0, currentMap.getData("name"))
+        self.mapsEdgeObjIDEntry.delete(0, tk.END)
+        self.mapsEdgeObjIDEntry.insert(0, self.currentMapData.getData("edge_obj_id"))
+        self.mapsDescEntry.delete(0, tk.END)
+        self.mapsDescEntry.insert(0, currentMap.getData("desc"))
+        self.mapsWidthEntry.delete(0, tk.END)
+        self.mapsWidthEntry.insert(0, currentMap.getData("width"))
+        self.mapsHeightEntry.delete(0, tk.END)
+        self.mapsHeightEntry.insert(0, currentMap.getData("height"))
 
     def showObjectEntry(self, currentObj):
         self.objectsIDEntry.delete(0, tk.END)
@@ -732,83 +771,44 @@ class UISettings(tk.Toplevel):
         self.objectsHealthEntry.insert(0, currentObj.getData("health"))
         self.objectsDensityEntry.delete(0, tk.END)
         self.objectsDensityEntry.insert(0, currentObj.getData("density"))
-        #self.objectsCompIDsEntry.delete(0, tk.END)
-        self.currentCompIDs=currentObj.getData("comp_ids")
+        self.currentCompIDs = currentObj.getData("comp_ids")
         self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
         if len(self.currentCompIDs) != 0:
             self.objectsCompIDsCombo.current(0)
-        self.objectsCompIDsCombo.bind("<Enter>",self.addEmptyCompID)
-        self.objectsCompIDsCombo.bind("<KeyRelease>", self.deleteCompID) 
-        #self.objectsCompIDsEntry.insert(0, currentObj.getData("comp_ids"))
+        self.objectsCompIDsCombo.bind("<<ComboboxSelected>>", self.getCurrentCompID)
+        self.objectsCompIDsCombo.bind("<Enter>", self.addEmptyCompID)
+        self.objectsCompIDsCombo.bind("<Return>", self.addNewCompID)
+        self.objectsCompIDsCombo.bind("<KeyRelease>", self.deleteCompID)
+
         self.objectsPointsCountEntry.delete(0, tk.END)
         self.objectsPointsCountEntry.insert(0, currentObj.getData("points_count"))
 
     def addEmptyCompID(self, event):
-        print(self.objectsCompIDsCombo.current())
-        if self.currentCompIDs[-1] != "":
-            print("vv")
-            print(self.currentCompIDs)
-            self.currentCompIDs.append("")
-            print(self.currentCompIDs)
+        if self.currentCompIDs[-1] != "Add New Comp ID":
+            self.currentCompIDs.append("Add New Comp ID")
             self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
+
+    def getCurrentCompID(self, event):
+        self.currentCompIDIdx = self.objectsCompIDsCombo.current()
+        self.currentCompID = self.objectsCompIDsCombo.get()
 
     def deleteCompID(self, event):
         currentCompID = self.objectsCompIDsCombo.get()
-        print("a")
         if len(currentCompID) == 0:
-            print("b")
-            print(self.objectsCompIDsCombo.get())
-            compIDIdx = self.objectsCompIDsCombo.current()
-            print(compIDIdx)
-            print(len(self.currentCompIDs))
-            
-            if compIDIdx != len(self.currentCompIDs) -2:
-                print(compIDIdx)
-                self.currentCompIDs.pop(compIDIdx)
-                print(self.currentCompIDs)
+            if self.currentCompIDIdx != len(self.currentCompIDs) - 1:
+                self.currentCompIDs.pop(self.currentCompIDIdx)
                 self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
-                self.objectsCompIDsCombo.current(0)   
 
-    def changeMapsEntryWidgets(self, event=None, fromCreate=False):
-        self.answer = True
+    def addNewCompID(self, event):
+        newComboID = self.objectsCompIDsCombo.get()
+        newComboIDIndex = self.currentCompIDIdx
+        print(newComboIDIndex)
+        if newComboID not in self.currentCompIDs and newComboID.strip() != "":
+            self.currentCompIDs[newComboIDIndex] = newComboID
+            self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
+            self.objectsCompIDsCombo.set(newComboID)
 
-        if not (
-            (
-                (self.mapsNameEntry == self.currentMapData.getData("name"))
-                and (
-                    self.mapsEdgeObjIDEntry.get()
-                    == self.currentMapData.getData("edge_obj_id")
-                )
-            )
-            or fromCreate
-        ):
-            self.answer = askyesno(
-                title="confirmation",
-                message="""Warning: You have modified Map values and have not Updated.
-                 Your changes will not be saved. Are you sure you would like continue?""",
-            )
-        currentMapID = self.selectMapsCombo.get()
-        print(currentMapID)
-        self.currentMapData = self.mapData[currentMapID]
-        print(self.currentMapData)
-        if self.answer is True:
-            self.showMapEntry(self.currentMapData)
-
-    def showMapEntry(self, currentMap):
-        self.mapsIDEntry.delete(0, tk.END)
-        self.mapsIDEntry.insert(0, self.selectMapsCombo.get())
-        self.mapsNameEntry.delete(0, tk.END)
-        self.mapsNameEntry.insert(0, currentMap.getData("name"))
-        self.mapsEdgeObjIDEntry.delete(0, tk.END)
-        self.mapsEdgeObjIDEntry.insert(0, self.currentMapData.getData("edge_obj_id"))
-        self.mapsDescEntry.delete(0, tk.END)
-        self.mapsDescEntry.insert(0, currentMap.getData("desc"))
-        self.mapsWidthEntry.delete(0, tk.END)
-        self.mapsWidthEntry.insert(0, currentMap.getData("width"))
-        self.mapsHeightEntry.delete(0, tk.END)
-        self.mapsHeightEntry.insert(0, currentMap.getData("height"))
-
-    ### UPDATE ###
+    ### UPDATE JSON FILES###
     def updateTeamsJSON(self):
         self.currentTeamData["size"] = int(self.teamSizeEntry.get())
         self.currentTeamData["agent_defs"][0]["callsign"] = self.callsignEntry.get()
@@ -876,10 +876,23 @@ class UISettings(tk.Toplevel):
             json.dump(objectJSON, f, indent=4)
         f.close()
 
-    def updateMapsJSON():
-        return
+    def updateMapsJSON(self):
+        self.currentMapData.setData("name", self.mapsNameEntry.get())
+        self.currentMapData.setData("edge_obj_id", self.mapsEdgeObjIDEntry.get())
+        self.currentMapData.setData("desc", self.mapsDescEntry.get())
+        self.currentMapData.setData("width", self.mapsWidthEntry.get())
+        self.currentMapData.setData("height", self.mapsHeightEntry.get())
+        with open("settings/maps.json", "r") as f:
+            mapJSON = json.load(f)
+            print(self.currentMapData.data)
+            mapJSON[self.selectMapsCombo.get()] = self.currentMapData.data
+        f.close()
 
-    ### CREATE ###
+        with open("settings/maps.json", "w") as f:
+            json.dump(mapJSON, f, indent=4)
+        f.close()
+
+    ### CREATE NEW ###
 
     def createTeam(self):
         self.teamID = askstring("Team ID", "Please enter an ID for the new team.")
@@ -956,8 +969,8 @@ class UISettings(tk.Toplevel):
     def createMap(self):
         self.mapName = askstring("Map Name", "Please enter a name for a new map.")
         self.mapIDs.append(self.mapName)
-        self.selectObjectsCombo.configure(values=self.objectIDs)
-        self.selectObjectsCombo.current(len(self.objectIDs) - 1)
+        self.selectMapsCombo.configure(values=self.mapIDs)
+        self.selectMapsCombo.current(len(self.mapIDs) - 1)
 
     ### DELETE ###
 
@@ -973,6 +986,15 @@ class UISettings(tk.Toplevel):
         if self.selectTeamCombo.get() in self.teamData:
             self.teamData.pop(self.selectTeamCombo.get())
             self.teamNames.pop(self.selectTeamCombo.current())
+
+            with open("settings/teams.json", "r") as f:
+                teamJSON = json.load(f)
+            f.close()
+            teamJSON.pop(self.selectTeamCombo.get())
+            with open("settings/teams.json", "w") as f:
+                json.dump(teamJSON, f, indent=4)
+            f.close()
+
             self.selectTeamCombo.configure(values=self.teamNames)
             self.selectTeamCombo.current(len(self.teamNames) - 1)
             self.changeTeamEntryWidgets()
@@ -981,6 +1003,13 @@ class UISettings(tk.Toplevel):
         if self.selectComponentCombo.get() in self.componentData:
             self.componentData.pop(self.selectComponentCombo.get())
             self.componentIDs.pop(self.selectComponentCombo.current())
+            with open("settings/components.json", "r") as f:
+                componentJSON = json.load(f)
+                componentJSON.pop(self.selectComponentCombo.get())
+            f.close()
+            with open("settings/components.json", "w") as f:
+                json.dump(componentJSON, f, indent=4)
+            f.close()
             self.selectComponentCombo.configure(values=self.componentIDs)
             self.selectComponentCombo.current(len(self.componentIDs) - 1)
             self.changeComponentsEntryWidgets()
