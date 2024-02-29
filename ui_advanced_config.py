@@ -8,6 +8,7 @@ import loader
 import json
 import comp
 import obj
+import zmap
 from tkinter.messagebox import askyesno
 from tkinter.simpledialog import askstring
 
@@ -541,7 +542,8 @@ class UISettings(tk.Toplevel):
 
     def changeObjectsEntryWidgets(self, event=None, fromCreate=False):
         self.answer = True
-
+        print(self.currentObjectData.getData("id"))
+        print(self.currentObjectData.getData("name"))
         if not (
             (
                 (self.objectsIDEntry.get() == self.currentObjectData.getData("id"))
@@ -561,6 +563,8 @@ class UISettings(tk.Toplevel):
                 message="""Warning: You have modified Object values and have not Updated.
                  Your changes will not be saved. Are you sure you would like continue?""",
             )
+        
+
 
         if self.answer:
             currentObject = self.selectObjectsCombo.get()
@@ -572,10 +576,13 @@ class UISettings(tk.Toplevel):
 
     def changeMapsEntryWidgets(self, event=None, fromCreate=False):
         self.answer = True
+        print("aaaa")
 
+        print(self.currentMapData.getData("name"))
+        print(self.currentMapData.getData("edge_obj_id"))
         if not (
             (
-                (self.mapsNameEntry == self.currentMapData.getData("name"))
+                (self.mapsNameEntry.get() == self.currentMapData.getData("name"))
                 and (
                     self.mapsEdgeObjIDEntry.get()
                     == self.currentMapData.getData("edge_obj_id")
@@ -784,7 +791,10 @@ class UISettings(tk.Toplevel):
         self.objectsPointsCountEntry.insert(0, currentObj.getData("points_count"))
 
     def addEmptyCompID(self, event):
-        if self.currentCompIDs[-1] != "Add New Comp ID":
+        if len(self.currentCompIDs) == 0:
+            self.currentCompIDs.append("Add New Comp ID")
+            self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
+        elif self.currentCompIDs[-1] != "Add New Comp ID":
             self.currentCompIDs.append("Add New Comp ID")
             self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
 
@@ -836,6 +846,87 @@ class UISettings(tk.Toplevel):
         self.currentComponentData.setData("id", self.componentsIDEntry.get())
         self.currentComponentData.setData("name", self.componentsNameEntry.get())
         self.currentComponentData.setData("ctype", self.componentsTypeCombo.get())
+        if self.currentComponentData.getData("ctype") == "CnC":
+            self.currentComponentData.setData(
+                "max_cmds_per_tick", self.componentsTypeAttr1Entry.get()
+            )
+        if self.currentComponentData.getData("ctype") == "FixedGun":
+            self.currentComponentData.setData(
+                "reload_ticks", self.componentsTypeAttr1Entry.get()
+            )
+            self.currentComponentData.setData(
+                "reload_ticks_remaining", self.componentsTypeAttr2Entry.get()
+            )
+            self.currentComponentData.setData(
+                "reloading", self.componentsTypeAttr3Entry.get()
+            )
+            self.currentComponentData.setData(
+                "ammunition", self.componentsTypeAttr4Entry.get()
+            )
+            self.currentComponentData.setData(
+                "min_damage", self.componentsTypeAttr5Entry.get()
+            )
+            self.currentComponentData.setData(
+                "max_damage", self.componentsTypeAttr6Entry.get()
+            )
+            self.currentComponentData.setData(
+                "range", self.componentsTypeAttr7Entry.get()
+            )
+        if self.currentComponentData.getData("ctype") == "Engine":
+            self.currentComponentData.setData(
+                "min_speed", self.componentsTypeAttr1Entry.get()
+            )
+            self.currentComponentData.setData(
+                "max_speed", self.componentsTypeAttr2Entry.get()
+            )
+            self.currentComponentData.setData(
+                "cur_speed", self.componentsTypeAttr3Entry.get()
+            )
+            self.currentComponentData.setData(
+                "max_turnrate", self.componentsTypeAttr4Entry.get()
+            )
+            self.currentComponentData.setData(
+                "cur_turnrate", self.componentsTypeAttr5Entry.get()
+            )
+        if self.currentComponentData.getData("ctype") == "Radar":
+            self.currentComponentData.setData(
+                "active", self.componentsTypeAttr1Entry.get()
+            )
+            self.currentComponentData.setData(
+                "range", self.componentsTypeAttr2Entry.get()
+            )
+            self.currentComponentData.setData(
+                "level", self.componentsTypeAttr3Entry.get()
+            )
+            self.currentComponentData.setData(
+                "visarc", self.componentsTypeAttr4Entry.get()
+            )
+            self.currentComponentData.setData(
+                "offset_angle", self.componentsTypeAttr5Entry.get()
+            )
+            self.currentComponentData.setData(
+                "resolution", self.componentsTypeAttr6Entry.get()
+            )
+        if self.currentComponentData.getData("ctype") == "Radio":
+            self.currentComponentData.setData(
+                "max_range", self.componentsTypeAttr1Entry.get()
+            )
+            self.currentComponentData.setData(
+                "cur_range", self.componentsTypeAttr2Entry.get()
+            )
+            self.currentComponentData.setData(
+                "message", self.componentsTypeAttr3Entry.get()
+            )
+        if self.currentComponentData.getData("ctype") == "Arm":
+            self.currentComponentData.setData(
+                "max_weight", self.componentsTypeAttr1Entry.get()
+            )
+            self.currentComponentData.setData(
+                "max_bulk", self.componentsTypeAttr2Entry.get()
+            )
+            self.currentComponentData.setData(
+                "item", self.componentsTypeAttr3Entry.get()
+            )
 
         with open("settings/components.json", "r") as f:
             componentJSON = json.load(f)
@@ -857,7 +948,8 @@ class UISettings(tk.Toplevel):
         self.currentObjectData.setData("text", self.objectsTextEntry.get())
         self.currentObjectData.setData("health", int(self.objectsHealthEntry.get()))
         self.currentObjectData.setData("density", int(self.objectsDensityEntry.get()))
-        self.currentObjectData.setData("comp_ids", self.objectsCompIDsEntry.get())
+        self.currentCompIDs.pop(-1)
+        self.currentObjectData.setData("comp_ids", self.currentCompIDs)
         self.currentObjectData.setData(
             "points_count", self.objectsPointsCountEntry.get()
         )
@@ -942,7 +1034,6 @@ class UISettings(tk.Toplevel):
 
         print(self.newDict)
         self.currentComponentData = comp.Comp(self.newDict)
-        # self.changeComponentsEntryWidgets(fromCreate=True)
         self.showComponentEntries(self.currentComponentData)
 
     def createObject(self):
@@ -971,6 +1062,20 @@ class UISettings(tk.Toplevel):
         self.mapIDs.append(self.mapName)
         self.selectMapsCombo.configure(values=self.mapIDs)
         self.selectMapsCombo.current(len(self.mapIDs) - 1)
+        self.currentMapData = zmap.Map(
+            {
+                "name": "",
+                "edge_obj_id": "",
+                "desc": "",
+                "width": "",
+                "height": "",
+                "placed_objects": {},
+                "placed_items": {},
+                "sides": {},
+                "win_states": [],
+            }
+        )
+        self.showMapEntry(self.currentMapData)
 
     ### DELETE ###
 
@@ -1002,7 +1107,7 @@ class UISettings(tk.Toplevel):
     def deleteComponents(self):
         if self.selectComponentCombo.get() in self.componentData:
             self.componentData.pop(self.selectComponentCombo.get())
-            self.componentIDs.pop(self.selectComponentCombo.current())
+
             with open("settings/components.json", "r") as f:
                 componentJSON = json.load(f)
                 componentJSON.pop(self.selectComponentCombo.get())
@@ -1010,14 +1115,17 @@ class UISettings(tk.Toplevel):
             with open("settings/components.json", "w") as f:
                 json.dump(componentJSON, f, indent=4)
             f.close()
-            self.selectComponentCombo.configure(values=self.componentIDs)
-            self.selectComponentCombo.current(len(self.componentIDs) - 1)
-            self.changeComponentsEntryWidgets()
+        self.componentIDs.pop(self.selectComponentCombo.current())
+        self.selectComponentCombo.configure(values=self.componentIDs)
+        self.selectComponentCombo.current(len(self.componentIDs) - 1)
+        self.changeComponentsEntryWidgets()
 
     def deleteMap(self):
         if self.selectMapsCombo.get() in self.mapData:
             self.mapData.pop(self.selectMapsCombo.get())
-            self.mapIDs.pop(self.selectMapsCombo.current())
-            self.selectMapsCombo.configure(values=self.mapIDs)
-            self.selectMapsCombo.current(len(self.mapIDs) - 1)
+             
             self.changeComponentsEntryWidgets()
+        self.mapIDs.pop(self.selectMapsCombo.current())
+        self.selectMapsCombo.configure(values=self.mapIDs)
+        self.selectMapsCombo.current(len(self.mapIDs) - 1)
+        self.changeMapsEntryWidgets()
