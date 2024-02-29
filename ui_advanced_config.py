@@ -563,8 +563,6 @@ class UISettings(tk.Toplevel):
                 message="""Warning: You have modified Object values and have not Updated.
                  Your changes will not be saved. Are you sure you would like continue?""",
             )
-        
-
 
         if self.answer:
             currentObject = self.selectObjectsCombo.get()
@@ -1123,8 +1121,13 @@ class UISettings(tk.Toplevel):
     def deleteMap(self):
         if self.selectMapsCombo.get() in self.mapData:
             self.mapData.pop(self.selectMapsCombo.get())
-             
-            self.changeComponentsEntryWidgets()
+            with open("settings/maps.json", "r") as f:
+                mapJSON = json.load(f)
+                mapJSON.pop(self.selectMapsCombo.get())
+            f.close()
+            with open("settings/maps.json", "w") as f:
+                json.dump(mapJSON, f, indent=4)
+            f.close()
         self.mapIDs.pop(self.selectMapsCombo.current())
         self.selectMapsCombo.configure(values=self.mapIDs)
         self.selectMapsCombo.current(len(self.mapIDs) - 1)
