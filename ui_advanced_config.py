@@ -19,7 +19,7 @@ class UISettings(tk.Toplevel):
     def __init__(self, master=None, logger=None):
         super().__init__(master)
         self.master = master
-        self.configure(bg=DARKCOLOR)
+        self.configure(bg=BGCOLOR)
         self.title("MAIA - Advanced Configuration")
         self.geometry("800x600")
         self.logger = logger
@@ -56,11 +56,13 @@ class UISettings(tk.Toplevel):
         self.RadioKeys = ["max_range", "cur_range", "message"]
         self.ArmKeys = ["max_weight", "max_bulk", "item"]
 
+
         self.BuildUI()
 
     def BuildUI(self):
 
         # Make main widgets
+
         self.mainFrame = uiQuietFrame(master=self)
         self.teamsColumn = uiQuietFrame(master=self.mainFrame)
         self.componentsColumn = uiQuietFrame(master=self.mainFrame)
@@ -73,6 +75,7 @@ class UISettings(tk.Toplevel):
         self.titleLabel.pack(side=tk.TOP, fill=tk.BOTH, expand=False, padx=10, pady=10)
 
         # Make Team Widgets
+
         self.selectTeamCombo = uiComboBox(master=self.teamsColumn)
         self.teamsLabel = uiLabel(master=self.teamsColumn, text="Teams")
         self.teamSizeLabel = uiLabel(master=self.teamsColumn, text="Size:")
@@ -371,6 +374,7 @@ class UISettings(tk.Toplevel):
         self.mapsHeightLabel = uiLabel(master=self.mapsColumn, text="Height:")
         self.mapsHeightEntry = uiEntry(master=self.mapsColumn)
 
+
         # Place Map Widgets
         self.mapsColumn.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10)
         self.selectMapsCombo.grid(
@@ -420,6 +424,7 @@ class UISettings(tk.Toplevel):
             pady=10,
         )
 
+
         self.initEntryWidgets()
 
     def initEntryWidgets(self):
@@ -447,6 +452,7 @@ class UISettings(tk.Toplevel):
             "<<ComboboxSelected>>", self.changeComponentsEntryWidgets
         )
         self.showComponentEntries(self.currentComponentData)
+
 
         # OBJECT
         self.objectData = self.ldr.obj_templates
