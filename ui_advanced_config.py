@@ -56,7 +56,6 @@ class UISettings(tk.Toplevel):
         self.RadioKeys = ["max_range", "cur_range", "message"]
         self.ArmKeys = ["max_weight", "max_bulk", "item"]
 
-
         self.BuildUI()
 
     def BuildUI(self):
@@ -94,7 +93,7 @@ class UISettings(tk.Toplevel):
         self.aiFileLabel = uiLabel(master=self.agentFrame, text="AI File:")
         self.aiFileEntry = uiEntry(master=self.agentFrame)
         self.teamsUpdateButton = uiButton(
-            master=self.teamsColumn, command=self.updateTeamsJSON, text="update"
+            master=self.teamsColumn, command=self.updateTeamsJSON, text="Update"
         )
         self.teamsCreateButton = uiButton(
             master=self.teamsColumn, command=self.createTeam, text="Create"
@@ -374,7 +373,6 @@ class UISettings(tk.Toplevel):
         self.mapsHeightLabel = uiLabel(master=self.mapsColumn, text="Height:")
         self.mapsHeightEntry = uiEntry(master=self.mapsColumn)
 
-
         # Place Map Widgets
         self.mapsColumn.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10)
         self.selectMapsCombo.grid(
@@ -424,7 +422,6 @@ class UISettings(tk.Toplevel):
             pady=10,
         )
 
-
         self.initEntryWidgets()
 
     def initEntryWidgets(self):
@@ -452,7 +449,6 @@ class UISettings(tk.Toplevel):
             "<<ComboboxSelected>>", self.changeComponentsEntryWidgets
         )
         self.showComponentEntries(self.currentComponentData)
-
 
         # OBJECT
         self.objectData = self.ldr.obj_templates
@@ -952,10 +948,12 @@ class UISettings(tk.Toplevel):
         self.currentObjectData.setData("text", self.objectsTextEntry.get())
         self.currentObjectData.setData("health", int(self.objectsHealthEntry.get()))
         self.currentObjectData.setData("density", int(self.objectsDensityEntry.get()))
-        self.currentCompIDs.pop(-1)
+        if len(self.currentCompIDs) != 0:
+            if self.currentCompIDs[-1] == "Add New Comp ID":
+                self.currentCompIDs.pop(-1)
         self.currentObjectData.setData("comp_ids", self.currentCompIDs)
         self.currentObjectData.setData(
-            "points_count", self.objectsPointsCountEntry.get()
+            "points_count", bool(int(self.objectsPointsCountEntry.get()))
         )
 
         print(self.currentObjectData.getJSONView())
@@ -976,8 +974,8 @@ class UISettings(tk.Toplevel):
         self.currentMapData.setData("name", self.mapsNameEntry.get())
         self.currentMapData.setData("edge_obj_id", self.mapsEdgeObjIDEntry.get())
         self.currentMapData.setData("desc", self.mapsDescEntry.get())
-        self.currentMapData.setData("width", self.mapsWidthEntry.get())
-        self.currentMapData.setData("height", self.mapsHeightEntry.get())
+        self.currentMapData.setData("width", int(self.mapsWidthEntry.get()))
+        self.currentMapData.setData("height", int(self.mapsHeightEntry.get()))
         with open("settings/maps.json", "r") as f:
             mapJSON = json.load(f)
             print(self.currentMapData.data)

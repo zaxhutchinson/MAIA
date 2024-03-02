@@ -1,51 +1,71 @@
 {
-    "Map 1" : {
-        "name" : "Simple Maze",
+    "Map 1": {
+        "name": "Simple Maze",
         "edge_obj_id": "0",
-        "desc" : "Simple Maze Map",
-        "width" : 10,
-        "height" : 10,
-        "placed_objects" : {
-
-        },
-        "placed_items" : {
-            "goal" : [
-                { "x":8, "y":1 }
+        "desc": "Simple Maze Map",
+        "width": 10,
+        "height": 10,
+        "placed_objects": {},
+        "placed_items": {
+            "goal": [
+                {
+                    "x": 8,
+                    "y": 1
+                }
             ]
         },
         "sides": {
-            "Green" : { 
-                "starting_locations": [ [1,1] ],
-                "facing":0
+            "Green": {
+                "starting_locations": [
+                    [
+                        1,
+                        1
+                    ]
+                ],
+                "facing": 0
             },
-            "Red" : { 
-                "starting_locations": [ [8,8] ],
-                "facing":270
+            "Red": {
+                "starting_locations": [
+                    [
+                        8,
+                        8
+                    ]
+                ],
+                "facing": 270
             }
         },
-        "win_states": ["reach_goal"]
+        "win_states": [
+            "reach_goal"
+        ]
     },
-
-    "Map 2" : {
-        "name" : "Capture The Flag",
+    "Map 2": {
+        "name": "Maze",
         "edge_obj_id": "0",
-        "desc" : "Capture The Flag Map",
-        "width" : 10,
-        "height" : 10,
-        "placed_objects" : {
-
-        },
-        "placed_items" : {
-            "goal" : [
-                { "x":8, "y":1 }
+        "desc": "Maze Map 2",
+        "width": 10,
+        "height": 10,
+        "placed_objects": {},
+        "placed_items": {
+            "goal": [
+                {
+                    "x": 8,
+                    "y": 1
+                }
             ]
         },
         "sides": {
-            "Green" : { 
-                "starting_locations": [ [1,1] ],
-                "facing":0
+            "Green": {
+                "starting_locations": [
+                    [
+                        1,
+                        1
+                    ]
+                ],
+                "facing": 0
             }
         },
-        "win_states": ["reach_goal"]
+        "win_states": [
+            "reach_goal"
+        ]
     }
 }

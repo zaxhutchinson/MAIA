@@ -22,30 +22,5 @@
                 "AI_file": "AI_file1.py"
             }
         ]
-    },
-    "t": {
-        "size": 11,
-        "name": "t",
-        "agent_defs": [
-            {
-                "callsign": "Leader",
-                "squad": "B",
-                "object": "player",
-                "AI_file": "AI_file1.py"
-            }
-        ]
-    },
-
-    "TeamAlpha" : {
-        "size" : 1,
-        "name" : "TeamAlpha",
-        "agent_defs" : [
-            {
-                "callsign": "Leader",
-                "squad" : "A",
-                "object" : "player",
-                "AI_file" : "AI_file1.py"
-            }
-        ]
     }
 }
