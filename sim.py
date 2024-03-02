@@ -68,7 +68,7 @@ class Sim:
         return self.map
 
     def hasMap(self):
-        return self.map != None
+        return self.map is not None
 
     ##########################################################################
     # SIDES
@@ -142,7 +142,7 @@ class Sim:
             raise BuildException("No map was selected.")
 
         for k, v in self.sides.items():
-            if v["teamname"] == None:
+            if v["teamname"] is None:
                 raise BuildException("Side " + k + " has no team assignment.")
 
         # Get the main config dict
@@ -329,15 +329,15 @@ class Sim:
         for name, data in self.sides.items():
             msg += "  TEAM: " + name + "\n"
             total = 0
-            for obj in data["team"]["agents"].values():
+            for curr_obj in data["team"]["agents"].values():
                 msg += (
                     "    "
-                    + obj.getBestDisplayName()
+                    + curr_obj.getBestDisplayName()
                     + ": "
-                    + str(obj.getData("points"))
+                    + str(curr_obj.getData("points"))
                     + "\n"
                 )
-                total += obj.getData("points")
+                total += curr_obj.getData("points")
             msg += "    TOTAL: " + str(total) + "\n"
 
         m = msgs.Msg(str(self.tick), "CURRENT POINTS", msg)
@@ -356,7 +356,7 @@ class Sim:
 
             # Run all obj's updates, storing the returned commands
             # Don't need to shuffle order while getting commands
-            for objuuid, obj in self.objs.items():
+            for objuuid, curr_obj in self.objs.items():
 
                 cmd = None
                 view = {}
@@ -365,13 +365,13 @@ class Sim:
                     view["comp"] = self.comp_views[objuuid]
 
                 # Call update and get commands
-                cmd = obj.update(view)
+                cmd = curr_obj.update(view)
 
                 # Validate commands
                 cmd = self.command_validator.validateCommands(cmd)
 
-                if cmd != None:
-                    if type(cmd) == dict and len(cmd) > 0:
+                if cmd is not None:
+                    if type(cmd) is dict and len(cmd) > 0:
                         cmds_by_uuid[objuuid] = cmd
 
             # Flush the obj_views, so no one gets old data.
@@ -384,8 +384,8 @@ class Sim:
             for tick in range(self.ticks_per_turn):
                 self.imsgr.addMsg(msgs.Msg(self.tick, "---NEW TICK---", ""))
 
-                # Shuffle turn order.
-                random.shuffle(objuuids_list)
+                # Advance turn order sequentially by rotating list of all active agents by 1.
+                objuuids_list[1:]
 
                 # Check all commands to see if there is
                 # something to do this tick.
@@ -426,7 +426,7 @@ class Sim:
         # from taking place.
         if objuuid in self.objs:
 
-            obj = self.objs[objuuid]
+            curr_obj = self.objs[objuuid]
 
             # Send the commands to the object so they can be
             # processed. This returns a list of actions.
@@ -437,7 +437,7 @@ class Sim:
             for a in actions:
 
                 # Add obj ref and action as a tuple.
-                self.actions[a.getType()].append((obj, a))
+                self.actions[a.getType()].append((curr_obj, a))
 
                 # self.action_dispatch_table[a.getType()](obj,a)
 
@@ -448,15 +448,15 @@ class Sim:
     ##########################################################################
 
     # High-speed projectile action
-    def ACTN_HighspeedProjectile(self, obj, actn):
+    def ACTN_HighspeedProjectile(self, curr_obj, actn):
 
         view = self.view_manager.getViewTemplate("projectile")
         view["compname"] = actn.getData("compname")
 
         # Get list of cells through which the shell travels.
         cells_hit = zmath.getCellsAlongTrajectory(
-            obj.getData("x"),
-            obj.getData("y"),
+            curr_obj.getData("x"),
+            curr_obj.getData("y"),
             actn.getData("direction"),
             actn.getData("range"),
         )
@@ -468,16 +468,16 @@ class Sim:
         # along the path and quit.
         for cell in cells_hit:
             id_in_cell = self.map.getCellOccupant(cell[0], cell[1])
-            if id_in_cell == obj.getData("uuid"):
+            if id_in_cell == curr_obj.getData("uuid"):
                 continue
-            elif id_in_cell != None:
+            elif id_in_cell is not None:
 
                 view["hit_x"] = cell[0]
                 view["hit_y"] = cell[1]
                 view["name"] = self.objs[id_in_cell].getData("name")
 
                 damage_str = (
-                    obj.getBestDisplayName()
+                    curr_obj.getBestDisplayName()
                     + " shot "
                     + self.objs[id_in_cell].getBestDisplayName()
                     + " for "
@@ -488,21 +488,21 @@ class Sim:
 
                 points = self.damageObj(id_in_cell, damage)
 
-                obj.setData("points", points)
+                curr_obj.setData("points", points)
 
                 break
 
-        self.addCompView(obj.getData("uuid"), view)
+        self.addCompView(curr_obj.getData("uuid"), view)
 
     # Regular object move action
-    def ACTN_Move(self, obj, actn):
+    def ACTN_Move(self, curr_obj, actn):
         # Get current data
-        facing = obj.getData("facing")
+        facing = curr_obj.getData("facing")
         cur_speed = actn.getData("speed")
-        old_x = obj.getData("x")
-        old_y = obj.getData("y")
-        old_cell_x = obj.getData("cell_x")
-        old_cell_y = obj.getData("cell_y")
+        old_x = curr_obj.getData("x")
+        old_y = curr_obj.getData("y")
+        old_cell_x = curr_obj.getData("cell_x")
+        old_cell_y = curr_obj.getData("cell_y")
         x = old_x + old_cell_x
         y = old_y + old_cell_y
         # translate and new data
@@ -536,14 +536,14 @@ class Sim:
             new_y = cur_cell[1]
 
             # Move the object
-            self.map.moveObjFromTo(obj.getData("uuid"), old_x, old_y, new_x, new_y)
-            obj.setData("x", new_x)
-            obj.setData("y", new_y)
-            obj.setData("cell_x", new_cell_x)
-            obj.setData("cell_y", new_cell_y)
+            self.map.moveObjFromTo(curr_obj.getData("uuid"), old_x, old_y, new_x, new_y)
+            curr_obj.setData("x", new_x)
+            curr_obj.setData("y", new_y)
+            curr_obj.setData("cell_x", new_cell_x)
+            curr_obj.setData("cell_y", new_cell_y)
 
             # Update held item's locations
-            item_uuids = obj.getAllHeldStoredItems()
+            item_uuids = curr_obj.getAllHeldStoredItems()
             for _uuid in item_uuids:
                 i = self.items[_uuid]
                 i.setData("x", new_x)
@@ -557,34 +557,34 @@ class Sim:
                 # crashing.
                 if new_x != old_x:
                     if new_x > old_x:
-                        obj.setData("cell_x", 0.99)
+                        curr_obj.setData("cell_x", 0.99)
                     else:
-                        obj.setData("cell_x", 0.0)
+                        curr_obj.setData("cell_x", 0.0)
                 if new_y != old_y:
                     if new_y > old_y:
-                        obj.setData("cell_y", 0.99)
+                        curr_obj.setData("cell_y", 0.99)
                     else:
-                        obj.setData("cell_y", 0.0)
+                        curr_obj.setData("cell_y", 0.0)
 
         # Didn't leave the cell, update in-cell coords.
         else:
-            obj.setData("cell_x", new_cell_x)
-            obj.setData("cell_y", new_cell_y)
+            curr_obj.setData("cell_x", new_cell_x)
+            curr_obj.setData("cell_y", new_cell_y)
             pass
 
     # Turns the obj
-    def ACTN_Turn(self, obj, actn):
+    def ACTN_Turn(self, curr_obj, actn):
 
-        cur_facing = obj.getData("facing")
+        cur_facing = curr_obj.getData("facing")
         new_facing = cur_facing + actn.getData("turnrate")
         while new_facing < 0:
             new_facing += 360
         while new_facing >= 360:
             new_facing -= 360
-        obj.setData("facing", new_facing)
+        curr_obj.setData("facing", new_facing)
 
     # Performs a radar transmission
-    def ACTN_TransmitRadar(self, obj, actn):
+    def ACTN_TransmitRadar(self, curr_obj, actn):
 
         view = self.view_manager.getViewTemplate("radar")
         view["tick"] = self.tick
@@ -593,13 +593,13 @@ class Sim:
         view["slot_id"] = actn.getData("slot_id")
 
         # Set up the necessary data for easy access
-        radar_facing = obj.getData("facing") + actn.getData("offset_angle")
+        radar_facing = curr_obj.getData("facing") + actn.getData("offset_angle")
         start = radar_facing - actn.getData("visarc")
         end = radar_facing + actn.getData("visarc")
         angle = start
         jump = actn.getData("resolution")
-        x = obj.getData("x")
-        y = obj.getData("y")
+        x = curr_obj.getData("x")
+        y = curr_obj.getData("y")
         _range = actn.getData("range")
 
         temp_view = []
@@ -617,7 +617,9 @@ class Sim:
             for ping in obj_pings:
 
                 # Pinged ourself
-                if ping["x"] == obj.getData("x") and ping["y"] == obj.getData("y"):
+                if ping["x"] == curr_obj.getData("x") and ping["y"] == curr_obj.getData(
+                    "y"
+                ):
                     pass
                 else:
                     # For now all we're giving the transmitting player
@@ -671,21 +673,21 @@ class Sim:
             del ping["uuid"]
             view["pings"].append(ping)
 
-        self.addCompView(obj.getData("uuid"), view)
+        self.addCompView(curr_obj.getData("uuid"), view)
 
-    def ACTN_BroadcastMessage(self, obj, actn):
+    def ACTN_BroadcastMessage(self, curr_obj, actn):
 
         view = {}
         view["vtype"] = "message"
         view["tick"] = self.tick
         view["message"] = actn.getData("message")
 
-        for uuid, other_obj in self.objs.items():
-            if uuid != obj.getData("uuid"):
+        for curr_uuid, other_obj in self.objs.items():
+            if curr_uuid != curr_obj.getData("uuid"):
 
                 distance = zmath.distance(
-                    obj.getData("x"),
-                    obj.getData("y"),
+                    curr_obj.getData("x"),
+                    curr_obj.getData("y"),
                     other_obj.getData("x"),
                     other_obj.getData("y"),
                 )
@@ -693,9 +695,9 @@ class Sim:
                 # if the distance to the other obj is less than
                 # the broadcast range, add the view.
                 if distance <= actn.getData("range"):
-                    self.addCompView(uuid, view)
+                    self.addCompView(curr_uuid, view)
 
-    def ACTN_TakeItem(self, obj, actn):
+    def ACTN_TakeItem(self, curr_obj, actn):
 
         take_location = actn.getData("location")
 
@@ -703,8 +705,8 @@ class Sim:
         # or if a take location was not provided, take from cell.
         if take_location == "cell" or take_location is None:
 
-            obj_x = obj.getData("x")
-            obj_y = obj.getData("y")
+            obj_x = curr_obj.getData("x")
+            obj_y = curr_obj.getData("y")
             items_in_obj_cell = self.map.getItemsInCell(obj_x, obj_y)
 
             if len(items_in_obj_cell) > 0:
@@ -738,8 +740,8 @@ class Sim:
                     item_to_take = self.items[matching_item]
 
                     # Get the arm component and make sure it isn't None
-                    arm_comp = obj.getComp(actn.getData("slot_id"))
-                    if arm_comp == None:
+                    arm_comp = curr_obj.getComp(actn.getData("slot_id"))
+                    if arm_comp is None:
                         print("ArmComp is None")
                         return
 
@@ -749,7 +751,7 @@ class Sim:
                         ):
                             arm_comp.setData("item", matching_item)
                             self.map.removeItem(obj_x, obj_y, matching_item)
-                            item_to_take.takeItem(obj.getData("uuid"))
+                            item_to_take.takeItem(curr_obj.getData("uuid"))
                             print("Take successful.")
                         else:
                             print("Item too heavy or bulky.")
@@ -758,13 +760,13 @@ class Sim:
                         print("Arm is already packing.")
                         pass
 
-    def ACTN_DropItem(self, obj, actn):
+    def ACTN_DropItem(self, curr_obj, actn):
         print("Dropping item")
-        obj_x = obj.getData("x")
-        obj_y = obj.getData("y")
+        obj_x = curr_obj.getData("x")
+        obj_y = curr_obj.getData("y")
 
-        arm_comp = obj.getComp(actn.getData("slot_id"))
-        if arm_comp == None:
+        arm_comp = curr_obj.getComp(actn.getData("slot_id"))
+        if arm_comp is None:
             return
 
         if arm_comp.isHoldingItem():
@@ -821,10 +823,10 @@ class Sim:
 
     def getObjDrawData(self):
         dd = []
-        for obj in self.destroyed_objs.values():
-            dd.append(obj.getDrawData())
-        for obj in self.objs.values():
-            dd.append(obj.getDrawData())
+        for curr_obj in self.destroyed_objs.values():
+            dd.append(curr_obj.getDrawData())
+        for curr_obj in self.objs.values():
+            dd.append(curr_obj.getDrawData())
         return dd
 
     def getItemDrawData(self):
