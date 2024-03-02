@@ -22,5 +22,21 @@
         "bulk":100000000,
         "text":"G",
         "fill":"yellow"
+    },
+    "redbase":{
+        "id":"redbase",
+        "name":"red_base",
+        "weight":1000000,
+        "bulk":100000000,
+        "text":"X",
+        "fill":"red"
+    },
+    "bluebase":{
+        "id":"bluebase",
+        "name":"blue_base",
+        "weight":1000000,
+        "bulk":100000000,
+        "text":"X",
+        "fill":"blue"
     }
 }

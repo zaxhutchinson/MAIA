@@ -8,17 +8,15 @@ import math
 import zmap
 
 
-
 if __name__ == "__main__":
     # Initialize the log files
-    #LogInit()
+    # LogInit()
 
-    logger = logging.getLogger('main')
-    handler = logging.FileHandler('log/main.log',mode='w')
-    formatter = logging.Formatter('%(name)s - %(message)s')
+    logger = logging.getLogger("main")
+    handler = logging.FileHandler("log/main.log", mode="w")
+    formatter = logging.Formatter("%(name)s - %(message)s")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    
 
     # Start App
     root = tk.Tk()
