@@ -24,6 +24,7 @@ class UISettings(tk.Toplevel):
         self.geometry("800x600")
         self.logger = logger
         self.ldr = loader.Loader(self.logger)
+
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
@@ -58,6 +59,19 @@ class UISettings(tk.Toplevel):
 
         self.BuildUI()
 
+    def validateNumberEntry(self, input):
+        if input.isdigit() or " ":
+            return True
+
+        else:
+            return False
+
+    def validateStringEntry(self, input):
+        if len(input) != 0:
+            return True
+        else:
+            return False
+
     def BuildUI(self):
 
         # Make main widgets
@@ -69,6 +83,9 @@ class UISettings(tk.Toplevel):
         self.mapsColumn = uiQuietFrame(master=self.mainFrame)
         self.titleLabel = uiLabel(master=self.mainFrame, text="Advanced Settings")
 
+        self.validateNum = self.teamsColumn.register(self.validateNumberEntry)
+        self.validateString = self.teamsColumn.register(self.validateStringEntry)
+
         # Place main widgets
         self.mainFrame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         self.titleLabel.pack(side=tk.TOP, fill=tk.BOTH, expand=False, padx=10, pady=10)
@@ -79,6 +96,9 @@ class UISettings(tk.Toplevel):
         self.teamsLabel = uiLabel(master=self.teamsColumn, text="Teams")
         self.teamSizeLabel = uiLabel(master=self.teamsColumn, text="Size:")
         self.teamSizeEntry = uiEntry(master=self.teamsColumn)
+        self.teamSizeEntry.config(
+            validate="all", validatecommand=(self.validateNum, "%P")
+        )
         self.teamNameLabel = uiLabel(master=self.teamsColumn, text="Name:")
         self.teamNameEntry = uiEntry(master=self.teamsColumn)
         self.agentFrame = uiQuietFrame(
@@ -280,8 +300,10 @@ class UISettings(tk.Toplevel):
         self.objectsTextEntry = uiEntry(master=self.objectsColumn)
         self.objectsHealthLabel = uiLabel(master=self.objectsColumn, text="Health:")
         self.objectsHealthEntry = uiEntry(master=self.objectsColumn)
+        self.objectsHealthEntry.config(validate="all", validatecommand=(self.validateNum, "%P"))
         self.objectsDensityLabel = uiLabel(master=self.objectsColumn, text="Density:")
         self.objectsDensityEntry = uiEntry(master=self.objectsColumn)
+        self.objectsDensityEntry.config(validate="all", validatecommand=(self.validateNum, "%P"))
         self.objectsCompIDsLabel = uiLabel(master=self.objectsColumn, text="Comp IDs:")
         self.objectsCompIDsCombo = uiComboBox(master=self.objectsColumn)
         self.objectsPointsCountLabel = uiLabel(
@@ -990,94 +1012,120 @@ class UISettings(tk.Toplevel):
 
     def createTeam(self):
         self.teamID = askstring("Team ID", "Please enter an ID for the new team.")
-        self.teamNames.append(self.teamID)
-        self.selectTeamCombo.configure(values=self.teamNames)
-        self.selectTeamCombo.current(len(self.teamNames) - 1)
-        self.currentTeamData = {
-            "size": "",
-            "name": "",
-            "agent_defs": [{"callsign": "", "squad": "", "object": "", "AI_file": ""}],
-        }
-        self.changeTeamEntryWidgets(fromCreate=True)
+        while len(self.teamID) == 0:
+            messagebox.showwarning("Warning", "You must enter a team ID to continue")
+            self.teamID = askstring("Team ID", "Please enter an ID for the new team.")
+        if self.teamID != 0:
+            self.teamNames.append(self.teamID)
+            self.selectTeamCombo.configure(values=self.teamNames)
+            self.selectTeamCombo.current(len(self.teamNames) - 1)
+            self.currentTeamData = {
+                "size": "",
+                "name": "",
+                "agent_defs": [
+                    {"callsign": "", "squad": "", "object": "", "AI_file": ""}
+                ],
+            }
+            self.changeTeamEntryWidgets(fromCreate=True)
 
     def createComponent(self):
         self.componentID = askstring(
             "Component ID", "Please enter an ID for the new component."
         )
-        self.componentIDs.append(self.componentID)
-        self.selectComponentCombo.configure(values=self.componentIDs)
-        self.selectComponentCombo.current(len(self.componentIDs) - 1)
-        self.newDict = {"id": self.componentID, "name": "", "ctype": ""}
+        while len(self.componentID) == 0:
+            messagebox.showwarning(
+                "Warning", "Please enter an ID for the new component"
+            )
+            self.componentID = askstring(
+                "Component ID", "Please enter an ID for the new component."
+            )
+        if self.componentID != 0:
+            self.componentIDs.append(self.componentID)
+            self.selectComponentCombo.configure(values=self.componentIDs)
+            self.selectComponentCombo.current(len(self.componentIDs) - 1)
+            self.newDict = {"id": self.componentID, "name": "", "ctype": ""}
 
-        if self.componentsTypeCombo.get() == "CnC":
-            self.newDict["ctype"] = "CnC"
-            for key in self.CnCKeys:
-                self.newDict[key] = ""
-        elif self.componentsTypeCombo.get() == "FixedGun":
-            self.newDict["ctype"] = "FixedGun"
-            for key in self.FixedGunKeys:
-                self.newDict[key] = ""
-        elif self.componentsTypeCombo.get() == "Engine":
-            self.newDict["ctype"] = "Engine"
-            for key in self.EngineKeys:
-                self.newDict[key] = ""
-        elif self.componentsTypeCombo.get() == "Radar":
-            self.newDict["ctype"] = "Radar"
-            for key in self.RadarKeys:
-                self.newDict[key] = ""
-        elif self.componentsTypeCombo.get() == "Radio":
-            self.newDict["ctype"] = "Radio"
-            for key in self.RadioKeys:
-                self.newDict[key] = ""
-        elif self.componentsTypeCombo.get() == "Arm":
-            self.newDict["ctype"] = "Arm"
-            for key in self.ArmKeys:
-                self.newDict[key] = ""
+            if self.componentsTypeCombo.get() == "CnC":
+                self.newDict["ctype"] = "CnC"
+                for key in self.CnCKeys:
+                    self.newDict[key] = ""
+            elif self.componentsTypeCombo.get() == "FixedGun":
+                self.newDict["ctype"] = "FixedGun"
+                for key in self.FixedGunKeys:
+                    self.newDict[key] = ""
+            elif self.componentsTypeCombo.get() == "Engine":
+                self.newDict["ctype"] = "Engine"
+                for key in self.EngineKeys:
+                    self.newDict[key] = ""
+            elif self.componentsTypeCombo.get() == "Radar":
+                self.newDict["ctype"] = "Radar"
+                for key in self.RadarKeys:
+                    self.newDict[key] = ""
+            elif self.componentsTypeCombo.get() == "Radio":
+                self.newDict["ctype"] = "Radio"
+                for key in self.RadioKeys:
+                    self.newDict[key] = ""
+            elif self.componentsTypeCombo.get() == "Arm":
+                self.newDict["ctype"] = "Arm"
+                for key in self.ArmKeys:
+                    self.newDict[key] = ""
 
-        print(self.newDict)
-        self.currentComponentData = comp.Comp(self.newDict)
-        self.showComponentEntries(self.currentComponentData)
+            print(self.newDict)
+            self.currentComponentData = comp.Comp(self.newDict)
+            self.showComponentEntries(self.currentComponentData)
 
     def createObject(self):
         self.objectID = askstring("Object ID", "Please enter an ID for the new object.")
-        self.objectIDs.append(self.objectID)
-        self.selectObjectsCombo.configure(values=self.objectIDs)
-        self.selectObjectsCombo.current(len(self.objectIDs) - 1)
-        self.currentObjectData = obj.Object(
-            {
-                "id": self.objectID,
-                "name": "",
-                "fill_alive": "",
-                "fill_dead": "",
-                "text": "",
-                "health": "",
-                "density": "",
-                "comp_ids": [],
-                "points_count": "",
-            }
-        )
-        # self.changeObjectsEntryWidgets(fromCreate=True)
-        self.showObjectEntry(self.currentObjectData)
+        while self.objectID == 0:
+            messagebox.showwarning(
+                "Warning", "Please enter an ID for the new object"
+            )
+            self.objectID = askstring("Object ID", "Please enter an ID for the new object.")
+        if self.objectID != 0:
+            self.objectIDs.append(self.objectID)
+            self.selectObjectsCombo.configure(values=self.objectIDs)
+            self.selectObjectsCombo.current(len(self.objectIDs) - 1)
+            self.currentObjectData = obj.Object(
+                {
+                    "id": self.objectID,
+                    "name": "",
+                    "fill_alive": "",
+                    "fill_dead": "",
+                    "text": "",
+                    "health": "",
+                    "density": "",
+                    "comp_ids": [],
+                    "points_count": "",
+                }
+            )
+            # self.changeObjectsEntryWidgets(fromCreate=True)
+            self.showObjectEntry(self.currentObjectData)
 
     def createMap(self):
         self.mapName = askstring("Map Name", "Please enter a name for a new map.")
-        self.mapIDs.append(self.mapName)
-        self.selectMapsCombo.configure(values=self.mapIDs)
-        self.selectMapsCombo.current(len(self.mapIDs) - 1)
-        self.currentMapData = zmap.Map(
-            {
-                "name": "",
-                "edge_obj_id": "",
-                "desc": "",
-                "width": "",
-                "height": "",
-                "placed_objects": {},
-                "placed_items": {},
-                "sides": {},
-                "win_states": [],
-            }
-        )
-        self.showMapEntry(self.currentMapData)
+        while len(self.mapName) == 0:
+            messagebox.showwarning(
+                "Warning", "Please enter an ID for the new map"
+            )
+            self.mapName = askstring("Map Name", "Please enter a name for a new map.")
+        if self.mapName != 0:
+            self.mapIDs.append(self.mapName)
+            self.selectMapsCombo.configure(values=self.mapIDs)
+            self.selectMapsCombo.current(len(self.mapIDs) - 1)
+            self.currentMapData = zmap.Map(
+                {
+                    "name": "",
+                    "edge_obj_id": "",
+                    "desc": "",
+                    "width": "",
+                    "height": "",
+                    "placed_objects": {},
+                    "placed_items": {},
+                    "sides": {},
+                    "win_states": [],
+                }
+            )
+            self.showMapEntry(self.currentMapData)
 
     ### DELETE ###
 
