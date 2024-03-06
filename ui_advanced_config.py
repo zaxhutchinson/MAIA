@@ -21,7 +21,7 @@ class UISettings(tk.Toplevel):
         self.master = master
         self.configure(bg=BGCOLOR)
         self.title("MAIA - Advanced Configuration")
-        self.geometry("800x600")
+        self.geometry("1100x600")
         self.logger = logger
         self.ldr = loader.Loader(self.logger)
 
@@ -57,23 +57,25 @@ class UISettings(tk.Toplevel):
         self.RadioKeys = ["max_range", "cur_range", "message"]
         self.ArmKeys = ["max_weight", "max_bulk", "item"]
 
-        self.BuildUI()
+        self.build_ui()
 
-    def validateNumberEntry(self, input):
+    def validate_number_entry(self, input):
         if input.isdigit() or " ":
             return True
 
         else:
             return False
 
-    def validateStringEntry(self, input):
+    def validate_string_entry(self, input):
         if len(input) != 0:
             return True
         else:
             return False
 
-    def BuildUI(self):
-
+    def build_ui(self):
+        """
+        Initializes all widgets and places them.  
+        """
         # Make main widgets
 
         self.mainFrame = uiQuietFrame(master=self)
@@ -83,8 +85,8 @@ class UISettings(tk.Toplevel):
         self.mapsColumn = uiQuietFrame(master=self.mainFrame)
         self.titleLabel = uiLabel(master=self.mainFrame, text="Advanced Settings")
 
-        self.validateNum = self.teamsColumn.register(self.validateNumberEntry)
-        self.validateString = self.teamsColumn.register(self.validateStringEntry)
+        self.validateNum = self.teamsColumn.register(self.validate_number_entry)
+        self.validateString = self.teamsColumn.register(self.validate_string_entry)
 
         # Place main widgets
         self.mainFrame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
@@ -447,6 +449,9 @@ class UISettings(tk.Toplevel):
         self.initEntryWidgets()
 
     def initEntryWidgets(self):
+        """
+        Gets information from the loader and assigns current values for each setting type.
+        """
         # TEAM
         self.teamData = self.ldr.team_templates
         self.teamNames = self.ldr.getTeamNames()
@@ -455,8 +460,8 @@ class UISettings(tk.Toplevel):
 
         self.selectTeamCombo.configure(values=self.teamNames)
         self.selectTeamCombo.current(0)
-        self.selectTeamCombo.bind("<<ComboboxSelected>>", self.changeTeamEntryWidgets)
-        self.showTeamEntry(self.currentTeamData)
+        self.selectTeamCombo.bind("<<ComboboxSelected>>", self.change_team_entry_widgets)
+        self.show_team_entry(self.currentTeamData)
 
         # COMPONENT
         self.componentData = self.ldr.comp_templates
@@ -468,9 +473,9 @@ class UISettings(tk.Toplevel):
         self.selectComponentCombo.configure(values=self.componentIDs)
         self.selectComponentCombo.current(0)
         self.selectComponentCombo.bind(
-            "<<ComboboxSelected>>", self.changeComponentsEntryWidgets
+            "<<ComboboxSelected>>", self.change_components_entry_widgets
         )
-        self.showComponentEntries(self.currentComponentData)
+        self.show_component_entries(self.currentComponentData)
 
         # OBJECT
         self.objectData = self.ldr.obj_templates
@@ -482,7 +487,7 @@ class UISettings(tk.Toplevel):
         self.selectObjectsCombo.bind(
             "<<ComboboxSelected>>", self.changeObjectsEntryWidgets
         )
-        self.showObjectEntry(self.currentObjectData)
+        self.show_object_entry(self.currentObjectData)
 
         # MAP
         self.mapData = self.ldr.map_templates
@@ -493,9 +498,12 @@ class UISettings(tk.Toplevel):
         self.selectMapsCombo.configure(values=self.mapIDs)
         self.selectMapsCombo.current(0)
         self.selectMapsCombo.bind("<<ComboboxSelected>>", self.changeMapsEntryWidgets)
-        self.showMapEntry(self.currentMapData)
+        self.show_map_entry(self.currentMapData)
 
-    def changeTeamEntryWidgets(self, event=None, fromCreate=False):
+    def change_team_entry_widgets(self, event=None, fromCreate=False):
+        """
+        Gets the correct team data for the currently selected team.
+        """
         # the answer variable defaults to true
         self.answer = True
 
@@ -524,9 +532,9 @@ class UISettings(tk.Toplevel):
             # currentTeamIdx = self.selectTeamCombo.current()
             if not (fromCreate):
                 self.currentTeamData = self.teamData[self.selectTeamCombo.get()]
-            self.showTeamEntry(self.currentTeamData)
+            self.show_team_entry(self.currentTeamData)
 
-    def changeComponentsEntryWidgets(self, event=None, fromCreate=False):
+    def change_components_entry_widgets(self, event=None, fromCreate=False):
         self.answer = True
 
         if not (
@@ -562,7 +570,7 @@ class UISettings(tk.Toplevel):
                     self.componentIDs[currentComponentIdx]
                 ]
 
-            self.showComponentEntries(self.currentComponentData)
+            self.show_component_entries(self.currentComponentData)
 
     def changeObjectsEntryWidgets(self, event=None, fromCreate=False):
         self.answer = True
@@ -594,7 +602,7 @@ class UISettings(tk.Toplevel):
             if not fromCreate:
                 self.currentObjectData = self.objectData[currentObject]
 
-            self.showObjectEntry(self.currentObjectData)
+            self.show_object_entry(self.currentObjectData)
 
     def changeMapsEntryWidgets(self, event=None, fromCreate=False):
         self.answer = True
@@ -622,9 +630,12 @@ class UISettings(tk.Toplevel):
         self.currentMapData = self.mapData[currentMapID]
         print(self.currentMapData)
         if self.answer is True:
-            self.showMapEntry(self.currentMapData)
+            self.show_map_entry(self.currentMapData)
 
-    def showComponentEntries(self, currentComp):
+    def show_component_entries(self, currentComp):
+        """
+        Updates the values in the component entry widgets.
+        """
         self.componentTypeAttr = currentComp.view_keys
         self.componentsIDEntry.delete(0, tk.END)
         self.componentsIDEntry.insert(0, currentComp.getData("id"))
@@ -757,7 +768,10 @@ class UISettings(tk.Toplevel):
                 0, currentComp.getData(self.componentTypeAttr[6])
             )
 
-    def showTeamEntry(self, currentTeam):
+    def show_team_entry(self, currentTeam):
+        """
+        Updates the values stored in the team entry widgets.
+        """
         self.teamNameEntry.delete(0, tk.END)
         self.teamNameEntry.insert(0, currentTeam["name"])
         self.teamSizeEntry.delete(0, tk.END)
@@ -771,7 +785,10 @@ class UISettings(tk.Toplevel):
         self.aiFileEntry.delete(0, tk.END)
         self.aiFileEntry.insert(0, currentTeam["agent_defs"][0]["AI_file"])
 
-    def showMapEntry(self, currentMap):
+    def show_map_entry(self, currentMap):
+        """
+        Updates the values stored in the map entry widgets.
+        """
         self.mapsIDEntry.delete(0, tk.END)
         self.mapsIDEntry.insert(0, self.selectMapsCombo.get())
         self.mapsNameEntry.delete(0, tk.END)
@@ -785,7 +802,10 @@ class UISettings(tk.Toplevel):
         self.mapsHeightEntry.delete(0, tk.END)
         self.mapsHeightEntry.insert(0, currentMap.getData("height"))
 
-    def showObjectEntry(self, currentObj):
+    def show_object_entry(self, currentObj):
+        """
+        Updates the values stored in the object entry widgets.
+        """
         self.objectsIDEntry.delete(0, tk.END)
         self.objectsIDEntry.insert(0, currentObj.getData("id"))
         self.objectsNameEntry.delete(0, tk.END)
@@ -805,14 +825,17 @@ class UISettings(tk.Toplevel):
         if len(self.currentCompIDs) != 0:
             self.objectsCompIDsCombo.current(0)
         self.objectsCompIDsCombo.bind("<<ComboboxSelected>>", self.getCurrentCompID)
-        self.objectsCompIDsCombo.bind("<Enter>", self.addEmptyCompID)
+        self.objectsCompIDsCombo.bind("<Enter>", self.add_empty_comp_id)
         self.objectsCompIDsCombo.bind("<Return>", self.addNewCompID)
         self.objectsCompIDsCombo.bind("<KeyRelease>", self.deleteCompID)
 
         self.objectsPointsCountEntry.delete(0, tk.END)
         self.objectsPointsCountEntry.insert(0, currentObj.getData("points_count"))
 
-    def addEmptyCompID(self, event):
+    def add_empty_comp_id(self, event):
+        """
+        Adds an empty component ID for users to select to add new component ID.
+        """
         if len(self.currentCompIDs) == 0:
             self.currentCompIDs.append("Add New Comp ID")
             self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
@@ -1015,7 +1038,7 @@ class UISettings(tk.Toplevel):
         while len(self.teamID) == 0:
             messagebox.showwarning("Warning", "You must enter a team ID to continue")
             self.teamID = askstring("Team ID", "Please enter an ID for the new team.")
-        if self.teamID != 0:
+        if len(self.teamID) != 0:
             self.teamNames.append(self.teamID)
             self.selectTeamCombo.configure(values=self.teamNames)
             self.selectTeamCombo.current(len(self.teamNames) - 1)
@@ -1026,7 +1049,7 @@ class UISettings(tk.Toplevel):
                     {"callsign": "", "squad": "", "object": "", "AI_file": ""}
                 ],
             }
-            self.changeTeamEntryWidgets(fromCreate=True)
+            self.change_team_entry_widgets(fromCreate=True)
 
     def createComponent(self):
         self.componentID = askstring(
@@ -1039,7 +1062,7 @@ class UISettings(tk.Toplevel):
             self.componentID = askstring(
                 "Component ID", "Please enter an ID for the new component."
             )
-        if self.componentID != 0:
+        if len(self.componentID) != 0:
             self.componentIDs.append(self.componentID)
             self.selectComponentCombo.configure(values=self.componentIDs)
             self.selectComponentCombo.current(len(self.componentIDs) - 1)
@@ -1072,16 +1095,16 @@ class UISettings(tk.Toplevel):
 
             print(self.newDict)
             self.currentComponentData = comp.Comp(self.newDict)
-            self.showComponentEntries(self.currentComponentData)
+            self.show_component_entries(self.currentComponentData)
 
     def createObject(self):
         self.objectID = askstring("Object ID", "Please enter an ID for the new object.")
-        while self.objectID == 0:
+        while len(self.objectID) == 0:
             messagebox.showwarning(
                 "Warning", "Please enter an ID for the new object"
             )
             self.objectID = askstring("Object ID", "Please enter an ID for the new object.")
-        if self.objectID != 0:
+        if len(self.objectID) != 0:
             self.objectIDs.append(self.objectID)
             self.selectObjectsCombo.configure(values=self.objectIDs)
             self.selectObjectsCombo.current(len(self.objectIDs) - 1)
@@ -1099,7 +1122,7 @@ class UISettings(tk.Toplevel):
                 }
             )
             # self.changeObjectsEntryWidgets(fromCreate=True)
-            self.showObjectEntry(self.currentObjectData)
+            self.show_object_entry(self.currentObjectData)
 
     def createMap(self):
         self.mapName = askstring("Map Name", "Please enter a name for a new map.")
@@ -1108,7 +1131,7 @@ class UISettings(tk.Toplevel):
                 "Warning", "Please enter an ID for the new map"
             )
             self.mapName = askstring("Map Name", "Please enter a name for a new map.")
-        if self.mapName != 0:
+        if len(self.mapName) != 0:
             self.mapIDs.append(self.mapName)
             self.selectMapsCombo.configure(values=self.mapIDs)
             self.selectMapsCombo.current(len(self.mapIDs) - 1)
@@ -1125,7 +1148,7 @@ class UISettings(tk.Toplevel):
                     "win_states": [],
                 }
             )
-            self.showMapEntry(self.currentMapData)
+            self.show_map_entry(self.currentMapData)
 
     ### DELETE ###
 
@@ -1152,7 +1175,7 @@ class UISettings(tk.Toplevel):
 
             self.selectTeamCombo.configure(values=self.teamNames)
             self.selectTeamCombo.current(len(self.teamNames) - 1)
-            self.changeTeamEntryWidgets()
+            self.change_team_entry_widgets()
 
     def deleteComponents(self):
         if self.selectComponentCombo.get() in self.componentData:
@@ -1168,7 +1191,7 @@ class UISettings(tk.Toplevel):
         self.componentIDs.pop(self.selectComponentCombo.current())
         self.selectComponentCombo.configure(values=self.componentIDs)
         self.selectComponentCombo.current(len(self.componentIDs) - 1)
-        self.changeComponentsEntryWidgets()
+        self.change_components_entry_widgets()
 
     def deleteMap(self):
         if self.selectMapsCombo.get() in self.mapData:
