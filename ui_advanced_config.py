@@ -1179,14 +1179,6 @@ class UISettings(tk.Toplevel):
 
     ### DELETE ###
 
-    def delete_object(self):
-        if self.selectObjectsCombo.get() in self.objectData:
-            self.objectData.pop(self.selectObjectsCombo.get())
-            self.objectIDs.pop(self.selectObjectsCombo.current())
-            self.selectObjectsCombo.configure(values=self.objectIDs)
-            self.selectObjectsCombo.current(len(self.objectIDs) - 1)
-            self.change_objects_entry_widgets()
-
     def delete_team(self):
         if self.selectTeamCombo.get() in self.teamData:
             self.teamData.pop(self.selectTeamCombo.get())
@@ -1219,6 +1211,14 @@ class UISettings(tk.Toplevel):
         self.selectComponentCombo.configure(values=self.componentIDs)
         self.selectComponentCombo.current(len(self.componentIDs) - 1)
         self.change_components_entry_widgets()
+
+    def delete_object(self):
+        if self.selectObjectsCombo.get() in self.objectData:
+            self.objectData.pop(self.selectObjectsCombo.get())
+            self.objectIDs.pop(self.selectObjectsCombo.current())
+            self.selectObjectsCombo.configure(values=self.objectIDs)
+            self.selectObjectsCombo.current(len(self.objectIDs) - 1)
+            self.change_objects_entry_widgets()
 
     def delete_map(self):
         if self.selectMapsCombo.get() in self.mapData:
