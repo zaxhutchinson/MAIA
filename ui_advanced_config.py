@@ -504,7 +504,9 @@ class UISettings(tk.Toplevel):
 
         self.selectMapsCombo.configure(values=self.mapIDs)
         self.selectMapsCombo.current(0)
-        self.selectMapsCombo.bind("<<ComboboxSelected>>", self.change_maps_entry_widgets)
+        self.selectMapsCombo.bind(
+            "<<ComboboxSelected>>", self.change_maps_entry_widgets
+        )
         self.show_map_entry(self.currentMapData)
 
     def change_team_entry_widgets(self, event=None):
@@ -775,7 +777,12 @@ class UISettings(tk.Toplevel):
             )
             self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
             self.componentsTypeAttr3Entry.insert(
-                0, currentComp.getData(self.componentTypeAttr[6]) if currentComp.getData(self.componentTypeAttr[6]) != None else "null"
+                0,
+                (
+                    currentComp.getData(self.componentTypeAttr[6])
+                    if currentComp.getData(self.componentTypeAttr[6]) is not None
+                    else "null"
+                ),
             )
             self.componentsTypeAttr3Entry.configure(state="readonly")
 
