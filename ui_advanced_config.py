@@ -60,7 +60,7 @@ class UISettings(tk.Toplevel):
         self.build_ui()
 
     def validate_number_entry(self, input):
-        if input.isdigit() or " ":
+        if input.isdigit() or input == "":
             return True
 
         else:
@@ -95,6 +95,7 @@ class UISettings(tk.Toplevel):
         # Make Team Widgets
 
         self.selectTeamCombo = uiComboBox(master=self.teamsColumn)
+        self.selectTeamCombo.configure(state="readonly")
         self.teamsLabel = uiLabel(master=self.teamsColumn, text="Teams")
         self.teamSizeLabel = uiLabel(master=self.teamsColumn, text="Size:")
         self.teamSizeEntry = uiEntry(master=self.teamsColumn)
@@ -178,6 +179,7 @@ class UISettings(tk.Toplevel):
 
         # Make Component Widgets
         self.selectComponentCombo = uiComboBox(master=self.componentsColumn)
+        self.selectComponentCombo.configure(state="readonly")
         self.componentsLabel = uiLabel(master=self.componentsColumn, text="Components")
         self.componentsUpdateButton = uiButton(
             master=self.componentsColumn,
@@ -275,6 +277,7 @@ class UISettings(tk.Toplevel):
 
         # Make Object Widgets
         self.selectObjectsCombo = uiComboBox(master=self.objectsColumn)
+        self.selectObjectsCombo.configure(state="readonly")
         self.objectsLabel = uiLabel(master=self.objectsColumn, text="Objects")
         self.objectsUpdateButton = uiButton(
             master=self.objectsColumn, command=self.update_objects_json, text="Update"
@@ -377,6 +380,7 @@ class UISettings(tk.Toplevel):
 
         # Make Map Widgets
         self.selectMapsCombo = uiComboBox(master=self.mapsColumn)
+        self.selectMapsCombo.configure(state="readonly")
         self.mapsLabel = uiLabel(master=self.mapsColumn, text="Maps")
         self.mapsUpdateButton = uiButton(
             master=self.mapsColumn, command=self.update_maps_json, text="Update"
@@ -473,6 +477,7 @@ class UISettings(tk.Toplevel):
         # COMPONENT
         self.componentData = self.ldr.comp_templates
         self.componentIDs = self.ldr.getCompIDs()
+        # self.componentNames = self.ldr.
         self.componentTypes = self.ldr.getCompTypes()
         self.currentComponentData = self.componentData[self.componentIDs[0]]
         self.componentTypeAttr = self.currentComponentData.view_keys
@@ -1004,12 +1009,29 @@ class UISettings(tk.Toplevel):
 
         with open("settings/components.json", "r") as f:
             componentJSON = json.load(f)
+
+        if self.currentComponentData.getData("id") != self.selectComponentCombo.get():
+            if self.currentComponentData.getData("id") in componentJSON:
+                componentJSON.pop(self.selectComponentCombo.get())
+            if self.selectComponentCombo.get() in self.componentData:
+                self.componentData.pop(self.selectComponentCombo.get())
+            self.componentIDs.pop(self.selectComponentCombo.current())
+            self.componentIDs.append(self.currentComponentData.getData("id"))
+            self.selectComponentCombo.configure(values=self.componentIDs)
+            self.selectComponentCombo.current(len(self.componentIDs) - 1)
+
         componentJSON[self.currentComponentData.getData("id")] = (
             self.currentComponentData.getSelfView()
         )
         f.close()
+
+        self.componentData[self.currentComponentData.getData("id")] = (
+            self.currentObjectData
+        )
+
         if "slot_id" in componentJSON[self.currentComponentData.getData("id")].keys():
             componentJSON[self.currentComponentData.getData("id")].pop("slot_id")
+
         with open("settings/components.json", "w") as f:
             json.dump(componentJSON, f, indent=4)
         f.close()
@@ -1033,9 +1055,24 @@ class UISettings(tk.Toplevel):
         print(self.currentObjectData.getJSONView())
         with open("settings/objects.json", "r") as f:
             objectJSON = json.load(f)
+
+        print(self.selectObjectsCombo.get())
+        if self.currentObjectData.getData("id") != self.selectObjectsCombo.get():
+            if self.selectObjectsCombo.get() in objectJSON:
+                objectJSON.pop(self.selectObjectsCombo.get())
+            if self.selectObjectsCombo.get() in self.objectData:
+                self.objectData.pop(self.selectObjectsCombo.get())
+            self.objectIDs.pop(self.selectObjectsCombo.current())
+            self.objectIDs.append(self.currentObjectData.getData("id"))
+            self.selectObjectsCombo.configure(values=self.objectIDs)
+            self.selectObjectsCombo.current(len(self.objectIDs) - 1)
+
         objectJSON[self.currentObjectData.getData("id")] = (
             self.currentObjectData.getJSONView()
         )
+
+        self.objectData[self.currentObjectData.getData("id")] = self.currentObjectData
+
         if "slot_id" in objectJSON[self.currentObjectData.getData("id")].keys():
             objectJSON[self.currentObjectData.getData("id")].pop("slot_id")
         f.close()
@@ -1043,6 +1080,7 @@ class UISettings(tk.Toplevel):
         with open("settings/objects.json", "w") as f:
             json.dump(objectJSON, f, indent=4)
         f.close()
+        print(self.objectData)
 
     def update_maps_json(self):
         self.currentMapData.setData("name", self.mapsNameEntry.get())
@@ -1078,7 +1116,7 @@ class UISettings(tk.Toplevel):
                     {"callsign": "", "squad": "", "object": "", "AI_file": ""}
                 ],
             }
-            self.change_team_entry_widgets(fromCreate=True)
+            self.show_team_entry(self.currentTeamData)
 
     def create_component(self):
         self.componentID = askstring(
