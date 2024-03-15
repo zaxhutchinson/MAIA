@@ -1295,5 +1295,5 @@ class UISettings(tk.Toplevel):
         map_height = self.currentMapData.getData("height")
 
         self.UIMap = ui_map_config.UIMapConfig(
-            map_width, map_height, self, logger=self.logger
+            self.currentMapData, self, logger=self.logger
         )
