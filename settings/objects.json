@@ -53,5 +53,17 @@
         "density":1000,
         "comp_ids" : ["0","2000","3000"],
         "points_count" : true
+    },
+    "fastplayer" : {
+        "id": "player",
+        "name" : "player",
+        "fill_alive":"red",
+        "fill_dead":"black",
+        "text":"&",
+        "health" : 100,
+        "density":1000,
+        "comp_ids" : ["0","2100","3000"],
+        "points_count" : true
     }
+
 }
