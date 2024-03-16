@@ -18,6 +18,19 @@
         "range":20
     },
 
+    "1100": {
+        "id":"1100",
+        "name":"Heavy Cannon",
+        "ctype":"FixedGun",
+        "reload_ticks":3,
+        "reload_ticks_remaining":0,
+        "reloading":false,
+        "ammunition":100,
+        "min_damage":250,
+        "max_damage":250,
+        "range":30
+    },
+
     "2000" : {
         "id":"2000",
         "name":"Small Engine",
@@ -26,6 +39,17 @@
         "max_speed":1.0,
         "cur_speed":0.0,
         "max_turnrate":90.0,
+        "cur_turnrate":0.0
+    },
+
+    "2100" : {
+        "id":"2100",
+        "name":"Medium Engine",
+        "ctype":"Engine",
+        "min_speed":-1.0,
+        "max_speed":2.0,
+        "cur_speed":0.0,
+        "max_turnrate":45.0,
         "cur_turnrate":0.0
     },
 
