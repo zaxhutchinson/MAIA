@@ -159,7 +159,7 @@ class Sim:
         self.map.buildMapGrid()
 
         # Create the map border
-        edge_obj_id = self.map.getData("edge_obj_id")
+        edge_obj_id = self.map.getData("edge_obj_id")  # Point B
         edge_coords = self.map.getListOfEdgeCoordinates()
         for ec in edge_coords:
             # Copy the obj
@@ -167,7 +167,7 @@ class Sim:
             # Create obj place data
             data = {}
             data["x"] = ec[0]
-            data["y"] = ec[1]
+            data["y"] = ec[1]  # HK this section just makes the border Xs, accpetable
             data["uuid"] = uuid.uuid4()
             # Place, add to objDict and add to map
             newobj.place(data)
@@ -181,10 +181,11 @@ class Sim:
                 # If an object entry in placed_objs does not
                 # have a position, it is ignored.
                 if "x" in o and "y" in o:
-                    newobj = ldr.copyObjTemplate(oid)
+                    newobj = ldr.copyObjTemplate(oid)  # Point C
                     data = o
                     data["uuid"] = uuid.uuid4()
-                    newobj.place(data)
+                    if newobj.place:
+                        newobj.place(data)
                     self.objs[data["uuid"]] = newobj
                     self.map.addObj(data["x"], data["y"], data["uuid"])
 
@@ -613,7 +614,9 @@ class Sim:
             for ping in obj_pings:
 
                 # Pinged ourself
-                if ping["x"] == curr_obj.getData("x") and ping["y"] == curr_obj.getData("y"):
+                if ping["x"] == curr_obj.getData("x") and ping["y"] == curr_obj.getData(
+                    "y"
+                ):
                     pass
                 else:
                     # For now all we're giving the transmitting player
@@ -819,7 +822,7 @@ class Sim:
         dd = []
         for curr_obj in self.destroyed_objs.values():
             dd.append(curr_obj.getDrawData())
-        for curr_obj in self.objs.values():
+        for curr_obj in self.objs.values():  # Point A
             dd.append(curr_obj.getDrawData())
         return dd
 

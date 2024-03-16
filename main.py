@@ -29,6 +29,8 @@ class App(tk.Tk):
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
 
+        self.img = tk.PhotoImage(file="boatGif.gif")
+
         self.frames = {}
 
         self.frames["HomePage"] = ui_homepage.UIHomepage(

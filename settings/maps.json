@@ -6,12 +6,22 @@
         "width" : 10,
         "height" : 10,
         "placed_objects" : {
+            "1" : [
+                {"x": 4, "y":4}
+            ]
 
         },
         "placed_items" : {
             "goal" : [
                 { "x":8, "y":1 }
+            ],
+            "0" : [
+                { "x":3, "y":5}
+            ],
+            "RE" : [
+                {"x:":6, "y":6}
             ]
+                
         },
         "sides": {
             "Green" : { 

@@ -58,10 +58,14 @@ class Loader:
         with open(filename, "r") as f:
             jsonObjs = json.load(f)
             for k, v in jsonObjs.items():
+                # print("k:", k, "v:", v)
                 self.obj_templates[k] = obj.Object(v)
 
     def copyObjTemplate(self, _id):
         try:
+            # hk = copy.deepcopy(self.obj_templates[_id])
+            # print("copyObjTemplate returns: ", copy.deepcopy(self.obj_templates[_id]))
+            # return hk
             return copy.deepcopy(self.obj_templates[_id])
         except KeyError:
             self.logger.error("LOADER: copyObjTemplate() KeyError " + str(_id))
