@@ -54,6 +54,17 @@
         "comp_ids" : ["0","2000","3000"],
         "points_count" : true
     },
+    "cliff": {
+        "id":"cliff",
+        "name":"cliff",
+        "fill_alive":"red",
+        "fill_dead":"black",
+        "text":"-",
+        "health" : 100000000000000000000,
+        "density":1,
+        "comp_ids" : [],
+        "points_count" : false
+    },
     "fastplayer" : {
         "id": "player",
         "name" : "player",

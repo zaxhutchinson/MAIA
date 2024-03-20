@@ -1,7 +1,7 @@
 {
-    "TeamBeta": {
+    "TeamAlpha": {
         "size": 1,
-        "name": "TeamBeta",
+        "name": "TeamAlpha",
         "agent_defs": [
             {
                 "callsign": "Leader",
@@ -11,16 +11,41 @@
             }
         ]
     },
-    "TeamAlpha": {
+    "TeamBeta": {
         "size": 1,
-        "name": "TeamAlpha",
+        "name": "TeamBeta",
         "agent_defs": [
             {
                 "callsign": "Leader",
-                "squad": "A",
-                "object": "fastplayer",
-                "AI_file": "AI_file1.py"
+                "squad": "B",
+                "object": "player",
+                "AI_file": "AI_file2.py"
+            }
+        ]
+    },
+    "TeamCharlie": {
+        "size": 1,
+        "name": "TeamCharlie",
+        "agent_defs": [
+            {
+                "callsign": "Leader",
+                "squad": "C",
+                "object": "player",
+                "AI_file": "AI_file3.py"
+            }
+        ]
+    },
+    "TeamDelta": {
+        "size": 1,
+        "name": "TeamDelta",
+        "agent_defs": [
+            {
+                "callsign": "Leader",
+                "squad": "D",
+                "object": "player",
+                "AI_file": "AI_file4.py"
             }
         ]
     }
+
 }
