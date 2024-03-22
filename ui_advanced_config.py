@@ -57,6 +57,8 @@ class UISettings(tk.Toplevel):
         self.RadioKeys = ["max_range", "cur_range", "message"]
         self.ArmKeys = ["max_weight", "max_bulk", "item"]
 
+        self.prev_component_combo = None
+
         self.build_ui()
 
     def validate_number_entry(self, input):
@@ -472,6 +474,7 @@ class UISettings(tk.Toplevel):
         self.selectTeamCombo.bind(
             "<<ComboboxSelected>>", self.change_team_entry_widgets
         )
+        self.selectTeamCombo.bind("<Enter>", self.get_previous_team_combo)
         self.show_team_entry(self.currentTeamData)
 
         # COMPONENT
@@ -487,6 +490,8 @@ class UISettings(tk.Toplevel):
         self.selectComponentCombo.bind(
             "<<ComboboxSelected>>", self.change_components_entry_widgets
         )
+        self.selectComponentCombo.bind("<Enter>", self.get_previous_component_combo)
+
         self.show_component_entries(self.currentComponentData)
 
         # OBJECT
@@ -499,6 +504,8 @@ class UISettings(tk.Toplevel):
         self.selectObjectsCombo.bind(
             "<<ComboboxSelected>>", self.change_objects_entry_widgets
         )
+        self.selectObjectsCombo.bind("<Enter>", self.get_previous_object_combo)
+
         self.show_object_entry(self.currentObjectData)
 
         # MAP
@@ -512,7 +519,21 @@ class UISettings(tk.Toplevel):
         self.selectMapsCombo.bind(
             "<<ComboboxSelected>>", self.change_maps_entry_widgets
         )
+        self.selectMapsCombo.bind("<Enter>", self.get_previous_map_combo)
+
         self.show_map_entry(self.currentMapData)
+
+    def get_previous_component_combo(self, event):
+        self.prev_component_combo = self.selectComponentCombo.current()
+
+    def get_previous_object_combo(self, event):
+        self.prev_object_combo = self.selectObjectsCombo.current()
+
+    def get_previous_map_combo(self, event):
+        self.prev_map_combo = self.selectMapsCombo.current()
+
+    def get_previous_team_combo(self, event):
+        self.prev_team_combo = self.selectTeamCombo.current()
 
     def change_team_entry_widgets(self, event=None):
         """
@@ -526,7 +547,7 @@ class UISettings(tk.Toplevel):
         if not (
             (
                 (self.teamNameEntry.get() == self.currentTeamData["name"])
-                and (int(self.teamSizeEntry.get()) == self.currentTeamData["size"])
+                and (self.teamSizeEntry.get() == str(self.currentTeamData["size"]))
                 and (
                     self.callsignEntry.get()
                     == self.currentTeamData["agent_defs"][0]["callsign"]
@@ -579,8 +600,10 @@ class UISettings(tk.Toplevel):
             self.currentComponentData = self.componentData[
                 self.componentIDs[currentComponentIdx]
             ]
-
             self.show_component_entries(self.currentComponentData)
+        else:
+            print(self.prev_component_combo)
+            self.selectComponentCombo.current(self.prev_component_combo)
 
     def change_objects_entry_widgets(self, event=None):
         self.answer = True
@@ -611,6 +634,8 @@ class UISettings(tk.Toplevel):
             self.currentObjectData = self.objectData[currentObject]
 
             self.show_object_entry(self.currentObjectData)
+        else:
+            self.selectObjectsCombo.current(self.prev_object_combo)
 
     def change_maps_entry_widgets(self, event=None):
         self.answer = True
@@ -640,12 +665,15 @@ class UISettings(tk.Toplevel):
                 message="""Warning: You have modified Map values and have not Updated.
                  Your changes will not be saved. Are you sure you would like continue?""",
             )
-        currentMapID = self.selectMapsCombo.get()
-        print(currentMapID)
-        self.currentMapData = self.mapData[currentMapID]
-        print(self.currentMapData)
         if self.answer is True:
+            currentMapID = self.selectMapsCombo.get()
+            print(currentMapID)
+            self.currentMapData = self.mapData[currentMapID]
+            print(self.currentMapData)
+        
             self.show_map_entry(self.currentMapData)
+        else:
+            self.selectMapsCombo.current()
 
     def show_component_entries(self, currentComp):
         """
@@ -659,9 +687,11 @@ class UISettings(tk.Toplevel):
             0,
             currentComp.getData("name"),
         )
+        print(currentComp)
         self.componentsTypeCombo.configure(values=self.componentTypes)
         self.componentsTypeCombo.set(currentComp.getData("ctype"))
         self.componentsTypeLabel.config(text=currentComp.getData("ctype"))
+        self.componentsTypeAttr3Entry.configure(state="normal")
         self.componentsTypeAttr1Label.config(text="")
         self.componentsTypeAttr2Label.config(text="")
         self.componentsTypeAttr3Label.config(text="")
@@ -676,7 +706,7 @@ class UISettings(tk.Toplevel):
         self.componentsTypeAttr5Entry.delete(0, tk.END)
         self.componentsTypeAttr6Entry.delete(0, tk.END)
         self.componentsTypeAttr7Entry.delete(0, tk.END)
-        self.componentsTypeAttr3Entry.configure(state="normal")
+
         if currentComp.getData("ctype") == "CnC":
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
             self.componentsTypeAttr1Entry.insert(
@@ -758,18 +788,13 @@ class UISettings(tk.Toplevel):
                 0, currentComp.getData(self.componentTypeAttr[9])
             )
         elif currentComp.getData("ctype") == "Radio":
-            self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
-            self.componentsTypeAttr1Entry.insert(
-                0, currentComp.getData(self.componentTypeAttr[4])
-            )
-            self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
-            self.componentsTypeAttr2Entry.insert(
-                0, currentComp.getData(self.componentTypeAttr[5])
-            )
-            self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
-            self.componentsTypeAttr3Entry.insert(
-                0, currentComp.getData(self.componentTypeAttr[6])
-            )
+            self.componentsTypeAttr1Label.config(text="max_range")
+            print(self.componentTypeAttr)
+            self.componentsTypeAttr1Entry.insert(0, currentComp.getData("max_range"))
+            self.componentsTypeAttr2Label.config(text="cur_range")
+            self.componentsTypeAttr2Entry.insert(0, currentComp.getData("cur_range"))
+            self.componentsTypeAttr3Label.config(text="message")
+            self.componentsTypeAttr3Entry.insert(0, currentComp.getData("message"))
             self.componentsTypeAttr3Entry.configure(state="readonly")
         elif self.currentComponentData.getData("ctype") == "Arm":
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
@@ -1111,11 +1136,12 @@ class UISettings(tk.Toplevel):
             self.selectTeamCombo.current(len(self.teamNames) - 1)
             self.currentTeamData = {
                 "size": "",
-                "name": "",
+                "name": self.teamID,
                 "agent_defs": [
                     {"callsign": "", "squad": "", "object": "", "AI_file": ""}
                 ],
             }
+            self.teamData.update({self.teamID: self.currentTeamData})
             self.show_team_entry(self.currentTeamData)
 
     def create_component(self):
@@ -1162,6 +1188,8 @@ class UISettings(tk.Toplevel):
 
             print(self.newDict)
             self.currentComponentData = comp.Comp(self.newDict)
+
+            self.componentData[self.componentID] = self.currentComponentData
             self.show_component_entries(self.currentComponentData)
 
     def create_object(self):
@@ -1188,7 +1216,7 @@ class UISettings(tk.Toplevel):
                     "points_count": "",
                 }
             )
-            # self.changeObjectsEntryWidgets(fromCreate=True)
+            self.objectData[self.objectID] = self.currentObjectData
             self.show_object_entry(self.currentObjectData)
 
     def create_map(self):
@@ -1213,6 +1241,7 @@ class UISettings(tk.Toplevel):
                     "win_states": [],
                 }
             )
+            self.mapData[self.mapName] = self.currentMapData
             self.show_map_entry(self.currentMapData)
 
     ### DELETE ###
