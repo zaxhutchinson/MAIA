@@ -119,7 +119,6 @@ class UIMapConfig(tk.Toplevel):
     def add_ai_objects(self):
         # Add possible team and ai-controlled obj locations
         sides = self.map.getData("sides")
-        print(sides)
         for iid, lst in sides.items():
             starting_locations = list(lst["starting_locations"])
 
