@@ -3,16 +3,7 @@ from tkinter.font import Font
 import tkinter.scrolledtext as scrolltext
 
 import uuid
-import random
-
-import queue
-import cProfile
-import logging
 import loader
-import json
-import comp
-import obj
-import zmap
 
 from ui_widgets import *
 
@@ -51,14 +42,14 @@ class UIMapConfig(tk.Toplevel):
             family="TkFixedFont", size=self.map_item_char_size
         )
 
-        self.xbar = tk.Scrollbar(self.container, orient=tk.HORIZONTAL)
-        self.ybar = tk.Scrollbar(self.container, orient=tk.VERTICAL)
+        self.x_bar = tk.Scrollbar(self.container, orient=tk.HORIZONTAL)
+        self.y_bar = tk.Scrollbar(self.container, orient=tk.VERTICAL)
         self.canvas = uiCanvas(
             master=self.container,
             width=800,
             height=800,
-            xscrollcommand=self.xbar.set,
-            yscrollcommand=self.ybar.set,
+            xscrollcommand=self.x_bar.set,
+            yscrollcommand=self.y_bar.set,
             scrollregion=(
                 0,
                 0,
@@ -72,10 +63,10 @@ class UIMapConfig(tk.Toplevel):
             obj_font=self.map_obj_font,
             item_font=self.map_item_font,
         )
-        self.ybar.configure(command=self.canvas.yview)
-        self.xbar.configure(command=self.canvas.xview)
-        self.ybar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.xbar.pack(side=tk.BOTTOM, fill=tk.X)
+        self.y_bar.configure(command=self.canvas.yview)
+        self.x_bar.configure(command=self.canvas.xview)
+        self.y_bar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.x_bar.pack(side=tk.BOTTOM, fill=tk.X)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         self.canvas.yview_moveto(0.0)
@@ -102,15 +93,15 @@ class UIMapConfig(tk.Toplevel):
         edge_coords = self.map.getListOfEdgeCoordinates()
         for ec in edge_coords:
             # Copy the obj
-            newobj = self.ldr.copyObjTemplate(edge_obj_id)
+            new_obj = self.ldr.copyObjTemplate(edge_obj_id)
             # Create obj place data
             data = {}
             data["x"] = ec[0]
             data["y"] = ec[1]
             data["uuid"] = uuid.uuid4()
             # Place, add to objDict and add to map
-            newobj.place(data)
-            self.objs[data["uuid"]] = newobj
+            new_obj.place(data)
+            self.objs[data["uuid"]] = new_obj
 
         # Add all placed objects
         pl_objs = self.map.getData("placed_objects")
@@ -119,11 +110,11 @@ class UIMapConfig(tk.Toplevel):
                 # If an object entry in placed_objs does not
                 # have a position, it is ignored.
                 if "x" in o and "y" in o:
-                    newobj = self.ldr.copyObjTemplate(oid)
+                    new_obj = self.ldr.copyObjTemplate(oid)
                     data = o
                     data["uuid"] = uuid.uuid4()
-                    newobj.place(data)
-                    self.objs[data["uuid"]] = newobj
+                    new_obj.place(data)
+                    self.objs[data["uuid"]] = new_obj
 
     def add_ai_objects(self):
         # Add possible team and ai-controlled obj locations
@@ -131,10 +122,10 @@ class UIMapConfig(tk.Toplevel):
         print(sides)
         for iid, lst in sides.items():
             starting_locations = list(lst["starting_locations"])
-            print(starting_locations)
 
             for loc in starting_locations:
-                newobj = self.ldr.copyObjTemplate("player")
+                new_obj = self.ldr.copyObjTemplate("start_loc")
+                new_obj.setData("fill_alive", lst["color"])
                 data = {}
 
                 data["x"] = loc[0]
@@ -142,8 +133,8 @@ class UIMapConfig(tk.Toplevel):
                 data["uuid"] = uuid.uuid4()
 
                 # Place and store and add to map
-                newobj.place(data)
-                self.objs[data["uuid"]] = newobj
+                new_obj.place(data)
+                self.objs[data["uuid"]] = new_obj
 
     def add_items(self):
         # Add all placed items
@@ -152,11 +143,11 @@ class UIMapConfig(tk.Toplevel):
             for i in lst:
                 # If an item entry does not have a position, ignore.
                 if "x" in i and "y" in i:
-                    newitem = self.ldr.copyItemTemplate(iid)
+                    new_item = self.ldr.copyItemTemplate(iid)
                     data = i
                     data["uuid"] = uuid.uuid4()
-                    newitem.place(data)
-                    self.items[data["uuid"]] = newitem
+                    new_item.place(data)
+                    self.items[data["uuid"]] = new_item
 
     def draw_tiles(self):
 

@@ -71,5 +71,16 @@
             "3000"
         ],
         "points_count": true
+    },
+    "start_loc": {
+        "id": "start_loc",
+        "name": "Starting Location",
+        "fill_alive": "white",
+        "fill_dead": "black",
+        "text": "S",
+        "health": 0,
+        "density": 0,
+        "comp_ids": [],
+        "points_count": false
     }
 }
