@@ -67,6 +67,8 @@ class UISetup(tk.Frame):
             selected_map = self.ldr.copyMapTemplate(map_ids[curselection[0]])
             self.sim.setMap(selected_map)
 
+            print("\n\n", selected_map.data, "\n\n")  # HK we have the data here
+
             # Construct the map info string
             mapInfoString = "NAME:   " + selected_map.getData("name") + "\n"
             mapInfoString += "DESC:   " + selected_map.getData("desc") + "\n"
@@ -84,8 +86,11 @@ class UISetup(tk.Frame):
             if "placed_objects" in selected_map.data:
                 for k, v in selected_map.data["placed_objects"].items():
                     mapInfoString += "   ID:" + str(k) + " AMT:" + str(len(v)) + "\n"
+                    print("H")
             else:
                 mapInfoString += "   NONE\n"
+
+            print(mapInfoString)
 
             # Add string to the info text box
             self.txtMapInfo.delete("1.0", tk.END)
@@ -259,10 +264,8 @@ class UISetup(tk.Frame):
     def buildAndRunSim(self):
         try:
             self.sim.buildSim(self.ldr)
-            print("try")
         except BuildException as e:
             tk.messagebox.showinfo(title="Build Exception", message=e)
-            print("except")
         else:
             # tk.messagebox.showinfo(title="Success",message="Sim build was successful.")    --this line makes a pop up
             map_width = self.sim.getMap().getData("width")
@@ -270,7 +273,6 @@ class UISetup(tk.Frame):
             self.UIMap = ui_sim.UISim(
                 map_width, map_height, self.sim, self.omsgr, self, self.logger
             )
-            print("else")
 
     def runAdvancedSettings(self):
         self.UIMap = ui_advanced_config.UISettings(self, self.logger)

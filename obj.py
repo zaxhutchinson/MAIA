@@ -163,6 +163,8 @@ class Object:
             "text": self.getData("text"),
             "fill": fill,
             "redraw": redraw,
+            "name": self.getData("name"),
+            "facing": self.data["facing"],
         }
 
     def processCommands(self, cmds):

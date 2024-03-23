@@ -25,6 +25,7 @@ class Item:
             "y": self.getData("y"),
             "text": self.getData("text"),
             "fill": self.getData("fill"),
+            "name": self.getData("name"),
         }
 
     def takeItem(self, owner_uuid):
