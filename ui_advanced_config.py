@@ -552,6 +552,9 @@ class UISettings(tk.Toplevel):
                     self.callsignEntry.get()
                     == self.currentTeamData["agent_defs"][0]["callsign"]
                 )
+                and (self.squadEntry.get() == self.currentTeamData["squad"])
+                and (self.agentObjectEntry.get() == self.currentTeamData["object"])
+                and (self.aiFileEntry.get() == self.currentTeamData["AI_file"])
             )
         ):
             self.answer = askyesno(
@@ -567,9 +570,24 @@ class UISettings(tk.Toplevel):
             self.currentTeamData = self.teamData[self.selectTeamCombo.get()]
             self.show_team_entry(self.currentTeamData)
 
-    def change_components_entry_widgets(self, event=None):
+    def change_components_entry_widgets(self, event):
         self.answer = True
 
+        if self.currentComponentData.getData("ctype") == "CnC":
+            ctype_attributes = self.CnCKeys
+        elif self.currentComponentData.getData("ctype") == "FixedGun":
+            ctype_attributes = self.FixedGunKeys
+        elif self.currentComponentData.getData("ctype") == "Engine":
+            ctype_attributes = self.EngineKeys
+        elif self.currentComponentData.getData("ctype") == "Radar":
+            ctype_attributes = self.RadarKeys
+        elif self.currentComponentData.getData("ctype") == "Radio":
+            ctype_attributes = self.RadioKeys
+        elif self.currentComponentData.getData("ctype") == "Arm":
+            ctype_attributes = self.ArmKeys
+
+        print(self.componentsTypeAttr1Entry.get())
+        print(self.currentComponentData.getData(ctype_attributes[0]))
         if not (
             (
                 (
@@ -584,6 +602,7 @@ class UISettings(tk.Toplevel):
                     self.componentsTypeCombo.get()
                     == self.currentComponentData.getData("ctype")
                 )
+
             )
         ):
             self.answer = askyesno(
@@ -794,7 +813,11 @@ class UISettings(tk.Toplevel):
             self.componentsTypeAttr2Label.config(text="cur_range")
             self.componentsTypeAttr2Entry.insert(0, currentComp.getData("cur_range"))
             self.componentsTypeAttr3Label.config(text="message")
-            self.componentsTypeAttr3Entry.insert(0, currentComp.getData("message"))
+            self.componentsTypeAttr3Entry.insert(0, (
+                    currentComp.getData("message")
+                    if currentComp.getData("message") is not None
+                    else "null"
+                ),)
             self.componentsTypeAttr3Entry.configure(state="readonly")
         elif self.currentComponentData.getData("ctype") == "Arm":
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
