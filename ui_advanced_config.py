@@ -602,7 +602,41 @@ class UISettings(tk.Toplevel):
                     self.componentsTypeCombo.get()
                     == self.currentComponentData.getData("ctype")
                 )
-
+                and (
+                    self.componentsTypeAttr1Entry.get()
+                    == str(self.currentComponentData.getData(ctype_attributes[0]))
+                )
+                and (
+                    (len(ctype_attributes) < 2)
+                    or (self.componentsTypeAttr2Entry.get()
+                    == str(self.currentComponentData.getData(ctype_attributes[1])))
+                )
+                and (
+                    (len(ctype_attributes) < 3)
+                    or self.currentComponentData.getData(ctype_attributes[2]) == None
+                    or (self.componentsTypeAttr3Entry.get()
+                    == str(self.currentComponentData.getData(ctype_attributes[2])))
+                )
+                and (
+                    (len(ctype_attributes) < 4)
+                    or (self.componentsTypeAttr4Entry.get()
+                    == str(self.currentComponentData.getData(ctype_attributes[3])))
+                )
+                and (
+                    (len(ctype_attributes) < 5)
+                    or (self.componentsTypeAttr5Entry.get()
+                    == str(self.currentComponentData.getData(ctype_attributes[4])))
+                )
+                and (
+                    (len(ctype_attributes) < 6)
+                    or (self.componentsTypeAttr6Entry.get()
+                    == str(self.currentComponentData.getData(ctype_attributes[5])))
+                )
+                and (
+                    (len(ctype_attributes) < 7)
+                    or (self.componentsTypeAttr7Entry.get()
+                    == str(self.currentComponentData.getData(ctype_attributes[6])))
+                )
             )
         ):
             self.answer = askyesno(
@@ -710,6 +744,7 @@ class UISettings(tk.Toplevel):
         self.componentsTypeCombo.configure(values=self.componentTypes)
         self.componentsTypeCombo.set(currentComp.getData("ctype"))
         self.componentsTypeLabel.config(text=currentComp.getData("ctype"))
+        self.componentsTypeAttr1Entry.configure(state="normal")
         self.componentsTypeAttr3Entry.configure(state="normal")
         self.componentsTypeAttr1Label.config(text="")
         self.componentsTypeAttr2Label.config(text="")
@@ -742,8 +777,12 @@ class UISettings(tk.Toplevel):
             )
             self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
             self.componentsTypeAttr3Entry.insert(
-                0, currentComp.getData(self.componentTypeAttr[6])
+                0, (currentComp.getData(self.componentTypeAttr[6])
+                    if currentComp.getData("reloading") is not False
+                    else "False"
+                    )       
             )
+            self.componentsTypeAttr3Entry.configure(state="readonly")
             self.componentsTypeAttr4Label.config(text=self.componentTypeAttr[7])
             self.componentsTypeAttr4Entry.insert(
                 0, currentComp.getData(self.componentTypeAttr[7])
@@ -784,8 +823,13 @@ class UISettings(tk.Toplevel):
         elif currentComp.getData("ctype") == "Radar":
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
             self.componentsTypeAttr1Entry.insert(
-                0, currentComp.getData(self.componentTypeAttr[4])
+                0, (
+                    currentComp.getData(self.componentTypeAttr[4])
+                    if currentComp.getData("active") is not False
+                    else "False"
+                )
             )
+            self.componentsTypeAttr1Entry.configure(state="readonly")
             self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
             self.componentsTypeAttr2Entry.insert(
                 0, currentComp.getData(self.componentTypeAttr[5])
@@ -965,71 +1009,75 @@ class UISettings(tk.Toplevel):
         self.currentComponentData.setData("ctype", self.componentsTypeCombo.get())
         if self.currentComponentData.getData("ctype") == "CnC":
             self.currentComponentData.setData(
-                "max_cmds_per_tick", self.componentsTypeAttr1Entry.get()
+                "max_cmds_per_tick", int(self.componentsTypeAttr1Entry.get())
             )
         if self.currentComponentData.getData("ctype") == "FixedGun":
             self.currentComponentData.setData(
-                "reload_ticks", self.componentsTypeAttr1Entry.get()
+                "reload_ticks", int(self.componentsTypeAttr1Entry.get())
             )
             self.currentComponentData.setData(
-                "reload_ticks_remaining", self.componentsTypeAttr2Entry.get()
+                "reload_ticks_remaining", int(self.componentsTypeAttr2Entry.get())
             )
             self.currentComponentData.setData(
-                "reloading", self.componentsTypeAttr3Entry.get()
+                "reloading", (self.componentsTypeAttr3Entry.get()
+                              if self.componentsTypeAttr3Entry.get() != "False"
+                              else False)
             )
             self.currentComponentData.setData(
-                "ammunition", self.componentsTypeAttr4Entry.get()
+                "ammunition", int(self.componentsTypeAttr4Entry.get())
             )
             self.currentComponentData.setData(
-                "min_damage", self.componentsTypeAttr5Entry.get()
+                "min_damage", int(self.componentsTypeAttr5Entry.get())
             )
             self.currentComponentData.setData(
-                "max_damage", self.componentsTypeAttr6Entry.get()
+                "max_damage", int(self.componentsTypeAttr6Entry.get())
             )
             self.currentComponentData.setData(
-                "range", self.componentsTypeAttr7Entry.get()
+                "range", int(self.componentsTypeAttr7Entry.get())
             )
         if self.currentComponentData.getData("ctype") == "Engine":
             self.currentComponentData.setData(
-                "min_speed", self.componentsTypeAttr1Entry.get()
+                "min_speed", int(self.componentsTypeAttr1Entry.get())
             )
             self.currentComponentData.setData(
-                "max_speed", self.componentsTypeAttr2Entry.get()
+                "max_speed", int(self.componentsTypeAttr2Entry.get())
             )
             self.currentComponentData.setData(
-                "cur_speed", self.componentsTypeAttr3Entry.get()
+                "cur_speed", int(self.componentsTypeAttr3Entry.get())
             )
             self.currentComponentData.setData(
-                "max_turnrate", self.componentsTypeAttr4Entry.get()
+                "max_turnrate", int(self.componentsTypeAttr4Entry.get())
             )
             self.currentComponentData.setData(
-                "cur_turnrate", self.componentsTypeAttr5Entry.get()
+                "cur_turnrate", int(self.componentsTypeAttr5Entry.get())
             )
         if self.currentComponentData.getData("ctype") == "Radar":
             self.currentComponentData.setData(
-                "active", self.componentsTypeAttr1Entry.get()
+                "active", (self.componentsTypeAttr1Entry.get()
+                           if self.componentsTypeAttr1Entry.get() != "False"
+                           else False)
             )
             self.currentComponentData.setData(
-                "range", self.componentsTypeAttr2Entry.get()
+                "range", int(self.componentsTypeAttr2Entry.get())
             )
             self.currentComponentData.setData(
-                "level", self.componentsTypeAttr3Entry.get()
+                "level", int(self.componentsTypeAttr3Entry.get())
             )
             self.currentComponentData.setData(
-                "visarc", self.componentsTypeAttr4Entry.get()
+                "visarc", int(self.componentsTypeAttr4Entry.get())
             )
             self.currentComponentData.setData(
-                "offset_angle", self.componentsTypeAttr5Entry.get()
+                "offset_angle", int(self.componentsTypeAttr5Entry.get())
             )
             self.currentComponentData.setData(
-                "resolution", self.componentsTypeAttr6Entry.get()
+                "resolution", int(self.componentsTypeAttr6Entry.get())
             )
         if self.currentComponentData.getData("ctype") == "Radio":
             self.currentComponentData.setData(
-                "max_range", self.componentsTypeAttr1Entry.get()
+                "max_range", int(self.componentsTypeAttr1Entry.get())
             )
             self.currentComponentData.setData(
-                "cur_range", self.componentsTypeAttr2Entry.get()
+                "cur_range", int(self.componentsTypeAttr2Entry.get())
             )
             self.currentComponentData.setData(
                 "message",
@@ -1192,6 +1240,7 @@ class UISettings(tk.Toplevel):
                 self.newDict["ctype"] = "FixedGun"
                 for key in self.FixedGunKeys:
                     self.newDict[key] = ""
+                self.newDict["reloading"] = False
             elif self.componentsTypeCombo.get() == "Engine":
                 self.newDict["ctype"] = "Engine"
                 for key in self.EngineKeys:
@@ -1200,6 +1249,7 @@ class UISettings(tk.Toplevel):
                 self.newDict["ctype"] = "Radar"
                 for key in self.RadarKeys:
                     self.newDict[key] = ""
+                self.newDict["active"] = False
             elif self.componentsTypeCombo.get() == "Radio":
                 self.newDict["ctype"] = "Radio"
                 for key in self.RadioKeys:
