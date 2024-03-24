@@ -552,9 +552,9 @@ class UISettings(tk.Toplevel):
                     self.callsignEntry.get()
                     == self.currentTeamData["agent_defs"][0]["callsign"]
                 )
-                and (self.squadEntry.get() == self.currentTeamData["squad"])
-                and (self.agentObjectEntry.get() == self.currentTeamData["object"])
-                and (self.aiFileEntry.get() == self.currentTeamData["AI_file"])
+                and (self.squadEntry.get() == self.currentTeamData["agent_defs"][0]["squad"])
+                and (self.agentObjectEntry.get() == self.currentTeamData["agent_defs"][0]["object"])
+                and (self.aiFileEntry.get() == self.currentTeamData["agent_defs"][0]["AI_file"])
             )
         ):
             self.answer = askyesno(
@@ -995,7 +995,20 @@ class UISettings(tk.Toplevel):
 
         with open("settings/teams.json", "r") as f:
             teamJSON = json.load(f)
-        teamJSON[self.selectTeamCombo.get()] = self.currentTeamData
+        
+        if self.currentTeamData["name"] != self.selectTeamCombo.get():
+            if self.selectTeamCombo.get() in teamJSON:
+                teamJSON.pop(self.selectTeamCombo.get())
+            if self.selectTeamCombo.get() in self.teamData:
+                self.teamData.pop(self.selectTeamCombo.get())
+            self.teamNames.pop(self.selectTeamCombo.current())
+            self.teamNames.append(self.currentTeamData["name"])
+            self.selectTeamCombo.current(len(self.teamNames) - 1)
+           
+        teamJSON[self.currentTeamData["name"]] = self.currentTeamData
+
+        self.teamData[self.currentTeamData["name"]] = self.currentTeamData
+        
         f.close()
 
         with open("settings/teams.json", "w") as f:
@@ -1107,7 +1120,7 @@ class UISettings(tk.Toplevel):
             componentJSON = json.load(f)
 
         if self.currentComponentData.getData("id") != self.selectComponentCombo.get():
-            if self.currentComponentData.getData("id") in componentJSON:
+            if self.selectComponentCombo.get() in componentJSON:
                 componentJSON.pop(self.selectComponentCombo.get())
             if self.selectComponentCombo.get() in self.componentData:
                 self.componentData.pop(self.selectComponentCombo.get())
@@ -1122,7 +1135,7 @@ class UISettings(tk.Toplevel):
         f.close()
 
         self.componentData[self.currentComponentData.getData("id")] = (
-            self.currentObjectData
+            self.currentComponentData
         )
 
         if "slot_id" in componentJSON[self.currentComponentData.getData("id")].keys():
