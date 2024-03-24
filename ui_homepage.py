@@ -14,7 +14,7 @@ import ui_sim
 import msgs
 from zexceptions import *
 from ui_widgets import *
-import aboutPage
+import ui_about
 import main
 from main import *
 import ui_advanced_config
