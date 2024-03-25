@@ -128,7 +128,7 @@ class uiEntry(tk.Entry):
             highlightcolor=TEXTCOLOR,
             insertbackground=TEXTCOLOR,
         )
-        self.bind("<FocusOut>", self.validateOut)
+        #self.bind("<FocusOut>", self.validateOut)
 
     def validateOut(self, event):
         if self.get().strip() == "":
