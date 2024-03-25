@@ -1259,8 +1259,13 @@ class UISettings(tk.Toplevel):
 
     def create_team(self):
         self.teamID = askstring("Team ID", "Please enter an ID for the new team.")
-        while len(self.teamID) == 0:
-            messagebox.showwarning("Warning", "You must enter a team ID to continue")
+        while len(self.teamID) == 0 or self.teamID in self.teamData.keys():
+            if len(self.teamID) == 0:
+                messagebox.showwarning("Warning", "You must enter a team ID to continue")
+            else:
+                messagebox.showwarning(
+                    "Warning", "This ID already exists, please enter a new ID."
+                )
             self.teamID = askstring("Team ID", "Please enter an ID for the new team.")
         if len(self.teamID) != 0:
             self.teamNames.append(self.teamID)
@@ -1280,10 +1285,15 @@ class UISettings(tk.Toplevel):
         self.componentID = askstring(
             "Component ID", "Please enter an ID for the new component."
         )
-        while len(self.componentID) == 0:
-            messagebox.showwarning(
-                "Warning", "Please enter an ID for the new component"
-            )
+        while len(self.componentID) == 0 or self.componentID in self.componentData.keys():
+            if len(self.componentID) == 0:
+                messagebox.showwarning(
+                    "Warning", "Please enter an ID for the new component"
+                )
+            else:
+                messagebox.showwarning(
+                    "Warning", "This ID already exists, please enter a new ID."
+                )
             self.componentID = askstring(
                 "Component ID", "Please enter an ID for the new component."
             )
@@ -1328,8 +1338,13 @@ class UISettings(tk.Toplevel):
 
     def create_object(self):
         self.objectID = askstring("Object ID", "Please enter an ID for the new object.")
-        while len(self.objectID) == 0:
-            messagebox.showwarning("Warning", "Please enter an ID for the new object")
+        while len(self.objectID) == 0 or self.objectID in self.objectData:
+            if len(self.objectID) == 0:
+                messagebox.showwarning("Warning", "Please enter an ID for the new object")
+            else:
+                messagebox.showwarning(
+                    "Warning", "This ID already exists, please enter a new ID."
+                )
             self.objectID = askstring(
                 "Object ID", "Please enter an ID for the new object."
             )
@@ -1355,8 +1370,13 @@ class UISettings(tk.Toplevel):
 
     def create_map(self):
         self.mapName = askstring("Map Name", "Please enter a name for a new map.")
-        while len(self.mapName) == 0:
-            messagebox.showwarning("Warning", "Please enter an ID for the new map")
+        while len(self.mapName) == 0 or self.mapName in self.mapData.keys():
+            if len(self.mapName) == 0:
+                messagebox.showwarning("Warning", "Please enter an ID for the new map")
+            else:
+                messagebox.showwarning(
+                    "Warning", "This Name already exists, please enter a new Name."
+                )
             self.mapName = askstring("Map Name", "Please enter a name for a new map.")
         if len(self.mapName) != 0:
             self.mapIDs.append(self.mapName)
