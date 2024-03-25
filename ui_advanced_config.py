@@ -661,8 +661,19 @@ class UISettings(tk.Toplevel):
 
     def change_objects_entry_widgets(self, event=None):
         self.answer = True
+        print(self.currentObjectData.getData("comp_ids"))
         print(self.currentObjectData.getData("id"))
         print(self.currentObjectData.getData("name"))
+        print(self.currentCompIDs)
+        compIds = self.currentCompIDs  
+        if len(compIds) != 0:
+            if compIds[-1] == "Add New Comp ID":
+                compIds.pop(-1)
+        print('a')
+        print(compIds)
+        print('b')
+        print(self.currentObjectData.getData("comp_ids"))
+        print('c')
         if not (
             (
                 (self.objectsIDEntry.get() == self.currentObjectData.getData("id"))
@@ -673,6 +684,25 @@ class UISettings(tk.Toplevel):
                 and (
                     self.objectsFillAliveEntry.get()
                     == self.currentObjectData.getData("fill_alive")
+                )
+                and (
+                    self.objectsFillDeadEntry.get()
+                    == self.currentObjectData.getData("fill_dead")
+                )
+                and (
+                    self.objectsTextEntry.get()
+                    == self.currentObjectData.getData("text")
+                )
+                and (
+                    self.objectsHealthEntry.get()
+                    == str(self.currentObjectData.getData("health"))
+                )
+                and (
+                    self.objectsDensityEntry.get()
+                    == str(self.currentObjectData.getData("density"))
+                )
+                and (
+                    compIds == self.currentObjectData.getData("comp_ids")
                 )
             )
         ):
@@ -936,7 +966,9 @@ class UISettings(tk.Toplevel):
         self.objectsHealthEntry.insert(0, currentObj.getData("health"))
         self.objectsDensityEntry.delete(0, tk.END)
         self.objectsDensityEntry.insert(0, currentObj.getData("density"))
-        self.currentCompIDs = currentObj.getData("comp_ids")
+        self.currentCompIDs = currentObj.getData("comp_ids")[:]
+        print(self.currentCompIDs)
+        self.objectsCompIDsCombo.set('')
         self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
         if len(self.currentCompIDs) != 0:
             self.objectsCompIDsCombo.current(0)
