@@ -63,4 +63,5 @@ class aboutPage(tk.Frame):
             text="Home",
             command=lambda: self.controller.show_frame("HomePage"),
         )
-        self.btnHome.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.btnHome.config(width=400)
+        self.btnHome.pack(side=tk.TOP, fill="y", expand=True)
