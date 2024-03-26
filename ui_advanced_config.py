@@ -22,7 +22,9 @@ class UISettings(tk.Toplevel):
         self.master = master
         self.configure(bg=BGCOLOR)
         self.title("MAIA - Advanced Configuration")
-        self.geometry("1100x600")
+
+        self.geometry("1150x600")
+        self.minsize(width=1150, height=600)
         self.logger = logger
         self.ldr = loader.Loader(self.logger)
 
