@@ -7,7 +7,7 @@ import vec2
 import math
 import zmap
 import ui_homepage
-import aboutPage
+import ui_about
 
 
 # Initialize the log files
@@ -37,7 +37,7 @@ class App(tk.Tk):
         self.frames["SetupPage"] = ui_setup.UISetup(
             master=self.container, controller=self, logger=logger
         )
-        self.frames["AboutPage"] = aboutPage.aboutPage(
+        self.frames["AboutPage"] = ui_about.ui_about(
             master=self.container, controller=self, logger=logger
         )
 
