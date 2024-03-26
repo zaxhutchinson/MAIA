@@ -448,8 +448,14 @@ class UISettings(tk.Toplevel):
         self.mapsDescEntry.grid(row=6, column=2, sticky="nsew")
         self.mapsWidthLabel.grid(row=7, column=1, sticky="nsew")
         self.mapsWidthEntry.grid(row=7, column=2, sticky="nsew")
+        self.mapsWidthEntry.config(
+            validate="key", validatecommand=(self.validateNum, "%P")
+        )
         self.mapsHeightLabel.grid(row=8, column=1, sticky="nsew")
         self.mapsHeightEntry.grid(row=8, column=2, sticky="nsew")
+        self.mapsHeightEntry.config(
+            validate="key", validatecommand=(self.validateNum, "%P")
+        )
         self.mapsUpdateButton.grid(
             row=9,
             column=1,
