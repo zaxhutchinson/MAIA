@@ -602,6 +602,8 @@ class UISettings(tk.Toplevel):
             # currentTeamIdx = self.selectTeamCombo.current()
             self.currentTeamData = self.teamData[self.selectTeamCombo.get()]
             self.show_team_entry(self.currentTeamData)
+        else:
+            self.selectTeamCombo.current(self.prev_team_combo)
 
     def change_components_entry_widgets(self, event):
         self.answer = True
