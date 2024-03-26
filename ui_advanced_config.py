@@ -63,7 +63,9 @@ class UISettings(tk.Toplevel):
         self.build_ui()
 
     def validate_number_entry(self, input):
-        if input.isdigit() or input == "":
+        input.replace(".", "", 1)
+        input.replace("-", "", 1)
+        if input.isdigit() or input == "" or "-" in input or "." in input:
             return True
 
         else:
@@ -234,18 +236,39 @@ class UISettings(tk.Toplevel):
 
         self.componentsTypeAttr1Label.grid(row=6, column=1, sticky="nsew")
         self.componentsTypeAttr1Entry.grid(row=6, column=2, sticky="nsew")
+        self.componentsTypeAttr1Entry.config(
+            validate="key", validatecommand=(self.validateNum, "%P")
+        )
         self.componentsTypeAttr2Label.grid(row=7, column=1, sticky="nsew")
         self.componentsTypeAttr2Entry.grid(row=7, column=2, sticky="nsew")
+        self.componentsTypeAttr2Entry.config(
+            validate="key", validatecommand=(self.validateNum, "%P")
+        )
         self.componentsTypeAttr3Label.grid(row=8, column=1, sticky="nsew")
         self.componentsTypeAttr3Entry.grid(row=8, column=2, sticky="nsew")
+        self.componentsTypeAttr3Entry.config(
+            validate="all", validatecommand=(self.validateNum, "%P")
+        )
         self.componentsTypeAttr4Label.grid(row=9, column=1, sticky="nsew")
         self.componentsTypeAttr4Entry.grid(row=9, column=2, sticky="nsew")
+        self.componentsTypeAttr4Entry.config(
+            validate="all", validatecommand=(self.validateNum, "%P")
+        )
         self.componentsTypeAttr5Label.grid(row=10, column=1, sticky="nsew")
         self.componentsTypeAttr5Entry.grid(row=10, column=2, sticky="nsew")
+        self.componentsTypeAttr5Entry.config(
+            validate="all", validatecommand=(self.validateNum, "%P")
+        )
         self.componentsTypeAttr6Label.grid(row=11, column=1, sticky="nsew")
         self.componentsTypeAttr6Entry.grid(row=11, column=2, sticky="nsew")
+        self.componentsTypeAttr6Entry.config(
+            validate="all", validatecommand=(self.validateNum, "%P")
+        )
         self.componentsTypeAttr7Label.grid(row=12, column=1, sticky="nsew")
         self.componentsTypeAttr7Entry.grid(row=12, column=2, sticky="nsew")
+        self.componentsTypeAttr7Entry.config(
+            validate="all", validatecommand=(self.validateNum, "%P")
+        )
         self.componentsTypeCombo.grid(row=13, column=1, columnspan=2, sticky="nsew")
         self.componentsUpdateButton.grid(
             row=14,
@@ -553,9 +576,18 @@ class UISettings(tk.Toplevel):
                     self.callsignEntry.get()
                     == self.currentTeamData["agent_defs"][0]["callsign"]
                 )
-                and (self.squadEntry.get() == self.currentTeamData["agent_defs"][0]["squad"])
-                and (self.agentObjectEntry.get() == self.currentTeamData["agent_defs"][0]["object"])
-                and (self.aiFileEntry.get() == self.currentTeamData["agent_defs"][0]["AI_file"])
+                and (
+                    self.squadEntry.get()
+                    == self.currentTeamData["agent_defs"][0]["squad"]
+                )
+                and (
+                    self.agentObjectEntry.get()
+                    == self.currentTeamData["agent_defs"][0]["object"]
+                )
+                and (
+                    self.aiFileEntry.get()
+                    == self.currentTeamData["agent_defs"][0]["AI_file"]
+                )
             )
         ):
             self.answer = askyesno(
@@ -609,34 +641,46 @@ class UISettings(tk.Toplevel):
                 )
                 and (
                     (len(ctype_attributes) < 2)
-                    or (self.componentsTypeAttr2Entry.get()
-                    == str(self.currentComponentData.getData(ctype_attributes[1])))
+                    or (
+                        self.componentsTypeAttr2Entry.get()
+                        == str(self.currentComponentData.getData(ctype_attributes[1]))
+                    )
                 )
                 and (
                     (len(ctype_attributes) < 3)
-                    or self.currentComponentData.getData(ctype_attributes[2]) == None
-                    or (self.componentsTypeAttr3Entry.get()
-                    == str(self.currentComponentData.getData(ctype_attributes[2])))
+                    or self.currentComponentData.getData(ctype_attributes[2]) is None
+                    or (
+                        self.componentsTypeAttr3Entry.get()
+                        == str(self.currentComponentData.getData(ctype_attributes[2]))
+                    )
                 )
                 and (
                     (len(ctype_attributes) < 4)
-                    or (self.componentsTypeAttr4Entry.get()
-                    == str(self.currentComponentData.getData(ctype_attributes[3])))
+                    or (
+                        self.componentsTypeAttr4Entry.get()
+                        == str(self.currentComponentData.getData(ctype_attributes[3]))
+                    )
                 )
                 and (
                     (len(ctype_attributes) < 5)
-                    or (self.componentsTypeAttr5Entry.get()
-                    == str(self.currentComponentData.getData(ctype_attributes[4])))
+                    or (
+                        self.componentsTypeAttr5Entry.get()
+                        == str(self.currentComponentData.getData(ctype_attributes[4]))
+                    )
                 )
                 and (
                     (len(ctype_attributes) < 6)
-                    or (self.componentsTypeAttr6Entry.get()
-                    == str(self.currentComponentData.getData(ctype_attributes[5])))
+                    or (
+                        self.componentsTypeAttr6Entry.get()
+                        == str(self.currentComponentData.getData(ctype_attributes[5]))
+                    )
                 )
                 and (
                     (len(ctype_attributes) < 7)
-                    or (self.componentsTypeAttr7Entry.get()
-                    == str(self.currentComponentData.getData(ctype_attributes[6])))
+                    or (
+                        self.componentsTypeAttr7Entry.get()
+                        == str(self.currentComponentData.getData(ctype_attributes[6]))
+                    )
                 )
             )
         ):
@@ -665,15 +709,15 @@ class UISettings(tk.Toplevel):
         print(self.currentObjectData.getData("id"))
         print(self.currentObjectData.getData("name"))
         print(self.currentCompIDs)
-        compIds = self.currentCompIDs  
+        compIds = self.currentCompIDs
         if len(compIds) != 0:
             if compIds[-1] == "Add New Comp ID":
                 compIds.pop(-1)
-        print('a')
+        print("a")
         print(compIds)
-        print('b')
+        print("b")
         print(self.currentObjectData.getData("comp_ids"))
-        print('c')
+        print("c")
         if not (
             (
                 (self.objectsIDEntry.get() == self.currentObjectData.getData("id"))
@@ -701,9 +745,7 @@ class UISettings(tk.Toplevel):
                     self.objectsDensityEntry.get()
                     == str(self.currentObjectData.getData("density"))
                 )
-                and (
-                    compIds == self.currentObjectData.getData("comp_ids")
-                )
+                and (compIds == self.currentObjectData.getData("comp_ids"))
             )
         ):
             self.answer = askyesno(
@@ -754,7 +796,7 @@ class UISettings(tk.Toplevel):
             print(currentMapID)
             self.currentMapData = self.mapData[currentMapID]
             print(self.currentMapData)
-        
+
             self.show_map_entry(self.currentMapData)
         else:
             self.selectMapsCombo.current()
@@ -785,8 +827,10 @@ class UISettings(tk.Toplevel):
         self.componentsTypeAttr6Label.config(text="")
         self.componentsTypeAttr7Label.config(text="")
         self.componentsTypeAttr1Entry.delete(0, tk.END)
+        self.componentsTypeAttr1Entry.config(validate="key", validatecommand=(self.validateNum, "%P"))
         self.componentsTypeAttr2Entry.delete(0, tk.END)
         self.componentsTypeAttr3Entry.delete(0, tk.END)
+        self.componentsTypeAttr3Entry.config(validate="key", validatecommand=(self.validateNum, "%P"))
         self.componentsTypeAttr4Entry.delete(0, tk.END)
         self.componentsTypeAttr5Entry.delete(0, tk.END)
         self.componentsTypeAttr6Entry.delete(0, tk.END)
@@ -798,6 +842,7 @@ class UISettings(tk.Toplevel):
                 0, currentComp.getData(self.componentTypeAttr[4])
             )
         elif currentComp.getData("ctype") == "FixedGun":
+            self.componentsTypeAttr3Entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
             self.componentsTypeAttr1Entry.insert(
                 0, currentComp.getData(self.componentTypeAttr[4])
@@ -808,12 +853,14 @@ class UISettings(tk.Toplevel):
             )
             self.componentsTypeAttr3Label.config(text=self.componentTypeAttr[6])
             self.componentsTypeAttr3Entry.insert(
-                0, (currentComp.getData(self.componentTypeAttr[6])
+                0,
+                (
+                    currentComp.getData(self.componentTypeAttr[6])
                     if currentComp.getData("reloading") is not False
                     else "False"
-                    )       
+                ),
             )
-            self.componentsTypeAttr3Entry.configure(state="readonly")
+            self.componentsTypeAttr3Entry.configure(state="readonly", validate="none")
             self.componentsTypeAttr4Label.config(text=self.componentTypeAttr[7])
             self.componentsTypeAttr4Entry.insert(
                 0, currentComp.getData(self.componentTypeAttr[7])
@@ -852,15 +899,17 @@ class UISettings(tk.Toplevel):
                 0, currentComp.getData(self.componentTypeAttr[8])
             )
         elif currentComp.getData("ctype") == "Radar":
+            self.componentsTypeAttr1Entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
             self.componentsTypeAttr1Entry.insert(
-                0, (
+                0,
+                (
                     currentComp.getData(self.componentTypeAttr[4])
                     if currentComp.getData("active") is not False
                     else "False"
-                )
+                ),
             )
-            self.componentsTypeAttr1Entry.configure(state="readonly")
+            self.componentsTypeAttr1Entry.configure(state="readonly", validate="none")
             self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
             self.componentsTypeAttr2Entry.insert(
                 0, currentComp.getData(self.componentTypeAttr[5])
@@ -882,19 +931,24 @@ class UISettings(tk.Toplevel):
                 0, currentComp.getData(self.componentTypeAttr[9])
             )
         elif currentComp.getData("ctype") == "Radio":
+            self.componentsTypeAttr3Entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text="max_range")
             print(self.componentTypeAttr)
             self.componentsTypeAttr1Entry.insert(0, currentComp.getData("max_range"))
             self.componentsTypeAttr2Label.config(text="cur_range")
             self.componentsTypeAttr2Entry.insert(0, currentComp.getData("cur_range"))
             self.componentsTypeAttr3Label.config(text="message")
-            self.componentsTypeAttr3Entry.insert(0, (
+            self.componentsTypeAttr3Entry.insert(
+                0,
+                (
                     currentComp.getData("message")
                     if currentComp.getData("message") is not None
                     else "null"
-                ),)
+                ),
+            )
             self.componentsTypeAttr3Entry.configure(state="readonly")
         elif self.currentComponentData.getData("ctype") == "Arm":
+            self.componentsTypeAttr3Entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
             self.componentsTypeAttr1Entry.insert(
                 0, currentComp.getData(self.componentTypeAttr[4])
@@ -968,7 +1022,7 @@ class UISettings(tk.Toplevel):
         self.objectsDensityEntry.insert(0, currentObj.getData("density"))
         self.currentCompIDs = currentObj.getData("comp_ids")[:]
         print(self.currentCompIDs)
-        self.objectsCompIDsCombo.set('')
+        self.objectsCompIDsCombo.set("")
         self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
         if len(self.currentCompIDs) != 0:
             self.objectsCompIDsCombo.current(0)
@@ -1013,14 +1067,22 @@ class UISettings(tk.Toplevel):
 
     ### UPDATE JSON FILES###
     def update_teams_json(self):
-        if self.teamNameEntry.get() in self.teamData.keys() and self.teamNameEntry.get() != self.selectTeamCombo.get():
-            showwarning(title="Warning", message="The name you are trying to use is already in use by another team. Please use another name.")
+        if (
+            self.teamNameEntry.get() in self.teamData.keys()
+            and self.teamNameEntry.get() != self.selectTeamCombo.get()
+        ):
+            showwarning(
+                title="Warning",
+                message="The name you are trying to use is already in use by another team. Please use another name.",
+            )
         else:
             self.currentTeamData["size"] = int(self.teamSizeEntry.get())
             self.currentTeamData["agent_defs"][0]["callsign"] = self.callsignEntry.get()
             self.currentTeamData["name"] = self.teamNameEntry.get()
             self.currentTeamData["agent_defs"][0]["squad"] = self.squadEntry.get()
-            self.currentTeamData["agent_defs"][0]["object"] = self.agentObjectEntry.get()
+            self.currentTeamData["agent_defs"][0][
+                "object"
+            ] = self.agentObjectEntry.get()
             self.currentTeamData["agent_defs"][0]["AI_file"] = self.aiFileEntry.get()
 
             self.teamData.update({self.currentTeamData["name"]: self.currentTeamData})
@@ -1053,8 +1115,14 @@ class UISettings(tk.Toplevel):
             f.close()
 
     def update_components_json(self):
-        if self.componentsIDEntry.get() in self.componentData.keys() and self.componentsIDEntry.get() != self.selectComponentCombo.get():
-            showwarning(title="Warning", message="The ID you are trying to use is already in use by another component. Please use another ID.")
+        if (
+            self.componentsIDEntry.get() in self.componentData.keys()
+            and self.componentsIDEntry.get() != self.selectComponentCombo.get()
+        ):
+            showwarning(
+                title="Warning",
+                message="The ID you are trying to use is already in use by another component. Please use another ID.",
+            )
         else:
             print(self.currentComponentData)
             self.currentComponentData.setData("id", self.componentsIDEntry.get())
@@ -1072,9 +1140,12 @@ class UISettings(tk.Toplevel):
                     "reload_ticks_remaining", int(self.componentsTypeAttr2Entry.get())
                 )
                 self.currentComponentData.setData(
-                    "reloading", (self.componentsTypeAttr3Entry.get()
-                                  if self.componentsTypeAttr3Entry.get() != "False"
-                                  else False)
+                    "reloading",
+                    (
+                        self.componentsTypeAttr3Entry.get()
+                        if self.componentsTypeAttr3Entry.get() != "False"
+                        else False
+                    ),
                 )
                 self.currentComponentData.setData(
                     "ammunition", int(self.componentsTypeAttr4Entry.get())
@@ -1106,9 +1177,12 @@ class UISettings(tk.Toplevel):
                 )
             if self.currentComponentData.getData("ctype") == "Radar":
                 self.currentComponentData.setData(
-                    "active", (self.componentsTypeAttr1Entry.get()
-                               if self.componentsTypeAttr1Entry.get() != "False"
-                               else False)
+                    "active",
+                    (
+                        self.componentsTypeAttr1Entry.get()
+                        if self.componentsTypeAttr1Entry.get() != "False"
+                        else False
+                    ),
                 )
                 self.currentComponentData.setData(
                     "range", int(self.componentsTypeAttr2Entry.get())
@@ -1159,7 +1233,10 @@ class UISettings(tk.Toplevel):
             with open("settings/components.json", "r") as f:
                 componentJSON = json.load(f)
 
-            if self.currentComponentData.getData("id") != self.selectComponentCombo.get():
+            if (
+                self.currentComponentData.getData("id")
+                != self.selectComponentCombo.get()
+            ):
                 if self.selectComponentCombo.get() in componentJSON:
                     componentJSON.pop(self.selectComponentCombo.get())
                 if self.selectComponentCombo.get() in self.componentData:
@@ -1178,7 +1255,10 @@ class UISettings(tk.Toplevel):
                 self.currentComponentData
             )
 
-            if "slot_id" in componentJSON[self.currentComponentData.getData("id")].keys():
+            if (
+                "slot_id"
+                in componentJSON[self.currentComponentData.getData("id")].keys()
+            ):
                 componentJSON[self.currentComponentData.getData("id")].pop("slot_id")
 
             with open("settings/components.json", "w") as f:
@@ -1186,17 +1266,27 @@ class UISettings(tk.Toplevel):
             f.close()
 
     def update_objects_json(self):
-        if self.objectsIDEntry.get() in self.objectData.keys() and self.objectsNameEntry.get() != self.selectObjectsCombo.get():
-           showwarning(title="Warning", message="The ID you are trying to use is already in use by another object. Please use another ID.")
-        else: 
-        
+        if (
+            self.objectsIDEntry.get() in self.objectData.keys()
+            and self.objectsNameEntry.get() != self.selectObjectsCombo.get()
+        ):
+            showwarning(
+                title="Warning",
+                message="The ID you are trying to use is already in use by another object. Please use another ID.",
+            )
+        else:
+
             self.currentObjectData.setData("id", self.objectsIDEntry.get())
             self.currentObjectData.setData("name", self.objectsNameEntry.get())
-            self.currentObjectData.setData("fill_alive", self.objectsFillAliveEntry.get())
+            self.currentObjectData.setData(
+                "fill_alive", self.objectsFillAliveEntry.get()
+            )
             self.currentObjectData.setData("fill_dead", self.objectsFillDeadEntry.get())
             self.currentObjectData.setData("text", self.objectsTextEntry.get())
             self.currentObjectData.setData("health", int(self.objectsHealthEntry.get()))
-            self.currentObjectData.setData("density", int(self.objectsDensityEntry.get()))
+            self.currentObjectData.setData(
+                "density", int(self.objectsDensityEntry.get())
+            )
             if len(self.currentCompIDs) != 0:
                 if self.currentCompIDs[-1] == "Add New Comp ID":
                     self.currentCompIDs.pop(-1)
@@ -1224,7 +1314,9 @@ class UISettings(tk.Toplevel):
                 self.currentObjectData.getJSONView()
             )
 
-            self.objectData[self.currentObjectData.getData("id")] = self.currentObjectData
+            self.objectData[self.currentObjectData.getData("id")] = (
+                self.currentObjectData
+            )
 
             if "slot_id" in objectJSON[self.currentObjectData.getData("id")].keys():
                 objectJSON[self.currentObjectData.getData("id")].pop("slot_id")
@@ -1237,8 +1329,14 @@ class UISettings(tk.Toplevel):
 
     def update_maps_json(self):
 
-        if self.mapsIDEntry.get() in self.mapData.keys() and self.mapsIDEntry.get() != self.selectMapsCombo.get():
-            showwarning(title="Warning", message="The ID you are trying to use is already in use by another map. Please use another ID.")
+        if (
+            self.mapsIDEntry.get() in self.mapData.keys()
+            and self.mapsIDEntry.get() != self.selectMapsCombo.get()
+        ):
+            showwarning(
+                title="Warning",
+                message="The ID you are trying to use is already in use by another map. Please use another ID.",
+            )
         else:
             self.currentMapData.setData("name", self.mapsNameEntry.get())
             self.currentMapData.setData("edge_obj_id", self.mapsEdgeObjIDEntry.get())
@@ -1250,7 +1348,7 @@ class UISettings(tk.Toplevel):
                 print(self.currentMapData.data)
                 mapJSON[self.selectMapsCombo.get()] = self.currentMapData.data
             f.close()
-    
+
             with open("settings/maps.json", "w") as f:
                 json.dump(mapJSON, f, indent=4)
             f.close()
@@ -1261,7 +1359,9 @@ class UISettings(tk.Toplevel):
         self.teamID = askstring("Team ID", "Please enter an ID for the new team.")
         while len(self.teamID) == 0 or self.teamID in self.teamData.keys():
             if len(self.teamID) == 0:
-                messagebox.showwarning("Warning", "You must enter a team ID to continue")
+                messagebox.showwarning(
+                    "Warning", "You must enter a team ID to continue"
+                )
             else:
                 messagebox.showwarning(
                     "Warning", "This ID already exists, please enter a new ID."
@@ -1285,7 +1385,9 @@ class UISettings(tk.Toplevel):
         self.componentID = askstring(
             "Component ID", "Please enter an ID for the new component."
         )
-        while len(self.componentID) == 0 or self.componentID in self.componentData.keys():
+        while (
+            len(self.componentID) == 0 or self.componentID in self.componentData.keys()
+        ):
             if len(self.componentID) == 0:
                 messagebox.showwarning(
                     "Warning", "Please enter an ID for the new component"
@@ -1340,7 +1442,9 @@ class UISettings(tk.Toplevel):
         self.objectID = askstring("Object ID", "Please enter an ID for the new object.")
         while len(self.objectID) == 0 or self.objectID in self.objectData:
             if len(self.objectID) == 0:
-                messagebox.showwarning("Warning", "Please enter an ID for the new object")
+                messagebox.showwarning(
+                    "Warning", "Please enter an ID for the new object"
+                )
             else:
                 messagebox.showwarning(
                     "Warning", "This ID already exists, please enter a new ID."
