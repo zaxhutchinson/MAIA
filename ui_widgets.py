@@ -180,6 +180,12 @@ class uiCanvas(tk.Canvas):
 
         self.boxSprite = tk.PhotoImage(file="images/barrel_top.png")
 
+        self.player = Image.open("images/stick.png")
+
+        self.player2 = Image.open("images/stick.png")
+
+        # self.playerTK = ImageTk.PhotoImage((Image.open("images/stick.png")).rotate(90))
+
         # item sprites
         self.red_flag = ImageTk.PhotoImage(Image.open("images/redFlag.png"))
         self.blue_flag = ImageTk.PhotoImage(Image.open("images/blueFlag.png"))
@@ -232,16 +238,32 @@ class uiCanvas(tk.Canvas):
         elif dd["name"] == "player":
             facing = dd["facing"]
 
-            self.player = Image.open("images/stick.png")
+            self.playerRot = self.player.rotate(facing)
+
+            self.playerRotTK = ImageTk.PhotoImage(self.playerRot)
+
+            self.player2Rot = self.player2.rotate(facing)
+
+            self.player2RotTK = ImageTk.PhotoImage(self.player2Rot)
+
+            self.create_image(x - 60, y - 60, image=self.player2RotTK)
+
+            # self.player = ImageTk.PhotoImage(self.player)
+
+            # self.player = Image.open("images/stick.png")
+            # self.player2 = Image.open("images/stick.png")
 
             # self.playerRot = self.player.rotate(330)
 
             print(facing)
 
-            self.playerTK = ImageTk.PhotoImage(self.player)
+            # self.playerTK = ImageTk.PhotoImage(Image.open("images/stick.png"))
+            # self.playerTK2 = ImageTk.PhotoImage(self.player2)
 
             # self.playerRot = self.player
-            return self.create_image(x, y, image=self.playerTK)
+            # self.create_image(x - 60, y - 60, image=self.playerTK)
+            # self.player = Image.open("images/stick.png")
+            return self.create_image(x, y, image=self.playerRotTK)
             # return self.create_image(x, y, image=self.player)
         elif dd["name"] == "Box":
             # facing = dd["facing"]
