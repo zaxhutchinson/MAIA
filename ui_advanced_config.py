@@ -1090,19 +1090,19 @@ class UISettings(tk.Toplevel):
                 )
             if self.currentComponentData.getData("ctype") == "Engine":
                 self.currentComponentData.setData(
-                    "min_speed", int(self.componentsTypeAttr1Entry.get())
+                    "min_speed", float(self.componentsTypeAttr1Entry.get())
                 )
                 self.currentComponentData.setData(
-                    "max_speed", int(self.componentsTypeAttr2Entry.get())
+                    "max_speed", float(self.componentsTypeAttr2Entry.get())
                 )
                 self.currentComponentData.setData(
-                    "cur_speed", int(self.componentsTypeAttr3Entry.get())
+                    "cur_speed", float(self.componentsTypeAttr3Entry.get())
                 )
                 self.currentComponentData.setData(
-                    "max_turnrate", int(self.componentsTypeAttr4Entry.get())
+                    "max_turnrate", float(self.componentsTypeAttr4Entry.get())
                 )
                 self.currentComponentData.setData(
-                    "cur_turnrate", int(self.componentsTypeAttr5Entry.get())
+                    "cur_turnrate", float(self.componentsTypeAttr5Entry.get())
                 )
             if self.currentComponentData.getData("ctype") == "Radar":
                 self.currentComponentData.setData(
