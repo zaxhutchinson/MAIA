@@ -827,10 +827,14 @@ class UISettings(tk.Toplevel):
         self.componentsTypeAttr6Label.config(text="")
         self.componentsTypeAttr7Label.config(text="")
         self.componentsTypeAttr1Entry.delete(0, tk.END)
-        self.componentsTypeAttr1Entry.config(validate="key", validatecommand=(self.validateNum, "%P"))
+        self.componentsTypeAttr1Entry.config(
+            validate="key", validatecommand=(self.validateNum, "%P")
+        )
         self.componentsTypeAttr2Entry.delete(0, tk.END)
         self.componentsTypeAttr3Entry.delete(0, tk.END)
-        self.componentsTypeAttr3Entry.config(validate="key", validatecommand=(self.validateNum, "%P"))
+        self.componentsTypeAttr3Entry.config(
+            validate="key", validatecommand=(self.validateNum, "%P")
+        )
         self.componentsTypeAttr4Entry.delete(0, tk.END)
         self.componentsTypeAttr5Entry.delete(0, tk.END)
         self.componentsTypeAttr6Entry.delete(0, tk.END)
@@ -1076,43 +1080,57 @@ class UISettings(tk.Toplevel):
                 message="The name you are trying to use is already in use by another team. Please use another name.",
             )
         else:
-            self.currentTeamData["size"] = int(self.teamSizeEntry.get())
-            self.currentTeamData["agent_defs"][0]["callsign"] = self.callsignEntry.get()
-            self.currentTeamData["name"] = self.teamNameEntry.get()
-            self.currentTeamData["agent_defs"][0]["squad"] = self.squadEntry.get()
-            self.currentTeamData["agent_defs"][0][
-                "object"
-            ] = self.agentObjectEntry.get()
-            self.currentTeamData["agent_defs"][0]["AI_file"] = self.aiFileEntry.get()
+            if (
+                self.teamSizeEntry.get() != ""
+                and self.callsignEntry.get() != ""
+                and self.teamNameEntry.get() != ""
+                and self.squadEntry.get() != ""
+                and self.agentObjectEntry.get() != ""
+                and self.aiFileEntry.get() != ""
+            ):
+                self.currentTeamData["size"] = int(self.teamSizeEntry.get())
+                self.currentTeamData["agent_defs"][0][
+                    "callsign"
+                ] = self.callsignEntry.get()
+                self.currentTeamData["name"] = self.teamNameEntry.get()
+                self.currentTeamData["agent_defs"][0]["squad"] = self.squadEntry.get()
+                self.currentTeamData["agent_defs"][0][
+                    "object"
+                ] = self.agentObjectEntry.get()
+                self.currentTeamData["agent_defs"][0][
+                    "AI_file"
+                ] = self.aiFileEntry.get()
 
-            self.teamData.update({self.currentTeamData["name"]: self.currentTeamData})
+                self.teamData.update(
+                    {self.currentTeamData["name"]: self.currentTeamData}
+                )
 
-            print(self.teamNameEntry.get())
-            self.teamsJSON = json.dumps(self.teamData, indent=4)
-            print(self.teamsJSON)
+                print(self.teamNameEntry.get())
+                self.teamsJSON = json.dumps(self.teamData, indent=4)
+                print(self.teamsJSON)
 
-            with open("settings/teams.json", "r") as f:
-                teamJSON = json.load(f)
+                with open("settings/teams.json", "r") as f:
+                    teamJSON = json.load(f)
 
-            if self.currentTeamData["name"] != self.selectTeamCombo.get():
-                if self.selectTeamCombo.get() in teamJSON:
-                    teamJSON.pop(self.selectTeamCombo.get())
-                if self.selectTeamCombo.get() in self.teamData:
-                    self.teamData.pop(self.selectTeamCombo.get())
-                self.teamNames.pop(self.selectTeamCombo.current())
-                self.teamNames.append(self.currentTeamData["name"])
-                self.selectTeamCombo.config(values=self.teamNames)
-                self.selectTeamCombo.current(len(self.teamNames) - 1)
+                if self.currentTeamData["name"] != self.selectTeamCombo.get():
+                    if self.selectTeamCombo.get() in teamJSON:
+                        teamJSON.pop(self.selectTeamCombo.get())
+                    if self.selectTeamCombo.get() in self.teamData:
+                        self.teamData.pop(self.selectTeamCombo.get())
+                    self.teamNames.pop(self.selectTeamCombo.current())
+                    self.teamNames.append(self.currentTeamData["name"])
+                    self.selectTeamCombo.config(values=self.teamNames)
+                    self.selectTeamCombo.current(len(self.teamNames) - 1)
 
-            teamJSON[self.currentTeamData["name"]] = self.currentTeamData
+                teamJSON[self.currentTeamData["name"]] = self.currentTeamData
 
-            self.teamData[self.currentTeamData["name"]] = self.currentTeamData
+                self.teamData[self.currentTeamData["name"]] = self.currentTeamData
 
-            f.close()
+                f.close()
 
-            with open("settings/teams.json", "w") as f:
-                json.dump(teamJSON, f, indent=4)
-            f.close()
+                with open("settings/teams.json", "w") as f:
+                    json.dump(teamJSON, f, indent=4)
+                f.close()
 
     def update_components_json(self):
         if (
@@ -1268,64 +1286,80 @@ class UISettings(tk.Toplevel):
     def update_objects_json(self):
         if (
             self.objectsIDEntry.get() in self.objectData.keys()
-            and self.objectsNameEntry.get() != self.selectObjectsCombo.get()
+            and self.objectsIDEntry.get() != self.selectObjectsCombo.get()
         ):
             showwarning(
                 title="Warning",
                 message="The ID you are trying to use is already in use by another object. Please use another ID.",
             )
         else:
+            if (
+                self.objectsIDEntry.get() != ""
+                and self.objectsNameEntry.get() != ""
+                and self.objectsFillDeadEntry.get() != ""
+                and self.objectsFillAliveEntry.get() != ""
+                and self.objectsTextEntry.get() != ""
+                and self.objectsHealthEntry.get() != ""
+                and self.objectsDensityEntry.get() != ""
+                and self.objectsPointsCountEntry.get() != ""
+            ):
+                self.currentObjectData.setData("id", self.objectsIDEntry.get())
+                self.currentObjectData.setData("name", self.objectsNameEntry.get())
+                self.currentObjectData.setData(
+                    "fill_alive", self.objectsFillAliveEntry.get()
+                )
+                self.currentObjectData.setData(
+                    "fill_dead", self.objectsFillDeadEntry.get()
+                )
+                self.currentObjectData.setData("text", self.objectsTextEntry.get())
+                self.currentObjectData.setData(
+                    "health", int(self.objectsHealthEntry.get())
+                )
+                self.currentObjectData.setData(
+                    "density", int(self.objectsDensityEntry.get())
+                )
+                if len(self.currentCompIDs) != 0:
+                    if self.currentCompIDs[-1] == "Add New Comp ID":
+                        self.currentCompIDs.pop(-1)
+                self.currentObjectData.setData("comp_ids", self.currentCompIDs)
+                self.currentObjectData.setData(
+                    "points_count", bool(int(self.objectsPointsCountEntry.get()))
+                )
 
-            self.currentObjectData.setData("id", self.objectsIDEntry.get())
-            self.currentObjectData.setData("name", self.objectsNameEntry.get())
-            self.currentObjectData.setData(
-                "fill_alive", self.objectsFillAliveEntry.get()
-            )
-            self.currentObjectData.setData("fill_dead", self.objectsFillDeadEntry.get())
-            self.currentObjectData.setData("text", self.objectsTextEntry.get())
-            self.currentObjectData.setData("health", int(self.objectsHealthEntry.get()))
-            self.currentObjectData.setData(
-                "density", int(self.objectsDensityEntry.get())
-            )
-            if len(self.currentCompIDs) != 0:
-                if self.currentCompIDs[-1] == "Add New Comp ID":
-                    self.currentCompIDs.pop(-1)
-            self.currentObjectData.setData("comp_ids", self.currentCompIDs)
-            self.currentObjectData.setData(
-                "points_count", bool(int(self.objectsPointsCountEntry.get()))
-            )
+                print(self.currentObjectData.getJSONView())
+                with open("settings/objects.json", "r") as f:
+                    objectJSON = json.load(f)
 
-            print(self.currentObjectData.getJSONView())
-            with open("settings/objects.json", "r") as f:
-                objectJSON = json.load(f)
+                print(self.selectObjectsCombo.get())
+                if (
+                    self.currentObjectData.getData("id")
+                    != self.selectObjectsCombo.get()
+                ):
+                    if self.selectObjectsCombo.get() in objectJSON:
+                        objectJSON.pop(self.selectObjectsCombo.get())
+                    if self.selectObjectsCombo.get() in self.objectData:
+                        self.objectData.pop(self.selectObjectsCombo.get())
+                    self.objectIDs.pop(self.selectObjectsCombo.current())
+                    self.objectIDs.append(self.currentObjectData.getData("id"))
+                    self.selectObjectsCombo.configure(values=self.objectIDs)
+                    self.selectObjectsCombo.current(len(self.objectIDs) - 1)
 
-            print(self.selectObjectsCombo.get())
-            if self.currentObjectData.getData("id") != self.selectObjectsCombo.get():
-                if self.selectObjectsCombo.get() in objectJSON:
-                    objectJSON.pop(self.selectObjectsCombo.get())
-                if self.selectObjectsCombo.get() in self.objectData:
-                    self.objectData.pop(self.selectObjectsCombo.get())
-                self.objectIDs.pop(self.selectObjectsCombo.current())
-                self.objectIDs.append(self.currentObjectData.getData("id"))
-                self.selectObjectsCombo.configure(values=self.objectIDs)
-                self.selectObjectsCombo.current(len(self.objectIDs) - 1)
+                objectJSON[self.currentObjectData.getData("id")] = (
+                    self.currentObjectData.getJSONView()
+                )
 
-            objectJSON[self.currentObjectData.getData("id")] = (
-                self.currentObjectData.getJSONView()
-            )
+                self.objectData[self.currentObjectData.getData("id")] = (
+                    self.currentObjectData
+                )
 
-            self.objectData[self.currentObjectData.getData("id")] = (
-                self.currentObjectData
-            )
+                if "slot_id" in objectJSON[self.currentObjectData.getData("id")].keys():
+                    objectJSON[self.currentObjectData.getData("id")].pop("slot_id")
+                f.close()
 
-            if "slot_id" in objectJSON[self.currentObjectData.getData("id")].keys():
-                objectJSON[self.currentObjectData.getData("id")].pop("slot_id")
-            f.close()
-
-            with open("settings/objects.json", "w") as f:
-                json.dump(objectJSON, f, indent=4)
-            f.close()
-            print(self.objectData)
+                with open("settings/objects.json", "w") as f:
+                    json.dump(objectJSON, f, indent=4)
+                f.close()
+                print(self.objectData)
 
     def update_maps_json(self):
 
@@ -1338,20 +1372,29 @@ class UISettings(tk.Toplevel):
                 message="The ID you are trying to use is already in use by another map. Please use another ID.",
             )
         else:
-            self.currentMapData.setData("name", self.mapsNameEntry.get())
-            self.currentMapData.setData("edge_obj_id", self.mapsEdgeObjIDEntry.get())
-            self.currentMapData.setData("desc", self.mapsDescEntry.get())
-            self.currentMapData.setData("width", int(self.mapsWidthEntry.get()))
-            self.currentMapData.setData("height", int(self.mapsHeightEntry.get()))
-            with open("settings/maps.json", "r") as f:
-                mapJSON = json.load(f)
-                print(self.currentMapData.data)
-                mapJSON[self.selectMapsCombo.get()] = self.currentMapData.data
-            f.close()
+            if (
+                self.mapsNameEntry.get() != ""
+                and self.mapsEdgeObjIDEntry.get() != ""
+                and self.mapsDescEntry.get() != ""
+                and self.mapsWidthEntry.get != ""
+                and self.mapsHeightEntry.get() != ""
+            ):
+                self.currentMapData.setData("name", self.mapsNameEntry.get())
+                self.currentMapData.setData(
+                    "edge_obj_id", self.mapsEdgeObjIDEntry.get()
+                )
+                self.currentMapData.setData("desc", self.mapsDescEntry.get())
+                self.currentMapData.setData("width", int(self.mapsWidthEntry.get()))
+                self.currentMapData.setData("height", int(self.mapsHeightEntry.get()))
+                with open("settings/maps.json", "r") as f:
+                    mapJSON = json.load(f)
+                    print(self.currentMapData.data)
+                    mapJSON[self.selectMapsCombo.get()] = self.currentMapData.data
+                f.close()
 
-            with open("settings/maps.json", "w") as f:
-                json.dump(mapJSON, f, indent=4)
-            f.close()
+                with open("settings/maps.json", "w") as f:
+                    json.dump(mapJSON, f, indent=4)
+                f.close()
 
     ### CREATE NEW ###
 
