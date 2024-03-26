@@ -17,6 +17,9 @@ import gstate
 import zfunctions
 
 
+from ui_scoreboard import displayScoreboard
+
+
 class Sim:
     def __init__(self, imsgr):
         self.reset()
@@ -412,6 +415,7 @@ class Sim:
 
                 # Check if the sim is over.
                 if self.checkEndOfSim():
+                    displayScoreboard()
                     return
                 else:
                     self.tick += 1
@@ -613,7 +617,9 @@ class Sim:
             for ping in obj_pings:
 
                 # Pinged ourself
-                if ping["x"] == curr_obj.getData("x") and ping["y"] == curr_obj.getData("y"):
+                if ping["x"] == curr_obj.getData("x") and ping["y"] == curr_obj.getData(
+                    "y"
+                ):
                     pass
                 else:
                     # For now all we're giving the transmitting player

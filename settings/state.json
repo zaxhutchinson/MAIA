@@ -51,5 +51,14 @@
             "state":false,
             "msg": "Blue wins"
         }
+    ],
+    "player_falls_off": [
+        {
+            "type": "OBJ_ITEMS_TOUCH",
+            "items": ["goal"],
+            "objs": ["player"],
+            "state": false,
+            "msg":"Player falls off the map"
+        }
     ]
 }

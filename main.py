@@ -21,9 +21,9 @@ class App(tk.Tk):
         formatter = logging.Formatter("%(name)s - %(message)s")
         handler.setFormatter(formatter)
         logger.addHandler(handler)
-
         self.title("MAIA")
-
+        self.geometry("1300x600")
+        self.minsize(width=1300, height=600)
         self.container = tk.Frame(self)
         self.container.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
         self.container.grid_rowconfigure(0, weight=1)
