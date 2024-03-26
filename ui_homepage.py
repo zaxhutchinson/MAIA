@@ -52,16 +52,19 @@ class UIHomepage(tk.Frame):
             text="Start Game",
             command=lambda: self.controller.show_frame("SetupPage"),
         )
-        self.btnStartGame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        self.btnStartGame.config(width=400)
+        self.btnStartGame.pack(side=tk.BOTTOM, fill="y", expand=True)
         self.btnAdvancedConfig = uiButton(
             master=self,
             command=lambda: ui_advanced_config.UISettings(self, self.logger),
             text="Advanced Config",
         )
-        self.btnAdvancedConfig.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        self.btnAdvancedConfig.config(width=400)
+        self.btnAdvancedConfig.pack(side=tk.BOTTOM, fill="y", expand=True)
         self.btnAbout = uiButton(
             master=self,
             text="About MAIA",
             command=lambda: self.controller.show_frame("AboutPage"),
         )
-        self.btnAbout.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        self.btnAbout.config(width=400)
+        self.btnAbout.pack(side=tk.BOTTOM, fill="y", expand=True)
