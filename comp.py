@@ -51,7 +51,7 @@ class Comp:
     ###########################################################################
     # Self View dispatch
     def setViewKeysBasic(self):
-        self.view_keys += ["id", "ctype", "name", "slot_id"]
+        self.view_keys += ["id", "name", "ctype", "slot_id"]
 
     def setViewKeysFixedGun(self):
         self.view_keys += [
@@ -90,7 +90,7 @@ class Comp:
         self.view_keys += ["range"]
 
     def setViewKeysArm(self):
-        self.view_keys += ["max_bulk", "max_weight", "item"]
+        self.view_keys += ["max_weight", "max_bulk", "item"]
 
     def getSelfView(self):
         view = {}
