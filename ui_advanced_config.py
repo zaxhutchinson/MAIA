@@ -1645,9 +1645,6 @@ class UISettings(tk.Toplevel):
 
     ### SHOW MAP WINDOW ###
     def show_map(self):
-        map_width = self.currentMapData.getData("width")
-        map_height = self.currentMapData.getData("height")
-
         self.UIMap = ui_map_config.UIMapConfig(
             self.currentMapData, self, logger=self.logger
         )
