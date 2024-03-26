@@ -1142,146 +1142,160 @@ class UISettings(tk.Toplevel):
                 message="The ID you are trying to use is already in use by another component. Please use another ID.",
             )
         else:
-            print(self.currentComponentData)
-            self.currentComponentData.setData("id", self.componentsIDEntry.get())
-            self.currentComponentData.setData("name", self.componentsNameEntry.get())
-            self.currentComponentData.setData("ctype", self.componentsTypeCombo.get())
-            if self.currentComponentData.getData("ctype") == "CnC":
-                self.currentComponentData.setData(
-                    "max_cmds_per_tick", int(self.componentsTypeAttr1Entry.get())
-                )
-            if self.currentComponentData.getData("ctype") == "FixedGun":
-                self.currentComponentData.setData(
-                    "reload_ticks", int(self.componentsTypeAttr1Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "reload_ticks_remaining", int(self.componentsTypeAttr2Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "reloading",
-                    (
-                        self.componentsTypeAttr3Entry.get()
-                        if self.componentsTypeAttr3Entry.get() != "False"
-                        else False
-                    ),
-                )
-                self.currentComponentData.setData(
-                    "ammunition", int(self.componentsTypeAttr4Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "min_damage", int(self.componentsTypeAttr5Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "max_damage", int(self.componentsTypeAttr6Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "range", int(self.componentsTypeAttr7Entry.get())
-                )
-            if self.currentComponentData.getData("ctype") == "Engine":
-                self.currentComponentData.setData(
-                    "min_speed", float(self.componentsTypeAttr1Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "max_speed", float(self.componentsTypeAttr2Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "cur_speed", float(self.componentsTypeAttr3Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "max_turnrate", float(self.componentsTypeAttr4Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "cur_turnrate", float(self.componentsTypeAttr5Entry.get())
-                )
-            if self.currentComponentData.getData("ctype") == "Radar":
-                self.currentComponentData.setData(
-                    "active",
-                    (
-                        self.componentsTypeAttr1Entry.get()
-                        if self.componentsTypeAttr1Entry.get() != "False"
-                        else False
-                    ),
-                )
-                self.currentComponentData.setData(
-                    "range", int(self.componentsTypeAttr2Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "level", int(self.componentsTypeAttr3Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "visarc", int(self.componentsTypeAttr4Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "offset_angle", int(self.componentsTypeAttr5Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "resolution", int(self.componentsTypeAttr6Entry.get())
-                )
-            if self.currentComponentData.getData("ctype") == "Radio":
-                self.currentComponentData.setData(
-                    "max_range", int(self.componentsTypeAttr1Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "cur_range", int(self.componentsTypeAttr2Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "message",
-                    (
-                        self.componentsTypeAttr3Entry.get()
-                        if self.componentsTypeAttr3Entry.get() != ""
-                        else None
-                    ),
-                )
-            if self.currentComponentData.getData("ctype") == "Arm":
-                self.currentComponentData.setData(
-                    "max_weight", int(self.componentsTypeAttr1Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "max_bulk", int(self.componentsTypeAttr2Entry.get())
-                )
-                self.currentComponentData.setData(
-                    "item",
-                    (
-                        self.componentsTypeAttr3Entry.get()
-                        if self.componentsTypeAttr3Entry.get() != "null"
-                        else None
-                    ),
-                )
-
-            with open("settings/components.json", "r") as f:
-                componentJSON = json.load(f)
-
             if (
-                self.currentComponentData.getData("id")
-                != self.selectComponentCombo.get()
+                self.componentsIDEntry.get() != ""
+                and self.componentsNameEntry.get() != ""
+                and self.componentsTypeAttr1Entry.get() != ""
+                and self.componentsTypeAttr2Entry.get() != ""
+                and self.componentsTypeAttr3Entry != ""
             ):
-                if self.selectComponentCombo.get() in componentJSON:
-                    componentJSON.pop(self.selectComponentCombo.get())
-                if self.selectComponentCombo.get() in self.componentData:
-                    self.componentData.pop(self.selectComponentCombo.get())
-                self.componentIDs.pop(self.selectComponentCombo.current())
-                self.componentIDs.append(self.currentComponentData.getData("id"))
-                self.selectComponentCombo.configure(values=self.componentIDs)
-                self.selectComponentCombo.current(len(self.componentIDs) - 1)
+                print(self.currentComponentData)
+                self.currentComponentData.setData("id", self.componentsIDEntry.get())
+                self.currentComponentData.setData(
+                    "name", self.componentsNameEntry.get()
+                )
+                self.currentComponentData.setData(
+                    "ctype", self.componentsTypeCombo.get()
+                )
+                if self.currentComponentData.getData("ctype") == "CnC":
+                    self.currentComponentData.setData(
+                        "max_cmds_per_tick", int(self.componentsTypeAttr1Entry.get())
+                    )
+                if self.currentComponentData.getData("ctype") == "FixedGun":
+                    self.currentComponentData.setData(
+                        "reload_ticks", int(self.componentsTypeAttr1Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "reload_ticks_remaining",
+                        int(self.componentsTypeAttr2Entry.get()),
+                    )
+                    self.currentComponentData.setData(
+                        "reloading",
+                        (
+                            self.componentsTypeAttr3Entry.get()
+                            if self.componentsTypeAttr3Entry.get() != "False"
+                            else False
+                        ),
+                    )
+                    self.currentComponentData.setData(
+                        "ammunition", int(self.componentsTypeAttr4Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "min_damage", int(self.componentsTypeAttr5Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "max_damage", int(self.componentsTypeAttr6Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "range", int(self.componentsTypeAttr7Entry.get())
+                    )
+                if self.currentComponentData.getData("ctype") == "Engine":
+                    self.currentComponentData.setData(
+                        "min_speed", float(self.componentsTypeAttr1Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "max_speed", float(self.componentsTypeAttr2Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "cur_speed", float(self.componentsTypeAttr3Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "max_turnrate", float(self.componentsTypeAttr4Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "cur_turnrate", float(self.componentsTypeAttr5Entry.get())
+                    )
+                if self.currentComponentData.getData("ctype") == "Radar":
+                    self.currentComponentData.setData(
+                        "active",
+                        (
+                            self.componentsTypeAttr1Entry.get()
+                            if self.componentsTypeAttr1Entry.get() != "False"
+                            else False
+                        ),
+                    )
+                    self.currentComponentData.setData(
+                        "range", int(self.componentsTypeAttr2Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "level", int(self.componentsTypeAttr3Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "visarc", int(self.componentsTypeAttr4Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "offset_angle", int(self.componentsTypeAttr5Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "resolution", int(self.componentsTypeAttr6Entry.get())
+                    )
+                if self.currentComponentData.getData("ctype") == "Radio":
+                    self.currentComponentData.setData(
+                        "max_range", int(self.componentsTypeAttr1Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "cur_range", int(self.componentsTypeAttr2Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "message",
+                        (
+                            self.componentsTypeAttr3Entry.get()
+                            if self.componentsTypeAttr3Entry.get() != ""
+                            else None
+                        ),
+                    )
+                if self.currentComponentData.getData("ctype") == "Arm":
+                    self.currentComponentData.setData(
+                        "max_weight", int(self.componentsTypeAttr1Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "max_bulk", int(self.componentsTypeAttr2Entry.get())
+                    )
+                    self.currentComponentData.setData(
+                        "item",
+                        (
+                            self.componentsTypeAttr3Entry.get()
+                            if self.componentsTypeAttr3Entry.get() != "null"
+                            else None
+                        ),
+                    )
 
-            componentJSON[self.currentComponentData.getData("id")] = (
-                self.currentComponentData.getSelfView()
-            )
-            f.close()
+                with open("settings/components.json", "r") as f:
+                    componentJSON = json.load(f)
 
-            self.componentData[self.currentComponentData.getData("id")] = (
-                self.currentComponentData
-            )
+                if (
+                    self.currentComponentData.getData("id")
+                    != self.selectComponentCombo.get()
+                ):
+                    if self.selectComponentCombo.get() in componentJSON:
+                        componentJSON.pop(self.selectComponentCombo.get())
+                    if self.selectComponentCombo.get() in self.componentData:
+                        self.componentData.pop(self.selectComponentCombo.get())
+                    self.componentIDs.pop(self.selectComponentCombo.current())
+                    self.componentIDs.append(self.currentComponentData.getData("id"))
+                    self.selectComponentCombo.configure(values=self.componentIDs)
+                    self.selectComponentCombo.current(len(self.componentIDs) - 1)
 
-            if (
-                "slot_id"
-                in componentJSON[self.currentComponentData.getData("id")].keys()
-            ):
-                componentJSON[self.currentComponentData.getData("id")].pop("slot_id")
+                componentJSON[self.currentComponentData.getData("id")] = (
+                    self.currentComponentData.getSelfView()
+                )
+                f.close()
 
-            with open("settings/components.json", "w") as f:
-                json.dump(componentJSON, f, indent=4)
-            f.close()
+                self.componentData[self.currentComponentData.getData("id")] = (
+                    self.currentComponentData
+                )
+
+                if (
+                    "slot_id"
+                    in componentJSON[self.currentComponentData.getData("id")].keys()
+                ):
+                    componentJSON[self.currentComponentData.getData("id")].pop(
+                        "slot_id"
+                    )
+
+                with open("settings/components.json", "w") as f:
+                    json.dump(componentJSON, f, indent=4)
+                f.close()
 
     def update_objects_json(self):
         if (
