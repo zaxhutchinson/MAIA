@@ -66,7 +66,7 @@ class AI:
                 if engine_view["cur_turnrate"] != 0:
                     self.cmd_maker.addCmd(0, 1, aih.CMD_Turn(0.0))
                 else:
-                    self.cmd_maker.addCmd(0, 1, aih.CMD_SetSpeed(2.0))
+                    self.cmd_maker.addCmd(0, 1, aih.CMD_SetSpeed(1.0))
 
             # # If not, make sure we're not turning.
             # if not turning:
