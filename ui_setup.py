@@ -18,13 +18,11 @@ from ui_widgets import *
 
 
 class UISetup(tk.Frame):
-    def __init__(self, master=None, logger=None):
-        super().__init__(master)
+    def __init__(self, controller, master=None, logger=None):
+        tk.Frame.__init__(self, master)
         self.master = master
         self.logger = logger
-
-        self.pack()
-        self.master.title("MAIA - Maine AI Arena")  # top of window tool bar
+        self.controller = controller
 
         # Create the msgr objs
         self.msg_queue = queue.Queue()
@@ -39,9 +37,6 @@ class UISetup(tk.Frame):
         self.BuildUI()
 
         self.UIMap = None
-
-    def Run(self):
-        self.mainloop()
 
     def updateTeamNames(self):
         self.lbTeams.delete(0, tk.END)
@@ -133,9 +128,7 @@ class UISetup(tk.Frame):
         ## MAP UI
         #######################################################################
         self.mapFrame = uiQuietFrame(master=self)  # map section
-        self.mapFrame.pack(
-            side=tk.LEFT, fill=tk.BOTH, padx=10, pady=10
-        )  # HK set side to left
+        self.mapFrame.pack(side=tk.LEFT, fill=tk.BOTH, padx=10, pady=10)
 
         self.mapListFrame = uiQuietFrame(master=self.mapFrame)
         self.mapListFrame.pack(side=tk.TOP, fill=tk.BOTH)
@@ -255,12 +248,6 @@ class UISetup(tk.Frame):
             self.logger.error("App::addTeam() - Sim is missing the map.")
 
     def removeTeam(self):
-        # side_index = self.lbSideNames.curselection()
-        # if len(side_index) > 0:
-        #     all_sides = self.lbSideNames.get(0,tk.END)
-        #     side_ID = all_sides[side_index[0]]
-        #     self.sim.delTeamName(side_ID)
-        #     self.updateTeamNames()
 
         team_index = self.lbTeamAssignments.curselection()
         if len(team_index) > 0:

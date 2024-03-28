@@ -89,6 +89,12 @@ class uiLabel(tk.Label):
         )
 
 
+class uiTextbox(tk.Text):
+    def __init__(self, **kwargs):
+        super().__init__(kwargs.pop("master"), **kwargs)
+        self.config(wrap="word")
+
+
 class uiQuietFrame(tk.Frame):
     def __init__(self, **kwargs):
         super().__init__(kwargs["master"])
@@ -123,6 +129,11 @@ class uiEntry(tk.Entry):
             insertbackground=TEXTCOLOR,
             font=("Arial", 16),
         )
+        # self.bind("<FocusOut>", self.validateOut)
+
+    def validateOut(self, event):
+        if self.get().strip() == "":
+            self.focus_set()
 
 
 class uiComboBox(ttk.Combobox):

@@ -1,10 +1,11 @@
 import ai_helpers as aih
 
+
 class AI:
     def __init__(self):
         None
-        
-    def initData(self,sim_data):
+
+    def initData(self, sim_data):
         # Store the sim_data in case we need to reference something.
         self.sim_data = sim_data
 
@@ -14,12 +15,11 @@ class AI:
         # Set our state
         self.state = 0
 
-
     # Implement AI here.
     # IMPORTANT: Must return commands a dictionary that follows the command
     # specifications. Can return empty dictionary or None if there are no
     # commands.
-    def runAI(self,view):
+    def runAI(self, view):
 
         self.cmd_maker.reset()
 
@@ -31,43 +31,42 @@ class AI:
         # print("--------------AI TURN--------------")
 
         if self.state == 0:
-            self.cmd_maker.addCmd(0,2,aih.CMD_ActivateRadar())
-            self.state+=1
+            self.cmd_maker.addCmd(0, 2, aih.CMD_ActivateRadar())
+            self.state += 1
 
+        comp_views = aih.getSubView(view, "comp")
 
-        comp_views = aih.getSubView(view,'comp')
-    
-        if comp_views != None:
+        if comp_views is not None:
 
             pings = []
 
             for cv in comp_views:
-                if cv['vtype']=='radar':
-                    
-                    pings+=cv['pings']
+                if cv["vtype"] == "radar":
 
-            #self_view = aih.getSubView(view,'self')
+                    pings += cv["pings"]
+
+            # self_view = aih.getSubView(view,'self')
 
             ############################################################
             # Have we run into an object?
             # If so turn...
             need_to_turn = False
-            engine_view = aih.getCompBySlotID(view,'1')
+            engine_view = aih.getCompBySlotID(view, "1")
 
             for ping in pings:
-                if ping['type']=='object':
-                    if ping['distance'] < 2.0:
-                        if engine_view['cur_speed'] != 0:
-                            self.cmd_maker.addCmd(0,1,aih.CMD_SetSpeed(0.0))
+                if ping["type"] == "object":
+                    if ping["distance"] < 2.0:
+                        if engine_view["cur_speed"] != 0:
+                            self.cmd_maker.addCmd(0, 1, aih.CMD_SetSpeed(0.0))
                         else:
-                            self.cmd_maker.addCmd(0,1,aih.CMD_Turn(90.0))
+                            self.cmd_maker.addCmd(0, 1, aih.CMD_Turn(90.0))
                         need_to_turn = True
 
             if not need_to_turn:
-                if engine_view['cur_turnrate'] != 0:
-                    self.cmd_maker.addCmd(0,1,aih.CMD_Turn(0.0))
+                if engine_view["cur_turnrate"] != 0:
+                    self.cmd_maker.addCmd(0, 1, aih.CMD_Turn(0.0))
                 else:
-                    self.cmd_maker.addCmd(0,1,aih.CMD_SetSpeed(1.0))
+                    self.cmd_maker.addCmd(0, 1, aih.CMD_SetSpeed(2.0))
 
             # # If not, make sure we're not turning.
             # if not turning:

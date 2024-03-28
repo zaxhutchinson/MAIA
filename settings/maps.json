@@ -1,24 +1,116 @@
-{
-    "Map 1" : {
-        "name" : "Simple Maze",
-        "edge_obj_id": "0",
-        "desc" : "Simple Maze Map",
-        "width" : 10,
-        "height" : 10,
-        "placed_objects" : {
+{"Map 1" : {
+    "name" : "Simple Maze",
+    "edge_obj_id": "0",
+    "desc" : "Simple Maze Map",
+    "width" : 10,
+    "height" : 10,
+    "placed_objects" : {
 
-        },
-        "placed_items" : {
-            "goal" : [
-                { "x":8, "y":1 }
-            ]
-        },
-        "sides": {
-            "Green" : { 
-                "starting_locations": [ [1,1] ],
-                "facing":0
-            }
-        },
-        "win_states": ["reach_goal"]
+    },
+    "placed_items" : {
+        "goal" : [
+            { "x":8, "y":1 }
+        ]
+    },
+    "sides": {
+        "Green" : { 
+            "starting_locations": [ [1,1] ],
+            "facing":0
+        }
+    },
+    "win_states": ["reach_goal"]
+},
+
+
+"Map 2" : {
+    "name": "Knockback",
+    "edge_obj_id": "cliff",
+    "desc": "Maze where players knock each other back on collision, falling off the edge ends the game",
+    "width": 10,
+    "height": 10,
+    "placed_objects": {
+
+    },
+    "placed_items": {
+      "goal": [
+        {"x":1},
+        {"x":10},
+        {"y":1},
+        {"y":10}
+      ]
+    },
+    "sides": {
+      "Green": {
+        "starting_locations": [[3, 3]],
+        "facing": 1
+      },
+      "Blue": {
+        "starting_locations": [[3, 6]],
+        "facing": 3
+      },
+      "Red": {
+        "starting_locations": [[6, 3]],
+        "facing": 1
+      },
+      "Yellow": {
+        "starting_locations": [[6, 6]],
+        "facing": 3
+      }
+    },
+    "gameplay_mechanics": {
+      "collision_action": "knockback",
+      "knockback_distance": 2
+    },
+    "win_states": ["player_falls_off"]
+  },
+
+
+"Map 3": {
+    "name" : "Capture the Flag",
+    "edge_obj_id": "0",
+    "desc" : "Two teams attempt to capture each other's flag and return to their zone",
+    "width" : 10,
+    "height" : 10,
+    "placed_objects" : {
+},
+
+"placed_items": {
+    "0": [
+    {"x":6,"y":6}
+    ],
+    "1":[
+    {"x":3,"y":3}
+    ],
+    "redbase": [
+        {"x":6,"y":8},
+        {"x":7,"y":7},
+        {"x":8,"y":6}
+    ],
+    "bluebase": [
+        {"x":1,"y":3},
+        {"x":2,"y":2},
+        {"x":3,"y":1}
+    ]
+
+  },
+
+  "sides": {
+    "Red": {
+      "starting_locations": [[1, 8]],
+      "facing": 1,
+      "color":"red"
+    },
+    "Blue": {
+      "starting_locations": [[8, 1]],
+      "facing": 3,
+      "color":"blue"
     }
+  },
+
+
+  "win_states": ["touchdown"]
+}
+
+
+
 }
