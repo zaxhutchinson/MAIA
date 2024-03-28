@@ -10,6 +10,7 @@ from tkinter import messagebox
 from tkinter.font import Font
 from tkinter import ttk
 import tkinter.scrolledtext as scrolltext
+import platform
 from packages.tkmacosx import Button
 
 BGCOLOR = "#E5E5E5"
@@ -22,6 +23,11 @@ ENTRY_DARK = "#222222"
 ENTRY_BG = "salmon1"
 
 BOXFILLCOLOR = "#B2C1E3"
+
+if platform.system() == "Darwin":
+    FONT_SIZE = 16
+else:
+    FONT_SIZE = 12
 
 
 class uiListBox(tk.Listbox):
@@ -38,7 +44,7 @@ class uiListBox(tk.Listbox):
             selectforeground=TEXTCOLOR,
             selectbackground=ENTRY_BG,
             exportselection=0,
-            font=("Arial", 18),
+            font=("Arial", FONT_SIZE),
         )
 
 
@@ -53,7 +59,7 @@ class uiScrollText(tk.scrolledtext.ScrolledText):
             highlightthickness=1,
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
-            font=("Arial", 18),
+            font=("Arial", FONT_SIZE),
         )
 
 
@@ -71,7 +77,7 @@ class uiButton(Button):
             highlightbackground=BTN_LIGHT,
             highlightcolor=BTN_LIGHT,
             relief=tk.FLAT,
-            font=("Arial", 18),
+            font=("Arial", FONT_SIZE),
         )
 
 
@@ -85,15 +91,14 @@ class uiLabel(tk.Label):
             highlightthickness=1,
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
-            font=("Arial", 16),
+            font=("Arial", FONT_SIZE),
         )
 
 
 class uiTextbox(tk.Text):
     def __init__(self, **kwargs):
         super().__init__(kwargs.pop("master"), **kwargs)
-        self.config(wrap="word")
-        self.config(font=("Arial", 16))
+        self.config(wrap="word", font=("Arial", FONT_SIZE))
 
 
 class uiQuietFrame(tk.Frame):
@@ -116,7 +121,7 @@ class uiNotebook(ttk.Notebook):
         # highlightthickness=0,
         # highlightbackground=DARKCOLOR
         # )
-        self.config(font=("Arial", 16))
+        self.config(font=("Arial", FONT_SIZE))
 
 
 class uiEntry(tk.Entry):
@@ -129,7 +134,7 @@ class uiEntry(tk.Entry):
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
             insertbackground=TEXTCOLOR,
-            font=("Arial", 16),
+            font=("Arial", FONT_SIZE),
         )
         # self.bind("<FocusOut>", self.validateOut)
 
@@ -141,7 +146,7 @@ class uiEntry(tk.Entry):
 class uiComboBox(ttk.Combobox):
     def __init__(self, **kwargs):
         super().__init__(kwargs["master"])
-        self.config(font=("Arial", 18))
+        self.config(font=("Arial", FONT_SIZE))
 
 
 class uiCanvas(tk.Canvas):
