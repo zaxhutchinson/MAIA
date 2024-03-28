@@ -533,7 +533,10 @@ class UISettings(tk.Toplevel):
         # OBJECT
         self.objectData = self.ldr.obj_templates
         self.objectIDs = self.ldr.getObjIDs()
-        self.currentObjectData = self.objectData[self.objectIDs[0]]
+        self.objectNames = self.ldr.getObjNames()
+        for i in range(len(self.objectIDs)):
+            self.objectIDs[i] = self.objectIDs[i] + ": " + self.objectNames[i]
+        self.currentObjectData = self.objectData[self.objectIDs[0].split(":")[0]]
         print(self.currentObjectData.getSelfView())
         self.selectObjectsCombo.configure(values=self.objectIDs)
         self.selectObjectsCombo.current(0)
@@ -771,7 +774,7 @@ class UISettings(tk.Toplevel):
         if self.answer:
             currentObject = self.selectObjectsCombo.get()
             print(currentObject)
-            self.currentObjectData = self.objectData[currentObject]
+            self.currentObjectData = self.objectData[currentObject.split(":")[0]]
 
             self.show_object_entry(self.currentObjectData)
         else:
@@ -1325,7 +1328,7 @@ class UISettings(tk.Toplevel):
     def update_objects_json(self):
         if (
             self.objectsIDEntry.get() in self.objectData.keys()
-            and self.objectsIDEntry.get() != self.selectObjectsCombo.get()
+            and self.objectsIDEntry.get() != self.selectObjectsCombo.get().split(":")[0]
         ):
             showwarning(
                 title="Warning",
@@ -1365,6 +1368,12 @@ class UISettings(tk.Toplevel):
                     "points_count", bool(int(self.objectsPointsCountEntry.get()))
                 )
 
+                if self.currentObjectData.getData("name") != self.objectData[self.currentObjectData.getData("id")].getData("name"):
+                    obj_idx = self.selectObjectsCombo.current()
+                    self.objectIDs[obj_idx] = ": ".join([self.objectIDs[obj_idx].split(":")[0], self.currentObjectData.getData("name")])
+                    self.selectObjectsCombo.configure(values= self.objectIDs)
+                    self.selectObjectsCombo.current(len(self.objectIDs) - 1)
+                
                 print(self.currentObjectData.getJSONView())
                 with open("settings/objects.json", "r") as f:
                     objectJSON = json.load(f)
@@ -1379,7 +1388,7 @@ class UISettings(tk.Toplevel):
                     if self.selectObjectsCombo.get() in self.objectData:
                         self.objectData.pop(self.selectObjectsCombo.get())
                     self.objectIDs.pop(self.selectObjectsCombo.current())
-                    self.objectIDs.append(self.currentObjectData.getData("id"))
+                    self.objectIDs.append(self.currentObjectData.getData("id") + ": " + self.currentObjectData.getData("name"))
                     self.selectObjectsCombo.configure(values=self.objectIDs)
                     self.selectObjectsCombo.current(len(self.objectIDs) - 1)
 
@@ -1535,7 +1544,7 @@ class UISettings(tk.Toplevel):
                 "Object ID", "Please enter an ID for the new object."
             )
         if len(self.objectID) != 0:
-            self.objectIDs.append(self.objectID)
+            self.objectIDs.append(self.objectID + ": ")
             self.selectObjectsCombo.configure(values=self.objectIDs)
             self.selectObjectsCombo.current(len(self.objectIDs) - 1)
             self.currentObjectData = obj.Object(
