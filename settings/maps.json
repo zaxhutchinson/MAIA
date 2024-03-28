@@ -31,7 +31,12 @@
             "Red" : { 
                 "starting_locations": [ [8,8] ],
                 "facing":270
+            },
+            "Blue" :{
+                "starting_locations": [ [2,6] ],
+                "facing":180
             }
+            
         },
         "win_states": ["reach_goal"]
     }

@@ -32,6 +32,8 @@ ENTRY_BG = "salmon1"
 
 BOXFILLCOLOR = "#B2C1E3"
 
+globalSpriteList = []
+
 
 class uiListBox(tk.Listbox):
     def __init__(self, master=None):
@@ -180,11 +182,15 @@ class uiCanvas(tk.Canvas):
 
         self.boxSprite = tk.PhotoImage(file="images/barrel_top.png")
 
+        self.counter = 0
+
         self.player = Image.open("images/stick.png")
 
-        self.player2 = Image.open("images/stick.png")
+        self.player.save("images/savedV.png")
 
-        # self.playerTK = ImageTk.PhotoImage((Image.open("images/stick.png")).rotate(90))
+        # self.player2 = Image.open("images/stick.png")
+
+        self.playerTK = ImageTk.PhotoImage((Image.open("images/stick.png")).rotate(90))
 
         # item sprites
         self.red_flag = ImageTk.PhotoImage(Image.open("images/redFlag.png"))
@@ -192,6 +198,9 @@ class uiCanvas(tk.Canvas):
         # self.crownSprite = Image.open("images/crown.png")
 
         self.crownSprite = ImageTk.PhotoImage(Image.open("images/crown.png"))
+
+        # 3:10 stuff
+        self.imageList = []
 
     def drawTile(self, **kwargs):
         x0 = kwargs["x"] * self.cell_size
@@ -237,16 +246,49 @@ class uiCanvas(tk.Canvas):
             return self.create_image(x, y, image=self.gTankSprite)
         elif dd["name"] == "player":
             facing = dd["facing"]
+            self.playerCopy = self.player.copy()
+            # 3:10 stuff
+            """
+            index = len(self.imageList)
+            self.imageList[index] = self.player.copy()
 
-            self.playerRot = self.player.rotate(facing)
+            self.imageList[index + 1] = self.imageList[index].rotate(facing)
 
-            self.playerRotTK = ImageTk.PhotoImage(self.playerRot)
+            return self.create_image(x, y, image=self.imageList[index + 1])
+            """
+            # below stuff kinda works
 
-            self.player2Rot = self.player2.rotate(facing)
+            coord = dd["x"]
 
-            self.player2RotTK = ImageTk.PhotoImage(self.player2Rot)
+            index = len(globalSpriteList)
+            print("Index ISSSS:", index)
+            globalSpriteList.append(self.player.copy())
+            print(globalSpriteList)
 
-            self.create_image(x - 60, y - 60, image=self.player2RotTK)
+            newVar = globalSpriteList[-1]
+            print("Now I'm using", globalSpriteList[-1])
+            globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
+            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
+            self.create_image(x, y, image=globalSpriteList[-1])
+            """
+            if coord == 1:
+                self.rot1 = self.player.rotate(facing)
+                self.final1 = ImageTk.PhotoImage(self.rot1)
+                return self.create_image(x, y, image=self.final1)
+
+            else:
+                self.rot2 = self.playerCopy.rotate(facing)
+                self.final2 = ImageTk.PhotoImage(self.rot2)
+                return self.create_image(x, y, image=self.final2)
+            # self.playerRot = self.player.rotate(facing)"""
+
+            # self.playerRotTK = ImageTk.PhotoImage(self.playerRot)
+
+            # self.player2Rot = self.player2.rotate(facing)
+
+            # self.player2RotTK = ImageTk.PhotoImage(self.player2Rot)
+
+            # self.create_image(x - 60, y - 60, image=self.player2RotTK)
 
             # self.player = ImageTk.PhotoImage(self.player)
 
@@ -255,7 +297,7 @@ class uiCanvas(tk.Canvas):
 
             # self.playerRot = self.player.rotate(330)
 
-            print(facing)
+            # print(facing)
 
             # self.playerTK = ImageTk.PhotoImage(Image.open("images/stick.png"))
             # self.playerTK2 = ImageTk.PhotoImage(self.player2)
@@ -263,7 +305,7 @@ class uiCanvas(tk.Canvas):
             # self.playerRot = self.player
             # self.create_image(x - 60, y - 60, image=self.playerTK)
             # self.player = Image.open("images/stick.png")
-            return self.create_image(x, y, image=self.playerRotTK)
+            # return self.create_image(x, y, image=self.playerRotTK)
             # return self.create_image(x, y, image=self.player)
         elif dd["name"] == "Box":
             # facing = dd["facing"]
