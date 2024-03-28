@@ -10,6 +10,7 @@ from ui_widgets import *
 
 class UIMapConfig(tk.Toplevel):
     def __init__(self, _map, master=None, logger=None):
+        """Sets window and frame information and calls function to build UI"""
         super().__init__(master)
         self.master = master
         self.logger = logger
@@ -31,6 +32,12 @@ class UIMapConfig(tk.Toplevel):
         self.build_ui()
 
     def build_ui(self):
+        """Generates UI of map
+
+        Set map info, generate canvas, draw tiles,
+        draw placed objects, draw placed items, draw
+        ai-controlled objects
+        """
         self.cell_size = 32
         self.map_obj_char_size = 24
         self.map_item_char_size = 10
@@ -88,6 +95,7 @@ class UIMapConfig(tk.Toplevel):
         self.initItems()
 
     def add_objects(self):
+        """Add edges and placed object to obj list"""
         # Create the map border
         edge_obj_id = self.map.getData("edge_obj_id")
         edge_coords = self.map.getListOfEdgeCoordinates()
@@ -117,6 +125,7 @@ class UIMapConfig(tk.Toplevel):
                     self.objs[data["uuid"]] = new_obj
 
     def add_ai_objects(self):
+        """Add ai-controlled object to obj list"""
         # Add possible team and ai-controlled obj locations
         sides = self.map.getData("sides")
         for iid, lst in sides.items():
@@ -136,6 +145,7 @@ class UIMapConfig(tk.Toplevel):
                 self.objs[data["uuid"]] = new_obj
 
     def add_items(self):
+        """Add placed items to item list"""
         # Add all placed items
         pl_items = self.map.getData("placed_items")
         for iid, lst in pl_items.items():
@@ -149,7 +159,7 @@ class UIMapConfig(tk.Toplevel):
                     self.items[data["uuid"]] = new_item
 
     def draw_tiles(self):
-
+        """Draw tiles on canvas"""
         w = self.map_width + 2
         h = self.map_height + 2
 
@@ -178,9 +188,11 @@ class UIMapConfig(tk.Toplevel):
                     self.canvas_background_RCnum_ids.append(RCnum_id)
 
     def addObjectDrawID(self, _uuid, _drawID):
+        """Add object draw id to obj draw id list"""
         self.obj_drawIDs[_uuid] = _drawID
 
     def getObjectDrawID(self, _uuid):
+        """Get object draw id"""
         try:
             return self.obj_drawIDs[_uuid]
         except KeyError:
@@ -190,6 +202,11 @@ class UIMapConfig(tk.Toplevel):
             return None
 
     def initObjects(self):
+        """Draw initial object state
+
+        Get and add draw date for every object to draw data list
+        Draw each object on canvas
+        """
         draw_data = []
 
         for curr_obj in self.objs.values():
@@ -200,9 +217,11 @@ class UIMapConfig(tk.Toplevel):
             self.addObjectDrawID(dd["uuid"], obj_id)
 
     def addItemDrawID(self, _uuid, _drawID):
+        """Add item draw id to item draw id list"""
         self.item_drawIDs[_uuid] = _drawID
 
     def getItemDrawID(self, _uuid):
+        """Get item draw id"""
         try:
             return self.item_drawIDs[_uuid]
         except KeyError:
@@ -212,6 +231,11 @@ class UIMapConfig(tk.Toplevel):
             return None
 
     def initItems(self):
+        """Draw initial item state
+
+        Get and add draw date for every item to draw data list
+        Draw each item on canvas
+        """
         draw_data = []
 
         for curr_items in self.items.values():
