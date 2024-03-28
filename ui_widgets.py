@@ -38,7 +38,7 @@ class uiListBox(tk.Listbox):
             selectforeground=TEXTCOLOR,
             selectbackground=ENTRY_BG,
             exportselection=0,
-            font=("Arial", 16),
+            font=("Arial", 18),
         )
 
 
@@ -53,7 +53,7 @@ class uiScrollText(tk.scrolledtext.ScrolledText):
             highlightthickness=1,
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
-            font=("Arial", 16),
+            font=("Arial", 18),
         )
 
 
@@ -71,7 +71,7 @@ class uiButton(Button):
             highlightbackground=BTN_LIGHT,
             highlightcolor=BTN_LIGHT,
             relief=tk.FLAT,
-            font=("Arial", 14),
+            font=("Arial", 18),
         )
 
 
@@ -85,7 +85,7 @@ class uiLabel(tk.Label):
             highlightthickness=1,
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
-            font=("Arial", 20),
+            font=("Arial", 16),
         )
 
 
@@ -121,12 +121,14 @@ class uiEntry(tk.Entry):
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
             insertbackground=TEXTCOLOR,
+            font=("Arial", 16),
         )
 
 
 class uiComboBox(ttk.Combobox):
     def __init__(self, **kwargs):
         super().__init__(kwargs["master"])
+        self.config(font=("Arial", 18))
 
 
 class uiCanvas(tk.Canvas):
