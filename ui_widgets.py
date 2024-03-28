@@ -93,6 +93,7 @@ class uiTextbox(tk.Text):
     def __init__(self, **kwargs):
         super().__init__(kwargs.pop("master"), **kwargs)
         self.config(wrap="word")
+        self.config(font=("Arial", 16))
 
 
 class uiQuietFrame(tk.Frame):
@@ -115,6 +116,7 @@ class uiNotebook(ttk.Notebook):
         # highlightthickness=0,
         # highlightbackground=DARKCOLOR
         # )
+        self.config(font=("Arial", 16))
 
 
 class uiEntry(tk.Entry):
