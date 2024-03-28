@@ -100,6 +100,12 @@ class Loader:
     def getCompIDs(self):
         return list(self.comp_templates.keys())
 
+    def getCompNames(self):
+        compNames = []
+        for component in self.comp_templates.values():
+            compNames.append(component.getData("name"))
+        return compNames
+
     def getCompTypes(self):
         self.compTypes = []
         for self.component in self.comp_templates.values():

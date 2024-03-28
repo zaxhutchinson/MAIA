@@ -512,9 +512,13 @@ class UISettings(tk.Toplevel):
         # COMPONENT
         self.componentData = self.ldr.comp_templates
         self.componentIDs = self.ldr.getCompIDs()
-        # self.componentNames = self.ldr.
+        self.componentNames = self.ldr.getCompNames()
+        for i in range(len(self.componentIDs)):
+            self.componentIDs[i] = self.componentIDs[i] + ": " + self.componentNames[i]
         self.componentTypes = self.ldr.getCompTypes()
-        self.currentComponentData = self.componentData[self.componentIDs[0]]
+        self.currentComponentData = self.componentData[
+            self.componentIDs[0].split(":")[0]
+        ]
         self.componentTypeAttr = self.currentComponentData.view_keys
 
         self.selectComponentCombo.configure(values=self.componentIDs)
@@ -703,10 +707,10 @@ class UISettings(tk.Toplevel):
         if self.answer is True:
             currentComponentIdx = self.selectComponentCombo.current()
             self.componentTypeAttr = self.componentData[
-                self.componentIDs[currentComponentIdx]
+                self.componentIDs[currentComponentIdx].split(":")[0]
             ].view_keys
             self.currentComponentData = self.componentData[
-                self.componentIDs[currentComponentIdx]
+                self.componentIDs[currentComponentIdx].split(":")[0]
             ]
             self.show_component_entries(self.currentComponentData)
         else:
@@ -1145,20 +1149,20 @@ class UISettings(tk.Toplevel):
     def update_components_json(self):
         if (
             self.componentsIDEntry.get() in self.componentData.keys()
-            and self.componentsIDEntry.get() != self.selectComponentCombo.get()
+            and self.componentsIDEntry.get() != self.selectComponentCombo.get().split(":")[0]
         ):
             showwarning(
                 title="Warning",
                 message="The ID you are trying to use is already in use by another component. Please use another ID.",
             )
         else:
+            print("a")
             if (
                 self.componentsIDEntry.get() != ""
                 and self.componentsNameEntry.get() != ""
                 and self.componentsTypeAttr1Entry.get() != ""
-                and self.componentsTypeAttr2Entry.get() != ""
-                and self.componentsTypeAttr3Entry != ""
             ):
+                print("b")
                 print(self.currentComponentData)
                 self.currentComponentData.setData("id", self.componentsIDEntry.get())
                 self.currentComponentData.setData(
@@ -1270,19 +1274,30 @@ class UISettings(tk.Toplevel):
                         ),
                     )
 
+                if self.currentComponentData.getData("name") != self.componentData[self.currentComponentData.getData("id")].getData("name"):
+                    print("c")
+                    comp_idx = self.selectComponentCombo.current()
+                    self.currentCompIDs[comp_idx] = ": ".join([self.currentCompIDs[comp_idx].split(":")[0], self.currentComponentData.getData("name")])
+                    self.selectComponentCombo.configure(values=self.componentIDs)
+                    self.selectComponentCombo.current(len(self.componentIDs) - 1)
                 with open("settings/components.json", "r") as f:
                     componentJSON = json.load(f)
-
+                print("d")
                 if (
                     self.currentComponentData.getData("id")
                     != self.selectComponentCombo.get()
                 ):
+                    print("e")
                     if self.selectComponentCombo.get() in componentJSON:
                         componentJSON.pop(self.selectComponentCombo.get())
                     if self.selectComponentCombo.get() in self.componentData:
                         self.componentData.pop(self.selectComponentCombo.get())
                     self.componentIDs.pop(self.selectComponentCombo.current())
-                    self.componentIDs.append(self.currentComponentData.getData("id"))
+                    self.componentIDs.append(
+                        self.currentComponentData.getData("id")
+                        + ": "
+                        + self.currentComponentData.getData("name")
+                    )
                     self.selectComponentCombo.configure(values=self.componentIDs)
                     self.selectComponentCombo.current(len(self.componentIDs) - 1)
 
@@ -1467,7 +1482,7 @@ class UISettings(tk.Toplevel):
                 "Component ID", "Please enter an ID for the new component."
             )
         if len(self.componentID) != 0:
-            self.componentIDs.append(self.componentID)
+            self.componentIDs.append(self.componentID + ": ")
             self.selectComponentCombo.configure(values=self.componentIDs)
             self.selectComponentCombo.current(len(self.componentIDs) - 1)
             self.newDict = {"id": self.componentID, "name": "", "ctype": ""}
