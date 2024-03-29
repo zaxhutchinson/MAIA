@@ -33,6 +33,7 @@ ENTRY_BG = "salmon1"
 BOXFILLCOLOR = "#B2C1E3"
 
 globalSpriteList = []
+globalTankList = []
 
 
 class uiListBox(tk.Listbox):
@@ -172,7 +173,9 @@ class uiCanvas(tk.Canvas):
 
         # object sprites # excessive comments kept for debugging purposes
         self.tank = ImageTk.PhotoImage(Image.open("images/bot2.png"))
-        self.rTankSprite = ImageTk.PhotoImage(Image.open("images/red_up1.png"))
+        # self.rTankSprite = ImageTk.PhotoImage(Image.open("images/red_up1.png"))
+
+        self.rTankSprite = Image.open("images/red_up1.png")
         self.bTankSprite = ImageTk.PhotoImage(Image.open("images/blue_up1.png"))
         self.gTankSprite = ImageTk.PhotoImage(Image.open("images/green_up1.png"))
         # self.player = Image.open("images/stick.png")
@@ -230,14 +233,34 @@ class uiCanvas(tk.Canvas):
             + self.cell_size
         )
 
-        print("dd contains: ", dd)
+        # index = len(globalSpriteList)
+
+        # print("dd contains: ", dd)
 
         if dd["name"] == "tank":
+
             return self.create_image(x, y, image=self.tank)
         elif dd["name"] == "Indestructible Block":
             return self.create_text(x, y, text="X", fill=dd["fill"], font=self.obj_font)
         elif dd["name"] == "Red Tank":
-            return self.create_image(x, y, image=self.rTankSprite)
+
+            facing = dd["facing"]
+            self.exactcopy = self.rTankSprite.copy()
+            globalTankList.append(self.rTankSprite.copy())
+            print("Added Red Tank", globalTankList)
+            globalTankList[-1] = globalTankList[-1].rotate(facing)
+            globalTankList[-1] = ImageTk.PhotoImage(globalTankList[-1])
+            self.create_image(x, y, image=globalTankList[-1])
+
+            """facing = dd["facing"]
+            rTankCopy = self.rTankSprite.copy()
+            globalSpriteList.append(self.rTankSprite.copy())
+            print("LOOK HERE: ", globalSpriteList)
+            newVar = globalSpriteList[-1]
+            globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
+            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
+            return self.create_image(x, y, image=globalSpriteList[-1])
+            # return self.create_image(x, y, image=self.rTankSprite)"""
         elif (
             dd["name"] == "Blue Tank"
         ):  # L is used for blue because B is already used for box
@@ -247,26 +270,15 @@ class uiCanvas(tk.Canvas):
         elif dd["name"] == "player":
             facing = dd["facing"]
             self.playerCopy = self.player.copy()
-            # 3:10 stuff
-            """
-            index = len(self.imageList)
-            self.imageList[index] = self.player.copy()
 
-            self.imageList[index + 1] = self.imageList[index].rotate(facing)
-
-            return self.create_image(x, y, image=self.imageList[index + 1])
-            """
             # below stuff kinda works
 
-            coord = dd["x"]
-
-            index = len(globalSpriteList)
-            print("Index ISSSS:", index)
+            # index = len(globalSpriteList)
             globalSpriteList.append(self.player.copy())
-            print(globalSpriteList)
+            print("Added player: ", globalSpriteList)
 
-            newVar = globalSpriteList[-1]
-            print("Now I'm using", globalSpriteList[-1])
+            # newVar = globalSpriteList[-1]
+            # print("Now I'm using", globalSpriteList[-1])
             globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
             globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
             self.create_image(x, y, image=globalSpriteList[-1])
@@ -281,33 +293,8 @@ class uiCanvas(tk.Canvas):
                 self.final2 = ImageTk.PhotoImage(self.rot2)
                 return self.create_image(x, y, image=self.final2)
             # self.playerRot = self.player.rotate(facing)"""
-
-            # self.playerRotTK = ImageTk.PhotoImage(self.playerRot)
-
-            # self.player2Rot = self.player2.rotate(facing)
-
-            # self.player2RotTK = ImageTk.PhotoImage(self.player2Rot)
-
-            # self.create_image(x - 60, y - 60, image=self.player2RotTK)
-
-            # self.player = ImageTk.PhotoImage(self.player)
-
-            # self.player = Image.open("images/stick.png")
-            # self.player2 = Image.open("images/stick.png")
-
-            # self.playerRot = self.player.rotate(330)
-
-            # print(facing)
-
-            # self.playerTK = ImageTk.PhotoImage(Image.open("images/stick.png"))
-            # self.playerTK2 = ImageTk.PhotoImage(self.player2)
-
-            # self.playerRot = self.player
-            # self.create_image(x - 60, y - 60, image=self.playerTK)
-            # self.player = Image.open("images/stick.png")
-            # return self.create_image(x, y, image=self.playerRotTK)
-            # return self.create_image(x, y, image=self.player)
         elif dd["name"] == "Box":
+
             # facing = dd["facing"]
 
             # self.boxSpriteRot = self.boxSprite.rotate(facing)
