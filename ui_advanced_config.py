@@ -13,6 +13,7 @@ from tkinter.messagebox import askyesno
 from tkinter.messagebox import showwarning
 from tkinter.simpledialog import askstring
 
+import ui_map_config
 from ui_widgets import *
 
 
@@ -63,6 +64,8 @@ class UISettings(tk.Toplevel):
         self.prev_component_combo = None
 
         self.build_ui()
+
+        self.UIMap = None
 
     def validate_number_entry(self, input):
         input.replace(".", "", 1)
@@ -410,6 +413,9 @@ class UISettings(tk.Toplevel):
         self.selectMapsCombo = uiComboBox(master=self.mapsColumn)
         self.selectMapsCombo.configure(state="readonly")
         self.mapsLabel = uiLabel(master=self.mapsColumn, text="Maps")
+        self.mapsShowButton = uiButton(
+            master=self.mapsColumn, command=self.show_map, text="Show"
+        )
         self.mapsUpdateButton = uiButton(
             master=self.mapsColumn, command=self.update_maps_json, text="Update"
         )
@@ -458,7 +464,7 @@ class UISettings(tk.Toplevel):
         self.mapsHeightEntry.config(
             validate="key", validatecommand=(self.validateNum, "%P")
         )
-        self.mapsUpdateButton.grid(
+        self.mapsShowButton.grid(
             row=9,
             column=1,
             columnspan=2,
@@ -468,7 +474,7 @@ class UISettings(tk.Toplevel):
             padx=10,
             pady=10,
         )
-        self.mapsCreateButton.grid(
+        self.mapsUpdateButton.grid(
             row=10,
             column=1,
             columnspan=2,
@@ -478,8 +484,18 @@ class UISettings(tk.Toplevel):
             padx=10,
             pady=10,
         )
-        self.mapsDeleteButton.grid(
+        self.mapsCreateButton.grid(
             row=11,
+            column=1,
+            columnspan=2,
+            sticky="nsew",
+            ipadx=2,
+            ipady=2,
+            padx=10,
+            pady=10,
+        )
+        self.mapsDeleteButton.grid(
+            row=12,
             column=1,
             columnspan=2,
             sticky="nsew",
@@ -1626,3 +1642,9 @@ class UISettings(tk.Toplevel):
         self.selectMapsCombo.configure(values=self.mapIDs)
         self.selectMapsCombo.current(len(self.mapIDs) - 1)
         self.change_maps_entry_widgets()
+
+    ### SHOW MAP WINDOW ###
+    def show_map(self):
+        self.UIMap = ui_map_config.UIMapConfig(
+            self.currentMapData, self, logger=self.logger
+        )
