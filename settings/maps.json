@@ -10,12 +10,9 @@
                 {"x": 4, "y":4}
             ],
             "red_tank" : [
-                { "x":7, "y":7, "facing": 90}
-            ],
-            "red_tank" : [
-                { "x":2, "y":7, "facing": 270}
+                { "x":7, "y":7, "facing": 90},
+                { "x":2, "y":2, "facing": 270}
             ]
-
         },
         "placed_items" : {
             "goal" : [

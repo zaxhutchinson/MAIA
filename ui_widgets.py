@@ -220,6 +220,7 @@ class uiCanvas(tk.Canvas):
 
     def drawObj(self, **kwargs):  # excessive comments kept for debugging purposes
         dd = kwargs["dd"]  # what to draw
+        print("This be kwargs :) -- ", kwargs)
         x = (  # x coord
             dd["x"] * self.cell_size
             + self.obj_char_size / 2
@@ -237,20 +238,20 @@ class uiCanvas(tk.Canvas):
 
         # print("dd contains: ", dd)
 
-        if dd["name"] == "tank":
+        if dd["text"] == "tank":
 
             return self.create_image(x, y, image=self.tank)
-        elif dd["name"] == "Indestructible Block":
+        elif dd["text"] == "X":
             return self.create_text(x, y, text="X", fill=dd["fill"], font=self.obj_font)
-        elif dd["name"] == "Red Tank":
+        elif dd["text"] == "R":
 
-            facing = dd["facing"]
+            # facing = dd["facing"]
             self.exactcopy = self.rTankSprite.copy()
             globalTankList.append(self.rTankSprite.copy())
             print("Added Red Tank", globalTankList)
-            globalTankList[-1] = globalTankList[-1].rotate(facing)
+            # globalTankList[-1] = globalTankList[-1].rotate(facing)
             globalTankList[-1] = ImageTk.PhotoImage(globalTankList[-1])
-            self.create_image(x, y, image=globalTankList[-1])
+            return self.create_image(x, y, image=globalTankList[-1])
 
             """facing = dd["facing"]
             rTankCopy = self.rTankSprite.copy()
@@ -262,12 +263,12 @@ class uiCanvas(tk.Canvas):
             return self.create_image(x, y, image=globalSpriteList[-1])
             # return self.create_image(x, y, image=self.rTankSprite)"""
         elif (
-            dd["name"] == "Blue Tank"
+            dd["text"] == "Blue Tank"
         ):  # L is used for blue because B is already used for box
             return self.create_image(x, y, image=self.bTankSprite)
-        elif dd["name"] == "Green Tank":
+        elif dd["text"] == "Green Tank":
             return self.create_image(x, y, image=self.gTankSprite)
-        elif dd["name"] == "player":
+        elif dd["text"] == "P":
             facing = dd["facing"]
             self.playerCopy = self.player.copy()
 
@@ -281,7 +282,8 @@ class uiCanvas(tk.Canvas):
             # print("Now I'm using", globalSpriteList[-1])
             globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
             globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
-            self.create_image(x, y, image=globalSpriteList[-1])
+            return self.create_image(x, y, image=globalSpriteList[-1])
+            print("Coords are: ", x, y)
             """
             if coord == 1:
                 self.rot1 = self.player.rotate(facing)
@@ -293,7 +295,7 @@ class uiCanvas(tk.Canvas):
                 self.final2 = ImageTk.PhotoImage(self.rot2)
                 return self.create_image(x, y, image=self.final2)
             # self.playerRot = self.player.rotate(facing)"""
-        elif dd["name"] == "Box":
+        elif dd["text"] == "B":
 
             # facing = dd["facing"]
 
@@ -328,6 +330,7 @@ class uiCanvas(tk.Canvas):
             + self.char_offset
             + self.cell_size
         )
+        print("KWARGS ID: ", kwargs["objID"])
         self.coords(kwargs["objID"], x, y)
 
     def drawItem(self, **kwargs):
