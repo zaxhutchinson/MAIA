@@ -33,7 +33,7 @@
         "density":1000,
         "comp_ids" : ["0","1000","2000","3000","4000","5000"],
         "points_count" : true,
-        "sprite_path" : "images/blue_up1.png"
+        "sprite_path" : "images/blue_right1.png"
     },
     "red_tank" : {
         "id": "red_tank",
@@ -45,7 +45,7 @@
         "density":1000,
         "comp_ids" : ["0","1000","2000","3000","4000","5000"],
         "points_count" : true,
-        "sprite_path" : "images/red_up1.png"
+        "sprite_path" : "images/red_right1.png"
 
     },
     "player" : {

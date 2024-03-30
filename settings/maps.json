@@ -9,8 +9,8 @@
             "1" : [
                 {"x": 4, "y":4, "facing": 90}
             ],
-            "blue_tank" : [
-                { "x":7, "y":7, "facing": 90},
+            "red_tank" : [
+                { "x":7, "y":7, "facing": 270},
                 { "x":2, "y":2, "facing": 270}
             ]
         },
@@ -30,7 +30,7 @@
         "sides": {
             "Green" : { 
                 "starting_locations": [ [1,1] ],
-                "facing":0
+                "facing":270
             },
             "Red" : { 
                 "starting_locations": [ [8,8] ],
@@ -38,7 +38,7 @@
             },
             "Blue" :{
                 "starting_locations": [ [2,6] ],
-                "facing":180
+                "facing":270
             }
             
         },

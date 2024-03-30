@@ -205,7 +205,9 @@ class uiCanvas(tk.Canvas):
 
         try:
             self.sprite = Image.open(dd["sprite_path"])
-            facing = dd["facing"]
+            facing = (  # sim usee clock-wise coords, ui uses counter-clockwise coords
+                dd["facing"] * -1
+            )
             globalSpriteList.append(self.sprite.copy())
             globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
             globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
