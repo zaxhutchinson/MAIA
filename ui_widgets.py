@@ -167,7 +167,7 @@ class uiCanvas(tk.Canvas):
         self.rTankSprite = Image.open("images/red_up1.png")
         self.bTankSprite = Image.open("images/blue_up1.png")
         self.boxSprite = Image.open("images/barrel_top.png")
-        self.player = Image.open("images/stick.png")
+        # self.player = Image.open("images/stick.png")
 
         # item sprites
         self.red_flag = ImageTk.PhotoImage(Image.open("images/redFlag.png"))
@@ -189,7 +189,7 @@ class uiCanvas(tk.Canvas):
 
     def drawObj(self, **kwargs):
         dd = kwargs["dd"]  # what to draw
-        print("This be kwargs :) -- ", kwargs)
+        # print("This be kwargs :) -- ", kwargs)
         x = (  # x coord
             dd["x"] * self.cell_size
             + self.obj_char_size / 2
@@ -203,33 +203,17 @@ class uiCanvas(tk.Canvas):
             + self.cell_size
         )
 
-        if dd["text"] == "X":
-            return self.create_text(x, y, text="X", fill=dd["fill"], font=self.obj_font)
-        elif dd["name"] == "Red Tank":
+        try:
+            self.sprite = Image.open(dd["sprite_path"])
             facing = dd["facing"]
-            globalSpriteList.append(self.rTankSprite.copy())
+            globalSpriteList.append(self.sprite.copy())
             globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
             globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
             return self.create_image(x, y, image=globalSpriteList[-1])
-        elif dd["name"] == "Blue Tank":
-            facing = dd["facing"]
-            globalSpriteList.append(self.bTankSprite.copy())
-            globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
-            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
-            return self.create_image(x, y, image=globalSpriteList[-1])
-        elif dd["name"] == "player":
-            facing = dd["facing"]
-            globalSpriteList.append(self.player.copy())
-            globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
-            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
-            return self.create_image(x, y, image=globalSpriteList[-1])
-        elif dd["name"] == "Box":
-            facing = dd["facing"]
-            globalSpriteList.append(self.boxSprite.copy())
-            globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
-            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
-            return self.create_image(x, y, image=globalSpriteList[-1])
-            # drawing it
+        except:
+            return self.create_text(
+                x, y, text=dd["text"], fill=dd["fill"], font=self.obj_font
+            )
 
     def removeObj(self, objID):
         self.delete(objID)
@@ -253,7 +237,7 @@ class uiCanvas(tk.Canvas):
             + self.char_offset
             + self.cell_size
         )
-        print("KWARGS ID: ", kwargs["objID"])
+        # print("KWARGS ID: ", kwargs["objID"])
         self.coords(kwargs["objID"], x, y)
 
     def drawItem(self, **kwargs):
@@ -271,15 +255,14 @@ class uiCanvas(tk.Canvas):
             + self.char_offset
             + self.cell_size
         )
-        if dd["name"] == "red_flag":
-            return self.create_image(x, y, image=self.red_flag)
-        elif dd["name"] == "blue_flag":
-            return self.create_image(x, y, image=self.blue_flag)
-        elif dd["name"] == "goal":
-            return self.create_image(x, y, image=self.crownSprite)
-        else:
-            return self.create_text(  # follow this model for implementing both accessing from JSON and back-up letter if image doesn't work
-                x, y, text=dd["text"], fill=dd["fill"], font=self.item_font
+        try:
+            self.sprite = Image.open(dd["sprite_path"])
+            globalSpriteList.append(self.sprite.copy())
+            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
+            return self.create_image(x, y, image=globalSpriteList[-1])
+        except:
+            return self.create_text(
+                x, y, text=dd["text"], fill=dd["fill"], font=self.obj_font
             )
 
     def updateDrawnItem(self, **kwargs):

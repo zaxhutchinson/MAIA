@@ -5,7 +5,8 @@
         "weight":1,
         "bulk":1,
         "text":"B",
-        "fill":"blue"
+        "fill":"blue",
+        "sprite_path":"images/blueFlag.png"
     },
     "1": {
         "id":"1",
@@ -13,7 +14,8 @@
         "weight":1,
         "bulk":1,
         "text":"R",
-        "fill":"red"
+        "fill":"red",
+        "sprite_path":"images/redFlag.png"
     },
     "goal": {
         "id":"goal",
@@ -21,6 +23,7 @@
         "weight":1000000,
         "bulk":100000000,
         "text":"G",
-        "fill":"yellow"
+        "fill":"yellow",
+        "sprite_path":"images/crown.png"
     }
 }

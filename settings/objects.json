@@ -8,7 +8,8 @@
         "health" : 100000000000000000000,
         "density":1000,
         "comp_ids" : [],
-        "points_count" : false
+        "points_count" : false,
+        "sprite_path" : "none"
     },
     "1" : {
         "id": "1",
@@ -19,7 +20,8 @@
         "health" : 10,
         "density":1000,
         "comp_ids" : [],
-        "points_count" : false
+        "points_count" : false,
+        "sprite_path" : "images/barrel_top.png"
     },
     "blue_tank" : {
         "id": "blue_tank",
@@ -30,7 +32,8 @@
         "health" : 100,
         "density":1000,
         "comp_ids" : ["0","1000","2000","3000","4000","5000"],
-        "points_count" : true
+        "points_count" : true,
+        "sprite_path" : "images/blue_up1.png"
     },
     "red_tank" : {
         "id": "red_tank",
@@ -41,7 +44,9 @@
         "health" : 100,
         "density":1000,
         "comp_ids" : ["0","1000","2000","3000","4000","5000"],
-        "points_count" : true
+        "points_count" : true,
+        "sprite_path" : "images/red_up1.png"
+
     },
     "player" : {
         "id": "player",
@@ -52,6 +57,7 @@
         "health" : 100,
         "density":1000,
         "comp_ids" : ["0","2000","3000"],
-        "points_count" : true
+        "points_count" : true,
+        "sprite_path": "images/stick.png"
     }
 }
