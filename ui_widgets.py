@@ -188,6 +188,7 @@ class uiCanvas(tk.Canvas):
         # )
 
     def drawObj(self, **kwargs):
+        # This function displays the object in the UI
         dd = kwargs["dd"]  # what to draw
         # print("This be kwargs :) -- ", kwargs)
         x = (  # x coord
