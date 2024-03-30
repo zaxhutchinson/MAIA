@@ -7,7 +7,7 @@ import vec2
 import math
 import zmap
 import ui_homepage
-import aboutPage
+import ui_about
 
 
 # Initialize the log files
@@ -21,9 +21,9 @@ class App(tk.Tk):
         formatter = logging.Formatter("%(name)s - %(message)s")
         handler.setFormatter(formatter)
         logger.addHandler(handler)
-
         self.title("MAIA")
-
+        self.geometry("1400x700")
+        self.minsize(width=1400, height=700)
         self.container = tk.Frame(self)
         self.container.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
         self.container.grid_rowconfigure(0, weight=1)
@@ -37,7 +37,7 @@ class App(tk.Tk):
         self.frames["SetupPage"] = ui_setup.UISetup(
             master=self.container, controller=self, logger=logger
         )
-        self.frames["AboutPage"] = aboutPage.aboutPage(
+        self.frames["AboutPage"] = ui_about.ui_about(
             master=self.container, controller=self, logger=logger
         )
 

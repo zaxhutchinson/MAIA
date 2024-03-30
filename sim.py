@@ -17,6 +17,9 @@ import gstate
 import zfunctions
 
 
+from ui_scoreboard import displayScoreboard
+
+
 class Sim:
     def __init__(self, imsgr):
         self.reset()
@@ -413,6 +416,7 @@ class Sim:
 
                 # Check if the sim is over.
                 if self.checkEndOfSim():
+                    displayScoreboard()
                     return
                 else:
                     self.tick += 1

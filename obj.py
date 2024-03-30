@@ -212,6 +212,12 @@ class Object:
 
         return view
 
+    def getJSONView(self):
+        view = {}
+        for key in self.JSON_keys:
+            view[key] = self.getData(key)
+        return view
+
     def getBestDisplayName(self):
         if self.data["callsign"] is not None:
             return self.data["callsign"]

@@ -25,5 +25,21 @@
         "text":"G",
         "fill":"yellow",
         "sprite_path":"images/crown.png"
+    },
+    "redbase":{
+        "id":"redbase",
+        "name":"red_base",
+        "weight":1000000,
+        "bulk":100000000,
+        "text":"X",
+        "fill":"red"
+    },
+    "bluebase":{
+        "id":"bluebase",
+        "name":"blue_base",
+        "weight":1000000,
+        "bulk":100000000,
+        "text":"X",
+        "fill":"blue"
     }
 }

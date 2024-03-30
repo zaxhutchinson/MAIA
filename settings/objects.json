@@ -1,5 +1,5 @@
 {
-    "0" : {
+    "0": {
         "id": "0",
         "name" : "Indestructible Block",
         "fill_alive":"gray1",
@@ -10,8 +10,9 @@
         "comp_ids" : [],
         "points_count" : false,
         "sprite_path" : "none"
+
     },
-    "1" : {
+    "1": {
         "id": "1",
         "name" : "Box",
         "fill_alive":"tan4",
@@ -23,7 +24,7 @@
         "points_count" : false,
         "sprite_path" : "images/barrel_top.png"
     },
-    "blue_tank" : {
+    "blue_tank": {
         "id": "blue_tank",
         "name" : "Blue Tank",
         "fill_alive":"blue1",
@@ -35,10 +36,54 @@
         "points_count" : true,
         "sprite_path" : "images/blue_right1.png"
     },
-    "red_tank" : {
+    "red_tank": {
         "id": "red_tank",
-        "name" : "Red Tank",
-        "fill_alive":"red1",
+        "name": "Red Tank",
+        "fill_alive": "red1",
+        "fill_dead": "black",
+        "text": "&",
+        "health": 100,
+        "density": 1000,
+        "comp_ids": [
+            "0",
+            "1000",
+            "2000",
+            "3000",
+            "4000",
+            "5000"
+        ],
+        "points_count": true
+    },
+    "player": {
+        "id": "player",
+        "name": "player",
+        "fill_alive": "green",
+        "fill_dead": "black",
+        "text": "&",
+        "health": 100,
+        "density": 1000,
+        "comp_ids": [
+            "0",
+            "2000",
+            "3000"
+        ],
+        "points_count": true
+    },
+    "start_loc": {
+        "id": "start_loc",
+        "name": "Starting Location",
+        "fill_alive": "white",
+        "fill_dead": "black",
+        "text": "S",
+        "health": 0,
+        "density": 0,
+        "comp_ids": [],
+        "points_count": false
+    },
+    "cliff": {
+        "id":"cliff",
+        "name":"cliff",
+        "fill_alive":"red",
         "fill_dead":"black",
         "text":"R",
         "health" : 100,
@@ -46,12 +91,11 @@
         "comp_ids" : ["0","1000","2000","3000","4000","5000"],
         "points_count" : true,
         "sprite_path" : "images/red_right1.png"
-
     },
-    "player" : {
+    "fastplayer" : {
         "id": "player",
         "name" : "player",
-        "fill_alive":"green",
+        "fill_alive":"red",
         "fill_dead":"black",
         "text":"P",
         "health" : 100,
@@ -60,4 +104,5 @@
         "points_count" : true,
         "sprite_path": "images/stick.png"
     }
+
 }

@@ -1,40 +1,17 @@
 import tkinter as tk
-from tkinter import messagebox
-from tkinter.font import Font
-import tkinter.scrolledtext as scrolltext
-import importlib.util
-import sys
-import os
-import queue
-import logging
 
-import sim
-import re
-import loader
-import ui_sim
-import msgs
 from zexceptions import *
 from ui_widgets import *
-import ui_setup
-import ui_homepage
+
 from main import *
 
 
-class aboutPage(tk.Frame):
+class ui_about(tk.Frame):
     def __init__(self, controller, master=None, logger=None):
         tk.Frame.__init__(self, master)
         self.master = master
         self.logger = logger
         self.controller = controller
-
-        # Create the msgr objs
-        self.msg_queue = queue.Queue()
-        self.imsgr = msgs.IMsgr(self.msg_queue)
-        self.omsgr = msgs.OMsgr(self.msg_queue)
-
-        self.ldr = loader.Loader(self.logger)
-
-        self.combat_log = []
 
         self.BuildUI()
 
@@ -63,4 +40,5 @@ class aboutPage(tk.Frame):
             text="Home",
             command=lambda: self.controller.show_frame("HomePage"),
         )
-        self.btnHome.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.btnHome.config(width=400)
+        self.btnHome.pack(side=tk.TOP, fill="y", expand=True)
