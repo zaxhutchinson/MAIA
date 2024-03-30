@@ -68,7 +68,7 @@ class Loader:
 
     def getObjIDs(self):
         return list(self.obj_templates.keys())
-    
+
     def getObjNames(self):
         objNames = []
         for object in self.obj_templates.values():
