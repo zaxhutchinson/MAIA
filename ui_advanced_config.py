@@ -1152,7 +1152,8 @@ class UISettings(tk.Toplevel):
     def update_components_json(self):
         if (
             self.componentsIDEntry.get() in self.componentData.keys()
-            and self.componentsIDEntry.get() != self.selectComponentCombo.get().split(":")[0]
+            and self.componentsIDEntry.get()
+            != self.selectComponentCombo.get().split(":")[0]
         ):
             showwarning(
                 title="Warning",
@@ -1277,10 +1278,17 @@ class UISettings(tk.Toplevel):
                         ),
                     )
 
-                if self.currentComponentData.getData("name") != self.componentData[self.currentComponentData.getData("id")].getData("name"):
+                if self.currentComponentData.getData("name") != self.componentData[
+                    self.selectComponentCombo.get().split(":")[0]
+                ].getData("name"):
                     print("c")
                     comp_idx = self.selectComponentCombo.current()
-                    self.currentCompIDs[comp_idx] = ": ".join([self.currentCompIDs[comp_idx].split(":")[0], self.currentComponentData.getData("name")])
+                    self.currentCompIDs[comp_idx] = ": ".join(
+                        [
+                            self.currentCompIDs[comp_idx].split(":")[0],
+                            self.currentComponentData.getData("name"),
+                        ]
+                    )
                     self.selectComponentCombo.configure(values=self.componentIDs)
                     self.selectComponentCombo.current(len(self.componentIDs) - 1)
                 with open("settings/components.json", "r") as f:
@@ -1288,13 +1296,13 @@ class UISettings(tk.Toplevel):
                 print("d")
                 if (
                     self.currentComponentData.getData("id")
-                    != self.selectComponentCombo.get()
+                    != self.selectComponentCombo.get().split(":")[0]
                 ):
                     print("e")
-                    if self.selectComponentCombo.get() in componentJSON:
-                        componentJSON.pop(self.selectComponentCombo.get())
-                    if self.selectComponentCombo.get() in self.componentData:
-                        self.componentData.pop(self.selectComponentCombo.get())
+                    if self.selectComponentCombo.get().split(":")[0] in componentJSON:
+                        componentJSON.pop(self.selectComponentCombo.get().split(":")[0])
+                    if self.selectComponentCombo.get().split(":")[0] in self.componentData:
+                        self.componentData.pop(self.selectComponentCombo.get().split(":")[0])
                     self.componentIDs.pop(self.selectComponentCombo.current())
                     self.componentIDs.append(
                         self.currentComponentData.getData("id")
@@ -1368,12 +1376,19 @@ class UISettings(tk.Toplevel):
                     "points_count", bool(int(self.objectsPointsCountEntry.get()))
                 )
 
-                if self.currentObjectData.getData("name") != self.objectData[self.currentObjectData.getData("id")].getData("name"):
+                if self.currentObjectData.getData("name") != self.objectData[
+                    self.selectObjectsCombo.get().split(":")[0]
+                ].getData("name"):
                     obj_idx = self.selectObjectsCombo.current()
-                    self.objectIDs[obj_idx] = ": ".join([self.objectIDs[obj_idx].split(":")[0], self.currentObjectData.getData("name")])
-                    self.selectObjectsCombo.configure(values= self.objectIDs)
+                    self.objectIDs[obj_idx] = ": ".join(
+                        [
+                            self.objectIDs[obj_idx].split(":")[0],
+                            self.currentObjectData.getData("name"),
+                        ]
+                    )
+                    self.selectObjectsCombo.configure(values=self.objectIDs)
                     self.selectObjectsCombo.current(len(self.objectIDs) - 1)
-                
+
                 print(self.currentObjectData.getJSONView())
                 with open("settings/objects.json", "r") as f:
                     objectJSON = json.load(f)
@@ -1381,14 +1396,18 @@ class UISettings(tk.Toplevel):
                 print(self.selectObjectsCombo.get())
                 if (
                     self.currentObjectData.getData("id")
-                    != self.selectObjectsCombo.get()
+                    != self.selectObjectsCombo.get().split(":")[0]
                 ):
-                    if self.selectObjectsCombo.get() in objectJSON:
-                        objectJSON.pop(self.selectObjectsCombo.get())
+                    if self.selectObjectsCombo.get().split(":")[0] in objectJSON:
+                        objectJSON.pop(self.selectObjectsCombo.get().split(":")[0])
                     if self.selectObjectsCombo.get() in self.objectData:
                         self.objectData.pop(self.selectObjectsCombo.get())
                     self.objectIDs.pop(self.selectObjectsCombo.current())
-                    self.objectIDs.append(self.currentObjectData.getData("id") + ": " + self.currentObjectData.getData("name"))
+                    self.objectIDs.append(
+                        self.currentObjectData.getData("id")
+                        + ": "
+                        + self.currentObjectData.getData("name")
+                    )
                     self.selectObjectsCombo.configure(values=self.objectIDs)
                     self.selectObjectsCombo.current(len(self.objectIDs) - 1)
 
@@ -1424,7 +1443,7 @@ class UISettings(tk.Toplevel):
                 self.mapsNameEntry.get() != ""
                 and self.mapsEdgeObjIDEntry.get() != ""
                 and self.mapsDescEntry.get() != ""
-                and self.mapsWidthEntry.get != ""
+                and self.mapsWidthEntry.get() != ""
                 and self.mapsHeightEntry.get() != ""
             ):
                 self.currentMapData.setData("name", self.mapsNameEntry.get())
@@ -1437,12 +1456,27 @@ class UISettings(tk.Toplevel):
                 with open("settings/maps.json", "r") as f:
                     mapJSON = json.load(f)
                     print(self.currentMapData.data)
-                    mapJSON[self.selectMapsCombo.get()] = self.currentMapData.data
+                if self.mapsIDEntry.get() != self.selectMapsCombo.get():
+                    print(self.selectMapsCombo.get())
+                    if self.selectMapsCombo.get() in mapJSON:
+                        mapJSON.pop(self.selectMapsCombo.get())
+                    if self.selectMapsCombo.get() in self.mapData:
+                        self.mapData.pop(self.selectMapsCombo.get())
+                    self.mapIDs.pop(self.selectMapsCombo.current())
+                    self.mapIDs.append(self.mapsIDEntry.get())
+                    self.selectMapsCombo.configure(values=self.mapIDs)
+                    self.selectMapsCombo.current(len(self.mapIDs) - 1)
+
+                self.mapData[self.mapsIDEntry.get()] = self.currentMapData
+                print(mapJSON)
+                mapJSON[self.mapsIDEntry.get()] = self.currentMapData.data
                 f.close()
 
                 with open("settings/maps.json", "w") as f:
                     json.dump(mapJSON, f, indent=4)
                 f.close()
+                print(self.mapData)
+                print(self.currentMapData.data)
 
     ### CREATE NEW ###
 
