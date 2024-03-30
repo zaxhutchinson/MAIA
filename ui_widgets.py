@@ -34,7 +34,6 @@ else:
     FONT_SIZE = 12
 
 
-
 class uiListBox(tk.Listbox):
     def __init__(self, master=None):
         super().__init__(master)
