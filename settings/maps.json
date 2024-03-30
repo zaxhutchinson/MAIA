@@ -7,9 +7,9 @@
         "height" : 10,
         "placed_objects" : {
             "1" : [
-                {"x": 4, "y":4}
+                {"x": 4, "y":4, "facing": 90}
             ],
-            "red_tank" : [
+            "blue_tank" : [
                 { "x":7, "y":7, "facing": 90},
                 { "x":2, "y":2, "facing": 270}
             ]

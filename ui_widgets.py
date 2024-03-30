@@ -4,14 +4,6 @@
 # Various custom tk widgets. Most of them just override default colors.
 ##############################################################################
 
-
-##############################################################################
-# UI WIDGETS
-#
-# Various custom tk widgets. Most of them just override default colors.
-##############################################################################
-
-
 import tkinter as tk
 from tkinter import messagebox
 from tkinter.font import Font
@@ -33,7 +25,6 @@ ENTRY_BG = "salmon1"
 BOXFILLCOLOR = "#B2C1E3"
 
 globalSpriteList = []
-globalTankList = []
 
 
 class uiListBox(tk.Listbox):
@@ -171,39 +162,17 @@ class uiCanvas(tk.Canvas):
             highlightcolor=TEXTCOLOR,
         )
 
-        # object sprites # excessive comments kept for debugging purposes
+        # object sprites
         self.tank = ImageTk.PhotoImage(Image.open("images/bot2.png"))
-        # self.rTankSprite = ImageTk.PhotoImage(Image.open("images/red_up1.png"))
-
         self.rTankSprite = Image.open("images/red_up1.png")
-        self.bTankSprite = ImageTk.PhotoImage(Image.open("images/blue_up1.png"))
-        self.gTankSprite = ImageTk.PhotoImage(Image.open("images/green_up1.png"))
-        # self.player = Image.open("images/stick.png")
-        # self.player = tk.PhotoImage(file="images/stick.png")
-        # self.boxSprite = ImageTk.PhotoImage(Image.open("images/barrel_top.png"))
-        # self.boxSprite = Image.open("images/barrel_top.png")
-
-        self.boxSprite = tk.PhotoImage(file="images/barrel_top.png")
-
-        self.counter = 0
-
+        self.bTankSprite = Image.open("images/blue_up1.png")
+        self.boxSprite = Image.open("images/barrel_top.png")
         self.player = Image.open("images/stick.png")
-
-        self.player.save("images/savedV.png")
-
-        # self.player2 = Image.open("images/stick.png")
-
-        self.playerTK = ImageTk.PhotoImage((Image.open("images/stick.png")).rotate(90))
 
         # item sprites
         self.red_flag = ImageTk.PhotoImage(Image.open("images/redFlag.png"))
         self.blue_flag = ImageTk.PhotoImage(Image.open("images/blueFlag.png"))
-        # self.crownSprite = Image.open("images/crown.png")
-
         self.crownSprite = ImageTk.PhotoImage(Image.open("images/crown.png"))
-
-        # 3:10 stuff
-        self.imageList = []
 
     def drawTile(self, **kwargs):
         x0 = kwargs["x"] * self.cell_size
@@ -218,7 +187,7 @@ class uiCanvas(tk.Canvas):
         #     {'fill':kwargs['fill']}
         # )
 
-    def drawObj(self, **kwargs):  # excessive comments kept for debugging purposes
+    def drawObj(self, **kwargs):
         dd = kwargs["dd"]  # what to draw
         print("This be kwargs :) -- ", kwargs)
         x = (  # x coord
@@ -234,78 +203,32 @@ class uiCanvas(tk.Canvas):
             + self.cell_size
         )
 
-        # index = len(globalSpriteList)
-
-        # print("dd contains: ", dd)
-
-        if dd["text"] == "tank":
-
-            return self.create_image(x, y, image=self.tank)
-        elif dd["text"] == "X":
+        if dd["text"] == "X":
             return self.create_text(x, y, text="X", fill=dd["fill"], font=self.obj_font)
-        elif dd["text"] == "R":
-
-            # facing = dd["facing"]
-            self.exactcopy = self.rTankSprite.copy()
-            globalTankList.append(self.rTankSprite.copy())
-            print("Added Red Tank", globalTankList)
-            # globalTankList[-1] = globalTankList[-1].rotate(facing)
-            globalTankList[-1] = ImageTk.PhotoImage(globalTankList[-1])
-            return self.create_image(x, y, image=globalTankList[-1])
-
-            """facing = dd["facing"]
-            rTankCopy = self.rTankSprite.copy()
-            globalSpriteList.append(self.rTankSprite.copy())
-            print("LOOK HERE: ", globalSpriteList)
-            newVar = globalSpriteList[-1]
-            globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
-            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
-            return self.create_image(x, y, image=globalSpriteList[-1])
-            # return self.create_image(x, y, image=self.rTankSprite)"""
-        elif (
-            dd["text"] == "Blue Tank"
-        ):  # L is used for blue because B is already used for box
-            return self.create_image(x, y, image=self.bTankSprite)
-        elif dd["text"] == "Green Tank":
-            return self.create_image(x, y, image=self.gTankSprite)
-        elif dd["text"] == "P":
+        elif dd["name"] == "Red Tank":
             facing = dd["facing"]
-            self.playerCopy = self.player.copy()
-
-            # below stuff kinda works
-
-            # index = len(globalSpriteList)
-            globalSpriteList.append(self.player.copy())
-            print("Added player: ", globalSpriteList)
-
-            # newVar = globalSpriteList[-1]
-            # print("Now I'm using", globalSpriteList[-1])
+            globalSpriteList.append(self.rTankSprite.copy())
             globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
             globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
             return self.create_image(x, y, image=globalSpriteList[-1])
-            print("Coords are: ", x, y)
-            """
-            if coord == 1:
-                self.rot1 = self.player.rotate(facing)
-                self.final1 = ImageTk.PhotoImage(self.rot1)
-                return self.create_image(x, y, image=self.final1)
-
-            else:
-                self.rot2 = self.playerCopy.rotate(facing)
-                self.final2 = ImageTk.PhotoImage(self.rot2)
-                return self.create_image(x, y, image=self.final2)
-            # self.playerRot = self.player.rotate(facing)"""
-        elif dd["text"] == "B":
-
-            # facing = dd["facing"]
-
-            # self.boxSpriteRot = self.boxSprite.rotate(facing)
-            # self.boxSpriteTK = ImageTk.PhotoImage(self.boxSprite)
-
-            # self.boxSprite = Image.open("images/barrel_top.png")
-
-            # return self.create_image(x, y, image=self.boxSpriteTK)
-            return self.create_image(x, y, image=self.boxSprite)
+        elif dd["name"] == "Blue Tank":
+            facing = dd["facing"]
+            globalSpriteList.append(self.bTankSprite.copy())
+            globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
+            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
+            return self.create_image(x, y, image=globalSpriteList[-1])
+        elif dd["name"] == "player":
+            facing = dd["facing"]
+            globalSpriteList.append(self.player.copy())
+            globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
+            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
+            return self.create_image(x, y, image=globalSpriteList[-1])
+        elif dd["name"] == "Box":
+            facing = dd["facing"]
+            globalSpriteList.append(self.boxSprite.copy())
+            globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
+            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
+            return self.create_image(x, y, image=globalSpriteList[-1])
             # drawing it
 
     def removeObj(self, objID):
@@ -355,7 +278,7 @@ class uiCanvas(tk.Canvas):
         elif dd["name"] == "goal":
             return self.create_image(x, y, image=self.crownSprite)
         else:
-            return self.create_text(
+            return self.create_text(  # follow this model for implementing both accessing from JSON and back-up letter if image doesn't work
                 x, y, text=dd["text"], fill=dd["fill"], font=self.item_font
             )
 
