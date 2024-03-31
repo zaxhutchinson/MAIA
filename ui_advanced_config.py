@@ -1294,6 +1294,20 @@ class UISettings(tk.Toplevel):
                 with open("settings/components.json", "r") as f:
                     componentJSON = json.load(f)
                 print("d")
+
+                if (
+                    self.currentComponentData.getData("name")
+                    != componentJSON[self.currentComponentData.getData("id")]["name"]
+                ):
+                    self.componentIDs.pop(self.selectComponentCombo.current())
+                    self.componentIDs.append(
+                        self.currentComponentData.getData("id")
+                        + ": "
+                        + self.currentComponentData.getData("name")
+                    )
+                    self.selectComponentCombo.configure(values=self.componentIDs)
+                    self.selectComponentCombo.current(len(self.componentIDs) - 1)
+
                 if (
                     self.currentComponentData.getData("id")
                     != self.selectComponentCombo.get().split(":")[0]
@@ -1301,8 +1315,13 @@ class UISettings(tk.Toplevel):
                     print("e")
                     if self.selectComponentCombo.get().split(":")[0] in componentJSON:
                         componentJSON.pop(self.selectComponentCombo.get().split(":")[0])
-                    if self.selectComponentCombo.get().split(":")[0] in self.componentData:
-                        self.componentData.pop(self.selectComponentCombo.get().split(":")[0])
+                    if (
+                        self.selectComponentCombo.get().split(":")[0]
+                        in self.componentData
+                    ):
+                        self.componentData.pop(
+                            self.selectComponentCombo.get().split(":")[0]
+                        )
                     self.componentIDs.pop(self.selectComponentCombo.current())
                     self.componentIDs.append(
                         self.currentComponentData.getData("id")
@@ -1394,6 +1413,20 @@ class UISettings(tk.Toplevel):
                     objectJSON = json.load(f)
 
                 print(self.selectObjectsCombo.get())
+
+                if (
+                    self.currentObjectData.getData("name")
+                    != objectJSON[self.currentObjectData.getData("id")]["name"]
+                ):
+                    self.objectIDs.pop(self.selectObjectsCombo.current())
+                    self.objectIDs.append(
+                        self.currentObjectData.getData("id")
+                        + ": "
+                        + self.currentObjectData.getData("name")
+                    )
+                    self.selectObjectsCombo.configure(values=self.objectIDs)
+                    self.selectObjectsCombo.current(len(self.objectIDs) - 1)
+
                 if (
                     self.currentObjectData.getData("id")
                     != self.selectObjectsCombo.get().split(":")[0]
