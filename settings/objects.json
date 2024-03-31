@@ -1,7 +1,7 @@
 {
     "0": {
         "id": "0",
-        "name": "Indestructible Blockbb",
+        "name": "Indestructible Block",
         "fill_alive": "gray1",
         "fill_dead": "black",
         "text": "X",
