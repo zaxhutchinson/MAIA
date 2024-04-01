@@ -389,9 +389,7 @@ class UISettings(tk.Toplevel):
         self.objectsPointsCountLabel = uiLabel(
             master=self.objectsColumn, text="Points Count:"
         )
-        self.objectsPointsCountEntry = EntryHelp(
-            master=self.objectsColumn, text="To be added."
-        )
+        self.objectsPointsCountCombo = uiComboBox(master=self.objectsColumn)
 
         # Place Object Widgets
         self.objectsColumn.pack(
@@ -418,7 +416,7 @@ class UISettings(tk.Toplevel):
         self.objectsCompIDsLabel.grid(row=10, column=1, sticky="nsew")
         self.objectsCompIDsCombo.grid(row=10, column=2, sticky="nsew")
         self.objectsPointsCountLabel.grid(row=11, column=1, sticky="nsew")
-        self.objectsPointsCountEntry.frame.grid(row=11, column=2, sticky="nsew")
+        self.objectsPointsCountCombo.grid(row=11, column=2, sticky="nsew")
         self.objectsUpdateButton.grid(
             row=12,
             column=1,
@@ -781,11 +779,8 @@ class UISettings(tk.Toplevel):
         if len(compIds) != 0:
             if compIds[-1] == "Add New Comp ID":
                 compIds.pop(-1)
-        print("a")
         print(compIds)
-        print("b")
         print(self.currentObjectData.getData("comp_ids"))
-        print("c")
         if not (
             (
                 (
@@ -817,6 +812,7 @@ class UISettings(tk.Toplevel):
                     == str(self.currentObjectData.getData("density"))
                 )
                 and (compIds == self.currentObjectData.getData("comp_ids"))
+                and (bool(self.objectsPointsCountCombo.current()) == self.currentObjectData.getData("points_count"))
             )
         ):
             self.answer = askyesno(
@@ -1142,9 +1138,13 @@ class UISettings(tk.Toplevel):
         self.objectsCompIDsCombo.bind("<Enter>", self.add_empty_comp_id)
         self.objectsCompIDsCombo.bind("<Return>", self.add_new_comp_id)
         self.objectsCompIDsCombo.bind("<KeyRelease>", self.delete_comp_id)
-
-        self.objectsPointsCountEntry.entry.delete(0, tk.END)
-        self.objectsPointsCountEntry.entry.insert(0, currentObj.getData("points_count"))
+        self.objectsPointsCountCombo.configure(values=["False", "True"])
+        self.objectsPointsCountCombo.config(state="normal")
+        if bool(currentObj.getData("points_count")) is True:
+            self.objectsPointsCountCombo.current(1)
+        else:
+            self.objectsPointsCountCombo.current(0)
+        self.objectsPointsCountCombo.config(state="readonly")
 
     def add_empty_comp_id(self, event):
         """
@@ -1413,7 +1413,7 @@ class UISettings(tk.Toplevel):
     def update_objects_json(self):
         if (
             self.objectsIDEntry.entry.get() in self.objectData.keys()
-            and self.objectsIDEntry.get() != self.selectObjectsCombo.get()
+            and self.objectsIDEntry.entry.get() != self.selectObjectsCombo.get()
         ):
             showwarning(
                 title="Warning",
@@ -1421,14 +1421,13 @@ class UISettings(tk.Toplevel):
             )
         else:
             if (
-                self.objectsIDEntry.get() != ""
-                and self.objectsNameEntry.get() != ""
-                and self.objectsFillDeadEntry.get() != ""
-                and self.objectsFillAliveEntry.get() != ""
-                and self.objectsTextEntry.get() != ""
-                and self.objectsHealthEntry.get() != ""
-                and self.objectsDensityEntry.get() != ""
-                and self.objectsPointsCountEntry.get() != ""
+                self.objectsIDEntry.entry.get() != ""
+                and self.objectsNameEntry.entry.get() != ""
+                and self.objectsFillDeadEntry.entry.get() != ""
+                and self.objectsFillAliveEntry.entry.get() != ""
+                and self.objectsTextEntry.entry.get() != ""
+                and self.objectsHealthEntry.entry.get() != ""
+                and self.objectsDensityEntry.entry.get() != ""
             ):
                 self.currentObjectData.setData("id", self.objectsIDEntry.entry.get())
                 self.currentObjectData.setData(
@@ -1454,7 +1453,7 @@ class UISettings(tk.Toplevel):
                         self.currentCompIDs.pop(-1)
                 self.currentObjectData.setData("comp_ids", self.currentCompIDs)
                 self.currentObjectData.setData(
-                    "points_count", bool(int(self.objectsPointsCountEntry.entry.get()))
+                    "points_count", bool(self.objectsPointsCountCombo.current())
                 )
 
                 print(self.currentObjectData.getJSONView())
