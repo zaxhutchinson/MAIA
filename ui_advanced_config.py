@@ -81,7 +81,7 @@ class UISettings(tk.Toplevel):
             return True
         else:
             return False
-        
+
     def get_focused_entry(self):
         focused_entry = self.focus_get()
         print(focused_entry)
@@ -116,7 +116,7 @@ class UISettings(tk.Toplevel):
         self.selectTeamCombo.configure(state="readonly")
         self.teamsLabel = uiLabel(master=self.teamsColumn, text="Teams")
         self.teamSizeLabel = uiLabel(master=self.teamsColumn, text="Size:")
-        self.teamSizeEntry = EntryHelp(master=self.teamsColumn,text="To be added.")
+        self.teamSizeEntry = EntryHelp(master=self.teamsColumn, text="To be added.")
         self.teamSizeEntry.entry.config(
             validate="all", validatecommand=(self.validateNum, "%P")
         )
@@ -143,7 +143,7 @@ class UISettings(tk.Toplevel):
             master=self.teamsColumn, command=self.delete_team, text="Delete"
         )
         self.helpButton = uiButton(
-            master=self.teamsColumn,command=self.show_help ,text="Help"
+            master=self.teamsColumn, command=self.show_help, text="Help"
         )
 
         # Place Team Widgets
@@ -214,26 +214,44 @@ class UISettings(tk.Toplevel):
             master=self.componentsColumn, command=self.delete_components, text="Delete"
         )
         self.componentsIDLabel = uiLabel(master=self.componentsColumn, text="ID:")
-        self.componentsIDEntry = EntryHelp(master=self.componentsColumn, text="To be added.")
+        self.componentsIDEntry = EntryHelp(
+            master=self.componentsColumn, text="To be added."
+        )
         self.componentsNameLabel = uiLabel(master=self.componentsColumn, text="Name:")
-        self.componentsNameEntry = EntryHelp(master=self.componentsColumn, text="To be added.")
+        self.componentsNameEntry = EntryHelp(
+            master=self.componentsColumn, text="To be added."
+        )
         self.componentsCTypeLabel = uiLabel(master=self.componentsColumn, text="CType:")
         self.componentsTypeLabel = uiLabel(master=self.componentsColumn, text="")
         self.componentsTypeCombo = uiComboBox(master=self.componentsColumn)
         self.componentsTypeAttr1Label = uiLabel(master=self.componentsColumn, text="")
-        self.componentsTypeAttr1Entry = EntryHelp(master=self.componentsColumn, text="To be added.")
+        self.componentsTypeAttr1Entry = EntryHelp(
+            master=self.componentsColumn, text="To be added."
+        )
         self.componentsTypeAttr2Label = uiLabel(master=self.componentsColumn, text="")
-        self.componentsTypeAttr2Entry = EntryHelp(master=self.componentsColumn, text="To be added.")
+        self.componentsTypeAttr2Entry = EntryHelp(
+            master=self.componentsColumn, text="To be added."
+        )
         self.componentsTypeAttr3Label = uiLabel(master=self.componentsColumn, text="")
-        self.componentsTypeAttr3Entry = EntryHelp(master=self.componentsColumn, text="To be added.")
+        self.componentsTypeAttr3Entry = EntryHelp(
+            master=self.componentsColumn, text="To be added."
+        )
         self.componentsTypeAttr4Label = uiLabel(master=self.componentsColumn, text="")
-        self.componentsTypeAttr4Entry = EntryHelp(master=self.componentsColumn, text="To be added.")
+        self.componentsTypeAttr4Entry = EntryHelp(
+            master=self.componentsColumn, text="To be added."
+        )
         self.componentsTypeAttr5Label = uiLabel(master=self.componentsColumn, text="")
-        self.componentsTypeAttr5Entry = EntryHelp(master=self.componentsColumn, text="To be added.")
+        self.componentsTypeAttr5Entry = EntryHelp(
+            master=self.componentsColumn, text="To be added."
+        )
         self.componentsTypeAttr6Label = uiLabel(master=self.componentsColumn, text="")
-        self.componentsTypeAttr6Entry = EntryHelp(master=self.componentsColumn, text="To be added.")
+        self.componentsTypeAttr6Entry = EntryHelp(
+            master=self.componentsColumn, text="To be added."
+        )
         self.componentsTypeAttr7Label = uiLabel(master=self.componentsColumn, text="")
-        self.componentsTypeAttr7Entry = EntryHelp(master=self.componentsColumn, text="To be added.")
+        self.componentsTypeAttr7Entry = EntryHelp(
+            master=self.componentsColumn, text="To be added."
+        )
 
         # Place Component Widgets
         self.componentsColumn.pack(
@@ -333,7 +351,9 @@ class UISettings(tk.Toplevel):
         self.objectsIDLabel = uiLabel(master=self.objectsColumn, text="ID:")
         self.objectsIDEntry = EntryHelp(master=self.objectsColumn, text="To be added.")
         self.objectsNameLabel = uiLabel(master=self.objectsColumn, text="Name:")
-        self.objectsNameEntry = EntryHelp(master=self.objectsColumn, text="To be added.")
+        self.objectsNameEntry = EntryHelp(
+            master=self.objectsColumn, text="To be added."
+        )
         self.objectsFillAliveLabel = uiLabel(
             master=self.objectsColumn, text="Fill Alive:"
         )
@@ -343,16 +363,24 @@ class UISettings(tk.Toplevel):
         self.objectsFillDeadLabel = uiLabel(
             master=self.objectsColumn, text="Fill Dead:"
         )
-        self.objectsFillDeadEntry = EntryHelp(master=self.objectsColumn, text="To be added.")
+        self.objectsFillDeadEntry = EntryHelp(
+            master=self.objectsColumn, text="To be added."
+        )
         self.objectsTextLabel = uiLabel(master=self.objectsColumn, text="Text:")
-        self.objectsTextEntry = EntryHelp(master=self.objectsColumn, text="To be added.")
+        self.objectsTextEntry = EntryHelp(
+            master=self.objectsColumn, text="To be added."
+        )
         self.objectsHealthLabel = uiLabel(master=self.objectsColumn, text="Health:")
-        self.objectsHealthEntry = EntryHelp(master=self.objectsColumn, text="To be added.")
+        self.objectsHealthEntry = EntryHelp(
+            master=self.objectsColumn, text="To be added."
+        )
         self.objectsHealthEntry.entry.config(
             validate="all", validatecommand=(self.validateNum, "%P")
         )
         self.objectsDensityLabel = uiLabel(master=self.objectsColumn, text="Density:")
-        self.objectsDensityEntry = EntryHelp(master=self.objectsColumn, text="To be added.")
+        self.objectsDensityEntry = EntryHelp(
+            master=self.objectsColumn, text="To be added."
+        )
         self.objectsDensityEntry.entry.config(
             validate="all", validatecommand=(self.validateNum, "%P")
         )
@@ -361,7 +389,9 @@ class UISettings(tk.Toplevel):
         self.objectsPointsCountLabel = uiLabel(
             master=self.objectsColumn, text="Points Count:"
         )
-        self.objectsPointsCountEntry = EntryHelp(master=self.objectsColumn, text="To be added.")
+        self.objectsPointsCountEntry = EntryHelp(
+            master=self.objectsColumn, text="To be added."
+        )
 
         # Place Object Widgets
         self.objectsColumn.pack(
@@ -605,7 +635,9 @@ class UISettings(tk.Toplevel):
         if not (
             (
                 (self.teamNameEntry.entry.get() == self.currentTeamData["name"])
-                and (self.teamSizeEntry.entry.get() == str(self.currentTeamData["size"]))
+                and (
+                    self.teamSizeEntry.entry.get() == str(self.currentTeamData["size"])
+                )
                 and (
                     self.callsignEntry.entry.get()
                     == self.currentTeamData["agent_defs"][0]["callsign"]
@@ -756,7 +788,10 @@ class UISettings(tk.Toplevel):
         print("c")
         if not (
             (
-                (self.objectsIDEntry.entry.get() == self.currentObjectData.getData("id"))
+                (
+                    self.objectsIDEntry.entry.get()
+                    == self.currentObjectData.getData("id")
+                )
                 and (
                     self.objectsNameEntry.entry.get()
                     == self.currentObjectData.getData("name")
@@ -811,7 +846,10 @@ class UISettings(tk.Toplevel):
                     self.mapsEdgeObjIDEntry.entry.get()
                     == self.currentMapData.getData("edge_obj_id")
                 )
-                and (self.mapsDescEntry.entry.get() == self.currentMapData.getData("desc"))
+                and (
+                    self.mapsDescEntry.entry.get()
+                    == self.currentMapData.getData("desc")
+                )
                 and (
                     int(self.mapsWidthEntry.entry.get())
                     == self.currentMapData.getData("width")
@@ -911,7 +949,9 @@ class UISettings(tk.Toplevel):
                     else "False"
                 ),
             )
-            self.componentsTypeAttr3Entry.entry.configure(state="readonly", validate="none")
+            self.componentsTypeAttr3Entry.entry.configure(
+                state="readonly", validate="none"
+            )
             self.componentsTypeAttr4Label.config(text=self.componentTypeAttr[7])
             self.componentsTypeAttr4Entry.entry.insert(
                 0, currentComp.getData(self.componentTypeAttr[7])
@@ -962,7 +1002,9 @@ class UISettings(tk.Toplevel):
                     else "False"
                 ),
             )
-            self.componentsTypeAttr1Entry.entry.configure(state="readonly", validate="none")
+            self.componentsTypeAttr1Entry.entry.configure(
+                state="readonly", validate="none"
+            )
             self.componentsTypeAttr2Label.config(text=self.componentTypeAttr[5])
             self.componentsTypeAttr2Entry.entry.insert(
                 0, currentComp.getData(self.componentTypeAttr[5])
@@ -988,9 +1030,13 @@ class UISettings(tk.Toplevel):
             self.componentsTypeAttr3Entry.entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text="max_range")
             print(self.componentTypeAttr)
-            self.componentsTypeAttr1Entry.entry.insert(0, currentComp.getData("max_range"))
+            self.componentsTypeAttr1Entry.entry.insert(
+                0, currentComp.getData("max_range")
+            )
             self.componentsTypeAttr2Label.config(text="cur_range")
-            self.componentsTypeAttr2Entry.entry.insert(0, currentComp.getData("cur_range"))
+            self.componentsTypeAttr2Entry.entry.insert(
+                0, currentComp.getData("cur_range")
+            )
             self.componentsTypeAttr3Label.config(text="message")
             self.componentsTypeAttr3Entry.entry.insert(
                 0,
@@ -1039,7 +1085,9 @@ class UISettings(tk.Toplevel):
         self.teamSizeEntry.entry.delete(0, tk.END)
         self.teamSizeEntry.entry.insert(0, currentTeam["size"])
         self.callsignEntry.entry.delete(0, tk.END)
-        self.callsignEntry.entry.insert(0, self.currentTeamData["agent_defs"][0]["callsign"])
+        self.callsignEntry.entry.insert(
+            0, self.currentTeamData["agent_defs"][0]["callsign"]
+        )
         self.squadEntry.entry.delete(0, tk.END)
         self.squadEntry.entry.insert(0, currentTeam["agent_defs"][0]["squad"])
         self.agentObjectEntry.entry.delete(0, tk.END)
@@ -1056,7 +1104,9 @@ class UISettings(tk.Toplevel):
         self.mapsNameEntry.entry.delete(0, tk.END)
         self.mapsNameEntry.entry.insert(0, currentMap.getData("name"))
         self.mapsEdgeObjIDEntry.entry.delete(0, tk.END)
-        self.mapsEdgeObjIDEntry.entry.insert(0, self.currentMapData.getData("edge_obj_id"))
+        self.mapsEdgeObjIDEntry.entry.insert(
+            0, self.currentMapData.getData("edge_obj_id")
+        )
         self.mapsDescEntry.entry.delete(0, tk.END)
         self.mapsDescEntry.entry.insert(0, currentMap.getData("desc"))
         self.mapsWidthEntry.entry.delete(0, tk.END)
@@ -1151,7 +1201,9 @@ class UISettings(tk.Toplevel):
                     "callsign"
                 ] = self.callsignEntry.entry.get()
                 self.currentTeamData["name"] = self.teamNameEntry.entry.get()
-                self.currentTeamData["agent_defs"][0]["squad"] = self.squadEntry.entry.get()
+                self.currentTeamData["agent_defs"][0][
+                    "squad"
+                ] = self.squadEntry.entry.get()
                 self.currentTeamData["agent_defs"][0][
                     "object"
                 ] = self.agentObjectEntry.entry.get()
@@ -1208,7 +1260,9 @@ class UISettings(tk.Toplevel):
                 and self.componentsTypeAttr3Entry != ""
             ):
                 print(self.currentComponentData)
-                self.currentComponentData.setData("id", self.componentsIDEntry.entry.get())
+                self.currentComponentData.setData(
+                    "id", self.componentsIDEntry.entry.get()
+                )
                 self.currentComponentData.setData(
                     "name", self.componentsNameEntry.entry.get()
                 )
@@ -1217,7 +1271,8 @@ class UISettings(tk.Toplevel):
                 )
                 if self.currentComponentData.getData("ctype") == "CnC":
                     self.currentComponentData.setData(
-                        "max_cmds_per_tick", int(self.componentsTypeAttr1Entry.entry.get())
+                        "max_cmds_per_tick",
+                        int(self.componentsTypeAttr1Entry.entry.get()),
                     )
                 if self.currentComponentData.getData("ctype") == "FixedGun":
                     self.currentComponentData.setData(
@@ -1376,14 +1431,18 @@ class UISettings(tk.Toplevel):
                 and self.objectsPointsCountEntry.get() != ""
             ):
                 self.currentObjectData.setData("id", self.objectsIDEntry.entry.get())
-                self.currentObjectData.setData("name", self.objectsNameEntry.entry.get())
+                self.currentObjectData.setData(
+                    "name", self.objectsNameEntry.entry.get()
+                )
                 self.currentObjectData.setData(
                     "fill_alive", self.objectsFillAliveEntry.entry.get()
                 )
                 self.currentObjectData.setData(
                     "fill_dead", self.objectsFillDeadEntry.entry.get()
                 )
-                self.currentObjectData.setData("text", self.objectsTextEntry.entry.get())
+                self.currentObjectData.setData(
+                    "text", self.objectsTextEntry.entry.get()
+                )
                 self.currentObjectData.setData(
                     "health", int(self.objectsHealthEntry.entry.get())
                 )
@@ -1456,8 +1515,12 @@ class UISettings(tk.Toplevel):
                     "edge_obj_id", self.mapsEdgeObjIDEntry.entry.get()
                 )
                 self.currentMapData.setData("desc", self.mapsDescEntry.entry.get())
-                self.currentMapData.setData("width", int(self.mapsWidthEntry.entry.get()))
-                self.currentMapData.setData("height", int(self.mapsHeightEntry.entry.get()))
+                self.currentMapData.setData(
+                    "width", int(self.mapsWidthEntry.entry.get())
+                )
+                self.currentMapData.setData(
+                    "height", int(self.mapsHeightEntry.entry.get())
+                )
                 with open("settings/maps.json", "r") as f:
                     mapJSON = json.load(f)
                     print(self.currentMapData.data)
