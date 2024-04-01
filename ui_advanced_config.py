@@ -81,6 +81,14 @@ class UISettings(tk.Toplevel):
             return True
         else:
             return False
+        
+    def get_focused_entry(self):
+        focused_entry = self.focus_get()
+        print(focused_entry)
+        return focused_entry
+
+    def show_help(self):
+        return
 
     def build_ui(self):
         """
@@ -108,23 +116,23 @@ class UISettings(tk.Toplevel):
         self.selectTeamCombo.configure(state="readonly")
         self.teamsLabel = uiLabel(master=self.teamsColumn, text="Teams")
         self.teamSizeLabel = uiLabel(master=self.teamsColumn, text="Size:")
-        self.teamSizeEntry = uiEntry(master=self.teamsColumn)
-        self.teamSizeEntry.config(
+        self.teamSizeEntry = EntryHelp(master=self.teamsColumn,text="aaaa")
+        self.teamSizeEntry.entry.config(
             validate="all", validatecommand=(self.validateNum, "%P")
         )
         self.teamNameLabel = uiLabel(master=self.teamsColumn, text="Name:")
-        self.teamNameEntry = uiEntry(master=self.teamsColumn)
+        self.teamNameEntry = EntryHelp(master=self.teamsColumn, text="")
         self.agentFrame = uiQuietFrame(
             master=self.teamsColumn, borderwidth=5, relief="ridge", sticky="nsew"
         )
         self.callsignLabel = uiLabel(master=self.agentFrame, text="Callsign:")
-        self.callsignEntry = uiEntry(master=self.agentFrame)
+        self.callsignEntry = EntryHelp(master=self.agentFrame, text="")
         self.squadLabel = uiLabel(master=self.agentFrame, text="Squad:")
-        self.squadEntry = uiEntry(master=self.agentFrame)
+        self.squadEntry = EntryHelp(master=self.agentFrame, text="")
         self.agentObjectLabel = uiLabel(master=self.agentFrame, text="Object:")
-        self.agentObjectEntry = uiEntry(master=self.agentFrame)
+        self.agentObjectEntry = EntryHelp(master=self.agentFrame, text="")
         self.aiFileLabel = uiLabel(master=self.agentFrame, text="AI File:")
-        self.aiFileEntry = uiEntry(master=self.agentFrame)
+        self.aiFileEntry = EntryHelp(master=self.agentFrame, text="")
         self.teamsUpdateButton = uiButton(
             master=self.teamsColumn, command=self.update_teams_json, text="Update"
         )
@@ -134,6 +142,9 @@ class UISettings(tk.Toplevel):
         self.teamsDeleteButton = uiButton(
             master=self.teamsColumn, command=self.delete_team, text="Delete"
         )
+        self.helpButton = uiButton(
+            master=self.teamsColumn,command=self.show_help ,text="Help"
+        )
 
         # Place Team Widgets
         self.teamsColumn.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10)
@@ -142,20 +153,20 @@ class UISettings(tk.Toplevel):
         )
         self.teamsLabel.grid(row=2, column=1, columnspan=2, sticky="nsew")
         self.teamSizeLabel.grid(row=3, column=1, sticky="nsew")
-        self.teamSizeEntry.grid(row=3, column=2, sticky="nsew")
+        self.teamSizeEntry.frame.grid(row=3, column=2, sticky="nsew")
         self.teamNameLabel.grid(row=4, column=1, sticky="nsew")
-        self.teamNameEntry.grid(row=4, column=2, sticky="nsew")
+        self.teamNameEntry.frame.grid(row=4, column=2, sticky="nsew")
         self.agentFrame.grid(
             row=5, column=1, columnspan=2, rowspan=2, sticky="nsew", ipadx=0, ipady=0
         )
         self.callsignLabel.grid(row=1, column=1, sticky="nsew")
-        self.callsignEntry.grid(row=1, column=2, sticky="nsew")
+        self.callsignEntry.frame.grid(row=1, column=2, sticky="nsew")
         self.squadLabel.grid(row=2, column=1, sticky="nsew")
-        self.squadEntry.grid(row=2, column=2, sticky="nsew")
+        self.squadEntry.frame.grid(row=2, column=2, sticky="nsew")
         self.agentObjectLabel.grid(row=3, column=1, sticky="nsew")
-        self.agentObjectEntry.grid(row=3, column=2, sticky="nsew")
+        self.agentObjectEntry.frame.grid(row=3, column=2, sticky="nsew")
         self.aiFileLabel.grid(row=4, column=1, sticky="nsew")
-        self.aiFileEntry.grid(row=4, column=2, sticky="nsew")
+        self.aiFileEntry.frame.grid(row=4, column=2, sticky="nsew")
         self.teamsUpdateButton.grid(
             row=7,
             column=1,
@@ -203,9 +214,9 @@ class UISettings(tk.Toplevel):
             master=self.componentsColumn, command=self.delete_components, text="Delete"
         )
         self.componentsIDLabel = uiLabel(master=self.componentsColumn, text="ID:")
-        self.componentsIDEntry = uiEntry(master=self.componentsColumn)
+        self.componentsIDEntry = EntryHelp(master=self.componentsColumn, text="")
         self.componentsNameLabel = uiLabel(master=self.componentsColumn, text="Name:")
-        self.componentsNameEntry = uiEntry(master=self.componentsColumn)
+        self.componentsNameEntry = EntryHelp(master=self.componentsColumn, text="")
         self.componentsCTypeLabel = uiLabel(master=self.componentsColumn, text="CType:")
         self.componentsTypeLabel = uiLabel(master=self.componentsColumn, text="")
         self.componentsTypeCombo = uiComboBox(master=self.componentsColumn)
@@ -233,9 +244,9 @@ class UISettings(tk.Toplevel):
         )
         self.componentsLabel.grid(row=2, column=1, columnspan=2, sticky="nsew")
         self.componentsIDLabel.grid(row=3, column=1, sticky="nsew")
-        self.componentsIDEntry.grid(row=3, column=2, sticky="nsew")
+        self.componentsIDEntry.frame.grid(row=3, column=2, sticky="nsew")
         self.componentsNameLabel.grid(row=4, column=1, sticky="nsew")
-        self.componentsNameEntry.grid(row=4, column=2, sticky="nsew")
+        self.componentsNameEntry.frame.grid(row=4, column=2, sticky="nsew")
         self.componentsCTypeLabel.grid(row=5, column=1, sticky="nsew")
         self.componentsTypeLabel.grid(row=5, column=2, sticky="nsew")
 
@@ -546,7 +557,6 @@ class UISettings(tk.Toplevel):
         self.objectData = self.ldr.obj_templates
         self.objectIDs = self.ldr.getObjIDs()
         self.currentObjectData = self.objectData[self.objectIDs[0]]
-        print(self.currentObjectData.getSelfView())
         self.selectObjectsCombo.configure(values=self.objectIDs)
         self.selectObjectsCombo.current(0)
         self.selectObjectsCombo.bind(
@@ -589,27 +599,27 @@ class UISettings(tk.Toplevel):
         """
         # the answer variable defaults to true
         self.answer = True
-
+        self.get_focused_entry()
         # if any of the team entry values differ from their starting values,
         # the user is warned that they could be overwritten
         if not (
             (
-                (self.teamNameEntry.get() == self.currentTeamData["name"])
-                and (self.teamSizeEntry.get() == str(self.currentTeamData["size"]))
+                (self.teamNameEntry.entry.get() == self.currentTeamData["name"])
+                and (self.teamSizeEntry.entry.get() == str(self.currentTeamData["size"]))
                 and (
-                    self.callsignEntry.get()
+                    self.callsignEntry.entry.get()
                     == self.currentTeamData["agent_defs"][0]["callsign"]
                 )
                 and (
-                    self.squadEntry.get()
+                    self.squadEntry.entry.get()
                     == self.currentTeamData["agent_defs"][0]["squad"]
                 )
                 and (
-                    self.agentObjectEntry.get()
+                    self.agentObjectEntry.entry.get()
                     == self.currentTeamData["agent_defs"][0]["object"]
                 )
                 and (
-                    self.aiFileEntry.get()
+                    self.aiFileEntry.entry.get()
                     == self.currentTeamData["agent_defs"][0]["AI_file"]
                 )
             )
@@ -650,11 +660,11 @@ class UISettings(tk.Toplevel):
         if not (
             (
                 (
-                    self.componentsIDEntry.get()
+                    self.componentsIDEntry.entry.get()
                     == self.currentComponentData.getData("id")
                 )
                 and (
-                    self.componentsNameEntry.get()
+                    self.componentsNameEntry.entry.get()
                     == self.currentComponentData.getData("name")
                 )
                 and (
@@ -832,10 +842,10 @@ class UISettings(tk.Toplevel):
         Updates the values in the component entry widgets.
         """
         self.componentTypeAttr = currentComp.view_keys
-        self.componentsIDEntry.delete(0, tk.END)
-        self.componentsIDEntry.insert(0, currentComp.getData("id"))
-        self.componentsNameEntry.delete(0, tk.END)
-        self.componentsNameEntry.insert(
+        self.componentsIDEntry.entry.delete(0, tk.END)
+        self.componentsIDEntry.entry.insert(0, currentComp.getData("id"))
+        self.componentsNameEntry.entry.delete(0, tk.END)
+        self.componentsNameEntry.entry.insert(
             0,
             currentComp.getData("name"),
         )
@@ -1002,18 +1012,18 @@ class UISettings(tk.Toplevel):
         """
         Updates the values stored in the team entry widgets.
         """
-        self.teamNameEntry.delete(0, tk.END)
-        self.teamNameEntry.insert(0, currentTeam["name"])
-        self.teamSizeEntry.delete(0, tk.END)
-        self.teamSizeEntry.insert(0, currentTeam["size"])
-        self.callsignEntry.delete(0, tk.END)
-        self.callsignEntry.insert(0, self.currentTeamData["agent_defs"][0]["callsign"])
-        self.squadEntry.delete(0, tk.END)
-        self.squadEntry.insert(0, currentTeam["agent_defs"][0]["squad"])
-        self.agentObjectEntry.delete(0, tk.END)
-        self.agentObjectEntry.insert(0, currentTeam["agent_defs"][0]["object"])
-        self.aiFileEntry.delete(0, tk.END)
-        self.aiFileEntry.insert(0, currentTeam["agent_defs"][0]["AI_file"])
+        self.teamNameEntry.entry.delete(0, tk.END)
+        self.teamNameEntry.entry.insert(0, currentTeam["name"])
+        self.teamSizeEntry.entry.delete(0, tk.END)
+        self.teamSizeEntry.entry.insert(0, currentTeam["size"])
+        self.callsignEntry.entry.delete(0, tk.END)
+        self.callsignEntry.entry.insert(0, self.currentTeamData["agent_defs"][0]["callsign"])
+        self.squadEntry.entry.delete(0, tk.END)
+        self.squadEntry.entry.insert(0, currentTeam["agent_defs"][0]["squad"])
+        self.agentObjectEntry.entry.delete(0, tk.END)
+        self.agentObjectEntry.entry.insert(0, currentTeam["agent_defs"][0]["object"])
+        self.aiFileEntry.entry.delete(0, tk.END)
+        self.aiFileEntry.entry.insert(0, currentTeam["agent_defs"][0]["AI_file"])
 
     def show_map_entry(self, currentMap):
         """
@@ -1098,8 +1108,8 @@ class UISettings(tk.Toplevel):
     ### UPDATE JSON FILES###
     def update_teams_json(self):
         if (
-            self.teamNameEntry.get() in self.teamData.keys()
-            and self.teamNameEntry.get() != self.selectTeamCombo.get()
+            self.teamNameEntry.entry.get() in self.teamData.keys()
+            and self.teamNameEntry.entry.get() != self.selectTeamCombo.get()
         ):
             showwarning(
                 title="Warning",
@@ -1108,30 +1118,30 @@ class UISettings(tk.Toplevel):
         else:
             if (
                 self.teamSizeEntry.get() != ""
-                and self.callsignEntry.get() != ""
-                and self.teamNameEntry.get() != ""
-                and self.squadEntry.get() != ""
-                and self.agentObjectEntry.get() != ""
-                and self.aiFileEntry.get() != ""
+                and self.callsignEntry.entry.get() != ""
+                and self.teamNameEntry.entry.get() != ""
+                and self.squadEntry.entry.get() != ""
+                and self.agentObjectEntry.entry.get() != ""
+                and self.aiFileEntry.entry.get() != ""
             ):
-                self.currentTeamData["size"] = int(self.teamSizeEntry.get())
+                self.currentTeamData["size"] = int(self.teamSizeEntry.entry.get())
                 self.currentTeamData["agent_defs"][0][
                     "callsign"
-                ] = self.callsignEntry.get()
-                self.currentTeamData["name"] = self.teamNameEntry.get()
-                self.currentTeamData["agent_defs"][0]["squad"] = self.squadEntry.get()
+                ] = self.callsignEntry.entry.get()
+                self.currentTeamData["name"] = self.teamNameEntry.entry.get()
+                self.currentTeamData["agent_defs"][0]["squad"] = self.squadEntry.entry.get()
                 self.currentTeamData["agent_defs"][0][
                     "object"
-                ] = self.agentObjectEntry.get()
+                ] = self.agentObjectEntry.entry.get()
                 self.currentTeamData["agent_defs"][0][
                     "AI_file"
-                ] = self.aiFileEntry.get()
+                ] = self.aiFileEntry.entry.get()
 
                 self.teamData.update(
                     {self.currentTeamData["name"]: self.currentTeamData}
                 )
 
-                print(self.teamNameEntry.get())
+                print(self.teamNameEntry.entry.get())
                 self.teamsJSON = json.dumps(self.teamData, indent=4)
                 print(self.teamsJSON)
 
@@ -1160,8 +1170,8 @@ class UISettings(tk.Toplevel):
 
     def update_components_json(self):
         if (
-            self.componentsIDEntry.get() in self.componentData.keys()
-            and self.componentsIDEntry.get() != self.selectComponentCombo.get()
+            self.componentsIDEntry.entry.get() in self.componentData.keys()
+            and self.componentsIDEntry.entry.get() != self.selectComponentCombo.get()
         ):
             showwarning(
                 title="Warning",
@@ -1169,16 +1179,16 @@ class UISettings(tk.Toplevel):
             )
         else:
             if (
-                self.componentsIDEntry.get() != ""
-                and self.componentsNameEntry.get() != ""
+                self.componentsIDEntry.entry.get() != ""
+                and self.componentsNameEntry.entry.get() != ""
                 and self.componentsTypeAttr1Entry.get() != ""
                 and self.componentsTypeAttr2Entry.get() != ""
                 and self.componentsTypeAttr3Entry != ""
             ):
                 print(self.currentComponentData)
-                self.currentComponentData.setData("id", self.componentsIDEntry.get())
+                self.currentComponentData.setData("id", self.componentsIDEntry.entry.get())
                 self.currentComponentData.setData(
-                    "name", self.componentsNameEntry.get()
+                    "name", self.componentsNameEntry.entry.get()
                 )
                 self.currentComponentData.setData(
                     "ctype", self.componentsTypeCombo.get()
