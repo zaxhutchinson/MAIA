@@ -117,6 +117,9 @@ class UISettings(tk.Toplevel):
         self.agentFrame = uiQuietFrame(
             master=self.teamsColumn, borderwidth=5, relief="ridge", sticky="nsew"
         )
+
+        self.agentCombobox = uiComboBox(master=self.teamsColumn)
+
         self.callsignLabel = uiLabel(master=self.agentFrame, text="Callsign:")
         self.callsignEntry = uiEntry(master=self.agentFrame)
         self.squadLabel = uiLabel(master=self.agentFrame, text="Squad:")
@@ -135,6 +138,14 @@ class UISettings(tk.Toplevel):
             master=self.teamsColumn, command=self.delete_team, text="Delete"
         )
 
+        self.addAgentButton = uiButton(
+            master=self.teamsColumn, command=self.add_agent, text="Add Agent"
+        )
+
+        self.deleteAgentButton = uiButton(
+            master=self.teamsColumn, command=self.delete_agent, text="Delete Agent"
+        )
+
         # Place Team Widgets
         self.teamsColumn.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10)
         self.selectTeamCombo.grid(
@@ -145,8 +156,9 @@ class UISettings(tk.Toplevel):
         self.teamSizeEntry.grid(row=3, column=2, sticky="nsew")
         self.teamNameLabel.grid(row=4, column=1, sticky="nsew")
         self.teamNameEntry.grid(row=4, column=2, sticky="nsew")
+        self.agentCombobox.grid(row=5, column=1, columnspan=2)
         self.agentFrame.grid(
-            row=5, column=1, columnspan=2, rowspan=2, sticky="nsew", ipadx=0, ipady=0
+            row=6, column=1, columnspan=2, rowspan=2, sticky="nsew", ipadx=0, ipady=0
         )
         self.callsignLabel.grid(row=1, column=1, sticky="nsew")
         self.callsignEntry.grid(row=1, column=2, sticky="nsew")
@@ -157,16 +169,6 @@ class UISettings(tk.Toplevel):
         self.aiFileLabel.grid(row=4, column=1, sticky="nsew")
         self.aiFileEntry.grid(row=4, column=2, sticky="nsew")
         self.teamsUpdateButton.grid(
-            row=7,
-            column=1,
-            columnspan=2,
-            sticky="nsew",
-            ipadx=2,
-            ipady=2,
-            padx=10,
-            pady=10,
-        )
-        self.teamsCreateButton.grid(
             row=8,
             column=1,
             columnspan=2,
@@ -176,7 +178,7 @@ class UISettings(tk.Toplevel):
             padx=10,
             pady=10,
         )
-        self.teamsDeleteButton.grid(
+        self.teamsCreateButton.grid(
             row=9,
             column=1,
             columnspan=2,
@@ -186,6 +188,20 @@ class UISettings(tk.Toplevel):
             padx=10,
             pady=10,
         )
+        self.teamsDeleteButton.grid(
+            row=10,
+            column=1,
+            columnspan=2,
+            sticky="nsew",
+            ipadx=2,
+            ipady=2,
+            padx=10,
+            pady=10,
+        )
+
+        self.addAgentButton.grid(row=11, column=1, columnspan=2)
+
+        self.deleteAgentButton.grid(row=12, column=1, columnspan=2)
 
         # Make Component Widgets
         self.selectComponentCombo = uiComboBox(master=self.componentsColumn)
@@ -507,12 +523,75 @@ class UISettings(tk.Toplevel):
 
         self.init_entry_widgets()
 
+    def add_agent(self):
+        self.agentCallsign = askstring(
+            "Agent Callsign", "Please enter a Callsign for the new agent."
+        )
+        while len(self.agentCallsign) == 0 or any(
+            agent["callsign"] == self.agentCallsign
+            for agent in self.currentTeamData["agent_defs"]
+        ):
+            if len(self.agentCallsign) == 0:
+                messagebox.showwarning(
+                    "Warning", "You must enter an agent callsign to continue"
+                )
+            else:
+                messagebox.showwarning(
+                    "Warning",
+                    "This callsign already exists, please enter a new callsign.",
+                )
+            self.agentCallsign = askstring(
+                "Agent Callsign", "Please enter a Callsign for the new agent."
+            )
+        if len(self.agentCallsign) != 0:
+            self.currentTeamData["agent_defs"].append(
+                {
+                    "callsign": self.agentCallsign,
+                    "squad": "B",
+                    "object": "",
+                    "AI_file": "",
+                }
+            )
+            self.team_agents.append(self.agentCallsign)
+            self.agentCombobox.config(values=self.team_agents)
+            self.agentCombobox.current(len(self.team_agents) - 1)
+            self.show_agent_entry_widgets()
+
+    def delete_agent(self):
+        current_agent_idx = int(self.agentCombobox.current())
+
+        print(self.teamData[self.selectTeamCombo.get()]["agent_defs"])
+        print(current_agent_idx)
+        print(self.currentTeamData)
+        print(self.currentTeamData["agent_defs"][1])
+
+        with open("settings/teams.json", "r") as f:
+            teamJSON = json.load(f)
+        f.close()
+        if (
+            self.currentTeamData["agent_defs"][current_agent_idx]
+            in teamJSON[self.selectTeamCombo.get()]["agent_defs"]
+        ):
+            teamJSON[self.selectTeamCombo.get()]["agent_defs"].pop(current_agent_idx)
+        with open("settings/teams.json", "w") as f:
+            json.dump(teamJSON, f, indent=4)
+        f.close()
+        self.currentTeamData["agent_defs"].pop(current_agent_idx)
+        print(self.teamData)
+        self.team_agents.pop(current_agent_idx)
+        self.agentCombobox.config(values=self.team_agents)
+        self.agentCombobox.current(len(self.team_agents) - 1)
+
+        self.change_agent_entry_widgets()
+
     def init_entry_widgets(self):
         """
         Gets information from the loader and assigns current values for each setting type.
         """
         # TEAM
+
         self.teamData = self.ldr.team_templates
+        print(self.teamData)
         self.teamNames = self.ldr.getTeamNames()
         print(self.teamNames)
         self.currentTeamData = self.teamData[self.teamNames[0]]
@@ -523,6 +602,7 @@ class UISettings(tk.Toplevel):
             "<<ComboboxSelected>>", self.change_team_entry_widgets
         )
         self.selectTeamCombo.bind("<Enter>", self.get_previous_team_combo)
+        self.agentCombobox.bind("<<ComboboxSelected>>", self.change_agent_entry_widgets)
         self.show_team_entry(self.currentTeamData)
 
         # COMPONENT
@@ -1002,10 +1082,16 @@ class UISettings(tk.Toplevel):
         """
         Updates the values stored in the team entry widgets.
         """
+        self.team_agents = []
+        for i in range(len(currentTeam["agent_defs"])):
+            self.team_agents.append(currentTeam["agent_defs"][i]["callsign"])
+
         self.teamNameEntry.delete(0, tk.END)
         self.teamNameEntry.insert(0, currentTeam["name"])
         self.teamSizeEntry.delete(0, tk.END)
         self.teamSizeEntry.insert(0, currentTeam["size"])
+        self.agentCombobox.config(values=self.team_agents)
+        self.agentCombobox.current(0)
         self.callsignEntry.delete(0, tk.END)
         self.callsignEntry.insert(0, self.currentTeamData["agent_defs"][0]["callsign"])
         self.squadEntry.delete(0, tk.END)
@@ -1014,6 +1100,28 @@ class UISettings(tk.Toplevel):
         self.agentObjectEntry.insert(0, currentTeam["agent_defs"][0]["object"])
         self.aiFileEntry.delete(0, tk.END)
         self.aiFileEntry.insert(0, currentTeam["agent_defs"][0]["AI_file"])
+
+    def change_agent_entry_widgets(self, event=None):
+        self.show_agent_entry_widgets()
+
+    def show_agent_entry_widgets(self):
+        agent_idx = self.agentCombobox.current()
+        self.callsignEntry.delete(0, tk.END)
+        self.callsignEntry.insert(
+            0, self.currentTeamData["agent_defs"][agent_idx]["callsign"]
+        )
+        self.squadEntry.delete(0, tk.END)
+        self.squadEntry.insert(
+            0, self.currentTeamData["agent_defs"][agent_idx]["squad"]
+        )
+        self.agentObjectEntry.delete(0, tk.END)
+        self.agentObjectEntry.insert(
+            0, self.currentTeamData["agent_defs"][agent_idx]["object"]
+        )
+        self.aiFileEntry.delete(0, tk.END)
+        self.aiFileEntry.insert(
+            0, self.currentTeamData["agent_defs"][agent_idx]["AI_file"]
+        )
 
     def show_map_entry(self, currentMap):
         """
@@ -1097,6 +1205,8 @@ class UISettings(tk.Toplevel):
 
     ### UPDATE JSON FILES###
     def update_teams_json(self):
+
+        current_agent_idx = self.agentCombobox.current()
         if (
             self.teamNameEntry.get() in self.teamData.keys()
             and self.teamNameEntry.get() != self.selectTeamCombo.get()
@@ -1115,15 +1225,15 @@ class UISettings(tk.Toplevel):
                 and self.aiFileEntry.get() != ""
             ):
                 self.currentTeamData["size"] = int(self.teamSizeEntry.get())
-                self.currentTeamData["agent_defs"][0][
+                self.currentTeamData["agent_defs"][current_agent_idx][
                     "callsign"
                 ] = self.callsignEntry.get()
                 self.currentTeamData["name"] = self.teamNameEntry.get()
-                self.currentTeamData["agent_defs"][0]["squad"] = self.squadEntry.get()
-                self.currentTeamData["agent_defs"][0][
+                self.currentTeamData["agent_defs"][current_agent_idx]["squad"] = self.squadEntry.get()
+                self.currentTeamData["agent_defs"][current_agent_idx][
                     "object"
                 ] = self.agentObjectEntry.get()
-                self.currentTeamData["agent_defs"][0][
+                self.currentTeamData["agent_defs"][current_agent_idx][
                     "AI_file"
                 ] = self.aiFileEntry.get()
 
