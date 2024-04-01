@@ -16,8 +16,7 @@ import views
 import gstate
 import zfunctions
 
-
-from ui_scoreboard import displayScoreboard
+from ui_sim import UISim
 
 
 class Sim:
@@ -297,11 +296,14 @@ class Sim:
 
             if r:
                 self.imsgr.addMsg(
-                    msgs.Msg(self.tick, "GAME OVER", win_state.getData("msg"))
+                    msgs.Msg(
+                        self.tick,
+                        "GAME OVER: Please select 'FINISH GAME' for final scores.",
+                        win_state.getData("msg"),
+                    )
                 )
-
             rtn = rtn or r
-
+        # bookmark
         return rtn
 
         # Only 1 team remaining
@@ -342,6 +344,22 @@ class Sim:
 
         m = msgs.Msg(str(self.tick), "CURRENT POINTS", msg)
         self.imsgr.addMsg(m)
+
+    def getFinalScores(self):
+        final_scores = {}
+        for name, data in self.sides.items():
+            team_scores = {"agents": {}, "total": 0}
+
+            for agent_name, curr_obj in data["team"]["agents"].items():
+                agent_score = curr_obj.getData("points")
+                team_scores["agents"][curr_obj.getBestDisplayName()] = agent_score
+                team_scores["total"] += agent_score
+
+            final_scores[name] = team_scores
+
+        return final_scores
+
+    # bookmark
 
     ##########################################################################
     # RUN SIM
@@ -415,7 +433,7 @@ class Sim:
 
                 # Check if the sim is over.
                 if self.checkEndOfSim():
-                    displayScoreboard()
+                    # bookmark
                     return
                 else:
                     self.tick += 1

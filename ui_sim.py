@@ -9,6 +9,7 @@ import tkinter.scrolledtext as scrolltext
 import queue
 import cProfile
 import logging
+import ui_scoreboard
 
 from ui_widgets import *
 
@@ -37,6 +38,8 @@ class UISim(tk.Toplevel):
         self.omsgr = omsgr
         self.map_width = map_width
         self.map_height = map_height
+
+        self.UIMap = None
 
         # Create the left and right frames
         self.mapFrame = uiQuietFrame(master=self)
@@ -106,6 +109,17 @@ class UISim(tk.Toplevel):
             master=self.btnFrame1, text="Display Points", command=self.displayPoints
         )
         self.btnDisplayPoints.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+
+        self.topRightFrame = tk.Frame(master=self.logFrame)
+        self.topRightFrame.pack(fill=tk.NONE, expand=False, side=tk.TOP, anchor="ne")
+
+        self.btnDisplayScoreboard = ttk.Button(
+            master=self.topRightFrame,
+            text="Finish Game",
+            command=self.displayScoreboard,
+            width=10,
+        )
+        self.btnDisplayScoreboard.pack(padx=5, pady=5)
 
         self.logFrame.after(100, self.updateLog)
 
@@ -247,3 +261,16 @@ class UISim(tk.Toplevel):
 
     def displayPoints(self):
         self.sim.getPointsData()
+
+    def displayScoreboard(self):
+        teams_scores = self.sim.getFinalScores()
+        for widget in self.logFrame.winfo_children():
+            widget.destroy()
+
+        scoreboardFrame = uiQuietFrame(master=self.logFrame)
+        scoreboardFrame.pack(fill=tk.BOTH, expand=True)
+
+        scoreboard_frame = ui_scoreboard.ScoreboardFrame(
+            teams_scores, master=self.logFrame
+        )
+        scoreboard_frame.pack(fill=tk.BOTH, expand=True)
