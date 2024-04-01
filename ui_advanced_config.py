@@ -118,7 +118,10 @@ class UISettings(tk.Toplevel):
         self.teamSizeLabel = uiLabel(master=self.teamsColumn, text="Size:")
         self.teamSizeEntry = EntryHelp(
             master=self.teamsColumn,
-            text="The team size field represents how many agents you want in the selected team. This field takes numeric values only.",
+            text=(
+                "The team size field represents how many agents you want in the selected team."
+                " This field takes numeric values only."
+            ),
         )
         self.teamSizeEntry.entry.config(
             validate="all", validatecommand=(self.validateNum, "%P")
