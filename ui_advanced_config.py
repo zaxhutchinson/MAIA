@@ -116,7 +116,10 @@ class UISettings(tk.Toplevel):
         self.selectTeamCombo.configure(state="readonly")
         self.teamsLabel = uiLabel(master=self.teamsColumn, text="Teams")
         self.teamSizeLabel = uiLabel(master=self.teamsColumn, text="Size:")
-        self.teamSizeEntry = EntryHelp(master=self.teamsColumn, text="To be added.")
+        self.teamSizeEntry = EntryHelp(
+            master=self.teamsColumn,
+            text="The team size field represents how many agents you want in the selected team. This field takes numeric values only.",
+        )
         self.teamSizeEntry.entry.config(
             validate="all", validatecommand=(self.validateNum, "%P")
         )
@@ -812,7 +815,10 @@ class UISettings(tk.Toplevel):
                     == str(self.currentObjectData.getData("density"))
                 )
                 and (compIds == self.currentObjectData.getData("comp_ids"))
-                and (bool(self.objectsPointsCountCombo.current()) == self.currentObjectData.getData("points_count"))
+                and (
+                    bool(self.objectsPointsCountCombo.current())
+                    == self.currentObjectData.getData("points_count")
+                )
             )
         ):
             self.answer = askyesno(
