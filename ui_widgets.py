@@ -125,7 +125,7 @@ class uiNotebook(ttk.Notebook):
         # highlightthickness=0,
         # highlightbackground=DARKCOLOR
         # )
-        #self.config(font=("Arial", FONT_SIZE))
+        # self.config(font=("Arial", FONT_SIZE))
 
 
 class uiEntry(tk.Entry):
