@@ -854,7 +854,12 @@ class UISettings(tk.Toplevel):
         self.componentsTypeCombo.set(currentComp.getData("ctype"))
         self.componentsTypeLabel.config(text=currentComp.getData("ctype"))
         self.componentsTypeAttr1Entry.entry.configure(state="normal")
+        self.componentsTypeAttr2Entry.entry.configure(state="normal")
         self.componentsTypeAttr3Entry.entry.configure(state="normal")
+        self.componentsTypeAttr4Entry.entry.configure(state="normal")
+        self.componentsTypeAttr5Entry.entry.configure(state="normal")
+        self.componentsTypeAttr6Entry.entry.configure(state="normal")
+        self.componentsTypeAttr7Entry.entry.configure(state="normal")
         self.componentsTypeAttr1Label.config(text="")
         self.componentsTypeAttr2Label.config(text="")
         self.componentsTypeAttr3Label.config(text="")
@@ -881,6 +886,12 @@ class UISettings(tk.Toplevel):
             self.componentsTypeAttr1Entry.entry.insert(
                 0, currentComp.getData(self.componentTypeAttr[4])
             )
+            self.componentsTypeAttr2Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr3Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr4Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr5Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr6Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr7Entry.entry.configure(state="readonly")
         elif currentComp.getData("ctype") == "FixedGun":
             self.componentsTypeAttr3Entry.entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
@@ -938,6 +949,8 @@ class UISettings(tk.Toplevel):
             self.componentsTypeAttr5Entry.entry.insert(
                 0, currentComp.getData(self.componentTypeAttr[8])
             )
+            self.componentsTypeAttr6Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr7Entry.entry.configure(state="readonly")
         elif currentComp.getData("ctype") == "Radar":
             self.componentsTypeAttr1Entry.entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
@@ -970,6 +983,7 @@ class UISettings(tk.Toplevel):
             self.componentsTypeAttr6Entry.entry.insert(
                 0, currentComp.getData(self.componentTypeAttr[9])
             )
+            self.componentsTypeAttr7Entry.entry.configure(state="readonly")
         elif currentComp.getData("ctype") == "Radio":
             self.componentsTypeAttr3Entry.entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text="max_range")
@@ -987,6 +1001,10 @@ class UISettings(tk.Toplevel):
                 ),
             )
             self.componentsTypeAttr3Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr4Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr5Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr6Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr7Entry.entry.configure(state="readonly")
         elif self.currentComponentData.getData("ctype") == "Arm":
             self.componentsTypeAttr3Entry.entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
@@ -1007,6 +1025,10 @@ class UISettings(tk.Toplevel):
                 ),
             )
             self.componentsTypeAttr3Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr4Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr5Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr6Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr7Entry.entry.configure(state="readonly")
 
     def show_team_entry(self, currentTeam):
         """
