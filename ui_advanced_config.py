@@ -746,11 +746,8 @@ class UISettings(tk.Toplevel):
         if len(compIds) != 0:
             if compIds[-1] == "Add New Comp ID":
                 compIds.pop(-1)
-        print("a")
         print(compIds)
-        print("b")
         print(self.currentObjectData.getData("comp_ids"))
-        print("c")
         if not (
             (
                 (self.objectsIDEntry.get() == self.currentObjectData.getData("id"))
@@ -1176,13 +1173,11 @@ class UISettings(tk.Toplevel):
                 message="The ID you are trying to use is already in use by another component. Please use another ID.",
             )
         else:
-            print("a")
             if (
                 self.componentsIDEntry.get() != ""
                 and self.componentsNameEntry.get() != ""
                 and self.componentsTypeAttr1Entry.get() != ""
             ):
-                print("b")
                 print(self.currentComponentData)
                 self.currentComponentData.setData("id", self.componentsIDEntry.get())
                 self.currentComponentData.setData(
@@ -1297,7 +1292,6 @@ class UISettings(tk.Toplevel):
                 if self.currentComponentData.getData("name") != self.componentData[
                     self.selectComponentCombo.get().split(":")[0]
                 ].getData("name"):
-                    print("c")
                     comp_idx = self.selectComponentCombo.current()
                     self.currentCompIDs[comp_idx] = ": ".join(
                         [
@@ -1309,9 +1303,7 @@ class UISettings(tk.Toplevel):
                     self.selectComponentCombo.current(len(self.componentIDs) - 1)
                 with open("settings/components.json", "r") as f:
                     componentJSON = json.load(f)
-                print("d")
-
-                if (
+                if self.selectComponentCombo.get().split(":")[1] != "" or (
                     self.currentComponentData.getData("name")
                     != componentJSON[self.currentComponentData.getData("id")]["name"]
                 ):
@@ -1328,7 +1320,6 @@ class UISettings(tk.Toplevel):
                     self.currentComponentData.getData("id")
                     != self.selectComponentCombo.get().split(":")[0]
                 ):
-                    print("e")
                     if self.selectComponentCombo.get().split(":")[0] in componentJSON:
                         componentJSON.pop(self.selectComponentCombo.get().split(":")[0])
                     if (
@@ -1430,7 +1421,7 @@ class UISettings(tk.Toplevel):
 
                 print(self.selectObjectsCombo.get())
 
-                if (
+                if self.selectObjectsCombo.get().split(":")[1] != "" or (
                     self.currentObjectData.getData("name")
                     != objectJSON[self.currentObjectData.getData("id")]["name"]
                 ):
