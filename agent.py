@@ -1,5 +1,8 @@
 class Agent:
+    """This class is currently depreciated and is not in use"""
+
     def __init__(self, ID, obj_id, ai_filename):
+        """Sets data values to associated params"""
         self.data = {}
         self.data["id"] = ID
         self.data["objid"] = obj_id
@@ -8,12 +11,14 @@ class Agent:
         self.data["obj"] = None
 
     def getData(self, key):
+        """Getter of data"""
         if key in self.data:
             return self.data[key]
         else:
             return None
 
     def setData(self, key, val):
+        """Setter of data"""
         self.data[key] = val
 
     # def setObj(self,obj):
