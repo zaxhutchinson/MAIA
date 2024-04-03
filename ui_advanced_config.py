@@ -24,7 +24,7 @@ class UISettings(tk.Toplevel):
         self.configure(bg=BGCOLOR)
         self.title("MAIA - Advanced Configuration")
 
-        self.geometry("1400x700")
+        self.geometry("1450x700")
         self.minsize(width=1400, height=700)
         self.logger = logger
         self.ldr = loader.Loader(self.logger)
@@ -691,8 +691,6 @@ class UISettings(tk.Toplevel):
         elif self.currentComponentData.getData("ctype") == "Arm":
             ctype_attributes = self.ArmKeys
 
-        print(self.componentsTypeAttr1Entry.entry.get())
-        print(self.currentComponentData.getData(ctype_attributes[0]))
         if not (
             (
                 (
@@ -903,6 +901,13 @@ class UISettings(tk.Toplevel):
         self.componentsTypeAttr5Entry.entry.configure(state="normal")
         self.componentsTypeAttr6Entry.entry.configure(state="normal")
         self.componentsTypeAttr7Entry.entry.configure(state="normal")
+        self.componentsTypeAttr1Entry.help_button.configure(state="normal")
+        self.componentsTypeAttr2Entry.help_button.configure(state="normal")
+        self.componentsTypeAttr3Entry.help_button.configure(state="normal")
+        self.componentsTypeAttr4Entry.help_button.configure(state="normal")
+        self.componentsTypeAttr5Entry.help_button.configure(state="normal")
+        self.componentsTypeAttr6Entry.help_button.configure(state="normal")
+        self.componentsTypeAttr7Entry.help_button.configure(state="normal")
         self.componentsTypeAttr1Label.config(text="")
         self.componentsTypeAttr2Label.config(text="")
         self.componentsTypeAttr3Label.config(text="")
@@ -935,6 +940,12 @@ class UISettings(tk.Toplevel):
             self.componentsTypeAttr5Entry.entry.configure(state="readonly")
             self.componentsTypeAttr6Entry.entry.configure(state="readonly")
             self.componentsTypeAttr7Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr2Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr3Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr4Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr5Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr6Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr7Entry.help_button.configure(state="disabled")
         elif currentComp.getData("ctype") == "FixedGun":
             self.componentsTypeAttr3Entry.entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
@@ -987,7 +998,7 @@ class UISettings(tk.Toplevel):
                 0, currentComp.getData(self.componentTypeAttr[6])
             )
             self.componentsTypeAttr4Label.config(text=self.componentTypeAttr[7])
-            self.componentsTypeAttr4Entry.insert(
+            self.componentsTypeAttr4Entry.entry.insert(
                 0, currentComp.getData(self.componentTypeAttr[7])
             )
             self.componentsTypeAttr5Label.config(text=self.componentTypeAttr[8])
@@ -996,6 +1007,8 @@ class UISettings(tk.Toplevel):
             )
             self.componentsTypeAttr6Entry.entry.configure(state="readonly")
             self.componentsTypeAttr7Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr6Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr7Entry.help_button.configure(state="disabled")
         elif currentComp.getData("ctype") == "Radar":
             self.componentsTypeAttr1Entry.entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
@@ -1034,7 +1047,6 @@ class UISettings(tk.Toplevel):
         elif currentComp.getData("ctype") == "Radio":
             self.componentsTypeAttr3Entry.entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text="max_range")
-            print(self.componentTypeAttr)
             self.componentsTypeAttr1Entry.entry.insert(
                 0, currentComp.getData("max_range")
             )
@@ -1056,6 +1068,11 @@ class UISettings(tk.Toplevel):
             self.componentsTypeAttr5Entry.entry.configure(state="readonly")
             self.componentsTypeAttr6Entry.entry.configure(state="readonly")
             self.componentsTypeAttr7Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr3Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr4Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr5Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr6Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr7Entry.help_button.configure(state="disabled")
         elif self.currentComponentData.getData("ctype") == "Arm":
             self.componentsTypeAttr3Entry.entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text=self.componentTypeAttr[4])
@@ -1080,6 +1097,11 @@ class UISettings(tk.Toplevel):
             self.componentsTypeAttr5Entry.entry.configure(state="readonly")
             self.componentsTypeAttr6Entry.entry.configure(state="readonly")
             self.componentsTypeAttr7Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr3Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr4Entry.help_button.configure(state="readonly")
+            self.componentsTypeAttr5Entry.help_button.configure(state="readonly")
+            self.componentsTypeAttr6Entry.help_button.configure(state="readonly")
+            self.componentsTypeAttr7Entry.help_button.configure(state="readonly")
 
     def show_team_entry(self, currentTeam):
         """
@@ -1226,7 +1248,6 @@ class UISettings(tk.Toplevel):
 
                 print(self.teamNameEntry.entry.get())
                 self.teamsJSON = json.dumps(self.teamData, indent=4)
-                print(self.teamsJSON)
 
                 with open("settings/teams.json", "r") as f:
                     teamJSON = json.load(f)
