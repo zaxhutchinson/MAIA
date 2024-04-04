@@ -1044,6 +1044,7 @@ class UISettings(tk.Toplevel):
                 0, currentComp.getData(self.componentTypeAttr[9])
             )
             self.componentsTypeAttr7Entry.entry.configure(state="readonly")
+            self.componentsTypeAttr7Entry.help_button.configure(state="disabled")
         elif currentComp.getData("ctype") == "Radio":
             self.componentsTypeAttr3Entry.entry.configure(validate="none")
             self.componentsTypeAttr1Label.config(text="max_range")
@@ -1098,10 +1099,10 @@ class UISettings(tk.Toplevel):
             self.componentsTypeAttr6Entry.entry.configure(state="readonly")
             self.componentsTypeAttr7Entry.entry.configure(state="readonly")
             self.componentsTypeAttr3Entry.help_button.configure(state="disabled")
-            self.componentsTypeAttr4Entry.help_button.configure(state="readonly")
-            self.componentsTypeAttr5Entry.help_button.configure(state="readonly")
-            self.componentsTypeAttr6Entry.help_button.configure(state="readonly")
-            self.componentsTypeAttr7Entry.help_button.configure(state="readonly")
+            self.componentsTypeAttr4Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr5Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr6Entry.help_button.configure(state="disabled")
+            self.componentsTypeAttr7Entry.help_button.configure(state="disabled")
 
     def show_team_entry(self, currentTeam):
         """
