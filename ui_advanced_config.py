@@ -391,11 +391,11 @@ class UISettings(tk.Toplevel):
             validate="all", validatecommand=(self.validateNum, "%P")
         )
         self.objectsCompIDsLabel = uiLabel(master=self.objectsColumn, text="Comp IDs:")
-        self.objectsCompIDsCombo = uiComboBox(master=self.objectsColumn)
+        self.objectsCompIDsCombo = ComboBoxHelp(master=self.objectsColumn, text="To be Added.")
         self.objectsPointsCountLabel = uiLabel(
             master=self.objectsColumn, text="Points Count:"
         )
-        self.objectsPointsCountCombo = uiComboBox(master=self.objectsColumn)
+        self.objectsPointsCountCombo = ComboBoxHelp(master=self.objectsColumn, text="To be Added.")
 
         # Place Object Widgets
         self.objectsColumn.pack(
@@ -420,9 +420,9 @@ class UISettings(tk.Toplevel):
         self.objectsDensityLabel.grid(row=9, column=1, sticky="nsew")
         self.objectsDensityEntry.frame.grid(row=9, column=2, sticky="nsew")
         self.objectsCompIDsLabel.grid(row=10, column=1, sticky="nsew")
-        self.objectsCompIDsCombo.grid(row=10, column=2, sticky="nsew")
+        self.objectsCompIDsCombo.frame.grid(row=10, column=2, sticky="nsew")
         self.objectsPointsCountLabel.grid(row=11, column=1, sticky="nsew")
-        self.objectsPointsCountCombo.grid(row=11, column=2, sticky="nsew")
+        self.objectsPointsCountCombo.frame.grid(row=11, column=2, sticky="nsew")
         self.objectsUpdateButton.grid(
             row=12,
             column=1,
@@ -817,7 +817,7 @@ class UISettings(tk.Toplevel):
                 )
                 and (compIds == self.currentObjectData.getData("comp_ids"))
                 and (
-                    bool(self.objectsPointsCountCombo.current())
+                    bool(self.objectsPointsCountCombo.combobox.current())
                     == self.currentObjectData.getData("points_count")
                 )
             )
@@ -1161,21 +1161,21 @@ class UISettings(tk.Toplevel):
         self.objectsDensityEntry.entry.insert(0, currentObj.getData("density"))
         self.currentCompIDs = currentObj.getData("comp_ids")[:]
         print(self.currentCompIDs)
-        self.objectsCompIDsCombo.set("")
-        self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
+        self.objectsCompIDsCombo.combobox.set("")
+        self.objectsCompIDsCombo.combobox.configure(values=self.currentCompIDs)
         if len(self.currentCompIDs) != 0:
-            self.objectsCompIDsCombo.current(0)
-        self.objectsCompIDsCombo.bind("<<ComboboxSelected>>", self.get_current_comp_id)
-        self.objectsCompIDsCombo.bind("<Enter>", self.add_empty_comp_id)
-        self.objectsCompIDsCombo.bind("<Return>", self.add_new_comp_id)
-        self.objectsCompIDsCombo.bind("<KeyRelease>", self.delete_comp_id)
-        self.objectsPointsCountCombo.configure(values=["False", "True"])
-        self.objectsPointsCountCombo.config(state="normal")
+            self.objectsCompIDsCombo.combobox.current(0)
+        self.objectsCompIDsCombo.combobox.bind("<<ComboboxSelected>>", self.get_current_comp_id)
+        self.objectsCompIDsCombo.combobox.bind("<Enter>", self.add_empty_comp_id)
+        self.objectsCompIDsCombo.combobox.bind("<Return>", self.add_new_comp_id)
+        self.objectsCompIDsCombo.combobox.bind("<KeyRelease>", self.delete_comp_id)
+        self.objectsPointsCountCombo.combobox.configure(values=["False", "True"])
+        self.objectsPointsCountCombo.combobox.config(state="normal")
         if bool(currentObj.getData("points_count")) is True:
-            self.objectsPointsCountCombo.current(1)
+            self.objectsPointsCountCombo.combobox.current(1)
         else:
-            self.objectsPointsCountCombo.current(0)
-        self.objectsPointsCountCombo.config(state="readonly")
+            self.objectsPointsCountCombo.combobox.current(0)
+        self.objectsPointsCountCombo.combobox.config(state="readonly")
 
     def add_empty_comp_id(self, event):
         """
@@ -1183,30 +1183,30 @@ class UISettings(tk.Toplevel):
         """
         if len(self.currentCompIDs) == 0:
             self.currentCompIDs.append("Add New Comp ID")
-            self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
+            self.objectsCompIDsCombo.combobox.configure(values=self.currentCompIDs)
         elif self.currentCompIDs[-1] != "Add New Comp ID":
             self.currentCompIDs.append("Add New Comp ID")
-            self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
+            self.objectsCompIDsCombo.combobox.configure(values=self.currentCompIDs)
 
     def get_current_comp_id(self, event):
-        self.currentCompIDIdx = self.objectsCompIDsCombo.current()
-        self.currentCompID = self.objectsCompIDsCombo.get()
+        self.currentCompIDIdx = self.objectsCompIDsCombo.combobox.current()
+        self.currentCompID = self.objectsCompIDsCombo.combobox.get()
 
     def delete_comp_id(self, event):
-        currentCompID = self.objectsCompIDsCombo.get()
+        currentCompID = self.objectsCompIDsCombo.combobox.get()
         if len(currentCompID) == 0:
             if self.currentCompIDIdx != len(self.currentCompIDs) - 1:
                 self.currentCompIDs.pop(self.currentCompIDIdx)
-                self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
+                self.objectsCompIDsCombo.combobox.configure(values=self.currentCompIDs)
 
     def add_new_comp_id(self, event):
-        newComboID = self.objectsCompIDsCombo.get()
+        newComboID = self.objectsCompIDsCombo.combobox.get()
         newComboIDIndex = self.currentCompIDIdx
         print(newComboIDIndex)
         if newComboID not in self.currentCompIDs and newComboID.strip() != "":
             self.currentCompIDs[newComboIDIndex] = newComboID
-            self.objectsCompIDsCombo.configure(values=self.currentCompIDs)
-            self.objectsCompIDsCombo.set(newComboID)
+            self.objectsCompIDsCombo.combobox.configure(values=self.currentCompIDs)
+            self.objectsCompIDsCombo.combobox.set(newComboID)
 
     ### UPDATE JSON FILES###
     def update_teams_json(self):
@@ -1483,7 +1483,7 @@ class UISettings(tk.Toplevel):
                         self.currentCompIDs.pop(-1)
                 self.currentObjectData.setData("comp_ids", self.currentCompIDs)
                 self.currentObjectData.setData(
-                    "points_count", bool(self.objectsPointsCountCombo.current())
+                    "points_count", bool(self.objectsPointsCountCombo.combobox.current())
                 )
 
                 print(self.currentObjectData.getJSONView())
