@@ -1247,7 +1247,6 @@ class UISettings(tk.Toplevel):
                     {self.currentTeamData["name"]: self.currentTeamData}
                 )
 
-                print(self.teamNameEntry.entry.get())
                 self.teamsJSON = json.dumps(self.teamData, indent=4)
 
                 with open("settings/teams.json", "r") as f:
@@ -1290,7 +1289,6 @@ class UISettings(tk.Toplevel):
                 and self.componentsTypeAttr2Entry.entry.get() != ""
                 and self.componentsTypeAttr3Entry != ""
             ):
-                print(self.currentComponentData)
                 self.currentComponentData.setData(
                     "id", self.componentsIDEntry.entry.get()
                 )
