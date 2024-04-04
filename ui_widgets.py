@@ -161,7 +161,7 @@ class EntryHelp:
         self.help_button.grid(row=0, column=7)
 
     def show_help(self):
-        messagebox.showinfo("Help", self.text)
+        messagebox.showinfo("Help", self.text, parent=self.master)
 
 
 class uiComboBox(ttk.Combobox):
