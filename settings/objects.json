@@ -10,7 +10,6 @@
         "comp_ids" : [],
         "points_count" : false,
         "sprite_path" : "none"
-
     },
     "1": {
         "id": "1",
@@ -67,7 +66,8 @@
             "2000",
             "3000"
         ],
-        "points_count": true
+        "points_count": true,
+        "sprite_path": "images/stick.png"
     },
     "start_loc": {
         "id": "start_loc",

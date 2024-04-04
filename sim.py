@@ -162,7 +162,7 @@ class Sim:
         self.map.buildMapGrid()
 
         # Create the map border
-        edge_obj_id = self.map.getData("edge_obj_id")  # Point B
+        edge_obj_id = self.map.getData("edge_obj_id")
         edge_coords = self.map.getListOfEdgeCoordinates()
         for ec in edge_coords:
             # Copy the obj
@@ -184,7 +184,7 @@ class Sim:
                 # If an object entry in placed_objs does not
                 # have a position, it is ignored.
                 if "x" in o and "y" in o:
-                    newobj = ldr.copyObjTemplate(oid)  # Point C
+                    newobj = ldr.copyObjTemplate(oid)
                     data = o
                     data["uuid"] = uuid.uuid4()
                     if newobj.place:
@@ -826,7 +826,7 @@ class Sim:
         dd = []
         for curr_obj in self.destroyed_objs.values():
             dd.append(curr_obj.getDrawData())
-        for curr_obj in self.objs.values():  # Point A
+        for curr_obj in self.objs.values():
             dd.append(curr_obj.getDrawData())
         return dd
 

@@ -177,18 +177,6 @@ class uiCanvas(tk.Canvas):
             highlightcolor=TEXTCOLOR,
         )
 
-        # object sprites
-        self.tank = ImageTk.PhotoImage(Image.open("images/bot2.png"))
-        self.rTankSprite = Image.open("images/red_up1.png")
-        self.bTankSprite = Image.open("images/blue_up1.png")
-        self.boxSprite = Image.open("images/barrel_top.png")
-        # self.player = Image.open("images/stick.png")
-
-        # item sprites
-        self.red_flag = ImageTk.PhotoImage(Image.open("images/redFlag.png"))
-        self.blue_flag = ImageTk.PhotoImage(Image.open("images/blueFlag.png"))
-        self.crownSprite = ImageTk.PhotoImage(Image.open("images/crown.png"))
-
     def drawTile(self, **kwargs):
         x0 = kwargs["x"] * self.cell_size
         y0 = kwargs["y"] * self.cell_size
@@ -221,7 +209,7 @@ class uiCanvas(tk.Canvas):
 
         try:
             self.sprite = Image.open(dd["sprite_path"])
-            facing = (  # sim usee clock-wise coords, ui uses counter-clockwise coords
+            facing = (  # sim uses clock-wise coords, ui uses counter-clockwise coords
                 dd["facing"] * -1
             )
             globalSpriteList.append(self.sprite.copy())
@@ -255,7 +243,6 @@ class uiCanvas(tk.Canvas):
             + self.char_offset
             + self.cell_size
         )
-        # print("KWARGS ID: ", kwargs["objID"])
         self.coords(kwargs["objID"], x, y)
 
     def drawItem(self, **kwargs):

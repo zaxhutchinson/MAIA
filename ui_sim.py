@@ -12,8 +12,6 @@ import logging
 
 from ui_widgets import *
 
-hope = None
-
 
 class UISim(tk.Toplevel):
     def __init__(self, map_width, map_height, sim, omsgr, master=None, logger=None):
