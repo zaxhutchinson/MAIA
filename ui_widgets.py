@@ -156,7 +156,11 @@ class EntryHelp:
         self.entry = uiEntry(master=self.frame)
         self.entry.grid(row=0, column=0, columnspan=6)
 
-        self.help_button = uiButton(master=self.frame, text="?", command=lambda: messagebox.showinfo("Help", self.text, parent=self.master))
+        self.help_button = uiButton(
+            master=self.frame,
+            text="?",
+            command=lambda: messagebox.showinfo("Help", self.text, parent=self.master),
+        )
         self.help_button.configure(width=26)
         self.help_button.grid(row=0, column=7)
 
@@ -174,9 +178,13 @@ class ComboBoxHelp:
         self.combobox = uiComboBox(master=self.frame)
         self.combobox.grid(row=0, column=0, columnspan=6)
 
-        self.help_button = uiButton(master=self.frame, text="?", command= lambda: messagebox.showinfo("Help", self.text, parent=self.master))
+        self.help_button = uiButton(
+            master=self.frame,
+            text="?",
+            command=lambda: messagebox.showinfo("Help", self.text, parent=self.master),
+        )
         self.help_button.configure(width=26)
-        self.help_button.grid(row=0,column=7)
+        self.help_button.grid(row=0, column=7)
 
 
 class uiComboBox(ttk.Combobox):
