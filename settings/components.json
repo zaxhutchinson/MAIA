@@ -1,4 +1,10 @@
 {
+    "0": {
+        "id": "0",
+        "name": "Basic Command Module",
+        "ctype": "CnC",
+        "max_cmds_per_tick": 100
+    }, 
     "1000": {
         "id": "1000",
         "name": "Main Cannon",
