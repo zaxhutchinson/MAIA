@@ -15,12 +15,13 @@ from ui_widgets import *
 
 
 class UISim(tk.Toplevel):
-    def __init__(self, map_width, map_height, sim, omsgr, master=None, logger=None):
+    def __init__(self, map_width, map_height, sim, omsgr, controller, master=None, logger=None):
         super().__init__(master)
         self.master = master
         self.configure(bg=BGCOLOR)
         self.title("MAIA - Sim UI")
         self.logger = logger
+        self.controller = controller
 
         self.cell_size = 32
         self.map_obj_char_size = 24
@@ -254,7 +255,8 @@ class UISim(tk.Toplevel):
         turns_to_run = self.tbTurnsToRun.get()
         if turns_to_run.isdigit():
             turns_to_run = int(turns_to_run)
-            self.sim.runSim(turns_to_run)
+            if self.sim.runSim(turns_to_run):
+                self.displayScoreboard()
 
         self.updateObjects()
         self.updateItems()
@@ -271,6 +273,6 @@ class UISim(tk.Toplevel):
         scoreboardFrame.pack(fill=tk.BOTH, expand=True)
 
         scoreboard_frame = ui_scoreboard.ScoreboardFrame(
-            teams_scores, master=self.logFrame
+            teams_scores, self.controller, self, self.sim, master=self.logFrame
         )
         scoreboard_frame.pack(fill=tk.BOTH, expand=True)

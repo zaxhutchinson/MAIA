@@ -434,7 +434,7 @@ class Sim:
                 # Check if the sim is over.
                 if self.checkEndOfSim():
                     # bookmark
-                    return
+                    return True
                 else:
                     self.tick += 1
 
