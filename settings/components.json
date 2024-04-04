@@ -75,11 +75,5 @@
         "max_weight": 1000,
         "max_bulk": 1000,
         "item": null
-    },
-    "11": {
-        "id": "11",
-        "name": "cc",
-        "ctype": "CnC",
-        "max_cmds_per_tick": 1
     }
 }

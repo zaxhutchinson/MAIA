@@ -46,17 +46,5 @@
                 "AI_file": "AI_file4.py"
             }
         ]
-    },
-    "teammm": {
-        "size": 1,
-        "name": "teammm",
-        "agent_defs": [
-            {
-                "callsign": "a",
-                "squad": "a",
-                "object": "a",
-                "AI_file": "a"
-            }
-        ]
     }
 }

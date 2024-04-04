@@ -108,16 +108,5 @@
             "3000"
         ],
         "points_count": true
-    },
-    "11": {
-        "id": "11",
-        "name": "a",
-        "fill_alive": "a",
-        "fill_dead": "a",
-        "text": "a",
-        "health": 11,
-        "density": 11,
-        "comp_ids": [],
-        "points_count": true
     }
 }
