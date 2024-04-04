@@ -1,15 +1,4 @@
 {
-    "0": {
-        "id": "0",
-        "name": "Indestructible Block",
-        "fill_alive": "gray1",
-        "fill_dead": "black",
-        "text": "X",
-        "health": 100000000000000000000,
-        "density": 1000,
-        "comp_ids": [],
-        "points_count": false
-    },
     "1": {
         "id": "1",
         "name": "Box",

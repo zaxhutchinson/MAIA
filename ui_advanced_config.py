@@ -636,7 +636,7 @@ class UISettings(tk.Toplevel):
         else:
             self.selectTeamCombo.current(self.prev_team_combo)
 
-    def change_components_entry_widgets(self, event):
+    def change_components_entry_widgets(self, event=None):
         self.answer = True
 
         if self.currentComponentData.getData("ctype") == "CnC":
@@ -1687,24 +1687,32 @@ class UISettings(tk.Toplevel):
             self.change_team_entry_widgets()
 
     def delete_components(self):
-        if self.selectComponentCombo.get() in self.componentData:
-            self.componentData.pop(self.selectComponentCombo.get())
+        if self.selectComponentCombo.get().split(":")[0] in self.componentData:
+            self.componentData.pop(self.selectComponentCombo.get().split(":")[0])
 
             with open("settings/components.json", "r") as f:
                 componentJSON = json.load(f)
-                componentJSON.pop(self.selectComponentCombo.get())
+                componentJSON.pop(self.selectComponentCombo.get().split(":")[0])
             f.close()
             with open("settings/components.json", "w") as f:
                 json.dump(componentJSON, f, indent=4)
             f.close()
-        self.componentIDs.pop(self.selectComponentCombo.current())
-        self.selectComponentCombo.configure(values=self.componentIDs)
-        self.selectComponentCombo.current(len(self.componentIDs) - 1)
-        self.change_components_entry_widgets()
+            self.componentIDs.pop(self.selectComponentCombo.current())
+            self.selectComponentCombo.configure(values=self.componentIDs)
+            self.selectComponentCombo.current(len(self.componentIDs) - 1)
+            self.change_components_entry_widgets()
 
     def delete_object(self):
-        if self.selectObjectsCombo.get() in self.objectData:
-            self.objectData.pop(self.selectObjectsCombo.get())
+        if self.selectObjectsCombo.get().split(":")[0] in self.objectData:
+            self.objectData.pop(self.selectObjectsCombo.get().split(":")[0])
+
+            with open("settings/objects.json", "r") as f:
+                objectJSON = json.load(f)
+                objectJSON.pop(self.selectObjectsCombo.get().split(":")[0])
+            f.close()
+            with open("settings/objects.json", "w") as f:
+                json.dump(objectJSON, f, indent=4)
+            f.close()
             self.objectIDs.pop(self.selectObjectsCombo.current())
             self.selectObjectsCombo.configure(values=self.objectIDs)
             self.selectObjectsCombo.current(len(self.objectIDs) - 1)
@@ -1720,10 +1728,10 @@ class UISettings(tk.Toplevel):
             with open("settings/maps.json", "w") as f:
                 json.dump(mapJSON, f, indent=4)
             f.close()
-        self.mapIDs.pop(self.selectMapsCombo.current())
-        self.selectMapsCombo.configure(values=self.mapIDs)
-        self.selectMapsCombo.current(len(self.mapIDs) - 1)
-        self.change_maps_entry_widgets()
+            self.mapIDs.pop(self.selectMapsCombo.current())
+            self.selectMapsCombo.configure(values=self.mapIDs)
+            self.selectMapsCombo.current(len(self.mapIDs) - 1)
+            self.change_maps_entry_widgets()
 
     ### SHOW MAP WINDOW ###
     def show_map(self):
