@@ -1,8 +1,9 @@
 import tkinter as tk
 from ui_widgets import *
 
+
 class ScoreboardFrame(tk.Frame):
-    def __init__(self, teams_scores_dict, controller, ui_sim,sim, master=None):
+    def __init__(self, teams_scores_dict, controller, ui_sim, sim, master=None):
         super().__init__(master)
         self.master = master
         self.teams_scores_dict = teams_scores_dict
@@ -50,9 +51,8 @@ class ScoreboardFrame(tk.Frame):
             score_label.grid(row=index, column=1, columnspan=2, sticky="e")
 
         home_button = uiButton(master=self, command=self.homepage, text="Home")
-        home_button.grid(row=index+1,column=0)
+        home_button.grid(row=index + 1, column=0)
 
     def homepage(self):
         self.controller.show_frame("HomePage")
         self.ui_sim.destroy()
-        

@@ -267,7 +267,7 @@ class UISim(tk.Toplevel):
     def displayScoreboard(self):
         teams_scores = self.sim.getFinalScores()
         for widget in self.logFrame.winfo_children():
-            widget.destroy()
+            widget.pack_forget()
 
         scoreboardFrame = uiQuietFrame(master=self.logFrame)
         scoreboardFrame.pack(fill=tk.BOTH, expand=True)

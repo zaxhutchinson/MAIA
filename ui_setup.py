@@ -268,7 +268,13 @@ class UISetup(tk.Frame):
             map_width = self.sim.getMap().getData("width")
             map_height = self.sim.getMap().getData("height")
             self.UIMap = ui_sim.UISim(
-                map_width, map_height, self.sim, self.omsgr, self.controller, self, self.logger, 
+                map_width,
+                map_height,
+                self.sim,
+                self.omsgr,
+                self.controller,
+                self,
+                self.logger,
             )
             print("else")
 
