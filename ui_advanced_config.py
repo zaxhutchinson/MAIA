@@ -1323,8 +1323,6 @@ class UISettings(tk.Toplevel):
                     self.currentComponentData
                 )
 
-
-
                 if self.selectComponentCombo.get().split(":")[1] != "" or (
                     self.currentComponentData.getData("name")
                     != componentJSON[self.currentComponentData.getData("id")]["name"]
@@ -1397,13 +1395,11 @@ class UISettings(tk.Toplevel):
                     "points_count", bool(int(self.objectsPointsCountEntry.get()))
                 )
 
-
                 print(self.currentObjectData.getJSONView())
                 with open("settings/objects.json", "r") as f:
                     objectJSON = json.load(f)
 
                 print(self.selectObjectsCombo.get())
-
 
                 if (
                     self.currentObjectData.getData("id")
@@ -1431,8 +1427,6 @@ class UISettings(tk.Toplevel):
                     self.currentObjectData
                 )
 
-                
-
                 if self.selectObjectsCombo.get().split(":")[1] != "" or (
                     self.currentObjectData.getData("name")
                     != objectJSON[self.currentObjectData.getData("id")]["name"]
@@ -1445,8 +1439,6 @@ class UISettings(tk.Toplevel):
                     )
                     self.selectObjectsCombo.configure(values=self.objectIDs)
                     self.selectObjectsCombo.current(len(self.objectIDs) - 1)
-
-
 
                 if self.currentObjectData.getData("name") != self.objectData[
                     self.selectObjectsCombo.get().split(":")[0]
