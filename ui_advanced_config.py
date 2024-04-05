@@ -1289,32 +1289,8 @@ class UISettings(tk.Toplevel):
                         ),
                     )
 
-                if self.currentComponentData.getData("name") != self.componentData[
-                    self.selectComponentCombo.get().split(":")[0]
-                ].getData("name"):
-                    comp_idx = self.selectComponentCombo.current()
-                    self.currentCompIDs[comp_idx] = ": ".join(
-                        [
-                            self.currentCompIDs[comp_idx].split(":")[0],
-                            self.currentComponentData.getData("name"),
-                        ]
-                    )
-                    self.selectComponentCombo.configure(values=self.componentIDs)
-                    self.selectComponentCombo.current(len(self.componentIDs) - 1)
                 with open("settings/components.json", "r") as f:
                     componentJSON = json.load(f)
-                if self.selectComponentCombo.get().split(":")[1] != "" or (
-                    self.currentComponentData.getData("name")
-                    != componentJSON[self.currentComponentData.getData("id")]["name"]
-                ):
-                    self.componentIDs.pop(self.selectComponentCombo.current())
-                    self.componentIDs.append(
-                        self.currentComponentData.getData("id")
-                        + ": "
-                        + self.currentComponentData.getData("name")
-                    )
-                    self.selectComponentCombo.configure(values=self.componentIDs)
-                    self.selectComponentCombo.current(len(self.componentIDs) - 1)
 
                 if (
                     self.currentComponentData.getData("id")
@@ -1347,13 +1323,32 @@ class UISettings(tk.Toplevel):
                     self.currentComponentData
                 )
 
-                if (
-                    "slot_id"
-                    in componentJSON[self.currentComponentData.getData("id")].keys()
+
+
+                if self.selectComponentCombo.get().split(":")[1] != "" or (
+                    self.currentComponentData.getData("name")
+                    != componentJSON[self.currentComponentData.getData("id")]["name"]
                 ):
-                    componentJSON[self.currentComponentData.getData("id")].pop(
-                        "slot_id"
+                    self.componentIDs.pop(self.selectComponentCombo.current())
+                    self.componentIDs.append(
+                        self.currentComponentData.getData("id")
+                        + ": "
+                        + self.currentComponentData.getData("name")
                     )
+                    self.selectComponentCombo.configure(values=self.componentIDs)
+                    self.selectComponentCombo.current(len(self.componentIDs) - 1)
+                if self.currentComponentData.getData("name") != self.componentData[
+                    self.selectComponentCombo.get().split(":")[0]
+                ].getData("name"):
+                    comp_idx = self.selectComponentCombo.current()
+                    self.currentCompIDs[comp_idx] = ": ".join(
+                        [
+                            self.currentCompIDs[comp_idx].split(":")[0],
+                            self.currentComponentData.getData("name"),
+                        ]
+                    )
+                    self.selectComponentCombo.configure(values=self.componentIDs)
+                    self.selectComponentCombo.current(len(self.componentIDs) - 1)
 
                 with open("settings/components.json", "w") as f:
                     json.dump(componentJSON, f, indent=4)
@@ -1402,18 +1397,6 @@ class UISettings(tk.Toplevel):
                     "points_count", bool(int(self.objectsPointsCountEntry.get()))
                 )
 
-                if self.currentObjectData.getData("name") != self.objectData[
-                    self.selectObjectsCombo.get().split(":")[0]
-                ].getData("name"):
-                    obj_idx = self.selectObjectsCombo.current()
-                    self.objectIDs[obj_idx] = ": ".join(
-                        [
-                            self.objectIDs[obj_idx].split(":")[0],
-                            self.currentObjectData.getData("name"),
-                        ]
-                    )
-                    self.selectObjectsCombo.configure(values=self.objectIDs)
-                    self.selectObjectsCombo.current(len(self.objectIDs) - 1)
 
                 print(self.currentObjectData.getJSONView())
                 with open("settings/objects.json", "r") as f:
@@ -1421,18 +1404,6 @@ class UISettings(tk.Toplevel):
 
                 print(self.selectObjectsCombo.get())
 
-                if self.selectObjectsCombo.get().split(":")[1] != "" or (
-                    self.currentObjectData.getData("name")
-                    != objectJSON[self.currentObjectData.getData("id")]["name"]
-                ):
-                    self.objectIDs.pop(self.selectObjectsCombo.current())
-                    self.objectIDs.append(
-                        self.currentObjectData.getData("id")
-                        + ": "
-                        + self.currentObjectData.getData("name")
-                    )
-                    self.selectObjectsCombo.configure(values=self.objectIDs)
-                    self.selectObjectsCombo.current(len(self.objectIDs) - 1)
 
                 if (
                     self.currentObjectData.getData("id")
@@ -1454,14 +1425,41 @@ class UISettings(tk.Toplevel):
                 objectJSON[self.currentObjectData.getData("id")] = (
                     self.currentObjectData.getJSONView()
                 )
+                f.close()
 
                 self.objectData[self.currentObjectData.getData("id")] = (
                     self.currentObjectData
                 )
 
-                if "slot_id" in objectJSON[self.currentObjectData.getData("id")].keys():
-                    objectJSON[self.currentObjectData.getData("id")].pop("slot_id")
-                f.close()
+                
+
+                if self.selectObjectsCombo.get().split(":")[1] != "" or (
+                    self.currentObjectData.getData("name")
+                    != objectJSON[self.currentObjectData.getData("id")]["name"]
+                ):
+                    self.objectIDs.pop(self.selectObjectsCombo.current())
+                    self.objectIDs.append(
+                        self.currentObjectData.getData("id")
+                        + ": "
+                        + self.currentObjectData.getData("name")
+                    )
+                    self.selectObjectsCombo.configure(values=self.objectIDs)
+                    self.selectObjectsCombo.current(len(self.objectIDs) - 1)
+
+
+
+                if self.currentObjectData.getData("name") != self.objectData[
+                    self.selectObjectsCombo.get().split(":")[0]
+                ].getData("name"):
+                    obj_idx = self.selectObjectsCombo.current()
+                    self.objectIDs[obj_idx] = ": ".join(
+                        [
+                            self.objectIDs[obj_idx].split(":")[0],
+                            self.currentObjectData.getData("name"),
+                        ]
+                    )
+                    self.selectObjectsCombo.configure(values=self.objectIDs)
+                    self.selectObjectsCombo.current(len(self.objectIDs) - 1)
 
                 with open("settings/objects.json", "w") as f:
                     json.dump(objectJSON, f, indent=4)
