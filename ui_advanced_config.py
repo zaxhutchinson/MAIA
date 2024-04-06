@@ -1101,6 +1101,7 @@ class UISettings(tk.Toplevel):
             self.componentsTypeAttr5Entry.help_button.configure(state="disabled")
             self.componentsTypeAttr6Entry.help_button.configure(state="disabled")
             self.componentsTypeAttr7Entry.help_button.configure(state="disabled")
+        self.componentsColumn.update_idletasks()
 
     def show_team_entry(self, currentTeam):
         """
