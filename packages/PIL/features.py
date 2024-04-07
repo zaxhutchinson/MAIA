@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import collections
 import os
 import sys
@@ -9,7 +11,7 @@ from . import Image
 
 modules = {
     "pil": ("PIL._imaging", "PILLOW_VERSION"),
-    "tkinter": ("PIL._tkinter_finder", None),
+    "tkinter": ("PIL._tkinter_finder", "tk_version"),
     "freetype2": ("PIL._imagingft", "freetype2_version"),
     "littlecms2": ("PIL._imagingcms", "littlecms_version"),
     "webp": ("PIL._webp", "webpdecoder_version"),
@@ -24,15 +26,19 @@ def check_module(feature):
     :returns: ``True`` if available, ``False`` otherwise.
     :raises ValueError: If the module is not defined in this version of Pillow.
     """
-    if not (feature in modules):
-        raise ValueError("Unknown module %s" % feature)
+    if feature not in modules:
+        msg = f"Unknown module {feature}"
+        raise ValueError(msg)
 
     module, ver = modules[feature]
 
     try:
         __import__(module)
         return True
-    except ImportError:
+    except ModuleNotFoundError:
+        return False
+    except ImportError as ex:
+        warnings.warn(str(ex))
         return False
 
 
@@ -78,7 +84,8 @@ def check_codec(feature):
     :raises ValueError: If the codec is not defined in this version of Pillow.
     """
     if feature not in codecs:
-        raise ValueError("Unknown codec %s" % feature)
+        msg = f"Unknown codec {feature}"
+        raise ValueError(msg)
 
     codec, lib = codecs[feature]
 
@@ -118,6 +125,8 @@ features = {
     "webp_mux": ("PIL._webp", "HAVE_WEBPMUX", None),
     "transp_webp": ("PIL._webp", "HAVE_TRANSPARENCY", None),
     "raqm": ("PIL._imagingft", "HAVE_RAQM", "raqm_version"),
+    "fribidi": ("PIL._imagingft", "HAVE_FRIBIDI", "fribidi_version"),
+    "harfbuzz": ("PIL._imagingft", "HAVE_HARFBUZZ", "harfbuzz_version"),
     "libjpeg_turbo": ("PIL._imaging", "HAVE_LIBJPEGTURBO", "libjpeg_turbo_version"),
     "libimagequant": ("PIL._imaging", "HAVE_LIBIMAGEQUANT", "imagequant_version"),
     "xcb": ("PIL._imaging", "HAVE_XCB", None),
@@ -133,14 +142,18 @@ def check_feature(feature):
     :raises ValueError: If the feature is not defined in this version of Pillow.
     """
     if feature not in features:
-        raise ValueError("Unknown feature %s" % feature)
+        msg = f"Unknown feature {feature}"
+        raise ValueError(msg)
 
     module, flag, ver = features[feature]
 
     try:
         imported_module = __import__(module, fromlist=["PIL"])
         return getattr(imported_module, flag)
-    except ImportError:
+    except ModuleNotFoundError:
+        return None
+    except ImportError as ex:
+        warnings.warn(str(ex))
         return None
 
 
@@ -182,7 +195,7 @@ def check(feature):
         return check_codec(feature)
     if feature in features:
         return check_feature(feature)
-    warnings.warn("Unknown feature '%s'." % feature, stacklevel=2)
+    warnings.warn(f"Unknown feature '{feature}'.", stacklevel=2)
     return False
 
 
@@ -216,7 +229,7 @@ def get_supported():
 def pilinfo(out=None, supported_formats=True):
     """
     Prints information about this installation of Pillow.
-    This function can be called with ``python -m PIL``.
+    This function can be called with ``python3 -m PIL``.
 
     :param out:
         The output stream to print to. Defaults to ``sys.stdout`` if ``None``.
@@ -230,18 +243,18 @@ def pilinfo(out=None, supported_formats=True):
     Image.init()
 
     print("-" * 68, file=out)
-    print("Pillow {}".format(PIL.__version__), file=out)
+    print(f"Pillow {PIL.__version__}", file=out)
     py_version = sys.version.splitlines()
-    print("Python {}".format(py_version[0].strip()), file=out)
+    print(f"Python {py_version[0].strip()}", file=out)
     for py_version in py_version[1:]:
-        print("       {}".format(py_version.strip()), file=out)
+        print(f"       {py_version.strip()}", file=out)
     print("-" * 68, file=out)
     print(
-        "Python modules loaded from {}".format(os.path.dirname(Image.__file__)),
+        f"Python modules loaded from {os.path.dirname(Image.__file__)}",
         file=out,
     )
     print(
-        "Binary modules loaded from {}".format(os.path.dirname(Image.core.__file__)),
+        f"Binary modules loaded from {os.path.dirname(Image.core.__file__)}",
         file=out,
     )
     print("-" * 68, file=out)
@@ -269,7 +282,16 @@ def pilinfo(out=None, supported_formats=True):
             else:
                 v = version(name)
             if v is not None:
-                t = "compiled for" if name in ("pil", "jpg") else "loaded"
+                version_static = name in ("pil", "jpg")
+                if name == "littlecms2":
+                    # this check is also in src/_imagingcms.c:setup_module()
+                    version_static = tuple(int(x) for x in v.split(".")) < (2, 7)
+                t = "compiled for" if version_static else "loaded"
+                if name == "raqm":
+                    for f in ("fribidi", "harfbuzz"):
+                        v2 = version_feature(f)
+                        if v2 is not None:
+                            v += f", {f} {v2}"
                 print("---", feature, "support ok,", t, v, file=out)
             else:
                 print("---", feature, "support ok", file=out)
@@ -283,9 +305,9 @@ def pilinfo(out=None, supported_formats=True):
             extensions[i].append(ext)
 
         for i in sorted(Image.ID):
-            line = "{}".format(i)
+            line = f"{i}"
             if i in Image.MIME:
-                line = "{} {}".format(line, Image.MIME[i])
+                line = f"{line} {Image.MIME[i]}"
             print(line, file=out)
 
             if i in extensions:

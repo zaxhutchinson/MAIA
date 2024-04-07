@@ -14,19 +14,21 @@
 
 # See the README file for information on usage and redistribution.  See
 # below for the original description.
+from __future__ import annotations
 
 import sys
+from enum import IntEnum
 
-from PIL import Image
+from . import Image
 
 try:
-    from PIL import _imagingcms
+    from . import _imagingcms
 except ImportError as ex:
     # Allow error import for doc purposes, but error out when accessing
     # anything in core.
-    from ._util import deferred_error
+    from ._util import DeferredError
 
-    _imagingcms = deferred_error(ex)
+    _imagingcms = DeferredError.new(ex)
 
 DESCRIPTION = """
 pyCMS
@@ -34,10 +36,10 @@ pyCMS
     a Python / PIL interface to the littleCMS ICC Color Management System
     Copyright (C) 2002-2003 Kevin Cazabon
     kevin@cazabon.com
-    http://www.cazabon.com
+    https://www.cazabon.com
 
-    pyCMS home page:  http://www.cazabon.com/pyCMS
-    littleCMS home page:  http://www.littlecms.com
+    pyCMS home page:  https://www.cazabon.com/pyCMS
+    littleCMS home page:  https://www.littlecms.com
     (littleCMS is Copyright (C) 1998-2001 Marti Maria)
 
     Originally released under LGPL.  Graciously donated to PIL in
@@ -100,14 +102,19 @@ core = _imagingcms
 #
 # intent/direction values
 
-INTENT_PERCEPTUAL = 0
-INTENT_RELATIVE_COLORIMETRIC = 1
-INTENT_SATURATION = 2
-INTENT_ABSOLUTE_COLORIMETRIC = 3
 
-DIRECTION_INPUT = 0
-DIRECTION_OUTPUT = 1
-DIRECTION_PROOF = 2
+class Intent(IntEnum):
+    PERCEPTUAL = 0
+    RELATIVE_COLORIMETRIC = 1
+    SATURATION = 2
+    ABSOLUTE_COLORIMETRIC = 3
+
+
+class Direction(IntEnum):
+    INPUT = 0
+    OUTPUT = 1
+    PROOF = 2
+
 
 #
 # flags
@@ -132,7 +139,7 @@ FLAGS = {
     "SOFTPROOFING": 16384,  # Do softproofing
     "PRESERVEBLACK": 32768,  # Black preservation
     "NODEFAULTRESOURCEDEF": 16777216,  # CRD special
-    "GRIDPOINTS": lambda n: ((n) & 0xFF) << 16,  # Gridpoints
+    "GRIDPOINTS": lambda n: (n & 0xFF) << 16,  # Gridpoints
 }
 
 _MAX_FLAG = 0
@@ -159,23 +166,28 @@ class ImageCmsProfile:
         """
 
         if isinstance(profile, str):
+            if sys.platform == "win32":
+                profile_bytes_path = profile.encode()
+                try:
+                    profile_bytes_path.decode("ascii")
+                except UnicodeDecodeError:
+                    with open(profile, "rb") as f:
+                        self._set(core.profile_frombytes(f.read()))
+                    return
             self._set(core.profile_open(profile), profile)
         elif hasattr(profile, "read"):
             self._set(core.profile_frombytes(profile.read()))
         elif isinstance(profile, _imagingcms.CmsProfile):
             self._set(profile)
         else:
-            raise TypeError("Invalid type for Profile")
+            msg = "Invalid type for Profile"
+            raise TypeError(msg)
 
     def _set(self, profile, filename=None):
         self.profile = profile
         self.filename = filename
-        if profile:
-            self.product_name = None  # profile.product_name
-            self.product_info = None  # profile.product_info
-        else:
-            self.product_name = None
-            self.product_info = None
+        self.product_name = None  # profile.product_name
+        self.product_info = None  # profile.product_info
 
     def tobytes(self):
         """
@@ -203,9 +215,9 @@ class ImageCmsTransform(Image.ImagePointHandler):
         output,
         input_mode,
         output_mode,
-        intent=INTENT_PERCEPTUAL,
+        intent=Intent.PERCEPTUAL,
         proof=None,
-        proof_intent=INTENT_ABSOLUTE_COLORIMETRIC,
+        proof_intent=Intent.ABSOLUTE_COLORIMETRIC,
         flags=0,
     ):
         if proof is None:
@@ -243,21 +255,24 @@ class ImageCmsTransform(Image.ImagePointHandler):
     def apply_in_place(self, im):
         im.load()
         if im.mode != self.output_mode:
-            raise ValueError("mode mismatch")  # wrong output mode
+            msg = "mode mismatch"
+            raise ValueError(msg)  # wrong output mode
         self.transform.apply(im.im.id, im.im.id)
         im.info["icc_profile"] = self.output_profile.tobytes()
         return im
 
 
 def get_display_profile(handle=None):
-    """ (experimental) Fetches the profile for the current display device.
+    """
+    (experimental) Fetches the profile for the current display device.
+
     :returns: ``None`` if the profile is not known.
     """
 
     if sys.platform != "win32":
         return None
 
-    from PIL import ImageWin
+    from . import ImageWin
 
     if isinstance(handle, ImageWin.HDC):
         profile = core.get_display_profile_win32(handle, 1)
@@ -275,8 +290,8 @@ def get_display_profile(handle=None):
 
 class PyCMSError(Exception):
 
-    """ (pyCMS) Exception class.
-    This is used for all errors in the pyCMS API. """
+    """(pyCMS) Exception class.
+    This is used for all errors in the pyCMS API."""
 
     pass
 
@@ -285,7 +300,7 @@ def profileToProfile(
     im,
     inputProfile,
     outputProfile,
-    renderingIntent=INTENT_PERCEPTUAL,
+    renderingIntent=Intent.PERCEPTUAL,
     outputMode=None,
     inPlace=False,
     flags=0,
@@ -321,10 +336,10 @@ def profileToProfile(
     :param renderingIntent: Integer (0-3) specifying the rendering intent you
         wish to use for the transform
 
-            ImageCms.INTENT_PERCEPTUAL            = 0 (DEFAULT)
-            ImageCms.INTENT_RELATIVE_COLORIMETRIC = 1
-            ImageCms.INTENT_SATURATION            = 2
-            ImageCms.INTENT_ABSOLUTE_COLORIMETRIC = 3
+            ImageCms.Intent.PERCEPTUAL            = 0 (DEFAULT)
+            ImageCms.Intent.RELATIVE_COLORIMETRIC = 1
+            ImageCms.Intent.SATURATION            = 2
+            ImageCms.Intent.ABSOLUTE_COLORIMETRIC = 3
 
         see the pyCMS documentation for details on rendering intents and what
         they do.
@@ -346,10 +361,12 @@ def profileToProfile(
         outputMode = im.mode
 
     if not isinstance(renderingIntent, int) or not (0 <= renderingIntent <= 3):
-        raise PyCMSError("renderingIntent must be an integer between 0 and 3")
+        msg = "renderingIntent must be an integer between 0 and 3"
+        raise PyCMSError(msg)
 
     if not isinstance(flags, int) or not (0 <= flags <= _MAX_FLAG):
-        raise PyCMSError("flags must be an integer between 0 and %s" + _MAX_FLAG)
+        msg = f"flags must be an integer between 0 and {_MAX_FLAG}"
+        raise PyCMSError(msg)
 
     try:
         if not isinstance(inputProfile, ImageCmsProfile):
@@ -402,7 +419,7 @@ def buildTransform(
     outputProfile,
     inMode,
     outMode,
-    renderingIntent=INTENT_PERCEPTUAL,
+    renderingIntent=Intent.PERCEPTUAL,
     flags=0,
 ):
     """
@@ -448,10 +465,10 @@ def buildTransform(
     :param renderingIntent: Integer (0-3) specifying the rendering intent you
         wish to use for the transform
 
-            ImageCms.INTENT_PERCEPTUAL            = 0 (DEFAULT)
-            ImageCms.INTENT_RELATIVE_COLORIMETRIC = 1
-            ImageCms.INTENT_SATURATION            = 2
-            ImageCms.INTENT_ABSOLUTE_COLORIMETRIC = 3
+            ImageCms.Intent.PERCEPTUAL            = 0 (DEFAULT)
+            ImageCms.Intent.RELATIVE_COLORIMETRIC = 1
+            ImageCms.Intent.SATURATION            = 2
+            ImageCms.Intent.ABSOLUTE_COLORIMETRIC = 3
 
         see the pyCMS documentation for details on rendering intents and what
         they do.
@@ -461,10 +478,12 @@ def buildTransform(
     """
 
     if not isinstance(renderingIntent, int) or not (0 <= renderingIntent <= 3):
-        raise PyCMSError("renderingIntent must be an integer between 0 and 3")
+        msg = "renderingIntent must be an integer between 0 and 3"
+        raise PyCMSError(msg)
 
     if not isinstance(flags, int) or not (0 <= flags <= _MAX_FLAG):
-        raise PyCMSError("flags must be an integer between 0 and %s" + _MAX_FLAG)
+        msg = "flags must be an integer between 0 and %s" + _MAX_FLAG
+        raise PyCMSError(msg)
 
     try:
         if not isinstance(inputProfile, ImageCmsProfile):
@@ -484,8 +503,8 @@ def buildProofTransform(
     proofProfile,
     inMode,
     outMode,
-    renderingIntent=INTENT_PERCEPTUAL,
-    proofRenderingIntent=INTENT_ABSOLUTE_COLORIMETRIC,
+    renderingIntent=Intent.PERCEPTUAL,
+    proofRenderingIntent=Intent.ABSOLUTE_COLORIMETRIC,
     flags=FLAGS["SOFTPROOFING"],
 ):
     """
@@ -540,20 +559,20 @@ def buildProofTransform(
     :param renderingIntent: Integer (0-3) specifying the rendering intent you
         wish to use for the input->proof (simulated) transform
 
-            ImageCms.INTENT_PERCEPTUAL            = 0 (DEFAULT)
-            ImageCms.INTENT_RELATIVE_COLORIMETRIC = 1
-            ImageCms.INTENT_SATURATION            = 2
-            ImageCms.INTENT_ABSOLUTE_COLORIMETRIC = 3
+            ImageCms.Intent.PERCEPTUAL            = 0 (DEFAULT)
+            ImageCms.Intent.RELATIVE_COLORIMETRIC = 1
+            ImageCms.Intent.SATURATION            = 2
+            ImageCms.Intent.ABSOLUTE_COLORIMETRIC = 3
 
         see the pyCMS documentation for details on rendering intents and what
         they do.
     :param proofRenderingIntent: Integer (0-3) specifying the rendering intent
         you wish to use for proof->output transform
 
-            ImageCms.INTENT_PERCEPTUAL            = 0 (DEFAULT)
-            ImageCms.INTENT_RELATIVE_COLORIMETRIC = 1
-            ImageCms.INTENT_SATURATION            = 2
-            ImageCms.INTENT_ABSOLUTE_COLORIMETRIC = 3
+            ImageCms.Intent.PERCEPTUAL            = 0 (DEFAULT)
+            ImageCms.Intent.RELATIVE_COLORIMETRIC = 1
+            ImageCms.Intent.SATURATION            = 2
+            ImageCms.Intent.ABSOLUTE_COLORIMETRIC = 3
 
         see the pyCMS documentation for details on rendering intents and what
         they do.
@@ -563,10 +582,12 @@ def buildProofTransform(
     """
 
     if not isinstance(renderingIntent, int) or not (0 <= renderingIntent <= 3):
-        raise PyCMSError("renderingIntent must be an integer between 0 and 3")
+        msg = "renderingIntent must be an integer between 0 and 3"
+        raise PyCMSError(msg)
 
     if not isinstance(flags, int) or not (0 <= flags <= _MAX_FLAG):
-        raise PyCMSError("flags must be an integer between 0 and %s" + _MAX_FLAG)
+        msg = "flags must be an integer between 0 and %s" + _MAX_FLAG
+        raise PyCMSError(msg)
 
     try:
         if not isinstance(inputProfile, ImageCmsProfile):
@@ -624,7 +645,7 @@ def applyTransform(im, transform, inPlace=False):
     :param im: An :py:class:`~PIL.Image.Image` object, and im.mode must be the same
         as the ``inMode`` supported by the transform.
     :param transform: A valid CmsTransform class object
-    :param inPlace: Bool.  If ``True``, ``im` is modified in place and ``None`` is
+    :param inPlace: Bool.  If ``True``, ``im`` is modified in place and ``None`` is
         returned, if ``False``, a new :py:class:`~PIL.Image.Image` object with the
         transform applied is returned (and ``im`` is not changed). The default is
         ``False``.
@@ -677,18 +698,17 @@ def createProfile(colorSpace, colorTemp=-1):
     """
 
     if colorSpace not in ["LAB", "XYZ", "sRGB"]:
-        raise PyCMSError(
-            "Color space not supported for on-the-fly profile creation (%s)"
-            % colorSpace
+        msg = (
+            f"Color space not supported for on-the-fly profile creation ({colorSpace})"
         )
+        raise PyCMSError(msg)
 
     if colorSpace == "LAB":
         try:
             colorTemp = float(colorTemp)
         except (TypeError, ValueError) as e:
-            raise PyCMSError(
-                'Color temperature must be numeric, "%s" not valid' % colorTemp
-            ) from e
+            msg = f'Color temperature must be numeric, "{colorTemp}" not valid'
+            raise PyCMSError(msg) from e
 
     try:
         return core.createProfile(colorSpace, colorTemp)
@@ -732,7 +752,7 @@ def getProfileName(profile):
             return (profile.profile.profile_description or "") + "\n"
         if not manufacturer or len(model) > 30:
             return model + "\n"
-        return "{} - {}\n".format(model, manufacturer)
+        return f"{model} - {manufacturer}\n"
 
     except (AttributeError, OSError, TypeError, ValueError) as v:
         raise PyCMSError(v) from v
@@ -768,11 +788,8 @@ def getProfileInfo(profile):
         # info was description \r\n\r\n copyright \r\n\r\n K007 tag \r\n\r\n whitepoint
         description = profile.profile.profile_description
         cpright = profile.profile.copyright
-        arr = []
-        for elt in (description, cpright):
-            if elt:
-                arr.append(elt)
-        return "\r\n\r\n".join(arr) + "\r\n\r\n"
+        elements = [element for element in (description, cpright) if element]
+        return "\r\n\r\n".join(elements) + "\r\n\r\n"
 
     except (AttributeError, OSError, TypeError, ValueError) as v:
         raise PyCMSError(v) from v
@@ -913,10 +930,10 @@ def getDefaultIntent(profile):
     :returns: Integer 0-3 specifying the default rendering intent for this
         profile.
 
-            ImageCms.INTENT_PERCEPTUAL            = 0 (DEFAULT)
-            ImageCms.INTENT_RELATIVE_COLORIMETRIC = 1
-            ImageCms.INTENT_SATURATION            = 2
-            ImageCms.INTENT_ABSOLUTE_COLORIMETRIC = 3
+            ImageCms.Intent.PERCEPTUAL            = 0 (DEFAULT)
+            ImageCms.Intent.RELATIVE_COLORIMETRIC = 1
+            ImageCms.Intent.SATURATION            = 2
+            ImageCms.Intent.ABSOLUTE_COLORIMETRIC = 3
 
         see the pyCMS documentation for details on rendering intents and what
             they do.
@@ -951,19 +968,19 @@ def isIntentSupported(profile, intent, direction):
     :param intent: Integer (0-3) specifying the rendering intent you wish to
         use with this profile
 
-            ImageCms.INTENT_PERCEPTUAL            = 0 (DEFAULT)
-            ImageCms.INTENT_RELATIVE_COLORIMETRIC = 1
-            ImageCms.INTENT_SATURATION            = 2
-            ImageCms.INTENT_ABSOLUTE_COLORIMETRIC = 3
+            ImageCms.Intent.PERCEPTUAL            = 0 (DEFAULT)
+            ImageCms.Intent.RELATIVE_COLORIMETRIC = 1
+            ImageCms.Intent.SATURATION            = 2
+            ImageCms.Intent.ABSOLUTE_COLORIMETRIC = 3
 
         see the pyCMS documentation for details on rendering intents and what
             they do.
     :param direction: Integer specifying if the profile is to be used for
         input, output, or proof
 
-            INPUT  = 0 (or use ImageCms.DIRECTION_INPUT)
-            OUTPUT = 1 (or use ImageCms.DIRECTION_OUTPUT)
-            PROOF  = 2 (or use ImageCms.DIRECTION_PROOF)
+            INPUT  = 0 (or use ImageCms.Direction.INPUT)
+            OUTPUT = 1 (or use ImageCms.Direction.OUTPUT)
+            PROOF  = 2 (or use ImageCms.Direction.PROOF)
 
     :returns: 1 if the intent/direction are supported, -1 if they are not.
     :exception PyCMSError:
@@ -987,4 +1004,4 @@ def versions():
     (pyCMS) Fetches versions.
     """
 
-    return (VERSION, core.littlecms_version, sys.version.split()[0], Image.__version__)
+    return VERSION, core.littlecms_version, sys.version.split()[0], Image.__version__
