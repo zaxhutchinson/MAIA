@@ -193,7 +193,6 @@ class uiCanvas(tk.Canvas):
     def drawObj(self, **kwargs):
         # This function displays the object in the UI
         dd = kwargs["dd"]  # what to draw
-        # print("This be kwargs :) -- ", kwargs)
         x = (  # x coord
             dd["x"] * self.cell_size
             + self.obj_char_size / 2
@@ -247,7 +246,6 @@ class uiCanvas(tk.Canvas):
 
     def drawItem(self, **kwargs):
         dd = kwargs["dd"]
-        print("dd items:", dd)
         x = (
             dd["x"] * self.cell_size
             + self.obj_char_size / 2

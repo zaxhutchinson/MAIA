@@ -67,8 +67,6 @@ class UISetup(tk.Frame):
             selected_map = self.ldr.copyMapTemplate(map_ids[curselection[0]])
             self.sim.setMap(selected_map)
 
-            print("\n\n", selected_map.data, "\n\n")  # HK we have the data here
-
             # Construct the map info string
             mapInfoString = "NAME:   " + selected_map.getData("name") + "\n"
             mapInfoString += "DESC:   " + selected_map.getData("desc") + "\n"
@@ -86,11 +84,8 @@ class UISetup(tk.Frame):
             if "placed_objects" in selected_map.data:
                 for k, v in selected_map.data["placed_objects"].items():
                     mapInfoString += "   ID:" + str(k) + " AMT:" + str(len(v)) + "\n"
-                    print("H")
             else:
                 mapInfoString += "   NONE\n"
-
-            print(mapInfoString)
 
             # Add string to the info text box
             self.txtMapInfo.delete("1.0", tk.END)

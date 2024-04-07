@@ -74,9 +74,6 @@ class UISim(tk.Toplevel):
         self.xbar.pack(side=tk.BOTTOM, fill=tk.X)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        # self.canvas.yview_moveto(0.0)
-        # self.canvas.xview_moveto(0.0)
-
         # Create the log notebook and tabs
 
         self.logNotebook = uiNotebook(master=self.logFrame)
@@ -167,7 +164,6 @@ class UISim(tk.Toplevel):
     # OBJECT DRAWING
     def addObjectDrawID(self, _uuid, _drawID):
         self.obj_drawIDs[_uuid] = _drawID
-        # print(self.obj_drawIDs)
 
     def getObjectDrawID(self, _uuid):
         try:
@@ -187,11 +183,9 @@ class UISim(tk.Toplevel):
     def initObjects(self):
         # self.canvas.delete(tk.ALL)
         draw_data = self.sim.getObjDrawData()
-        # print("This is Draw Data: ", draw_data)
         for dd in draw_data:
             obj_id = self.canvas.drawObj(dd=dd)
             self.addObjectDrawID(dd["uuid"], obj_id)
-            # print("dd is thus: ", dd)
 
     def updateObjects(self):
         draw_data = self.sim.getObjDrawData()

@@ -21,7 +21,7 @@
         "density":1000,
         "comp_ids" : [],
         "points_count" : false,
-        "sprite_path" : "images/barrel_top.png"
+        "sprite_path" : "images/finalBox.png"
     },
     "blue_tank": {
         "id": "blue_tank",
@@ -51,7 +51,8 @@
             "4000",
             "5000"
         ],
-        "points_count": true
+        "points_count": true,
+        "sprite_path" : "images/red_right1.png"
     },
     "player": {
         "id": "player",
@@ -78,7 +79,8 @@
         "health": 0,
         "density": 0,
         "comp_ids": [],
-        "points_count": false
+        "points_count": false,
+        "sprite_path":"images/wild_flower_13.png"
     },
     "cliff": {
         "id":"cliff",
@@ -90,7 +92,7 @@
         "density":1000,
         "comp_ids" : ["0","1000","2000","3000","4000","5000"],
         "points_count" : true,
-        "sprite_path" : "images/red_right1.png"
+        "sprite_path" : "images/cliff.png"
     },
     "fastplayer" : {
         "id": "player",
@@ -102,7 +104,7 @@
         "density":1000,
         "comp_ids" : ["0","2000","3000"],
         "points_count" : true,
-        "sprite_path": "images/stick.png"
+        "sprite_path": "images/arrow.png"
     }
 
 }
