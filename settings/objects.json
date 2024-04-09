@@ -84,26 +84,29 @@
         "points_count": false
     },
     "cliff": {
-        "id":"cliff",
-        "name":"cliff",
-        "fill_alive":"red",
-        "fill_dead":"black",
-        "text":"-",
-        "health" : 100000000000000000000,
-        "density":1,
-        "comp_ids" : [],
-        "points_count" : false
+        "id": "cliff",
+        "name": "cliff",
+        "fill_alive": "red",
+        "fill_dead": "black",
+        "text": "-",
+        "health": 100000000000000000000,
+        "density": 1,
+        "comp_ids": [],
+        "points_count": false
     },
-    "fastplayer" : {
+    "fastplayer": {
         "id": "player",
-        "name" : "player",
-        "fill_alive":"red",
-        "fill_dead":"black",
-        "text":"&",
-        "health" : 100,
-        "density":1000,
-        "comp_ids" : ["0","2100","3000"],
-        "points_count" : true
+        "name": "player",
+        "fill_alive": "red",
+        "fill_dead": "black",
+        "text": "&",
+        "health": 100,
+        "density": 1000,
+        "comp_ids": [
+            "0",
+            "2100",
+            "3000"
+        ],
+        "points_count": true
     }
-
 }
