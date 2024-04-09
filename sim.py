@@ -298,12 +298,11 @@ class Sim:
                 self.imsgr.addMsg(
                     msgs.Msg(
                         self.tick,
-                        "GAME OVER: Please select 'FINISH GAME' for final scores.",
+                        "GAME OVER",
                         win_state.getData("msg"),
                     )
                 )
             rtn = rtn or r
-        # bookmark
         return rtn
 
         # Only 1 team remaining
@@ -358,8 +357,6 @@ class Sim:
             final_scores[name] = team_scores
 
         return final_scores
-
-    # bookmark
 
     ##########################################################################
     # RUN SIM
@@ -433,7 +430,6 @@ class Sim:
 
                 # Check if the sim is over.
                 if self.checkEndOfSim():
-                    # bookmark
                     return True
                 else:
                     self.tick += 1

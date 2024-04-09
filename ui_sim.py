@@ -111,12 +111,12 @@ class UISim(tk.Toplevel):
         )
         self.btnDisplayPoints.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
-        self.topRightFrame = tk.Frame(master=self.logFrame)
+        self.topRightFrame = uiQuietFrame(master=self.logFrame)
         self.topRightFrame.pack(fill=tk.NONE, expand=False, side=tk.TOP, anchor="ne")
 
-        self.btnDisplayScoreboard = ttk.Button(
+        self.btnDisplayScoreboard = uiButton(
             master=self.topRightFrame,
-            text="Finish Game",
+            text="End Game",
             command=self.displayScoreboard,
             width=10,
         )

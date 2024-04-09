@@ -40,13 +40,13 @@ class ScoreboardFrame(tk.Frame):
         )
 
         # Title
-        title_label = tk.Label(self, text="Final Scores", font=("Arial", 16))
+        title_label = uiLabel(master=self, text="Final Scores", font=("Arial", 16))
         title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
         # Scores
         for index, (team, score) in enumerate(self.teams_scores_sorted, start=1):
-            team_label = tk.Label(self, text=f"{team}", font=("Arial", 14))
-            score_label = tk.Label(self, text=f"{score}", font=("Arial", 14))
+            team_label = uiLabel(master=self, text=f"{team}", font=("Arial", 14))
+            score_label = uiLabel(master=self, text=f"{score}", font=("Arial", 14))
             team_label.grid(row=index, column=0, columnspan=2, sticky="w")
             score_label.grid(row=index, column=1, columnspan=2, sticky="e")
 
