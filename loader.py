@@ -69,6 +69,12 @@ class Loader:
     def getObjIDs(self):
         return list(self.obj_templates.keys())
 
+    def getObjNames(self):
+        objNames = []
+        for object in self.obj_templates.values():
+            objNames.append(object.getData("name"))
+        return objNames
+
     ##########################################################################
     # LOAD/COPY ITEMS
     def loadItemTemplates(self, filename):
@@ -99,6 +105,12 @@ class Loader:
 
     def getCompIDs(self):
         return list(self.comp_templates.keys())
+
+    def getCompNames(self):
+        compNames = []
+        for component in self.comp_templates.values():
+            compNames.append(component.getData("name"))
+        return compNames
 
     def getCompTypes(self):
         self.compTypes = []
