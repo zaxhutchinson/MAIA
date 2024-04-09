@@ -1,18 +1,4 @@
 {
-    "touchdown": [
-        {
-            "type": "ITEMS_TOUCH",
-            "items":["red_flag","red_base"],
-            "state":false,
-            "msg": "Red Wins"
-        },
-        {
-            "type": "ITEMS_TOUCH",
-            "items":["blue_flag","blue_base"],
-            "state":false,
-            "msg": "Blue wins"
-        }
-    ],
     "reach_goal": [
         {
             "type": "OBJ_ITEMS_TOUCH",
@@ -50,15 +36,6 @@
             "objs": ["Red Tank"],
             "state":false,
             "msg": "Blue wins"
-        }
-    ],
-    "player_falls_off": [
-        {
-            "type": "OBJ_ITEMS_TOUCH",
-            "items": ["goal"],
-            "objs": ["player"],
-            "state": false,
-            "msg":"Player falls off the map"
         }
     ]
 }
