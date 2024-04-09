@@ -1,24 +1,75 @@
-{   "Map 1" : {
-    "name" : "Simple Maze",
-    "edge_obj_id": "0",
-    "desc" : "Simple Maze Map",
-   "width" : 10,
-   "height" : 10,
-   "placed_objects" : {
-
-   },
-   "placed_items" : {
-        "goal" : [
-           { "x":8, "y":1 }
-       ]
-   },
-   "sides": {
-        "Green" : { 
-            "starting_locations": [ [1,1] ],
-            "facing":0,
-            "color": "green"
-        }
+{
+    "Map 1": {
+        "name": "Simple Maze",
+        "edge_obj_id": "0",
+        "desc": "Simple Maze Map",
+        "width": 10,
+        "height": 10,
+        "placed_objects": {},
+        "placed_items": {
+            "goal": [
+                {
+                    "x": 8,
+                    "y": 1
+                }
+            ]
+        },
+        "sides": {
+            "Green": {
+                "starting_locations": [
+                    [
+                        1,
+                        1
+                    ]
+                ],
+                "facing": 0,
+                "color": "green"
+            }
+        },
+        "win_states": [
+            "reach_goal"
+        ]
     },
-    "win_states": ["reach_goal"]
-}
+    "Map 2": {
+        "name": "Death Match",
+        "edge_obj_id": "0",
+        "desc": "Death Match Map",
+        "width": 15,
+        "height": 15,
+        "placed_objects": {},
+        "placed_items": {},
+        "sides": {
+            "Zach": {
+                "starting_locations": [
+                    [
+                        1,
+                        1
+                    ],
+                    [
+                        13,
+                        13
+                    ]
+                ],
+                "facing": 0,
+                "color": "green"
+            },
+            "LADS": {
+                "starting_locations": [
+                    [
+                        1,
+                        13
+                    ],
+                    [
+                        13,
+                        1
+                    ]
+                ],
+                "facing": 0,
+                "color": "blue"
+            }
+        },
+        "win_states": [
+            "domination"
+        ]
+    }
 }
