@@ -1293,8 +1293,6 @@ class UISettings(tk.Toplevel):
                 self.componentsIDEntry.entry.get() != ""
                 and self.componentsNameEntry.entry.get() != ""
                 and self.componentsTypeAttr1Entry.entry.get() != ""
-                and self.componentsTypeAttr2Entry.entry.get() != ""
-                and self.componentsTypeAttr3Entry.entry.get() != ""
             ):
                 self.currentComponentData.setData(
                     "id", self.componentsIDEntry.entry.get()
@@ -1467,7 +1465,13 @@ class UISettings(tk.Toplevel):
                     )
                     self.selectComponentCombo.configure(values=self.componentIDs)
                     self.selectComponentCombo.current(len(self.componentIDs) - 1)
-
+                if (
+                    "slot_id"
+                    in componentJSON[self.currentComponentData.getData("id")].keys()
+                ):
+                    componentJSON[self.currentComponentData.getData("id")].pop(
+                        "slot_id"
+                    )
                 with open("settings/components.json", "w") as f:
                     json.dump(componentJSON, f, indent=4)
                 f.close()
@@ -1613,20 +1617,20 @@ class UISettings(tk.Toplevel):
                 with open("settings/maps.json", "r") as f:
                     mapJSON = json.load(f)
                     print(self.currentMapData.data)
-                if self.mapsIDEntry.get() != self.selectMapsCombo.get():
+                if self.mapsIDEntry.entry.get() != self.selectMapsCombo.get():
                     print(self.selectMapsCombo.get())
                     if self.selectMapsCombo.get() in mapJSON:
                         mapJSON.pop(self.selectMapsCombo.get())
                     if self.selectMapsCombo.get() in self.mapData:
                         self.mapData.pop(self.selectMapsCombo.get())
                     self.mapIDs.pop(self.selectMapsCombo.current())
-                    self.mapIDs.append(self.mapsIDEntry.get())
+                    self.mapIDs.append(self.mapsIDEntry.entry.get())
                     self.selectMapsCombo.configure(values=self.mapIDs)
                     self.selectMapsCombo.current(len(self.mapIDs) - 1)
 
-                self.mapData[self.mapsIDEntry.get()] = self.currentMapData
+                self.mapData[self.mapsIDEntry.entry.get()] = self.currentMapData
                 print(mapJSON)
-                mapJSON[self.mapsIDEntry.get()] = self.currentMapData.data
+                mapJSON[self.mapsIDEntry.entry.get()] = self.currentMapData.data
                 f.close()
 
                 with open("settings/maps.json", "w") as f:
