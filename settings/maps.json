@@ -20,5 +20,80 @@
         }
     },
     "win_states": ["reach_goal"]
+},
+"Map 3": {
+    "name": "Capture the Flag",
+    "edge_obj_id": "0",
+    "desc": "Two teams attempt to capture each other's flag and return to their zone",
+    "width": 10,
+    "height": 10,
+    "placed_objects": {},
+    "placed_items": {
+        "0": [
+            {
+                "x": 6,
+                "y": 6
+            }
+        ],
+        "1": [
+            {
+                "x": 3,
+                "y": 3
+            }
+        ],
+        "redbase": [
+            {
+                "x": 6,
+                "y": 8
+            },
+            {
+                "x": 7,
+                "y": 7
+            },
+            {
+                "x": 8,
+                "y": 6
+            }
+        ],
+        "bluebase": [
+            {
+                "x": 1,
+                "y": 3
+            },
+            {
+                "x": 2,
+                "y": 2
+            },
+            {
+                "x": 3,
+                "y": 1
+            }
+        ]
+    },
+    "sides": {
+        "Red": {
+            "starting_locations": [
+                [
+                    1,
+                    8
+                ]
+            ],
+            "facing": 1,
+            "color": "red"
+        },
+        "Blue": {
+            "starting_locations": [
+                [
+                    8,
+                    1
+                ]
+            ],
+            "facing": 3,
+            "color": "blue"
+        }
+    },
+    "win_states": [
+        "touchdown"
+    ]
 }
 }
