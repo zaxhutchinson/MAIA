@@ -46,5 +46,29 @@
                 "AI_file": "AI_file4.py"
             }
         ]
+    },
+    "TeamZach": {
+        "size": 1,
+        "name": "TeamZach",
+        "agent_defs": [
+            {
+                "callsign": "Leader",
+                "squad": "Z",
+                "object": "red_tank",
+                "AI_file": "Zach_AI.py"
+            }
+        ]
+    },
+    "TeamLADS": {
+        "size": 1,
+        "name": "TeamLADS",
+        "agent_defs": [
+            {
+                "callsign": "Leader",
+                "squad": "L",
+                "object": "blue_tank",
+                "AI_file": "LADS_AI.py"
+            }
+        ]
     }
 }
