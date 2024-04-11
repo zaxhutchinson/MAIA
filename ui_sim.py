@@ -51,6 +51,7 @@ class UISim(tk.Toplevel):
         # Create the map canvas
         self.xbar = tk.Scrollbar(self.mapFrame, orient=tk.HORIZONTAL)
         self.ybar = tk.Scrollbar(self.mapFrame, orient=tk.VERTICAL)
+
         self.canvas = uiCanvas(
             master=self.mapFrame,
             width=800,
@@ -70,16 +71,15 @@ class UISim(tk.Toplevel):
             obj_font=self.map_obj_font,
             item_font=self.map_item_font,
         )
+
         self.ybar.configure(command=self.canvas.yview)
         self.xbar.configure(command=self.canvas.xview)
         self.ybar.pack(side=tk.RIGHT, fill=tk.Y)
         self.xbar.pack(side=tk.BOTTOM, fill=tk.X)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        self.canvas.yview_moveto(0.0)
-        self.canvas.xview_moveto(0.0)
-
         # Create the log notebook and tabs
+
         self.logNotebook = uiNotebook(master=self.logFrame)
         self.logNotebook.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
 
@@ -136,7 +136,7 @@ class UISim(tk.Toplevel):
         self.initItems()
 
         # TEST JUNK
-        # self.canvas.create_text(50,50,text="Hello world")
+        # self.canvas.create_text(50, 50, text="Hello world")
         # self.canvas.create_rectangle(50,50,450,450,fill="green")
 
     def displayMsgMain(self, msg):
@@ -198,7 +198,6 @@ class UISim(tk.Toplevel):
     def initObjects(self):
         # self.canvas.delete(tk.ALL)
         draw_data = self.sim.getObjDrawData()
-
         for dd in draw_data:
             obj_id = self.canvas.drawObj(dd=dd)
             self.addObjectDrawID(dd["uuid"], obj_id)

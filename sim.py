@@ -185,7 +185,8 @@ class Sim:
                     newobj = ldr.copyObjTemplate(oid)
                     data = o
                     data["uuid"] = uuid.uuid4()
-                    newobj.place(data)
+                    if newobj.place:
+                        newobj.place(data)
                     self.objs[data["uuid"]] = newobj
                     self.map.addObj(data["x"], data["y"], data["uuid"])
 
