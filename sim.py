@@ -2,7 +2,6 @@ import importlib
 import uuid
 import random
 
-import obj
 import copy
 import zmap
 import comp
@@ -400,7 +399,7 @@ class Sim:
                 self.imsgr.addMsg(msgs.Msg(self.tick, "---NEW TICK---", ""))
 
                 # Advance turn order sequentially by rotating list of all active agents by 1.
-                objuuids_list[1:]
+                objuuids_list = objuuids_list[1:]
 
                 # Check all commands to see if there is
                 # something to do this tick.
@@ -410,6 +409,8 @@ class Sim:
                     if str(tick) in objcmds:
                         cmds_this_tick = objcmds[str(tick)]
                         self.processCommands(objuuid, cmds_this_tick)
+
+                self.processUpdates()
 
                 # Run all actions by type in the order specified in the main
                 # config's action_priority
@@ -454,6 +455,17 @@ class Sim:
                 self.actions[a.getType()].append((curr_obj, a))
 
                 # self.action_dispatch_table[a.getType()](obj,a)
+
+    def processUpdates(self):
+
+        for objuuid, obj in self.objs.items():
+
+            actions = obj.processUpdates()
+
+            for a in actions:
+
+                # Add obj ref and action as a tuple.
+                self.actions[a.getType()].append((obj, a))
 
     ##########################################################################
     # ACTION PROCESSING FUNCTIONS
