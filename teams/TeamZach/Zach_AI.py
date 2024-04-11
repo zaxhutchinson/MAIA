@@ -1,6 +1,3 @@
-
-
-
 import ai_helpers as aih
 import random
 
@@ -25,7 +22,6 @@ class AI:
         self.slots_by_ctype = None
         self.tick = 0
 
-    
 
     def initRunTime(self, view):
         self.is_initd = True
@@ -119,10 +115,6 @@ class AI:
                         aih.CMD_Turn(random.choice([-18.0,18.0]))
                     )
             
-
-
-
-
 
     # Implement AI here.
     # IMPORTANT: Must return commands a dictionary that follows the command
