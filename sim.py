@@ -399,7 +399,7 @@ class Sim:
                 self.imsgr.addMsg(msgs.Msg(self.tick, "---NEW TICK---", ""))
 
                 # Advance turn order sequentially by rotating list of all active agents by 1.
-                objuuids_list = objuuids_list[1:]
+                objuuids_list[1:]
 
                 # Check all commands to see if there is
                 # something to do this tick.
