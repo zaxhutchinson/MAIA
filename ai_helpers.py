@@ -135,39 +135,25 @@ def isWeaponReloading(view, slotID):
 
 ##################################
 # Search radar view for pings containing specific objnames.
-# Returns a dictionary of pings that contain the objname.
-# Each entry in the returned dict is a list keyed by direction.
-#
+# Returns a list of pings that contain the objname.
 def searchRadarForObjname(view, name):
-    found_pings = {}
-
+    found_pings = []
     comp_views = getSubView(view, "comp")
-
     if comp_views is not None:
-
         radar_views = {}
-
-        for k, v in comp_views.items():
-
+        for cview in comp_views:
             radar_views = []
-
             # Find all comp views from radar components
-            for cv in v:
-                if cv["ctype"] == "Radar":
-                    radar_views.append(cv)
+            if cview["ctype"] == "Radar":
+                radar_views.append(cview)
 
             # Search the radar views for pings with a matching obj name.
             for sv in radar_views:
-                for vec, data in sv["pings"].items():
-                    if data["name"] == name:
-                        if k not in found_pings:
-                            found_pings[k] = {}
-                            found_pings[k][vec] = []
-                        elif vec not in found_pings[k]:
-                            found_pings[k][vec] = []
-                        found_pings[k][vec].append(data)
+                pings = sv["pings"]
+                for p in pings:
+                    if p["name"] == name:
+                        found_pings.append(p)
     return found_pings
-
 
 ##############################################################################
 # COMP VIEW
