@@ -94,7 +94,7 @@
         "points_count" : true,
         "sprite_path" : "images/cliff.png"
     },
-    "fastplayer" : {
+    "fastplayer": {
         "id": "player",
         "name" : "player",
         "fill_alive":"red",
@@ -106,5 +106,4 @@
         "points_count" : true,
         "sprite_path": "images/arrow.png"
     }
-
 }

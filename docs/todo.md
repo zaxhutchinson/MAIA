@@ -11,6 +11,97 @@ This file describes the planned features and a status on the work for each.
 2. Move victory conditions into WorldState
 3. Monitor for item and object state checks.
 
+### Possible Default Virtual Worlds
+1. Knockout
+Maze where players knock each other back on collision, falling off the edge ends the game.
+```json
+"Map 2": {
+    "name": "Knockback",
+    "edge_obj_id": "cliff",
+    "desc": "Maze where players knock each other back on collision, falling off the edge ends the game",
+    "width": 10,
+    "height": 10,
+    "placed_objects": {},
+    "placed_items": {
+        "goal": [
+            {
+                "x": 1
+            },
+            {
+                "x": 10
+            },
+            {
+                "y": 1
+            },
+            {
+                "y": 10
+            }
+        ]
+    },
+    "sides": {
+        "Green": {
+            "starting_locations": [
+                [
+                    3,
+                    3
+                ]
+            ],
+            "facing": 1,
+            "color": "green"
+        },
+        "Blue": {
+            "starting_locations": [
+                [
+                    3,
+                    6
+                ]
+            ],
+            "facing": 3,
+            "color": "blue"
+        },
+        "Orange": {
+            "starting_locations": [
+                [
+                    6,
+                    3
+                ]
+            ],
+            "facing": 1,
+            "color": "orange"
+        },
+        "Yellow": {
+            "starting_locations": [
+                [
+                    6,
+                    6
+                ]
+            ],
+            "facing": 3,
+            "color": "yellow"
+        }
+    },
+    "gameplay_mechanics": {
+        "collision_action": "knockback",
+        "knockback_distance": 2
+    },
+    "win_states": [
+        "player_falls_off"
+    ]
+},
+```
+```json
+"player_falls_off": [
+    {
+        "type": "OBJ_ITEMS_TOUCH",
+        "items": ["cliff"],
+        "objs": ["player"],
+        "state": false,
+        "msg":"Player falls off the map"
+    }
+]
+```
+Collision detect is not currently a feature in MAIA, and would need to be added for this to be a functional map.
+
 
 # Problem List
 

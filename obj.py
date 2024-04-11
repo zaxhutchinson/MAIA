@@ -194,8 +194,16 @@ class Object:
                 else:
                     self.logError(zfunctions.CmdToString(cmd))
 
-            for comp in self.data["comps"].values():
-                actions += comp.Update()
+            # MOVED INTO ITS OWN FUNCTION
+            # for comp in self.data["comps"].values():
+            #    actions += comp.Update()
+
+        return actions
+
+    def processUpdates(self):
+        actions = []
+        for comp in self.data["comps"].values():
+            actions += comp.Update()
 
         return actions
 

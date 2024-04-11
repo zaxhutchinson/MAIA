@@ -147,6 +147,50 @@ class uiEntry(tk.Entry):
             self.focus_set()
 
 
+class EntryHelp:
+    def __init__(self, master, text):
+        self.master = master
+        self.text = text
+
+        self.frame = uiQuietFrame(master=master)
+        self.frame.grid(sticky="nsew")
+
+        self.frame.columnconfigure(7)
+
+        self.entry = uiEntry(master=self.frame)
+        self.entry.grid(row=0, column=0, columnspan=6)
+
+        self.help_button = uiButton(
+            master=self.frame,
+            text="?",
+            command=lambda: messagebox.showinfo("Help", self.text, parent=self.master),
+        )
+        self.help_button.configure(width=26)
+        self.help_button.grid(row=0, column=7)
+
+
+class ComboBoxHelp:
+    def __init__(self, master, text):
+        self.master = master
+        self.text = text
+
+        self.frame = uiQuietFrame(master=master)
+        self.frame.grid(sticky="nsew")
+
+        self.frame.columnconfigure(7)
+
+        self.combobox = uiComboBox(master=self.frame)
+        self.combobox.grid(row=0, column=0, columnspan=6)
+
+        self.help_button = uiButton(
+            master=self.frame,
+            text="?",
+            command=lambda: messagebox.showinfo("Help", self.text, parent=self.master),
+        )
+        self.help_button.configure(width=26)
+        self.help_button.grid(row=0, column=7)
+
+
 class uiComboBox(ttk.Combobox):
     def __init__(self, **kwargs):
         super().__init__(kwargs["master"])

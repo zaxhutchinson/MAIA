@@ -1,70 +1,65 @@
 {
     "0": {
-        "id":"0",
-        "name":"Basic Command Module",
-        "ctype":"CnC",
-        "max_cmds_per_tick":100
-    },
+        "id": "0",
+        "name": "Basic Command Module",
+        "ctype": "CnC",
+        "max_cmds_per_tick": 100
+    }, 
     "1000": {
-        "id":"1000",
-        "name":"Main Cannon",
-        "ctype":"FixedGun",
-        "reload_ticks":1,
-        "reload_ticks_remaining":0,
-        "reloading":false,
-        "ammunition":100,
-        "min_damage":100,
-        "max_damage":100,
-        "range":20
+        "id": "1000",
+        "name": "Main Cannon",
+        "ctype": "FixedGun",
+        "reload_ticks": 1,
+        "reload_ticks_remaining": 0,
+        "reloading": false,
+        "ammunition": 100,
+        "min_damage": 100,
+        "max_damage": 100,
+        "range": 20
     },
-
     "1100": {
-        "id":"1100",
-        "name":"Heavy Cannon",
-        "ctype":"FixedGun",
-        "reload_ticks":3,
-        "reload_ticks_remaining":0,
-        "reloading":false,
-        "ammunition":100,
-        "min_damage":250,
-        "max_damage":250,
-        "range":30
+        "id": "1100",
+        "name": "Heavy Cannon",
+        "ctype": "FixedGun",
+        "reload_ticks": 3,
+        "reload_ticks_remaining": 0,
+        "reloading": false,
+        "ammunition": 100,
+        "min_damage": 250,
+        "max_damage": 250,
+        "range": 30
     },
-
-    "2000" : {
-        "id":"2000",
-        "name":"Small Engine",
-        "ctype":"Engine",
-        "min_speed":-1.0,
-        "max_speed":1.0,
-        "cur_speed":0.0,
-        "max_turnrate":90.0,
-        "cur_turnrate":0.0
+    "2000": {
+        "id": "2000",
+        "name": "Small Engine",
+        "ctype": "Engine",
+        "min_speed": -1.0,
+        "max_speed": 1.0,
+        "cur_speed": 0.0,
+        "max_turnrate": 90.0,
+        "cur_turnrate": 0.0
     },
-
-    "2100" : {
-        "id":"2100",
-        "name":"Medium Engine",
-        "ctype":"Engine",
-        "min_speed":-1.0,
-        "max_speed":2.0,
-        "cur_speed":0.0,
-        "max_turnrate":45.0,
-        "cur_turnrate":0.0
+    "2100": {
+        "id": "2100",
+        "name": "Medium Engine",
+        "ctype": "Engine",
+        "min_speed": -1.0,
+        "max_speed": 2.0,
+        "cur_speed": 0.0,
+        "max_turnrate": 45.0,
+        "cur_turnrate": 0.0
     },
-
     "3000": {
-        "id":"3000",
+        "id": "3000",
         "name": "Simple 120/20/10 Radar",
         "ctype": "Radar",
         "active": false,
-        "range":20,
-        "level":1,
-        "visarc":0,
-        "offset_angle":0,
-        "resolution":0
+        "range": 20,
+        "level": 1,
+        "visarc": 0,
+        "offset_angle": 0,
+        "resolution": 0
     },
-
     "4000": {
         "id": "4000",
         "name": "Basic Radio",
@@ -72,9 +67,7 @@
         "max_range": 100,
         "cur_range": 100,
         "message": null
-
     },
-
     "5000": {
         "id": "5000",
         "name": "Robotic Arm",
