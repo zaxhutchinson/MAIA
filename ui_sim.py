@@ -49,7 +49,7 @@ class UISim(tk.Toplevel):
         self.ybar = tk.Scrollbar(self.mapFrame, orient=tk.VERTICAL)
 
         self.canvas = uiCanvas(
-            master=self.mapFrame,  # sets map canvas (The canvas with the grid) as part of map frame
+            master=self.mapFrame,
             width=800,
             height=800,
             xscrollcommand=self.xbar.set,

@@ -170,7 +170,7 @@ class Sim:
             # Create obj place data
             data = {}
             data["x"] = ec[0]
-            data["y"] = ec[1]  # HK this section just makes the border Xs, accpetable
+            data["y"] = ec[1]
             data["uuid"] = uuid.uuid4()
             # Place, add to objDict and add to map
             newobj.place(data)

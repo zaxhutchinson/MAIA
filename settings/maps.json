@@ -5,28 +5,11 @@
     "width" : 10,
     "height" : 10,
     "placed_objects" : {
-      "start_loc" : [
-        {"x":2, "y":2}
-      ],
-      "cliff": [
-        {"x":3,"y":6}
-      ],
-      "fastplayer": [
-        {"x":7, "y":7}
-      ],
-      "1":[
-        {"x":5,"y":7}
-      ]
+
     },
     "placed_items" : {
         "goal" : [
             { "x":8, "y":1 }
-        ],
-        "redbase" : [
-          {"x":3, "y":3}
-        ],
-        "bluebase" : [
-          {"x":5, "y":5}
         ]
 
     },
