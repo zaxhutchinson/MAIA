@@ -34,6 +34,7 @@ class AI:
             aih.CMD_SetSpeed(1),
             aih.CMD_SetSpeed(1),
             aih.CMD_SetSpeed(1),
+            aih.CMD_SetSpeed(0),
             aih.CMD_Turn(45),
             aih.CMD_Turn(0),
             aih.CMD_Turn(0),
@@ -47,12 +48,15 @@ class AI:
             aih.CMD_SetSpeed(1),
             aih.CMD_SetSpeed(1),
             aih.CMD_SetSpeed(1),
+            aih.CMD_SetSpeed(0),
             aih.CMD_Turn(45),
             aih.CMD_Turn(0),
             aih.CMD_Turn(0),
         ]
 
         self.cmd = [
+            aih.CMD_SetSpeed(1),
+            aih.CMD_SetSpeed(1),
             aih.CMD_SetSpeed(1),
             aih.CMD_SetSpeed(1),
             aih.CMD_SetSpeed(1),
@@ -103,7 +107,8 @@ class AI:
         return ((locB[0] - locA[0]) ** 2 + (locB[1] - locA[1]) ** 2) ** 0.5
 
     def checkForEnemyObj(self, view, objname):
-        pings = aih.searchRadarForObjname(view, "Blue Tank")
+        print("hewwo?")
+        pings = aih.searchRadarForObjname(view, "Red Tank")
 
         # If we see the blue tank, shoot!
         if len(pings) > 0:
@@ -127,7 +132,6 @@ class AI:
 
     # Performs appropriate start actions based on starting location
     def startAction(self, view):
-        print("hey look ma i made it")
         self.cmd_maker.addCmd(
             self.tick,
             self.getSlot("Engine"),
@@ -154,20 +158,15 @@ class AI:
         self.updateMap(view)
 
         if (aih.getX(view), aih.getY(view)) == (1, 13):
-            print("aaaa")
             self.start_cmd_set = self.start_cmds_a
         elif (aih.getX(view), aih.getY(view)) == (13, 1):
-            print("bbbb")
             self.start_cmd_set = self.start_cmds_b
 
-        print("ffff")
-        print(self.start_performed)
         if not (self.start_performed):
             print("cccc")
             self.start_performed = self.startAction(view)
 
         if self.start_performed:
-            print("dddd")
             print(self.cmd_iteration)
             self.checkForEnemyObj(view, "Red Tank")
             self.determineNextMove(view)
