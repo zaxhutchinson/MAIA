@@ -251,7 +251,7 @@ class uiCanvas(tk.Canvas):
         )
 
         try:
-            if dd["alive"] == True:
+            if dd["alive"] is True:
                 self.sprite = Image.open(dd["sprite_path"])
                 facing = (  # sim uses clock-wise coords, ui uses counter-clockwise coords
                     dd["facing"] * -1
