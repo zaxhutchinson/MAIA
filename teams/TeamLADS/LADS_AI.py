@@ -25,8 +25,25 @@ class AI:
         self.start_performed = False
         self.cmd_iteration = 0
 
-        self.start_cmds = [
+        self.start_cmds_a = [
+            aih.CMD_Turn(-45),
+            aih.CMD_Turn(0),
+            aih.CMD_SetSpeed(1),
+            aih.CMD_SetSpeed(1),
+            aih.CMD_SetSpeed(1),
+            aih.CMD_Turn(45),
+            aih.CMD_Turn(0),
+        ]
 
+        self.start_cmds_b = [
+            aih.CMD_Turn(90),
+            aih.CMD_Turn(45),
+            aih.CMD_Turn(0),
+            aih.CMD_SetSpeed(1),
+            aih.CMD_SetSpeed(1),
+            aih.CMD_SetSpeed(1),
+            aih.CMD_Turn(45),
+            aih.CMD_Turn(0)
         ]
 
     def initRunTime(self, view):
@@ -113,7 +130,7 @@ class AI:
 
     #Performs appropriate start actions based on starting location
     def startAction(self, view):
-
+        
 
     # Implement AI here.
     # IMPORTANT: Must return commands a dictionary that follows the command
@@ -134,11 +151,9 @@ class AI:
 
         if not (start_performed):
             start_performed = self.startAction(view, cmd_iteration)
-
-
-
-        self.checkForEnemyObj(view, "Blue Tank")
-
-        self.determineNextMove(view)
+        
+        if (start_performed):
+            self.checkForEnemyObj(view, "Red Tank")
+            self.determineNextMove(view)
 
         return self.cmd_maker.getCmds()
