@@ -251,14 +251,24 @@ class uiCanvas(tk.Canvas):
         )
 
         try:
-            self.sprite = Image.open(dd["sprite_path"])
-            facing = (  # sim uses clock-wise coords, ui uses counter-clockwise coords
-                dd["facing"] * -1
-            )
-            globalSpriteList.append(self.sprite.copy())
-            globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
-            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
-            return self.create_image(x, y, image=globalSpriteList[-1])
+            if dd["alive"] is True:
+                self.sprite = Image.open(dd["sprite_path"])
+                facing = (  # sim uses clock-wise coords, ui uses counter-clockwise coords
+                    dd["facing"] * -1
+                )
+                globalSpriteList.append(self.sprite.copy())
+                globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
+                globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
+                return self.create_image(x, y, image=globalSpriteList[-1])
+            else:
+                self.sprite = Image.open(dd["death_sprite_path"])
+                facing = (  # sim uses clock-wise coords, ui uses counter-clockwise coords
+                    dd["facing"] * -1
+                )
+                globalSpriteList.append(self.sprite.copy())
+                globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
+                globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
+                return self.create_image(x, y, image=globalSpriteList[-1])
         except:
             return self.create_text(
                 x, y, text=dd["text"], fill=dd["fill"], font=self.obj_font
