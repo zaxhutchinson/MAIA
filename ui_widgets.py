@@ -4,7 +4,6 @@
 # Various custom tk widgets. Most of them just override default colors.
 ##############################################################################
 
-
 import tkinter as tk
 from tkinter import messagebox
 from tkinter.font import Font
@@ -12,6 +11,8 @@ from tkinter import ttk
 import tkinter.scrolledtext as scrolltext
 import platform
 from packages.tkmacosx import Button
+from packages.PIL import ImageTk, Image
+
 
 BGCOLOR = "#E5E5E5"
 TEXTCOLOR = "#222222"
@@ -23,6 +24,9 @@ ENTRY_DARK = "#222222"
 ENTRY_BG = "salmon1"
 
 BOXFILLCOLOR = "#B2C1E3"
+
+
+globalSpriteList = []
 
 if platform.system() == "Darwin":
     FONT_SIZE = 16
@@ -231,22 +235,44 @@ class uiCanvas(tk.Canvas):
         # )
 
     def drawObj(self, **kwargs):
-        dd = kwargs["dd"]
-        x = (
+        # This function displays the object in the UI
+        dd = kwargs["dd"]  # what to draw
+        x = (  # x coord
             dd["x"] * self.cell_size
             + self.obj_char_size / 2
             + self.char_offset
             + self.cell_size
         )
-        y = (
+        y = (  # y coord
             dd["y"] * self.cell_size
             + self.obj_char_size / 2
             + self.char_offset
             + self.cell_size
         )
-        return self.create_text(
-            x, y, text=dd["text"], fill=dd["fill"], font=self.obj_font
-        )
+
+        try:
+            if dd["alive"] is True:
+                self.sprite = Image.open(dd["sprite_path"])
+                facing = (  # sim uses clock-wise coords, ui uses counter-clockwise coords
+                    dd["facing"] * -1
+                )
+                globalSpriteList.append(self.sprite.copy())
+                globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
+                globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
+                return self.create_image(x, y, image=globalSpriteList[-1])
+            else:
+                self.sprite = Image.open(dd["death_sprite_path"])
+                facing = (  # sim uses clock-wise coords, ui uses counter-clockwise coords
+                    dd["facing"] * -1
+                )
+                globalSpriteList.append(self.sprite.copy())
+                globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
+                globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
+                return self.create_image(x, y, image=globalSpriteList[-1])
+        except:
+            return self.create_text(
+                x, y, text=dd["text"], fill=dd["fill"], font=self.obj_font
+            )
 
     def removeObj(self, objID):
         self.delete(objID)
@@ -286,9 +312,15 @@ class uiCanvas(tk.Canvas):
             + self.char_offset
             + self.cell_size
         )
-        return self.create_text(
-            x, y, text=dd["text"], fill=dd["fill"], font=self.item_font
-        )
+        try:
+            self.sprite = Image.open(dd["sprite_path"])
+            globalSpriteList.append(self.sprite.copy())
+            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
+            return self.create_image(x, y, image=globalSpriteList[-1])
+        except:
+            return self.create_text(
+                x, y, text=dd["text"], fill=dd["fill"], font=self.obj_font
+            )
 
     def updateDrawnItem(self, **kwargs):
         dd = kwargs["dd"]

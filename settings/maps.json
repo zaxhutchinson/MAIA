@@ -29,6 +29,7 @@
         "win_states": [
             "reach_goal"
         ]
+
     },
     "Map 2": {
         "name": "Death Match",

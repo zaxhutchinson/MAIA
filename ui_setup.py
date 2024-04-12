@@ -259,10 +259,8 @@ class UISetup(tk.Frame):
     def buildAndRunSim(self):
         try:
             self.sim.buildSim(self.ldr)
-            print("try")
         except BuildException as e:
             tk.messagebox.showinfo(title="Build Exception", message=e)
-            print("except")
         else:
             # tk.messagebox.showinfo(title="Success",message="Sim build was successful.")    --this line makes a pop up
             map_width = self.sim.getMap().getData("width")
@@ -276,7 +274,6 @@ class UISetup(tk.Frame):
                 self,
                 self.logger,
             )
-            print("else")
 
     def runAdvancedSettings(self):
         self.UIMap = ui_advanced_config.UISettings(self, self.logger)
