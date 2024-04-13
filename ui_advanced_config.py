@@ -76,15 +76,8 @@ class UISettings(tk.Toplevel):
         else:
             return False
 
-    def validate_string_entry(self, input):
-        if len(input) != 0:
-            return True
-        else:
-            return False
-
     def get_focused_entry(self):
         focused_entry = self.focus_get()
-        print(focused_entry)
         return focused_entry
 
     def build_ui(self):
@@ -101,7 +94,6 @@ class UISettings(tk.Toplevel):
         self.title_label = uiLabel(master=self.main_frame, text="Advanced Settings")
 
         self.validate_num = self.teams_column.register(self.validate_number_entry)
-        self.validate_string = self.teams_column.register(self.validate_string_entry)
 
         # Place main widgets
         self.main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
@@ -1499,11 +1491,8 @@ class UISettings(tk.Toplevel):
                     "points_count", bool(self.objects_points_count_combo.combobox.current())
                 )
 
-                print(self.current_object_data.getJSONView())
                 with open("settings/objects.json", "r") as f:
                     object_json = json.load(f)
-
-                print(self.select_objects_combo.get())
 
                 if (
                     self.current_object_data.getData("id")
@@ -1560,7 +1549,6 @@ class UISettings(tk.Toplevel):
                 with open("settings/objects.json", "w") as f:
                     json.dump(object_json, f, indent=4)
                 f.close()
-                print(self.object_data)
 
     def update_maps_json(self):
 
@@ -1593,9 +1581,7 @@ class UISettings(tk.Toplevel):
                 )
                 with open("settings/maps.json", "r") as f:
                     map_json = json.load(f)
-                    print(self.current_map_data.data)
                 if self.maps_id_entry.entry.get() != self.select_maps_combo.get():
-                    print(self.select_maps_combo.get())
                     if self.select_maps_combo.get() in map_json:
                         map_json.pop(self.select_maps_combo.get())
                     if self.select_maps_combo.get() in self.map_data:
@@ -1606,15 +1592,12 @@ class UISettings(tk.Toplevel):
                     self.select_maps_combo.current(len(self.map_ids) - 1)
 
                 self.map_data[self.maps_id_entry.entry.get()] = self.current_map_data
-                print(map_json)
                 map_json[self.maps_id_entry.entry.get()] = self.current_map_data.data
                 f.close()
 
                 with open("settings/maps.json", "w") as f:
                     json.dump(map_json, f, indent=4)
                 f.close()
-                print(self.map_data)
-                print(self.current_map_data.data)
 
     ### CREATE NEW ###
 
