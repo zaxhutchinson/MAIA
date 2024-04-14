@@ -107,16 +107,12 @@ class AI:
         return ((locB[0] - locA[0]) ** 2 + (locB[1] - locA[1]) ** 2) ** 0.5
 
     def checkForEnemyObj(self, view, objname):
-        print("hewwo?")
         pings = aih.searchRadarForObjname(view, "Red Tank")
 
         # If we see the blue tank, shoot!
         if len(pings) > 0:
-            print("BANGGGGG!!!!!!!")
             if aih.canWeaponFire(view, self.getSlot("FixedGun")):
                 self.cmd_maker.addCmd(0, self.getSlot("FixedGun"), aih.CMD_Fire())
-        else:
-            print(":(")
 
         # Always check if we need to reload.
         if aih.doesWeaponNeedReloading(view, self.getSlot("FixedGun")):
@@ -163,11 +159,9 @@ class AI:
             self.start_cmd_set = self.start_cmds_b
 
         if not (self.start_performed):
-            print("cccc")
             self.start_performed = self.startAction(view)
 
         if self.start_performed:
-            print(self.cmd_iteration)
             self.checkForEnemyObj(view, "Red Tank")
             self.determineNextMove(view)
 
