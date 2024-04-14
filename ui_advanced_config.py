@@ -68,6 +68,9 @@ class UISettings(tk.Toplevel):
         self.ui_map = None
 
     def validate_number_entry(self, input):
+        """
+        Validates each entered value (input) to ensure it is a number.
+        """
         input.replace(".", "", 1)
         input.replace("-", "", 1)
         if input.isdigit() or input == "" or "-" in input or "." in input:
@@ -77,6 +80,9 @@ class UISettings(tk.Toplevel):
             return False
 
     def get_focused_entry(self):
+        """
+        Returns the currently focused entry in advanced config.
+        """
         focused_entry = self.focus_get()
         return focused_entry
 
@@ -668,6 +674,9 @@ class UISettings(tk.Toplevel):
             self.select_team_combo.current(self.prev_team_combo)
 
     def change_components_entry_widgets(self, event=None):
+        """
+        Gets the correct component data for the currently selected team.
+        """
         self.answer = True
 
         if self.current_component_data.getData("ctype") == "CnC":
@@ -765,6 +774,9 @@ class UISettings(tk.Toplevel):
             self.select_component_combo.current(self.prev_component_combo)
 
     def change_objects_entry_widgets(self, event=None):
+        """
+        Gets the correct object data for the currently selected team.
+        """
         self.answer = True
         comp_ids = self.current_comp_ids
         if len(comp_ids) != 0:
@@ -822,6 +834,9 @@ class UISettings(tk.Toplevel):
             self.select_objects_combo.current(self.prev_object_combo)
 
     def change_maps_entry_widgets(self, event=None):
+        """
+        Gets the correct map data for the currently selected team.
+        """
         self.answer = True
 
         if not (
@@ -1167,10 +1182,16 @@ class UISettings(tk.Toplevel):
             self.objects_comp_ids_combo.combobox.configure(values=self.current_comp_ids)
 
     def get_current_comp_id(self, event):
+        """
+        Gets the current comp id selected for the current object.
+        """
         self.current_comp_id_idx = self.objects_comp_ids_combo.combobox.current()
         self.current_comp_id = self.objects_comp_ids_combo.combobox.get()
 
     def delete_comp_id(self, event):
+        """
+        Removes the current component ID from the list.
+        """
         current_comp_id = self.objects_comp_ids_combo.combobox.get()
         if len(current_comp_id) == 0:
             if self.current_comp_id_idx != len(self.current_comp_ids) - 1:
@@ -1178,6 +1199,9 @@ class UISettings(tk.Toplevel):
                 self.objects_comp_ids_combo.combobox.configure(values=self.current_comp_ids)
 
     def add_new_comp_id(self, event):
+        """
+        Adds the a new component ID to the list.
+        """
         new_combo_id = self.objects_comp_ids_combo.combobox.get()
         new_combo_id_index = self.current_comp_id_idx
         if new_combo_id not in self.current_comp_ids and new_combo_id.strip() != "":
@@ -1187,6 +1211,9 @@ class UISettings(tk.Toplevel):
 
     ### UPDATE JSON FILES###
     def update_teams_json(self):
+        """
+        Updates the teams JSON values.
+        """
         if (
             self.team_name_entry.entry.get() in self.team_data.keys()
             and self.team_name_entry.entry.get() != self.select_team_combo.get()
@@ -1249,6 +1276,9 @@ class UISettings(tk.Toplevel):
                 f.close()
 
     def update_components_json(self):
+        """
+        Updates the components JSON. values
+        """
         if (
             self.components_id_entry.entry.get() in self.component_data.keys()
             and self.components_id_entry.entry.get() != self.select_component_combo.get().split(":")[0]
@@ -1446,6 +1476,9 @@ class UISettings(tk.Toplevel):
                 f.close()
 
     def update_objects_json(self):
+        """
+        Updates the objects JSON values.
+        """
         if (
             self.objects_id_entry.entry.get() in self.object_data.keys()
             and self.objects_id_entry.entry.get() != self.select_objects_combo.get().split(":")[0]
@@ -1551,7 +1584,9 @@ class UISettings(tk.Toplevel):
                 f.close()
 
     def update_maps_json(self):
-
+        """
+        Updates the maps JSON values.
+        """
         if (
             self.maps_id_entry.entry.get() in self.map_data.keys()
             and self.maps_id_entry.entry.get() != self.select_maps_combo.get()
@@ -1602,6 +1637,9 @@ class UISettings(tk.Toplevel):
     ### CREATE NEW ###
 
     def create_team(self):
+        """
+        Creates a new team and adds it to the team dictionary.
+        """
         self.team_id = askstring("Team ID", "Please enter an ID for the new team.")
         while len(self.team_id) == 0 or self.team_id in self.team_data.keys():
             if len(self.team_id) == 0:
@@ -1628,6 +1666,9 @@ class UISettings(tk.Toplevel):
             self.show_team_entry(self.current_team_data)
 
     def create_component(self):
+        """
+        Creates a new component and adds it to the component dictionary.
+        """
         self.component_id = askstring(
             "Component ID", "Please enter an ID for the new component."
         )
@@ -1684,6 +1725,9 @@ class UISettings(tk.Toplevel):
             self.show_component_entries(self.current_component_data)
 
     def create_object(self):
+        """
+        Creates a new object and adds it to the object dictionary.
+        """
         self.object_id = askstring("Object ID", "Please enter an ID for the new object.")
         while len(self.object_id) == 0 or self.object_id in self.object_data:
             if len(self.object_id) == 0:
@@ -1718,6 +1762,9 @@ class UISettings(tk.Toplevel):
             self.show_object_entry(self.current_object_data)
 
     def create_map(self):
+        """
+        Creates a new map and adds it to the map dictionary.
+        """
         self.map_name = askstring("Map Name", "Please enter a name for a new map.")
         while len(self.map_name) == 0 or self.map_name in self.map_data.keys():
             if len(self.map_name) == 0:
@@ -1750,6 +1797,9 @@ class UISettings(tk.Toplevel):
     ### DELETE ###
 
     def delete_team(self):
+        """
+        Deletes the currently selected team from the JSON and team dictionary.
+        """
         if self.select_team_combo.get() in self.team_data:
             self.team_data.pop(self.select_team_combo.get())
             self.team_names.pop(self.select_team_combo.current())
@@ -1767,6 +1817,9 @@ class UISettings(tk.Toplevel):
             self.change_team_entry_widgets()
 
     def delete_components(self):
+        """
+        Deletes the currently selected component from the JSON and component dictionary.
+        """
         if self.select_component_combo.get().split(":")[0] in self.component_data:
             self.component_data.pop(self.select_component_combo.get().split(":")[0])
 
@@ -1783,6 +1836,9 @@ class UISettings(tk.Toplevel):
             self.change_components_entry_widgets()
 
     def delete_object(self):
+        """
+        Deletes the currently selected object from the JSON and object dictionary.
+        """
         if self.select_objects_combo.get().split(":")[0] in self.object_data:
             self.object_data.pop(self.select_objects_combo.get().split(":")[0])
 
@@ -1799,6 +1855,9 @@ class UISettings(tk.Toplevel):
             self.change_objects_entry_widgets()
 
     def delete_map(self):
+        """
+        Deletes the currently selected map from the JSON and map dictionary.
+        """
         if self.select_maps_combo.get() in self.map_data:
             self.map_data.pop(self.select_maps_combo.get())
             with open("settings/maps.json", "r") as f:
@@ -1815,6 +1874,9 @@ class UISettings(tk.Toplevel):
 
     ### SHOW MAP WINDOW ###
     def show_map(self):
+        """
+        Shows the UI representation of the currently selected map.
+        """
         self.ui_map = ui_map_config.UIMapConfig(
             self.current_map_data, self, logger=self.logger
         )
