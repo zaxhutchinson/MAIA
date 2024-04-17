@@ -2,7 +2,7 @@ class Agent:
     """This class is currently depreciated and is not in use"""
 
     def __init__(self, ID, obj_id, ai_filename):
-        """Sets data values to associated params"""
+        """Initializes data values to associated params"""
         self.data = {}
         self.data["id"] = ID
         self.data["objid"] = obj_id

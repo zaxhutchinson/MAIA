@@ -8,7 +8,7 @@
 
 class GState:
     def __init__(self, data):
-        """Initialize gstate data
+        """Initializes gstate data
 
         Sets data to input
         Sets check_state and init_state based on end-state type
