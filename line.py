@@ -2,6 +2,8 @@ from vec2 import Vec2
 
 
 class LineSeg:
+    """This class is currently depreciated and is not in use"""
+
     def __init__(self, v1, v2):
         """Sets start and end points"""
         self.v1 = v1

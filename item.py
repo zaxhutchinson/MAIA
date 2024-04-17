@@ -18,7 +18,7 @@ class Item:
         self.data[key] = value
 
     def place(self, data):
-        """Set all key/value pairs"""
+        """Sets all key/value pairs"""
         for k, v in data.items():
             self.data[k] = v
 
