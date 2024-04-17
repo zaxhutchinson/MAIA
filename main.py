@@ -14,6 +14,10 @@ import ui_about
 # LogInit()
 class App(tk.Tk):
     def __init__(self, *args, **kwargs):
+        """Initializes MAIA window
+
+        Instances of home page, about page, and set up page frames are stored in array to be raised as needed
+        """
         tk.Tk.__init__(self, *args, **kwargs)
 
         logger = logging.getLogger("main")
@@ -31,24 +35,25 @@ class App(tk.Tk):
 
         self.frames = {}
 
-        self.frames["HomePage"] = ui_homepage.UIHomepage(
+        self.frames["home_page"] = ui_homepage.UIHomepage(
             master=self.container, controller=self, logger=logger
         )
-        self.frames["SetupPage"] = ui_setup.UISetup(
+        self.frames["setup_page"] = ui_setup.UISetup(
             master=self.container, controller=self, logger=logger
         )
-        self.frames["AboutPage"] = ui_about.ui_about(
+        self.frames["about_page"] = ui_about.ui_about(
             master=self.container, controller=self, logger=logger
         )
 
         # the setup page must be placed first to prevent errors
-        self.frames["SetupPage"].grid(row=0, column=0, sticky="nsew")
-        self.frames["HomePage"].grid(row=0, column=0, sticky="nsew")
-        self.frames["AboutPage"].grid(row=0, column=0, sticky="nsew")
+        self.frames["setup_page"].grid(row=0, column=0, sticky="nsew")
+        self.frames["home_page"].grid(row=0, column=0, sticky="nsew")
+        self.frames["about_page"].grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame("HomePage")
+        self.show_frame("home_page")
 
     def show_frame(self, page_name):
+        """Raises frame"""
         frame = self.frames[page_name]
         frame.tkraise()
 
