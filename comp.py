@@ -151,7 +151,7 @@ class Comp:
 
         return actions
 
-    def FixedGunUpdate(self, cmd):
+    def FixedGunUpdate(self):
 
         # See if we were reloading
         self.updateReloading()

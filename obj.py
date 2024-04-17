@@ -163,6 +163,10 @@ class Object:
             "text": self.getData("text"),
             "fill": fill,
             "redraw": redraw,
+            "name": self.getData("name"),
+            "facing": self.data["facing"],
+            "sprite_path": self.getData("sprite_path"),
+            "death_sprite_path": self.getData("death_sprite_path"),
         }
 
     def processCommands(self, cmds):
@@ -191,8 +195,16 @@ class Object:
                 else:
                     self.logError(zfunctions.CmdToString(cmd))
 
-            for comp in self.data["comps"].values():
-                actions += comp.Update()
+            # MOVED INTO ITS OWN FUNCTION
+            # for comp in self.data["comps"].values():
+            #    actions += comp.Update()
+
+        return actions
+
+    def processUpdates(self):
+        actions = []
+        for comp in self.data["comps"].values():
+            actions += comp.Update()
 
         return actions
 

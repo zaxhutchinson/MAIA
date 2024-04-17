@@ -2,7 +2,6 @@ import importlib
 import uuid
 import random
 
-import obj
 import copy
 import zmap
 import comp
@@ -16,8 +15,7 @@ import views
 import gstate
 import zfunctions
 
-
-from ui_scoreboard import displayScoreboard
+from ui_sim import UISim
 
 
 class Sim:
@@ -187,7 +185,8 @@ class Sim:
                     newobj = ldr.copyObjTemplate(oid)
                     data = o
                     data["uuid"] = uuid.uuid4()
-                    newobj.place(data)
+                    if newobj.place:
+                        newobj.place(data)
                     self.objs[data["uuid"]] = newobj
                     self.map.addObj(data["x"], data["y"], data["uuid"])
 
@@ -297,11 +296,13 @@ class Sim:
 
             if r:
                 self.imsgr.addMsg(
-                    msgs.Msg(self.tick, "GAME OVER", win_state.getData("msg"))
+                    msgs.Msg(
+                        self.tick,
+                        "GAME OVER",
+                        win_state.getData("msg"),
+                    )
                 )
-
             rtn = rtn or r
-
         return rtn
 
         # Only 1 team remaining
@@ -342,6 +343,20 @@ class Sim:
 
         m = msgs.Msg(str(self.tick), "CURRENT POINTS", msg)
         self.imsgr.addMsg(m)
+
+    def getFinalScores(self):
+        final_scores = {}
+        for name, data in self.sides.items():
+            team_scores = {"agents": {}, "total": 0}
+
+            for agent_name, curr_obj in data["team"]["agents"].items():
+                agent_score = curr_obj.getData("points")
+                team_scores["agents"][curr_obj.getBestDisplayName()] = agent_score
+                team_scores["total"] += agent_score
+
+            final_scores[name] = team_scores
+
+        return final_scores
 
     ##########################################################################
     # RUN SIM
@@ -396,6 +411,8 @@ class Sim:
                         cmds_this_tick = objcmds[str(tick)]
                         self.processCommands(objuuid, cmds_this_tick)
 
+                self.processUpdates()
+
                 # Run all actions by type in the order specified in the main
                 # config's action_priority
                 for ap in self.action_priority_keys:
@@ -415,8 +432,7 @@ class Sim:
 
                 # Check if the sim is over.
                 if self.checkEndOfSim():
-                    displayScoreboard()
-                    return
+                    return True
                 else:
                     self.tick += 1
 
@@ -440,6 +456,17 @@ class Sim:
                 self.actions[a.getType()].append((curr_obj, a))
 
                 # self.action_dispatch_table[a.getType()](obj,a)
+
+    def processUpdates(self):
+
+        for objuuid, obj in self.objs.items():
+
+            actions = obj.processUpdates()
+
+            for a in actions:
+
+                # Add obj ref and action as a tuple.
+                self.actions[a.getType()].append((obj, a))
 
     ##########################################################################
     # ACTION PROCESSING FUNCTIONS

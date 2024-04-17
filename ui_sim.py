@@ -9,17 +9,19 @@ import tkinter.scrolledtext as scrolltext
 import queue
 import cProfile
 import logging
+import ui_scoreboard
 
 from ui_widgets import *
 
 
 class UISim(tk.Toplevel):
-    def __init__(self, map_width, map_height, sim, omsgr, master=None, logger=None):
+    def __init__(self, map_width, map_height, sim, omsgr, controller, master=None, logger=None):
         super().__init__(master)
         self.master = master
         self.configure(bg=BGCOLOR)
         self.title("MAIA - Sim UI")
         self.logger = logger
+        self.controller = controller
 
         self.cell_size = 32
         self.map_obj_char_size = 24
@@ -38,6 +40,8 @@ class UISim(tk.Toplevel):
         self.map_width = map_width
         self.map_height = map_height
 
+        self.UIMap = None
+
         # Create the left and right frames
         self.mapFrame = uiQuietFrame(master=self)
         self.mapFrame.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
@@ -47,6 +51,7 @@ class UISim(tk.Toplevel):
         # Create the map canvas
         self.xbar = tk.Scrollbar(self.mapFrame, orient=tk.HORIZONTAL)
         self.ybar = tk.Scrollbar(self.mapFrame, orient=tk.VERTICAL)
+
         self.canvas = uiCanvas(
             master=self.mapFrame,
             width=800,
@@ -66,16 +71,15 @@ class UISim(tk.Toplevel):
             obj_font=self.map_obj_font,
             item_font=self.map_item_font,
         )
+
         self.ybar.configure(command=self.canvas.yview)
         self.xbar.configure(command=self.canvas.xview)
         self.ybar.pack(side=tk.RIGHT, fill=tk.Y)
         self.xbar.pack(side=tk.BOTTOM, fill=tk.X)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        self.canvas.yview_moveto(0.0)
-        self.canvas.xview_moveto(0.0)
-
         # Create the log notebook and tabs
+
         self.logNotebook = uiNotebook(master=self.logFrame)
         self.logNotebook.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
 
@@ -107,6 +111,17 @@ class UISim(tk.Toplevel):
         )
         self.btnDisplayPoints.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
+        self.topRightFrame = uiQuietFrame(master=self.logFrame)
+        self.topRightFrame.pack(fill=tk.NONE, expand=False, side=tk.TOP, anchor="ne")
+
+        self.btnDisplayScoreboard = uiButton(
+            master=self.topRightFrame,
+            text="End Game",
+            command=self.displayScoreboard,
+            width=10,
+        )
+        self.btnDisplayScoreboard.pack(padx=5, pady=5)
+
         self.logFrame.after(100, self.updateLog)
 
         # Draw the background tiles
@@ -121,7 +136,7 @@ class UISim(tk.Toplevel):
         self.initItems()
 
         # TEST JUNK
-        # self.canvas.create_text(50,50,text="Hello world")
+        # self.canvas.create_text(50, 50, text="Hello world")
         # self.canvas.create_rectangle(50,50,450,450,fill="green")
 
     def displayMsgMain(self, msg):
@@ -183,7 +198,6 @@ class UISim(tk.Toplevel):
     def initObjects(self):
         # self.canvas.delete(tk.ALL)
         draw_data = self.sim.getObjDrawData()
-
         for dd in draw_data:
             obj_id = self.canvas.drawObj(dd=dd)
             self.addObjectDrawID(dd["uuid"], obj_id)
@@ -240,10 +254,24 @@ class UISim(tk.Toplevel):
         turns_to_run = self.tbTurnsToRun.get()
         if turns_to_run.isdigit():
             turns_to_run = int(turns_to_run)
-            self.sim.runSim(turns_to_run)
+            if self.sim.runSim(turns_to_run):
+                self.displayScoreboard()
 
         self.updateObjects()
         self.updateItems()
 
     def displayPoints(self):
         self.sim.getPointsData()
+
+    def displayScoreboard(self):
+        teams_scores = self.sim.getFinalScores()
+        for widget in self.logFrame.winfo_children():
+            widget.pack_forget()
+
+        scoreboardFrame = uiQuietFrame(master=self.logFrame)
+        scoreboardFrame.pack(fill=tk.BOTH, expand=True)
+
+        scoreboard_frame = ui_scoreboard.ScoreboardFrame(
+            teams_scores, self.controller, self, self.sim, master=self.logFrame
+        )
+        scoreboard_frame.pack(fill=tk.BOTH, expand=True)
