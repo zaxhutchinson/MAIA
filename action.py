@@ -5,15 +5,15 @@ class Action:
         self.data = {}
 
     def set_type(self, typ):
-        """Setter of type"""
+        """Sets type"""
         self.type = typ
 
     def get_type(self):
-        """Getter of type"""
+        """Gets type"""
         return self.type
 
     def set_data(self, data):
-        """Setter of data
+        """Sets data
 
         Replaced currently stored data
         """
@@ -27,7 +27,7 @@ class Action:
         self.data[key] = value
 
     def get_data(self, key):
-        """Getter of data"""
+        """Gets data"""
         if key in self.data:
             return self.data[key]
         else:

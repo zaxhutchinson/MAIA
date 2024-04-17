@@ -10,15 +10,15 @@ class Agent:
         self.data["ai"] = None
         self.data["obj"] = None
 
-    def getData(self, key):
-        """Getter of data"""
+    def get_data(self, key):
+        """Gets data"""
         if key in self.data:
             return self.data[key]
         else:
             return None
 
-    def setData(self, key, val):
-        """Setter of data"""
+    def set_data(self, key, val):
+        """Sets data"""
         self.data[key] = val
 
     # def setObj(self,obj):

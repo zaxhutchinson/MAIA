@@ -35,7 +35,7 @@ def pretty_print_view(view, out=sys.stdout, indent=""):
 
 
 def get_sub_view(view, *args):
-    """Getter of sub view (dict of world state)"""
+    """Gets sub view (dict of world state)"""
     try:
         subview = view[args[0]]
         return get_sub_view(subview, *args[1:])
@@ -48,72 +48,72 @@ def get_sub_view(view, *args):
 ##################################################
 # GETTERS FOR SELF VIEW DATA
 def get_self(view):
-    """Getter of self"""
+    """Gets self"""
     return get_sub_view(view, "self")
 
 
 def get_facing(view):
-    """Getter of self facing"""
+    """Gets self facing"""
     return get_sub_view(view, "self", "facing")
 
 
 def get_health(view):
-    """Getter of self health"""
+    """Gets self health"""
     return get_sub_view(view, "self", "health")
 
 
 def get_damage(view):
-    """Getter of self damage"""
+    """Gets self damage"""
     return get_sub_view(view, "self", "damage")
 
 
 def get_x(view):
-    """Getter of self x location"""
+    """Gets self x location"""
     return get_sub_view(view, "self", "x")
 
 
 def get_y(view):
-    """Getter of self y location"""
+    """Gets self y location"""
     return get_sub_view(view, "self", "y")
 
 
 def get_cell_x(view):
-    """Getter of self cell x location w/i cell"""
+    """Gets self cell x location w/i cell"""
     return get_sub_view(view, "self", "cell_x")
 
 
 def get_cell_y(view):
-    """Getter of self cell y location w/i cell"""
+    """Gets self cell y location w/i cell"""
     return get_sub_view(view, "self", "cell_y")
 
 
 def get_team_name(view):
-    """Getter of self team name"""
+    """Gets self team name"""
     return get_sub_view(view, "self", "teamname")
 
 
 def get_call_sign(view):
-    """Getter of self call sign"""
+    """Gets self call sign"""
     return get_sub_view(view, "self", "callsign")
 
 
 def get_squad(view):
-    """Getter of self squad"""
+    """Gets self squad"""
     return get_sub_view(view, "self", "squad")
 
 
 def get_comps(view):
-    """Getter of self components"""
+    """Gets self components"""
     return get_sub_view(view, "self", "comps")
 
 
 def get_comp_by_slot_id(view, slot_id):
-    """Getter of self components by slot id"""
+    """Gets self components by slot id"""
     return get_sub_view(view, "self", "comps", slot_id)
 
 
 def get_slot_ids_by_ctype(view):
-    """Getter of slot ids by ctype
+    """Gets slot ids by ctype
 
     Returns a dictionary where k=ctype and v=[slot_ids]
     Good use is to call and store on T0 for future reference
@@ -191,7 +191,7 @@ def search_radar_for_obj_name(view, name):
 
 
 def get_comp_views_of_vtype(view, vtype):
-    """Getter of component views of a vtype
+    """Gets component views of a vtype
 
     Returns a list of all the views within the comp view with a specific vtype."""
     views = []
