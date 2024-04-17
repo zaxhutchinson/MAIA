@@ -22,6 +22,7 @@ import ui_advanced_config
 
 class UIHomepage(tk.Frame):
     def __init__(self, controller, master=None, logger=None):
+        """Initializes ui dependencies and build ui"""
         tk.Frame.__init__(self, master)
         self.master = master
         self.logger = logger
@@ -37,34 +38,38 @@ class UIHomepage(tk.Frame):
 
         self.combat_log = []
 
-        self.BuildUI()
+        self.build_ui()
         self.UIMap = None
 
-    def Run(self):
+    def run(self):
         self.mainloop()
 
-    def BuildUI(self):
+    def build_ui(self):
+        """Build the homepage ui"""
         # self.mainFrame = uiQuietFrame(master=self)
-        self.MAIALabel = uiLabel(master=self, text="Maine AI Arena")
-        self.MAIALabel.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        self.btnStartGame = uiButton(
+        self.maia_label = uiLabel(master=self, text="Maine AI Arena")
+        self.maia_label.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+        self.start_game_button = uiButton(
             master=self,
             text="Start Game",
             command=lambda: self.controller.show_frame("SetupPage"),
         )
-        self.btnStartGame.config(width=400)
-        self.btnStartGame.pack(side=tk.BOTTOM, fill="y", expand=True)
-        self.btnAdvancedConfig = uiButton(
+        self.start_game_button.config(width=400)
+        self.start_game_button.pack(side=tk.BOTTOM, fill="y", expand=True)
+
+        self.adv_config_button = uiButton(
             master=self,
             command=lambda: ui_advanced_config.UISettings(self, self.logger),
             text="Advanced Config",
         )
-        self.btnAdvancedConfig.config(width=400)
-        self.btnAdvancedConfig.pack(side=tk.BOTTOM, fill="y", expand=True)
-        self.btnAbout = uiButton(
+        self.adv_config_button.config(width=400)
+        self.adv_config_button.pack(side=tk.BOTTOM, fill="y", expand=True)
+
+        self.about_button = uiButton(
             master=self,
             text="About MAIA",
             command=lambda: self.controller.show_frame("AboutPage"),
         )
-        self.btnAbout.config(width=400)
-        self.btnAbout.pack(side=tk.BOTTOM, fill="y", expand=True)
+        self.about_button.config(width=400)
+        self.about_button.pack(side=tk.BOTTOM, fill="y", expand=True)
