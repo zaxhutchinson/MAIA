@@ -9,6 +9,7 @@
 
 class CommandValidator:
     def __init__(self):
+        """Initializes prossible commands and their inputs/input types"""
         self.commands = {}
         self.commands["FIRE"] = {}
         self.commands["RELOAD"] = {}
@@ -26,8 +27,8 @@ class CommandValidator:
         }
         self.commands["DROP_ITEM"] = {"location": [str, type(None)]}
 
-    def validateCommands(self, cmds):
-
+    def validate_commands(self, cmds):
+        """Determines if commands are well-formed"""
         # cmds is None
         if cmds is None:
             return {}
@@ -118,6 +119,7 @@ class CommandValidator:
         return cmds
 
 
+# test of command validator?
 if __name__ == "__main__":
     cv = CommandValidator()
 
@@ -126,4 +128,4 @@ if __name__ == "__main__":
         "1": {"5": {"commad": "SET_RANGE", "range": 1.0}},
     }
 
-    newcmd = cv.validateCommands(cmd)
+    newcmd = cv.validate_commands(cmd)
