@@ -34,8 +34,8 @@ class UIMapConfig(tk.Toplevel):
     def build_ui(self):
         """Generates UI of map
 
-        Set map info, generate canvas, draw tiles,
-        draw placed objects, draw placed items, draw
+        Sets map info, generates canvas, draws tiles,
+        draws placed objects, draws placed items, draws
         ai-controlled objects
         """
         self.cell_size = 32

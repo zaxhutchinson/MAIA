@@ -45,10 +45,10 @@ class UIHomepage(tk.Frame):
         self.mainloop()
 
     def build_ui(self):
-        """Generate the homepage UI
+        """Generates the homepage UI
 
-        Place label, place start game button,
-        place adv config button, place about button
+        Places label, places start game button,
+        places adv config button, places about button
         """
         # self.mainFrame = uiQuietFrame(master=self)
         self.maia_label = uiLabel(master=self, text="Maine AI Arena")

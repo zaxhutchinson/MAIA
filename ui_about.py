@@ -19,10 +19,10 @@ class ui_about(tk.Frame):
         self.UIMap = None
 
     def build_ui(self):
-        """Generate the about page UI
+        """Generates the about page UI
 
-        Set description text, place description,
-        place label, place home button
+        Sets description text, places description,
+        places label, places home button
         """
         desc_text = "MAIA is a platform designed for AI competitions that provides a modular 2D \
             simulation environment for which students write AI to control competing agents.\n\
