@@ -10,15 +10,15 @@ from ui_widgets import *
 
 class UIMapConfig(tk.Toplevel):
     def __init__(self, _map, master=None, logger=None):
-        """Sets window and frame information and calls function to build UI"""
+        """Sets window and frame information and calls function to build ui"""
         super().__init__(master)
         self.master = master
         self.logger = logger
         self.ldr = loader.Loader(self.logger)
 
         self.map = _map
-        self.map_width = self.map.getData("width")
-        self.map_height = self.map.getData("height")
+        self.map_width = self.map.get_data("width")
+        self.map_height = self.map.get_data("height")
 
         self.objs = {}
         self.items = {}
@@ -89,19 +89,19 @@ class UIMapConfig(tk.Toplevel):
         self.draw_tiles()
 
         self.obj_drawIDs = {}
-        self.initObjects()
+        self.init_objects()
 
         self.item_drawIDs = {}
-        self.initItems()
+        self.init_items()
 
     def add_objects(self):
         """Add edges and placed object to obj list"""
         # Create the map border
-        edge_obj_id = self.map.getData("edge_obj_id")
-        edge_coords = self.map.getListOfEdgeCoordinates()
+        edge_obj_id = self.map.get_data("edge_obj_id")
+        edge_coords = self.map.get_list_of_edge_coordinates()
         for ec in edge_coords:
             # Copy the obj
-            new_obj = self.ldr.copyObjTemplate(edge_obj_id)
+            new_obj = self.ldr.copy_obj_template(edge_obj_id)
             # Create obj place data
             data = {}
             data["x"] = ec[0]
@@ -112,13 +112,13 @@ class UIMapConfig(tk.Toplevel):
             self.objs[data["uuid"]] = new_obj
 
         # Add all placed objects
-        pl_objs = self.map.getData("placed_objects")
+        pl_objs = self.map.get_data("placed_objects")
         for oid, lst in pl_objs.items():
             for o in lst:
                 # If an object entry in placed_objs does not
                 # have a position, it is ignored.
                 if "x" in o and "y" in o:
-                    new_obj = self.ldr.copyObjTemplate(oid)
+                    new_obj = self.ldr.copy_obj_template(oid)
                     data = o
                     data["uuid"] = uuid.uuid4()
                     new_obj.place(data)
@@ -127,13 +127,13 @@ class UIMapConfig(tk.Toplevel):
     def add_ai_objects(self):
         """Add ai-controlled object to obj list"""
         # Add possible team and ai-controlled obj locations
-        sides = self.map.getData("sides")
+        sides = self.map.get_data("sides")
         for iid, lst in sides.items():
             starting_locations = list(lst["starting_locations"])
 
             for loc in starting_locations:
-                new_obj = self.ldr.copyObjTemplate("start_loc")
-                new_obj.setData("fill_alive", lst["color"])
+                new_obj = self.ldr.copy_obj_template("start_loc")
+                new_obj.set_data("fill_alive", lst["color"])
                 data = {}
 
                 data["x"] = loc[0]
@@ -147,12 +147,12 @@ class UIMapConfig(tk.Toplevel):
     def add_items(self):
         """Add placed items to item list"""
         # Add all placed items
-        pl_items = self.map.getData("placed_items")
+        pl_items = self.map.get_data("placed_items")
         for iid, lst in pl_items.items():
             for i in lst:
                 # If an item entry does not have a position, ignore.
                 if "x" in i and "y" in i:
-                    new_item = self.ldr.copyItemTemplate(iid)
+                    new_item = self.ldr.copy_item_template(iid)
                     data = i
                     data["uuid"] = uuid.uuid4()
                     new_item.place(data)
@@ -187,11 +187,11 @@ class UIMapConfig(tk.Toplevel):
                     )
                     self.canvas_background_RCnum_ids.append(RCnum_id)
 
-    def addObjectDrawID(self, _uuid, _drawID):
+    def add_object_draw_id(self, _uuid, _drawID):
         """Add object draw id to obj draw id list"""
         self.obj_drawIDs[_uuid] = _drawID
 
-    def getObjectDrawID(self, _uuid):
+    def get_object_draw_id(self, _uuid):
         """Get object draw id"""
         try:
             return self.obj_drawIDs[_uuid]
@@ -201,7 +201,7 @@ class UIMapConfig(tk.Toplevel):
             )
             return None
 
-    def initObjects(self):
+    def init_objects(self):
         """Draw initial object state
 
         Get and add draw date for every object to draw data list
@@ -210,17 +210,17 @@ class UIMapConfig(tk.Toplevel):
         draw_data = []
 
         for curr_obj in self.objs.values():
-            draw_data.append(curr_obj.getDrawData())
+            draw_data.append(curr_obj.get_draw_data())
 
         for dd in draw_data:
-            obj_id = self.canvas.drawObj(dd=dd)
-            self.addObjectDrawID(dd["uuid"], obj_id)
+            obj_id = self.canvas.draw_obj(dd=dd)
+            self.add_object_draw_id(dd["uuid"], obj_id)
 
-    def addItemDrawID(self, _uuid, _drawID):
+    def add_item_draw_id(self, _uuid, _drawID):
         """Add item draw id to item draw id list"""
         self.item_drawIDs[_uuid] = _drawID
 
-    def getItemDrawID(self, _uuid):
+    def get_item_draw_id(self, _uuid):
         """Get item draw id"""
         try:
             return self.item_drawIDs[_uuid]
@@ -230,7 +230,7 @@ class UIMapConfig(tk.Toplevel):
             )
             return None
 
-    def initItems(self):
+    def init_items(self):
         """Draw initial item state
 
         Get and add draw date for every item to draw data list
@@ -239,8 +239,8 @@ class UIMapConfig(tk.Toplevel):
         draw_data = []
 
         for curr_items in self.items.values():
-            draw_data.append(curr_items.getDrawData())
+            draw_data.append(curr_items.get_draw_data())
 
         for dd in draw_data:
             item_id = self.canvas.drawObj(dd=dd)
-            self.addItemDrawID(dd["uuid"], item_id)
+            self.add_item_draw_id(dd["uuid"], item_id)

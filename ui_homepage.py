@@ -22,7 +22,7 @@ import ui_advanced_config
 
 class UIHomepage(tk.Frame):
     def __init__(self, controller, master=None, logger=None):
-        """Initializes ui dependencies and build ui"""
+        """Sets window and frame information and calls function to build UI"""
         tk.Frame.__init__(self, master)
         self.master = master
         self.logger = logger
@@ -45,7 +45,11 @@ class UIHomepage(tk.Frame):
         self.mainloop()
 
     def build_ui(self):
-        """Build the homepage ui"""
+        """Generate the homepage UI
+
+        Place label, place start game button,
+        place adv config button, place about button
+        """
         # self.mainFrame = uiQuietFrame(master=self)
         self.maia_label = uiLabel(master=self, text="Maine AI Arena")
         self.maia_label.pack(side=tk.TOP, fill=tk.BOTH, expand=True)

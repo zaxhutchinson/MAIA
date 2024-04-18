@@ -8,7 +8,7 @@ from main import *
 
 class ui_about(tk.Frame):
     def __init__(self, controller, master=None, logger=None):
-        """Initializes ui dependencies and build ui"""
+        """Sets window and frame information and calls function to build UI"""
         tk.Frame.__init__(self, master)
         self.master = master
         self.logger = logger
@@ -19,7 +19,11 @@ class ui_about(tk.Frame):
         self.UIMap = None
 
     def build_ui(self):
-        """Build the about page ui"""
+        """Generate the about page UI
+
+        Set description text, place description,
+        place label, place home button
+        """
         desc_text = "MAIA is a platform designed for AI competitions that provides a modular 2D \
             simulation environment for which students write AI to control competing agents.\n\
             The goal is to give coders all the tools necessary so that they can focus \
