@@ -168,21 +168,21 @@ class UIMapConfig(tk.Toplevel):
 
                 if x != 0 and x != w - 1 and y != 0 and y != h - 1:
 
-                    tile_id = self.canvas.drawTile(x=x, y=y, fill="snow4")
+                    tile_id = self.canvas.draw_tile(x=x, y=y, fill="snow4")
 
                     self.canvas_background_tile_ids.append(tile_id)
 
                 if (x == 0 and (y != 0 and y != h - 1)) or (
                     x == w - 1 and (y != 0 and y != h - 1)
                 ):
-                    RCnum_id = self.canvas.drawRCNumber(
+                    RCnum_id = self.canvas.draw_rc_number(
                         x=x, y=y, fill="gray35", text=str(y - 1)
                     )
                     self.canvas_background_RCnum_ids.append(RCnum_id)
                 elif (y == 0 and (x != 0 and x != w - 1)) or (
                     y == h - 1 and (x != 0 and x != w - 1)
                 ):
-                    RCnum_id = self.canvas.drawRCNumber(
+                    RCnum_id = self.canvas.draw_rc_number(
                         x=x, y=y, fill="gray35", text=str(x - 1)
                     )
                     self.canvas_background_RCnum_ids.append(RCnum_id)
@@ -242,5 +242,5 @@ class UIMapConfig(tk.Toplevel):
             draw_data.append(curr_items.get_draw_data())
 
         for dd in draw_data:
-            item_id = self.canvas.drawObj(dd=dd)
+            item_id = self.canvas.draw_obj(dd=dd)
             self.add_item_draw_id(dd["uuid"], item_id)

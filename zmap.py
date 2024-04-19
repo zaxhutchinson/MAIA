@@ -98,7 +98,7 @@ class Map:
             grid[to_x][to_y] = objuuid
 
     def get_all_obj_uuid_along_trajectory(self, x, y, angle, distance):
-        """Gets all object uuid's along a trajectory given angle and distance"""
+        """Gets all object uuid's along a trajectory given a start point, angle and distance"""
         found = {}
         found["objects"] = []
         found["items"] = []

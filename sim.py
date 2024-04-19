@@ -191,7 +191,7 @@ class Sim:
             data["y"] = ec[1]
             data["uuid"] = uuid.uuid4()
             # Place, add to objDict and add to map
-            newobj.place(data)
+            new_obj.place(data)
             self.objs[data["uuid"]] = new_obj
             self.map.add_obj(data["x"], data["y"], data["uuid"])
 
@@ -233,7 +233,7 @@ class Sim:
             starting_locations = list(v["starting_locations"])
 
             for agent in team_data["agent_defs"]:
-                newobj = ldr.copy_obj_template(agent["object"])
+                new_obj = ldr.copy_obj_template(agent["object"])
                 data = {}
                 data["side"] = k
                 data["ticks_per_turn"] = config["ticks_per_turn"]
@@ -268,7 +268,7 @@ class Sim:
                 ai_module = importlib.util.module_from_spec(ai_spec)
                 ai_spec.loader.exec_module(ai_module)
                 AI = ai_module.AI()
-                AI.initData(data)
+                AI.init_data(data)
 
                 # Store the AI object after initialization
                 # to avoid including it in the data dict passed
@@ -278,7 +278,7 @@ class Sim:
                 # Create and store components
                 for c in new_obj.get_data("comp_ids"):
                     new_comp = ldr.copy_comp_template(c)
-                    new_comp.set_data("parent", newobj)
+                    new_comp.set_data("parent", new_obj)
                     new_obj.add_comp(new_comp)
 
                 # Place and store and add to map
@@ -355,7 +355,7 @@ class Sim:
             for curr_obj in data["team"]["agents"].values():
                 msg += (
                     "    "
-                    + curr_obj.getBestDisplayName()
+                    + curr_obj.get_best_display_name()
                     + ": "
                     + str(curr_obj.get_data("points"))
                     + "\n"
@@ -374,7 +374,7 @@ class Sim:
 
             for agent_name, curr_obj in data["team"]["agents"].items():
                 agent_score = curr_obj.get_data("points")
-                team_scores["agents"][curr_obj.getBestDisplayName()] = agent_score
+                team_scores["agents"][curr_obj.get_best_display_name()] = agent_score
                 team_scores["total"] += agent_score
 
             final_scores[name] = team_scores
@@ -656,7 +656,7 @@ class Sim:
     # Performs a radar transmission
     def actn_transmit_radar(self, curr_obj, actn):
         """Radar transmission action"""
-        view = self.view_manager.getViewTemplate("radar")
+        view = self.view_manager.get_view_template("radar")
         view["tick"] = self.tick
         view["ctype"] = actn.get_data("ctype")
         view["compname"] = actn.get_data("compname")
@@ -902,7 +902,7 @@ class Sim:
         for curr_obj in self.destroyed_objs.values():
             dd.append(curr_obj.get_draw_data())
         for curr_obj in self.objs.values():
-            dd.append(curr_obj.get_draw_Data())
+            dd.append(curr_obj.get_draw_data())
         return dd
 
     def get_item_draw_data(self):

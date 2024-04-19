@@ -57,7 +57,7 @@ class UIHomepage(tk.Frame):
         self.start_game_button = uiButton(
             master=self,
             text="Start Game",
-            command=lambda: self.controller.show_frame("SetupPage"),
+            command=lambda: self.controller.show_frame("setup_page"),
         )
         self.start_game_button.config(width=400)
         self.start_game_button.pack(side=tk.BOTTOM, fill="y", expand=True)
@@ -73,7 +73,7 @@ class UIHomepage(tk.Frame):
         self.about_button = uiButton(
             master=self,
             text="About MAIA",
-            command=lambda: self.controller.show_frame("AboutPage"),
+            command=lambda: self.controller.show_frame("about_page"),
         )
         self.about_button.config(width=400)
         self.about_button.pack(side=tk.BOTTOM, fill="y", expand=True)

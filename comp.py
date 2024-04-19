@@ -35,7 +35,7 @@ class Comp:
         elif ctype == "CnC":
             self.command = self.cnc_command
             self.update = self.cnc_update
-            self.setViewKeysCnC()
+            self.set_view_keys_cnc()
         elif ctype == "Radio":
             self.command = self.radar_command
             self.update = self.radio_update

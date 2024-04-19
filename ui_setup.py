@@ -48,16 +48,13 @@ class UISetup(tk.Frame):
             self.teams_list.insert(tk.END, name)
         for k, v in self.sim.get_sides().items():
             self.sides_list.insert(tk.END, k)
-            self.team_assignments_list.insert(tk.END, str(self.sim.getTeamName(k)))
+            self.team_assignments_list.insert(tk.END, str(self.sim.get_team_name(k)))
 
     def update_map_names(self):
         """Updates map names"""
         self.maps_list.delete(0, tk.END)
         for name in self.ldr.get_map_ids():
             self.maps_list.insert(tk.END, name)
-
-    """this function is what happens when you hit button "select map"
-    moved it up here so that it can be bound to selecting map in build_ui"""
 
     def select_map(self, event):
         """Selects map for sim

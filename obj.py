@@ -79,7 +79,7 @@ class Object:
         """Sets all key/value pairs"""
         for k, v in data.items():
             self.data[k] = v
-        self.initLogger()
+        self.init_logger()
 
     def init_logger(self):
         """Initializes logger"""
@@ -131,7 +131,7 @@ class Object:
                 else:
                     return None
             except Exception as e:
-                self.logError("runAI() raised an exception: " + str(e))
+                self.log_error("run_ai() raised an exception: " + str(e))
                 # log.LogMostRecentException(
                 #     "AI script for team "+
                 #     self.get_data('teamname') +
@@ -147,7 +147,7 @@ class Object:
         new_damage = old_damage + amt
         self.set_data("damage", new_damage)
 
-        self.logInfo("Damaged for " + str(amt) + " - Total Damage: " + str(new_damage))
+        self.log_info("Damaged for " + str(amt) + " - Total Damage: " + str(new_damage))
 
         points = 0
         if self.get_data("points_count"):
@@ -158,7 +158,7 @@ class Object:
         if self.is_alive() and new_damage >= self.get_data("health"):
             self.set_data("alive", False)
 
-            self.logInfo("DESTROYED!!!")
+            self.log_info("DESTROYED!!!")
 
             points = self.get_data("health") - old_damage
 
@@ -208,9 +208,9 @@ class Object:
 
                 if slot_id in self.data["comps"]:
                     actions += self.data["comps"][slot_id].command(cmd)
-                    self.logInfo(zfunctions.CmdToString(cmd))
+                    self.log_info(zfunctions.cmd_to_string(cmd))
                 else:
-                    self.logError(zfunctions.CmdToString(cmd))
+                    self.log_error(zfunctions.cmd_to_string(cmd))
 
             # MOVED INTO ITS OWN FUNCTION
             # for comp in self.data["comps"].values():

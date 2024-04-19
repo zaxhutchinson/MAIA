@@ -220,12 +220,15 @@ class CmdMaker:
         self.cmds = {}
 
     def reset(self):
+        """Resets commands"""
         self.cmds.clear()
 
     def get_cmds(self):
+        """Gets commands"""
         return self.cmds
 
     def add_cmd(self, tick, slot, cmd):
+        """Adds commands"""
         tick = str(tick)
         if tick not in self.cmds:
             self.cmds[tick] = {}

@@ -174,14 +174,14 @@ class UISim(tk.Toplevel):
                 if (x == 0 and (y != 0 and y != h - 1)) or (
                     x == w - 1 and (y != 0 and y != h - 1)
                 ):
-                    rc_num_id = self.canvas.drawRCNumber(
+                    rc_num_id = self.canvas.draw_rc_number(
                         x=x, y=y, fill="gray35", text=str(y - 1)
                     )
                     self.canvas_background_rc_num_ids.append(rc_num_id)
                 elif (y == 0 and (x != 0 and x != w - 1)) or (
                     y == h - 1 and (x != 0 and x != w - 1)
                 ):
-                    rc_num_id = self.canvas.drawRCNumber(
+                    rc_num_id = self.canvas.draw_rc_number(
                         x=x, y=y, fill="gray35", text=str(x - 1)
                     )
                     self.canvas_background_rc_num_ids.append(rc_num_id)
@@ -284,7 +284,7 @@ class UISim(tk.Toplevel):
 
     def run_x_turns(self):
         """Run sim for a set number of turns"""
-        turns_to_run = self.turns_to_run_entry.get()
+        turns_to_run = self.turns_entry.get()
         if turns_to_run.isdigit():
             turns_to_run = int(turns_to_run)
             if self.sim.run_sim(turns_to_run):

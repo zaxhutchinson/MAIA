@@ -286,12 +286,12 @@ class uiCanvas(tk.Canvas):
 
     def redraw_obj(self, **kwargs):
         """Redraws object"""
-        self.remove_obj(kwargs["objID"])
+        self.remove_obj(kwargs["obj_id"])
         return self.draw_obj(**kwargs)
 
     def update_drawn_obj(self, **kwargs):
         """Updates drawn object"""
-        # self.delete(kwargs['objID'])
+        # self.delete(kwargs['obj_id'])
         dd = kwargs["dd"]
         x = (
             dd["x"] * self.cell_size
@@ -305,7 +305,7 @@ class uiCanvas(tk.Canvas):
             + self.char_offset
             + self.cell_size
         )
-        self.coords(kwargs["objID"], x, y)
+        self.coords(kwargs["obj_id"], x, y)
 
     def draw_item(self, **kwargs):
         """Draws item
