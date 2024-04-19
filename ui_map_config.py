@@ -24,7 +24,7 @@ class UIMapConfig(tk.Toplevel):
         self.items = {}
         self.sides = {}
 
-        self.container = tk.Frame(self)
+        self.container = uiQuietFrame(self)
         self.container.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)

@@ -36,13 +36,8 @@ class UIHomepage(tk.Frame):
         self.ldr = loader.Loader(self.logger)
         self.sim = sim.Sim(self.imsgr)
 
-        self.combat_log = []
-
         self.build_ui()
         self.UIMap = None
-
-    def run(self):
-        self.mainloop()
 
     def build_ui(self):
         """Generates the homepage UI
