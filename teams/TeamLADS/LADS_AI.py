@@ -6,7 +6,7 @@ class AI:
     def __init__(self):
         None
 
-    def initData(self, sim_data):
+    def init_data(self, sim_data):
         # Store the sim_data in case we need to reference something.
         self.sim_data = sim_data
 
@@ -28,75 +28,75 @@ class AI:
         self.start_cmd_set = []
 
         self.start_cmds_a = [
-            aih.CMD_Turn(-45),
-            aih.CMD_Turn(0),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(0),
-            aih.CMD_Turn(45),
-            aih.CMD_Turn(0),
-            aih.CMD_Turn(0),
+            aih.cmd_turn(-45),
+            aih.cmd_turn(0),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(0),
+            aih.cmd_turn(45),
+            aih.cmd_turn(0),
+            aih.cmd_turn(0),
         ]
 
         self.start_cmds_b = [
-            aih.CMD_Turn(90),
-            aih.CMD_Turn(45),
-            aih.CMD_Turn(0),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(0),
-            aih.CMD_Turn(45),
-            aih.CMD_Turn(0),
-            aih.CMD_Turn(0),
+            aih.cmd_turn(90),
+            aih.cmd_turn(45),
+            aih.cmd_turn(0),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(0),
+            aih.cmd_turn(45),
+            aih.cmd_turn(0),
+            aih.cmd_turn(0),
         ]
 
         self.cmd = [
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(1),
-            aih.CMD_SetSpeed(0),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(30),
-            aih.CMD_Turn(0),
-            aih.CMD_Turn(0),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(1),
+            aih.cmd_set_speed(0),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(30),
+            aih.cmd_turn(0),
+            aih.cmd_turn(0),
         ]
 
-    def initRunTime(self, view):
+    def init_run_time(self, view):
         self.is_initd = True
-        self.slots_by_ctype = aih.getSlotIDsByCtype(view)
+        self.slots_by_ctype = aih.get_slot_ids_by_ctype(view)
 
-    def getSlot(self, ctype):
+    def get_slot(self, ctype):
         return self.slots_by_ctype[ctype][0]
 
-    def updateMap(self, view):
+    def update_map(self, view):
 
-        loc = (aih.getX(view), aih.getY(view))
+        loc = (aih.get_x(view), aih.get_y(view))
 
         if loc not in self.gamemap:
             self.gamemap[loc] = None
@@ -106,21 +106,21 @@ class AI:
     def distance(self, locA, locB):
         return ((locB[0] - locA[0]) ** 2 + (locB[1] - locA[1]) ** 2) ** 0.5
 
-    def checkForEnemyObj(self, view, objname):
-        pings = aih.searchRadarForObjname(view, "Red Tank")
+    def check_for_enemy_obj(self, view, objname):
+        pings = aih.search_radar_for_obj_name(view, "Red Tank")
 
         # If we see the blue tank, shoot!
         if len(pings) > 0:
-            if aih.canWeaponFire(view, self.getSlot("FixedGun")):
-                self.cmd_maker.addCmd(0, self.getSlot("FixedGun"), aih.CMD_Fire())
+            if aih.can_weapon_fire(view, self.get_slot("FixedGun")):
+                self.cmd_maker.add_cmd(0, self.get_slot("FixedGun"), aih.cmd_fire())
 
         # Always check if we need to reload.
-        if aih.doesWeaponNeedReloading(view, self.getSlot("FixedGun")):
-            self.cmd_maker.addCmd(0, self.getSlot("FixedGun"), aih.CMD_Reload())
+        if aih.does_weapon_need_reloading(view, self.get_slot("FixedGun")):
+            self.cmd_maker.add_cmd(0, self.get_slot("FixedGun"), aih.cmd_reload())
 
-    def determineNextMove(self, view):
-        self.cmd_maker.addCmd(
-            self.tick, self.getSlot("Engine"), self.cmd[self.cmd_iteration]
+    def determine_next_move(self, view):
+        self.cmd_maker.add_cmd(
+            self.tick, self.get_slot("Engine"), self.cmd[self.cmd_iteration]
         )
         self.cmd_iteration += 1
         if len(self.cmd) <= self.cmd_iteration:
@@ -128,9 +128,9 @@ class AI:
 
     # Performs appropriate start actions based on starting location
     def startAction(self, view):
-        self.cmd_maker.addCmd(
+        self.cmd_maker.add_cmd(
             self.tick,
-            self.getSlot("Engine"),
+            self.get_slot("Engine"),
             self.start_cmd_set[self.cmd_start_iteration],
         )
         self.cmd_start_iteration += 1
@@ -140,29 +140,29 @@ class AI:
     # IMPORTANT: Must return commands a dictionary that follows the command
     # specifications. Can return empty dictionary or None if there are no
     # commands.
-    def runAI(self, view):
+    def run_ai(self, view):
 
         self.cmd_maker.reset()
 
         if not self.is_initd:
-            self.initRunTime(view)
+            self.init_run_time(view)
 
-            self.cmd_maker.addCmd(
-                self.tick, self.getSlot("Radar"), aih.CMD_ActivateRadar()
+            self.cmd_maker.add_cmd(
+                self.tick, self.get_slot("Radar"), aih.cmd_activate_radar()
             )
 
-        self.updateMap(view)
+        self.update_map(view)
 
-        if (aih.getX(view), aih.getY(view)) == (1, 13):
+        if (aih.get_x(view), aih.get_y(view)) == (1, 13):
             self.start_cmd_set = self.start_cmds_a
-        elif (aih.getX(view), aih.getY(view)) == (13, 1):
+        elif (aih.get_x(view), aih.get_y(view)) == (13, 1):
             self.start_cmd_set = self.start_cmds_b
 
         if not (self.start_performed):
             self.start_performed = self.startAction(view)
 
         if self.start_performed:
-            self.checkForEnemyObj(view, "Red Tank")
-            self.determineNextMove(view)
+            self.check_for_enemy_obj(view, "Red Tank")
+            self.determine_next_move(view)
 
-        return self.cmd_maker.getCmds()
+        return self.cmd_maker.get_cmds()

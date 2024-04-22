@@ -19,7 +19,7 @@ class AI:
     # IMPORTANT: Must return commands a dictionary that follows the command
     # specifications. Can return empty dictionary or None if there are no
     # commands.
-    def runAI(self, view):
+    def run_ai(self, view):
 
         self.cmd_maker.reset()
 
@@ -31,10 +31,10 @@ class AI:
         # print("--------------AI TURN--------------")
 
         if self.state == 0:
-            self.cmd_maker.addCmd(0, 2, aih.CMD_ActivateRadar())
+            self.cmd_maker.add_cmd(0, 2, aih.cmd_activate_radar())
             self.state += 1
 
-        comp_views = aih.getSubView(view, "comp")
+        comp_views = aih.get_sub_view(view, "comp")
 
         if comp_views is not None:
 
@@ -51,29 +51,29 @@ class AI:
             # Have we run into an object?
             # If so turn...
             need_to_turn = False
-            engine_view = aih.getCompBySlotID(view, "1")
+            engine_view = aih.get_comp_by_slot_id(view, "1")
 
             for ping in pings:
                 if ping["type"] == "object":
                     if ping["distance"] < 2.0:
                         if engine_view["cur_speed"] != 0:
-                            self.cmd_maker.addCmd(0, 1, aih.CMD_SetSpeed(0.0))
+                            self.cmd_maker.add_cmd(0, 1, aih.cmd_set_speed(0.0))
                         else:
-                            self.cmd_maker.addCmd(0, 1, aih.CMD_Turn(90.0))
+                            self.cmd_maker.add_cmd(0, 1, aih.cmd_turn(90.0))
                         need_to_turn = True
 
             if not need_to_turn:
                 if engine_view["cur_turnrate"] != 0:
-                    self.cmd_maker.addCmd(0, 1, aih.CMD_Turn(0.0))
+                    self.cmd_maker.add_cmd(0, 1, aih.cmd_turn(0.0))
                 else:
-                    self.cmd_maker.addCmd(0, 1, aih.CMD_SetSpeed(2.0))
+                    self.cmd_maker.add_cmd(0, 1, aih.cmd_set_speed(2.0))
 
             # # If not, make sure we're not turning.
             # if not turning:
             #     print("NULL TURNING")
-            #     self.cmd_maker.addCmd(0,1,aih.CMD_Turn(0.0))
+            #     self.cmd_maker.add_cmd(0,1,aih.cmd_turm(0.0))
 
             #     # Since we're not turning, move forward.
-            #     self.cmd_maker.addCmd(0,1,aih.CMD_SetSpeed(1.0))
+            #     self.cmd_maker.add_cmd(0,1,aih.cmd_set_speed(1.0))
 
-        return self.cmd_maker.getCmds()
+        return self.cmd_maker.get_cmds()

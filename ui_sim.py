@@ -15,7 +15,17 @@ from ui_widgets import *
 
 
 class UISim(tk.Toplevel):
-    def __init__(self, map_width, map_height, sim, omsgr, controller, master=None, logger=None):
+    def __init__(
+        self, map_width, map_height, sim, omsgr, controller, master=None, logger=None
+    ):
+        """Sets window and frame information and generates the sim UI
+
+        Sets map info, generates canvas, draws tiles,
+        draws placed objects, draws placed items, draws
+        ai-controlled objects
+        Places sim log, places turns-to-run entry elements,
+        places end game button
+        """
         super().__init__(master)
         self.master = master
         self.configure(bg=BGCOLOR)
@@ -43,21 +53,21 @@ class UISim(tk.Toplevel):
         self.UIMap = None
 
         # Create the left and right frames
-        self.mapFrame = uiQuietFrame(master=self)
-        self.mapFrame.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.logFrame = uiQuietFrame(master=self)
-        self.logFrame.pack(fill=tk.BOTH, expand=True, side=tk.RIGHT)
+        self.map_frame = uiQuietFrame(master=self)
+        self.map_frame.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        self.log_frame = uiQuietFrame(master=self)
+        self.log_frame.pack(fill=tk.BOTH, expand=True, side=tk.RIGHT)
 
         # Create the map canvas
-        self.xbar = tk.Scrollbar(self.mapFrame, orient=tk.HORIZONTAL)
-        self.ybar = tk.Scrollbar(self.mapFrame, orient=tk.VERTICAL)
+        self.x_bar = tk.Scrollbar(self.map_frame, orient=tk.HORIZONTAL)
+        self.y_bar = tk.Scrollbar(self.map_frame, orient=tk.VERTICAL)
 
         self.canvas = uiCanvas(
-            master=self.mapFrame,
+            master=self.map_frame,
             width=800,
             height=800,
-            xscrollcommand=self.xbar.set,
-            yscrollcommand=self.ybar.set,
+            xscrollcommand=self.x_bar.set,
+            yscrollcommand=self.y_bar.set,
             scrollregion=(
                 0,
                 0,
@@ -72,82 +82,83 @@ class UISim(tk.Toplevel):
             item_font=self.map_item_font,
         )
 
-        self.ybar.configure(command=self.canvas.yview)
-        self.xbar.configure(command=self.canvas.xview)
-        self.ybar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.xbar.pack(side=tk.BOTTOM, fill=tk.X)
+        self.y_bar.configure(command=self.canvas.yview)
+        self.x_bar.configure(command=self.canvas.xview)
+        self.y_bar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.x_bar.pack(side=tk.BOTTOM, fill=tk.X)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         # Create the log notebook and tabs
 
-        self.logNotebook = uiNotebook(master=self.logFrame)
-        self.logNotebook.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
+        self.log_notebook = uiNotebook(master=self.log_frame)
+        self.log_notebook.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
 
-        self.mainLogFrame = uiQuietFrame(master=self.logNotebook)
-        self.logNotebook.add(self.mainLogFrame, text="Main")
-        self.mainScrollLog = uiScrollText(master=self.mainLogFrame)
-        self.mainScrollLog.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
-        self.mainScrollLog.configure(state="disabled")
+        self.main_log_frame = uiQuietFrame(master=self.log_notebook)
+        self.log_notebook.add(self.main_log_frame, text="Main")
+        self.main_log_scroll = uiScrollText(master=self.main_log_frame)
+        self.main_log_scroll.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
+        self.main_log_scroll.configure(state="disabled")
 
         # Add the buttons
-        self.dataFrame1 = uiQuietFrame(master=self.logFrame)
-        self.dataFrame1.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
-        self.lbTurnsToRun = uiLabel(master=self.dataFrame1, text="Turns To Run")
-        self.lbTurnsToRun.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.tbTurnsToRun = uiEntry(master=self.dataFrame1)
-        self.tbTurnsToRun.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        self.data_frame_1 = uiQuietFrame(master=self.log_frame)
+        self.data_frame_1.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
+        self.turns_label = uiLabel(master=self.data_frame_1, text="Turns To Run")
+        self.turns_label.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        self.turns_entry = uiEntry(master=self.data_frame_1)
+        self.turns_entry.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
-        # self.dataFrame2 = uiQuietFrame(master=self.logFrame)
-        # self.dataFrame2.pack(fill=tk.BOTH,expand=True,side=tk.TOP)
+        # self.data_frame_2 = uiQuietFrame(master=self.log_frame)
+        # self.data_frame_2.pack(fill=tk.BOTH,expand=True,side=tk.TOP)
 
-        self.btnFrame1 = uiQuietFrame(master=self.logFrame)
-        self.btnFrame1.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
-        self.btnRunXTurns = uiButton(
-            master=self.btnFrame1, text="Run X Turns", command=self.runXTurns
+        self.btn_frame_1 = uiQuietFrame(master=self.log_frame)
+        self.btn_frame_1.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
+        self.turns_button = uiButton(
+            master=self.btn_frame_1, text="Run X Turns", command=self.run_x_turns
         )
-        self.btnRunXTurns.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.btnDisplayPoints = uiButton(
-            master=self.btnFrame1, text="Display Points", command=self.displayPoints
+        self.turns_button.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        self.display_points_button = uiButton(
+            master=self.btn_frame_1, text="Display Points", command=self.display_points
         )
-        self.btnDisplayPoints.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        self.display_points_button.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
-        self.topRightFrame = uiQuietFrame(master=self.logFrame)
-        self.topRightFrame.pack(fill=tk.NONE, expand=False, side=tk.TOP, anchor="ne")
+        self.top_right_frame = uiQuietFrame(master=self.log_frame)
+        self.top_right_frame.pack(fill=tk.NONE, expand=False, side=tk.TOP, anchor="ne")
 
-        self.btnDisplayScoreboard = uiButton(
-            master=self.topRightFrame,
+        self.end_game_button = uiButton(
+            master=self.top_right_frame,
             text="End Game",
-            command=self.displayScoreboard,
+            command=self.display_scoreboard,
             width=10,
         )
-        self.btnDisplayScoreboard.pack(padx=5, pady=5)
+        self.end_game_button.pack(padx=5, pady=5)
 
-        self.logFrame.after(100, self.updateLog)
+        self.log_frame.after(100, self.update_log)
 
         # Draw the background tiles
         self.canvas_background_tile_ids = []
-        self.canvas_background_RCnum_ids = []
-        self.drawTiles()
+        self.canvas_background_rc_num_ids = []
+        self.draw_tiles()
 
-        self.obj_drawIDs = {}
-        self.initObjects()
+        self.obj_draw_ids = {}
+        self.init_objects()
 
         self.item_drawIDs = {}
-        self.initItems()
+        self.init_items()
 
         # TEST JUNK
         # self.canvas.create_text(50, 50, text="Hello world")
         # self.canvas.create_rectangle(50,50,450,450,fill="green")
 
-    def displayMsgMain(self, msg):
-        m = msg.getText()
-        self.mainScrollLog.configure(state="normal")
-        self.mainScrollLog.insert(tk.END, m + "\n")
-        self.mainScrollLog.configure(state="disabled")
-        self.mainScrollLog.yview(tk.END)
+    def display_message(self, msg):
+        """Display message in sim log"""
+        m = msg.get_text()
+        self.main_log_scroll.configure(state="normal")
+        self.main_log_scroll.insert(tk.END, m + "\n")
+        self.main_log_scroll.configure(state="disabled")
+        self.main_log_scroll.yview(tk.END)
 
-    def drawTiles(self):
-
+    def draw_tiles(self):
+        """Draw tiles on canvas"""
         w = self.map_width + 2
         h = self.map_height + 2
 
@@ -156,122 +167,146 @@ class UISim(tk.Toplevel):
 
                 if x != 0 and x != w - 1 and y != 0 and y != h - 1:
 
-                    tile_id = self.canvas.drawTile(x=x, y=y, fill="snow4")
+                    tile_id = self.canvas.draw_tile(x=x, y=y, fill="snow4")
 
                     self.canvas_background_tile_ids.append(tile_id)
 
                 if (x == 0 and (y != 0 and y != h - 1)) or (
                     x == w - 1 and (y != 0 and y != h - 1)
                 ):
-                    RCnum_id = self.canvas.drawRCNumber(
+                    rc_num_id = self.canvas.draw_rc_number(
                         x=x, y=y, fill="gray35", text=str(y - 1)
                     )
-                    self.canvas_background_RCnum_ids.append(RCnum_id)
+                    self.canvas_background_rc_num_ids.append(rc_num_id)
                 elif (y == 0 and (x != 0 and x != w - 1)) or (
                     y == h - 1 and (x != 0 and x != w - 1)
                 ):
-                    RCnum_id = self.canvas.drawRCNumber(
+                    rc_num_id = self.canvas.draw_rc_number(
                         x=x, y=y, fill="gray35", text=str(x - 1)
                     )
-                    self.canvas_background_RCnum_ids.append(RCnum_id)
+                    self.canvas_background_rc_num_ids.append(rc_num_id)
 
     #####################################################
     # OBJECT DRAWING
-    def addObjectDrawID(self, _uuid, _drawID):
-        self.obj_drawIDs[_uuid] = _drawID
+    def add_object_draw_id(self, _uuid, _drawID):
+        """Adds object draw id to obj draw id list"""
+        self.obj_draw_ids[_uuid] = _drawID
 
-    def getObjectDrawID(self, _uuid):
+    def get_object_draw_id(self, _uuid):
+        """Gets object draw id"""
         try:
-            return self.obj_drawIDs[_uuid]
+            return self.obj_draw_ids[_uuid]
         except KeyError:
             self.logger.error(
-                "UISim: KeyError " + str(_uuid) + " in getObjectDrawID()."
+                "UISim: KeyError " + str(_uuid) + " in get_object_draw_id()."
             )
             return None
 
-    def removeObjectDrawID(self, _uuid):
-        objID = self.getObjectDrawID(_uuid)
-        if objID is not None:
-            self.canvas.removeObj(objID)
-            del self.obj_drawIDs[_uuid]
+    def remove_object_draw_id(self, _uuid):
+        """Removes object draw id to obj draw id list"""
+        obj_id = self.get_object_draw_id(_uuid)
+        if obj_id is not None:
+            self.canvas.remove_obj(obj_id)
+            del self.obj_draw_ids[_uuid]
 
-    def initObjects(self):
+    def init_objects(self):
+        """Draws initial object state
+
+        Gets and add draw date for every object to draw data list
+        Draws each object on canvas
+        """
         # self.canvas.delete(tk.ALL)
-        draw_data = self.sim.getObjDrawData()
+        draw_data = self.sim.get_obj_draw_data()
         for dd in draw_data:
-            obj_id = self.canvas.drawObj(dd=dd)
-            self.addObjectDrawID(dd["uuid"], obj_id)
+            obj_id = self.canvas.draw_obj(dd=dd)
+            self.add_object_draw_id(dd["uuid"], obj_id)
 
-    def updateObjects(self):
-        draw_data = self.sim.getObjDrawData()
+    def update_objects(self):
+        """Updates objects"""
+        draw_data = self.sim.get_obj_draw_data()
         for dd in draw_data:
             if dd["redraw"]:
-                objID = self.getObjectDrawID(dd["uuid"])
-                objID = self.canvas.redrawObj(dd=dd, objID=objID)
-                self.addObjectDrawID(dd["uuid"], objID)
+                obj_id = self.get_object_draw_id(dd["uuid"])
+                obj_id = self.canvas.redraw_obj(dd=dd, obj_id=obj_id)
+                self.add_object_draw_id(dd["uuid"], obj_id)
             else:
-                objID = self.getObjectDrawID(dd["uuid"])
-                self.canvas.updateDrawnObj(dd=dd, objID=objID)
+                obj_id = self.get_object_draw_id(dd["uuid"])
+                self.canvas.update_drawn_obj(dd=dd, obj_id=obj_id)
 
     ######################################################
     # ITEM DRAWING
-    def addItemDrawID(self, _uuid, _drawID):
+    def add_item_draw_id(self, _uuid, _drawID):
+        """Adds item draw id to item draw id list"""
         self.item_drawIDs[_uuid] = _drawID
 
-    def getItemDrawID(self, _uuid):
+    def get_item_draw_id(self, _uuid):
+        """Gets item draw id"""
         try:
             return self.item_drawIDs[_uuid]
         except KeyError:
-            self.logger.error("UISim: KeyError " + str(_uuid) + " in getItemDrawID().")
+            self.logger.error(
+                "UISim: KeyError " + str(_uuid) + " in get_item_draw_id()."
+            )
             return None
 
-    def removeItemDrawID(self, _uuid):
+    def remove_item_draw_id(self, _uuid):
+        """Removes object draw id from item draw id list"""
         del self.item_drawIDs[_uuid]
 
-    def initItems(self):
-        draw_data = self.sim.getItemDrawData()
+    def init_items(self):
+        """Draws initial item state
+
+        Gets and adds draw data for every item to draw data list
+        Draws each item on canvas
+        """
+        draw_data = self.sim.get_item_draw_data()
         for dd in draw_data:
             item_id = self.canvas.drawItem(dd=dd)
-            self.addItemDrawID(dd["uuid"], item_id)
+            self.add_item_draw_id(dd["uuid"], item_id)
 
-    def updateItems(self):
-        draw_data = self.sim.getItemDrawData()
+    def update_items(self):
+        """Updates items"""
+        draw_data = self.sim.get_item_draw_data()
         for dd in draw_data:
-            item_id = self.getItemDrawID(dd["uuid"])
-            self.canvas.updateDrawnItem(dd=dd, itemID=item_id)
+            item_id = self.get_item_draw_id(dd["uuid"])
+            self.canvas.update_drawn_item(dd=dd, itemID=item_id)
 
-    def updateLog(self):
+    def update_log(self):
+        """Updates log"""
         while True:
             try:
-                m = self.omsgr.getMsg()
+                m = self.omsgr.get_msg()
             except queue.Empty:
                 break
             else:
-                self.displayMsgMain(m)
-        self.logFrame.after(100, self.updateLog)
+                self.display_message(m)
+        self.log_frame.after(100, self.update_log)
 
-    def runXTurns(self):
-        turns_to_run = self.tbTurnsToRun.get()
+    def run_x_turns(self):
+        """Run sim for a set number of turns"""
+        turns_to_run = self.turns_entry.get()
         if turns_to_run.isdigit():
             turns_to_run = int(turns_to_run)
-            if self.sim.runSim(turns_to_run):
-                self.displayScoreboard()
+            if self.sim.run_sim(turns_to_run):
+                self.display_scoreboard()
 
-        self.updateObjects()
-        self.updateItems()
+        self.update_objects()
+        self.update_items()
 
-    def displayPoints(self):
-        self.sim.getPointsData()
+    def display_points(self):
+        """Displays points"""
+        self.sim.get_points_data()
 
-    def displayScoreboard(self):
-        teams_scores = self.sim.getFinalScores()
-        for widget in self.logFrame.winfo_children():
+    def display_scoreboard(self):
+        """Displays scoreboard"""
+        teams_scores = self.sim.get_final_scores()
+        for widget in self.log_frame.winfo_children():
             widget.pack_forget()
 
-        scoreboardFrame = uiQuietFrame(master=self.logFrame)
-        scoreboardFrame.pack(fill=tk.BOTH, expand=True)
+        scoreboard_frame = uiQuietFrame(master=self.log_frame)
+        scoreboard_frame.pack(fill=tk.BOTH, expand=True)
 
         scoreboard_frame = ui_scoreboard.ScoreboardFrame(
-            teams_scores, self.controller, self, self.sim, master=self.logFrame
+            teams_scores, self.controller, self, self.sim, master=self.log_frame
         )
         scoreboard_frame.pack(fill=tk.BOTH, expand=True)

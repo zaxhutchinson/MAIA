@@ -3,15 +3,18 @@ import copy
 
 class ViewManager:
     def __init__(self):
+        """Initializes view templates"""
         self.view_templates = {}
-        self.buildTemplates()
+        self.build_templates()
 
-    def getViewTemplate(self, vtype):
+    def get_view_template(self, vtype):
+        """Gets a view template"""
         if vtype in self.view_templates:
             return copy.deepcopy(self.view_templates[vtype])
         return None
 
-    def buildTemplates(self):
+    def build_templates(self):
+        """Generates view templates"""
         #####################
         # projectile
         #####################

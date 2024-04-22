@@ -3,27 +3,33 @@ import queue
 
 class Msg:
     def __init__(self, tick, title, text):
+        """Initializes tick, title, and text with associated parameters"""
         self.tick = str(tick)
         self.title = str(title)
         self.text = str(text)
 
-    def getText(self):
+    def get_text(self):
+        """Gets text"""
         return "[" + self.tick + "] " + self.title + "\n" + self.text
 
 
 class IMsgr:
     def __init__(self, q):
+        """Initializes q with associated parameter"""
         self.q = q
 
-    def addMsg(self, msg):
+    def add_msg(self, msg):
+        """Adds message"""
         self.q.put(msg)
 
 
 class OMsgr:
     def __init__(self, q):
+        """Initializes q with associated parameter"""
         self.q = q
 
-    def getMsg(self):
+    def get_msg(self):
+        """Gets message"""
         try:
             return self.q.get(block=False)
         except queue.Empty:

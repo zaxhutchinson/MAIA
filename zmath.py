@@ -1,41 +1,36 @@
 import math
 
 
-###############################################################################
-# Translate Point
-#   Translates the x and y along an angle and distance
-#   Angle is expected in degrees since they will come from the player
-#   Returns a tuple with the new x and y
-def translatePoint(x, y, angle, distance):
+def translate_point(x, y, angle, distance):
+    """Translates the x and y along an angle and distance
+
+    Angle is expected in degrees since they will come from the player
+    """
     rad_angle = math.radians(angle)
     new_x = x + distance * math.cos(rad_angle)
     new_y = y + distance * math.sin(rad_angle)
     return (new_x, new_y)
 
 
-###############################################################################
-# Sign
-#   Returns the sign of n. Used by other functions.
 def sign(_n):
+    """Returns the sign of n"""
     return (_n > 0) - (_n < 0)
 
 
-###############################################################################
-# Distance
 def distance(x0, y0, x1, y1):
+    """Calculates distance between two points"""
     return math.sqrt((x1 - x0) ** 2.0 + (y1 - y0) ** 2.0)
 
 
-###############################################################################
-# Get Cells Along a Trajector
-#   Returns a list of cells (x,y) through which a line passes
-#   on its way from A to B
-#   NOTE: I am pretty sure this came from some internet source. It has been
-#       passed down through several of my projects and I've lost the
-#       original citation. Hats off to whomever wrote it.
-def getCellsAlongTrajectory(x, y, angle, distance):
+def get_cells_along_trajectory(x, y, angle, distance):
+    """Gets cells along trajectory given a start point, angle, and distance
+
+    Z note: I am pretty sure this came from some internet source. It has been
+    passed down through several of my projects and I've lost the
+    original citation. Hats off to whomever wrote it.
+    """
     A = (x, y)
-    B = translatePoint(x, y, angle, distance)
+    B = translate_point(x, y, angle, distance)
     B = (int(B[0]), int(B[1]))
 
     D = (B[0] - A[0], B[1] - A[1])
@@ -70,9 +65,8 @@ def getCellsAlongTrajectory(x, y, angle, distance):
     return traversed
 
 
-###############################################################################
-# Get vector to
-def vectorTo(x0, y0, x1, y1):
+def get_vector_to(x0, y0, x1, y1):
+    """Get vector to"""
     bearing = math.degrees(math.atan2(y1 - y0, x1 - x0))
     if bearing < 0:
         bearing += 360
