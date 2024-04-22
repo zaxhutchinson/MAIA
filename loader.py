@@ -16,7 +16,7 @@ import logging
 
 class Loader:
     def __init__(self, logger=None):
-
+        """Initializes empty dict templates and loads jsons"""
         self.main_config = {}
         self.obj_templates = {}
         self.item_templates = {}
@@ -25,149 +25,172 @@ class Loader:
         self.team_templates = {}
         self.gstate_templates = {}
 
-        self.loadMainConfig("settings/main.json")
-        self.loadCompTemplates("settings/components.json")
-        self.loadObjTemplates("settings/objects.json")
-        self.loadItemTemplates("settings/items.json")
-        self.loadMapTemplates("settings/maps.json")
-        self.loadTeamTemplates("settings/teams.json")
-        self.loadGStateTemplates("settings/state.json")
+        self.load_main_config("settings/main.json")
+        self.load_comp_templates("settings/components.json")
+        self.load_obj_templates("settings/objects.json")
+        self.load_item_templates("settings/items.json")
+        self.load_map_templates("settings/maps.json")
+        self.load_team_templates("settings/teams.json")
+        self.load_gstate_templates("settings/state.json")
 
         self.logger = logger
 
     ##########################################################################
-    # LOAD/COPY GSTATE
-    def loadGStateTemplates(self, filename):
-        with open(filename, "r") as f:
-            jsonObjs = json.load(f)
-            for k, v in jsonObjs.items():
+    # GSTATE
+    def load_gstate_templates(self, file_name):
+        """Loads gstate templates"""
+        with open(file_name, "r") as f:
+            json_objs = json.load(f)
+            for k, v in json_objs.items():
                 self.gstate_templates[k] = []
                 for g in v:
                     gs = gstate.GState(g)
                     self.gstate_templates[k].append(gs)
 
-    def copyGStateTemplate(self, _id):
+    def copy_gstate_template(self, _id):
+        """Produces a deep copy of a gstate template"""
         try:
             return copy.deepcopy(self.gstate_templates[_id])
         except KeyError:
             self.logger.error("LOADER: copyGStateTemplate() KeyError " + str(_id))
 
     ##########################################################################
-    # LOAD/COPY OBJ
-    def loadObjTemplates(self, filename):
-        with open(filename, "r") as f:
-            jsonObjs = json.load(f)
-            for k, v in jsonObjs.items():
+    # OBJ
+    def load_obj_templates(self, file_name):
+        """Loads object templates"""
+        with open(file_name, "r") as f:
+            json_objs = json.load(f)
+            for k, v in json_objs.items():
                 self.obj_templates[k] = obj.Object(v)
 
-    def copyObjTemplate(self, _id):
+    def copy_obj_template(self, _id):
+        """Produces a deep copy of a object template"""
         try:
             return copy.deepcopy(self.obj_templates[_id])
         except KeyError:
             self.logger.error("LOADER: copyObjTemplate() KeyError " + str(_id))
 
-    def getObjIDs(self):
+    def get_obj_ids(self):
+        """Gets object ids"""
         return list(self.obj_templates.keys())
 
-    def getObjNames(self):
-        objNames = []
+    def get_obj_names(self):
+        """Gets object names"""
+        obj_names = []
         for object in self.obj_templates.values():
-            objNames.append(object.getData("name"))
-        return objNames
+            obj_names.append(object.get_data("name"))
+        return obj_names
 
     ##########################################################################
-    # LOAD/COPY ITEMS
-    def loadItemTemplates(self, filename):
-        with open(filename, "r") as f:
-            jsonObjs = json.load(f)
-            for k, v in jsonObjs.items():
+    # ITEMS
+    def load_item_templates(self, file_name):
+        """Loads item templates"""
+        with open(file_name, "r") as f:
+            json_objs = json.load(f)
+            for k, v in json_objs.items():
                 self.item_templates[k] = item.Item(v)
 
-    def copyItemTemplate(self, _id):
+    def copy_item_template(self, _id):
+        """Produces a deep copy of an item template"""
         try:
             return copy.deepcopy(self.item_templates[_id])
         except KeyError:
             self.logger.error("LOADER: copyItemTemplate() KeyError " + str(_id))
 
     ##########################################################################
-    # LOAD/COPY COMPS
-    def loadCompTemplates(self, filename):
-        with open(filename, "r") as f:
-            jsonObjs = json.load(f)
-            for k, v in jsonObjs.items():
+    # COMPS
+    def load_comp_templates(self, file_name):
+        """Loads component templates"""
+        with open(file_name, "r") as f:
+            json_objs = json.load(f)
+            for k, v in json_objs.items():
                 self.comp_templates[k] = comp.Comp(v)
 
-    def copyCompTemplate(self, _id):
+    def copy_comp_template(self, _id):
+        """Produces a deep copy of a component template"""
         try:
             return copy.deepcopy(self.comp_templates[_id])
         except KeyError:
             self.logger.error("LOADER: copyCompTemplate() KeyError " + str(_id))
 
-    def getCompIDs(self):
+    def get_comp_ids(self):
+        """Gets component ids"""
         return list(self.comp_templates.keys())
 
-    def getCompNames(self):
-        compNames = []
+    def get_comp_names(self):
+        """Gets component names"""
+        comp_names = []
         for component in self.comp_templates.values():
-            compNames.append(component.getData("name"))
-        return compNames
+            comp_names.append(component.get_data("name"))
+        return comp_names
 
-    def getCompTypes(self):
-        self.compTypes = []
+    def get_comp_types(self):
+        """Gets component types"""
+        self.comp_types = []
         for self.component in self.comp_templates.values():
-            self.compTypes.append(self.component.getData("ctype"))
-        return self.compTypes
+            self.comp_types.append(self.component.get_data("ctype"))
+        return self.comp_types
 
     ##########################################################################
-    # LOAD/COPY MAPS
-    def loadMapTemplates(self, filename):
-        with open(filename, "r") as f:
-            jsonObjs = json.load(f)
-            for k, v in jsonObjs.items():
+    # MAPS
+    def load_map_templates(self, file_name):
+        """Loads map templates"""
+        with open(file_name, "r") as f:
+            json_objs = json.load(f)
+            for k, v in json_objs.items():
                 self.map_templates[k] = zmap.Map(v)
 
-    def copyMapTemplate(self, _id):
+    def copy_map_template(self, _id):
+        """Produces a deep copy of a map template"""
         try:
             return copy.deepcopy(self.map_templates[_id])
         except KeyError:
             self.logger.error("LOADER: copyMapTemplate() KeyError " + str(_id))
 
-    def getMapIDs(self):
+    def get_map_ids(self):
+        """Gets map ids"""
         return list(self.map_templates.keys())
 
     ##########################################################################
-    # LOAD/COPY TEAMS
-    def loadTeamTemplates(self, filename):
-        with open(filename, "r") as f:
-            jsonObj = json.load(f)
-            for k, v in jsonObj.items():
+    # TEAMS
+    def load_team_templates(self, file_name):
+        """Loads team templates"""
+        with open(file_name, "r") as f:
+            json_obj = json.load(f)
+            for k, v in json_obj.items():
                 self.team_templates[k] = v
 
-    def copyTeamTemplate(self, _id):
+    def copy_team_template(self, _id):
+        """Produces a deep copy of a team template"""
         try:
             return copy.deepcopy(self.team_templates[_id])
         except KeyError:
             self.logger.error("LOADER: copyTeamTemplate() KeyError " + str(_id))
 
-    def getTeamIDs(self):
+    def get_team_ids(self):
+        """Gets team ids"""
         return list(self.team_templates.keys())
 
-    def getTeamNames(self):
+    def get_team_names(self):
+        """Gets team names"""
         names = []
         for t in self.team_templates.values():
             names.append(t["name"])
         return names
 
     ##########################################################################
-    # LOAD/COPY Mainconfig
-    def loadMainConfig(self, filename):
-        with open(filename, "r") as f:
+    # Mainconfig
+    def load_main_config(self, file_name):
+        """Loads main config"""
+        with open(file_name, "r") as f:
             self.main_config = json.load(f)
 
-    def copyMainConfig(self):
+    def copy_main_config(self):
+        """Produces a deep copy of main config"""
         return copy.deepcopy(self.main_config)
 
-    def getMainConfigData(self, key):
+    def get_main_config_data(self, key):
+        """Gets main config data"""
         try:
             return self.main_config[key]
         except KeyError:

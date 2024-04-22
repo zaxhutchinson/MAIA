@@ -6,54 +6,64 @@ import action
 
 class Comp:
     def __init__(self, data):
+        """Initializes component data
+
+        Sets data to input
+        Sets command, update, and view_keys functions based on component type
+        """
+
         self.data = data
 
-        self.Command = self.NoCommand
-        self.Update = self.NoUpdate
+        self.command = self.no_command
+        self.update = self.no_update
         self.view_keys = []
-        self.setViewKeysBasic()
+        self.set_view_keys_basic()
 
         ctype = self.data["ctype"]
         if ctype == "FixedGun":
-            self.Command = self.FixedGunCommand
-            self.Update = self.FixedGunUpdate
-            self.setViewKeysFixedGun()
+            self.command = self.fixed_gun_command
+            self.update = self.fixed_gun_update
+            self.set_view_keys_fixed_gun()
         elif ctype == "Engine":
-            self.Command = self.EngineCommand
-            self.Update = self.EngineUpdate
-            self.setViewKeysEngine()
+            self.command = self.engine_command
+            self.update = self.engine_update
+            self.set_view_keys_engine()
         elif ctype == "Radar":
-            self.Command = self.RadarCommand
-            self.Update = self.RadarUpdate
-            self.setViewKeysRadar()
+            self.command = self.radar_command
+            self.update = self.radar_update
+            self.set_view_keys_radar()
         elif ctype == "CnC":
-            self.Command = self.CnCCommand
-            self.Update = self.CnCUpdate
-            self.setViewKeysCnC()
+            self.command = self.cnc_command
+            self.update = self.cnc_update
+            self.set_view_keys_cnc()
         elif ctype == "Radio":
-            self.Command = self.RadarCommand
-            self.Update = self.RadioUpdate
-            self.setViewKeysRadio()
+            self.command = self.radar_command
+            self.update = self.radio_update
+            self.set_view_keys_radio()
         elif ctype == "Arm":
-            self.Command = self.ArmCommand
-            self.Update = self.ArmUpdate
-            self.setViewKeysArm()
+            self.command = self.arm_command
+            self.update = self.arm_update
+            self.set_view_keys_arm()
 
-    def getData(self, key):
+    def get_data(self, key):
+        """Gets data"""
         if key in self.data:
             return self.data[key]
         else:
             return None
 
-    def setData(self, key, value):
+    def set_data(self, key, value):
+        """Sets data"""
         self.data[key] = value
 
     ###########################################################################
     # Self View dispatch
-    def setViewKeysBasic(self):
+    def set_view_keys_basic(self):
+        """Sets view keys to basic/default configuration"""
         self.view_keys += ["id", "name", "ctype", "slot_id"]
 
-    def setViewKeysFixedGun(self):
+    def set_view_keys_fixed_gun(self):
+        """Sets view keys to fixed gun configuration"""
         self.view_keys += [
             "reload_ticks",
             "reload_ticks_remaining",
@@ -64,7 +74,8 @@ class Comp:
             "range",
         ]
 
-    def setViewKeysEngine(self):
+    def set_view_keys_engine(self):
+        """Sets view keys to engine configuration"""
         self.view_keys += [
             "min_speed",
             "max_speed",
@@ -73,7 +84,8 @@ class Comp:
             "cur_turnrate",
         ]
 
-    def setViewKeysRadar(self):
+    def set_view_keys_radar(self):
+        """Sets view keys to radar configuration"""
         self.view_keys += [
             "active",
             "range",
@@ -83,19 +95,23 @@ class Comp:
             "resolution",
         ]
 
-    def setViewKeysCnC(self):
+    def set_view_keys_cnc(self):
+        """Sets view keys to cnc configuration"""
         self.view_keys += ["max_cmds_per_tick"]
 
-    def setViewKeysRadio(self):
+    def set_view_keys_radio(self):
+        """Sets view keys to radio configuration"""
         self.view_keys += ["range"]
 
-    def setViewKeysArm(self):
+    def set_view_keys_arm(self):
+        """Sets view keys to arm configuration"""
         self.view_keys += ["max_weight", "max_bulk", "item"]
 
-    def getSelfView(self):
+    def get_self_view(self):
+        """Gets self view"""
         view = {}
         for key in self.view_keys:
-            view[key] = self.getData(key)
+            view[key] = self.get_data(key)
         return view
 
     ##########################################################################
@@ -103,35 +119,45 @@ class Comp:
     ##########################################################################
 
     ###################################
-    # Default Update: does nothing.
-    #   Intended for use in comps that never produce actions
-    def NoCommand(self, cmd):
+    # Default
+    def no_command(self, cmd):
+        """Default command (does nothing)
+
+        Intended for use in comps that never produce actions
+        """
         return []
 
-    def NoUpdate(self):
+    def no_update(self):
+        """Default update (does nothing)
+
+        Intended for use in comps that never produce actions
+        """
         return []
 
     ###################################
-    # FixedGun Update:
-    #   Commands: FIRE, RELOAD
-    def FixedGunCommand(self, cmd):
+    # Fixed Gun
+    def fixed_gun_command(self, cmd):
+        """Update fixed gune data based on command
+
+        Options: FIRE, RELOAD
+        """
         actions = []
 
         if "command" in cmd:
             if cmd["command"] == "FIRE":
 
-                if self.isLoaded():
+                if self.is_loaded():
                     # Reset the reload ticks
-                    self.setReloadTicksToFull()
+                    self.set_reload_ticks_to_full()
 
                     a = action.Action()
-                    a.setType("HIGHSPEED_PROJECTILE")
-                    a.addData("slot_id", self.getData("slot_id"))
-                    a.addData("compname", self.getData("name"))
-                    a.addData("direction", self.getData("parent").getData("facing"))
-                    a.addData("min_damage", self.getData("min_damage"))
-                    a.addData("max_damage", self.getData("max_damage"))
-                    a.addData("range", self.getData("range"))
+                    a.set_type("HIGHSPEED_PROJECTILE")
+                    a.add_data("slot_id", self.get_data("slot_id"))
+                    a.add_data("compname", self.get_data("name"))
+                    a.add_data("direction", self.get_data("parent").get_data("facing"))
+                    a.add_data("min_damage", self.get_data("min_damage"))
+                    a.add_data("max_damage", self.get_data("max_damage"))
+                    a.add_data("range", self.get_data("range"))
                     actions.append(a)
 
             elif cmd["command"] == "RELOAD":
@@ -141,27 +167,30 @@ class Comp:
                 #   and we have ammo left.
                 if (
                     not self.data["reloading"]
-                    and not self.isLoaded()
-                    and self.getData("ammunition") > 0
+                    and not self.is_loaded()
+                    and self.get_data("ammunition") > 0
                 ):
                     self.data["reloading"] = True
 
         # See if we were reloading
-        self.updateReloading()
+        self.update_reloading()
 
         return actions
 
-    def FixedGunUpdate(self):
-
+    def fixed_gun_update(self):
+        """Update fixed gun data based on if it's reloading"""
         # See if we were reloading
-        self.updateReloading()
+        self.update_reloading()
 
         return []
 
     ###################################
-    # Engine Update:
-    def EngineCommand(self, cmd):
+    # Engine
+    def engine_command(self, cmd):
+        """Update engine data based on command
 
+        Options: SET_SPEED, SET_TURNRATE
+        """
         actions = []
 
         if "command" in cmd:
@@ -169,169 +198,186 @@ class Comp:
             if cmd["command"] == "SET_SPEED":
 
                 if "speed" in cmd:
-                    newspeed = cmd["speed"]
-                    if newspeed < self.getData("min_speed"):
-                        self.data["cur_speed"] = self.getData("min_speed")
-                    elif newspeed > self.getData("max_speed"):
-                        self.data["cur_speed"] = self.getData("max_speed")
+                    new_speed = cmd["speed"]
+                    if new_speed < self.get_data("min_speed"):
+                        self.data["cur_speed"] = self.get_data("min_speed")
+                    elif new_speed > self.get_data("max_speed"):
+                        self.data["cur_speed"] = self.get_data("max_speed")
                     else:
-                        self.data["cur_speed"] = newspeed
+                        self.data["cur_speed"] = new_speed
 
             elif cmd["command"] == "SET_TURNRATE":
 
                 if "turnrate" in cmd:
-                    newturnrate = cmd["turnrate"]
+                    new_turnrate = cmd["turnrate"]
 
-                    if abs(newturnrate) <= self.getData("max_turnrate"):
-                        self.data["cur_turnrate"] = newturnrate
+                    if abs(new_turnrate) <= self.get_data("max_turnrate"):
+                        self.data["cur_turnrate"] = new_turnrate
                     else:
-                        self.data["cur_turnrate"] = self.getData("max_turnrate")
+                        self.data["cur_turnrate"] = self.get_data("max_turnrate")
 
         return actions
 
-    def EngineUpdate(self):
-
+    def engine_update(self):
+        """Update engine data based on if it's moving and/or turning"""
         actions = []
 
-        if self.isMoving():
+        if self.is_moving():
             a = action.Action()
-            a.setType("MOVE")
-            a.addData("slot_id", self.getData("slot_id"))
-            a.addData("speed", self.getData("cur_speed"))
+            a.set_type("MOVE")
+            a.add_data("slot_id", self.get_data("slot_id"))
+            a.add_data("speed", self.get_data("cur_speed"))
             actions.append(a)
 
-        if self.isTurning():
+        if self.is_turning():
             a = action.Action()
-            a.setType("TURN")
-            a.addData("slot_id", self.getData("slot_id"))
-            a.addData("turnrate", self.getData("cur_turnrate"))
+            a.set_type("TURN")
+            a.add_data("slot_id", self.get_data("slot_id"))
+            a.add_data("turnrate", self.get_data("cur_turnrate"))
             actions.append(a)
 
         return actions
 
     ###################################
-    # Radar Update
-    def RadarCommand(self, cmd):
+    # Radar
+    def radar_command(self, cmd):
+        """Update radar data based on command
 
+        Options: ACTIVATE_RADAR, DEACTIVATE_RADAR
+        """
         if "command" in cmd:
             if cmd["command"] == "ACTIVATE_RADAR":
-                self.makeActive()
+                self.make_active()
             elif cmd["command"] == "DEACTIVATE_RADAR":
-                self.makeInactive()
+                self.make_inactive()
 
         return []
 
-    def RadarUpdate(self):
-
+    def radar_update(self):
+        """Update radar data based on if it's activated"""
         actions = []
 
-        if self.isActive():
+        if self.is_active():
             a = action.Action()
-            a.setType("TRANSMIT_RADAR")
-            a.addData("slot_id", self.getData("slot_id"))
-            a.addData("compname", self.getData("name"))
-            a.addData("ctype", self.getData("ctype"))
-            a.addData("range", self.getData("range"))
-            a.addData("offset_angle", self.getData("offset_angle"))
-            a.addData("level", self.getData("level"))
-            a.addData("visarc", self.getData("visarc"))
-            a.addData("offset_angle", self.getData("offset_angle"))
-            a.addData("resolution", self.getData("resolution"))
+            a.set_type("TRANSMIT_RADAR")
+            a.add_data("slot_id", self.get_data("slot_id"))
+            a.add_data("compname", self.get_data("name"))
+            a.add_data("ctype", self.get_data("ctype"))
+            a.add_data("range", self.get_data("range"))
+            a.add_data("offset_angle", self.get_data("offset_angle"))
+            a.add_data("level", self.get_data("level"))
+            a.add_data("visarc", self.get_data("visarc"))
+            a.add_data("offset_angle", self.get_data("offset_angle"))
+            a.add_data("resolution", self.get_data("resolution"))
             actions.append(a)
 
         return actions
 
     ##################################
-    # CnC Udpate
-    def CnCCommand(self, cmd):
+    # CnC
+    def cnc_command(self, cmd):
+        """Update CnC data based on command (does nothing)"""
         return []
 
-    def CnCUpdate(self):
+    def cnc_update(self):
+        """Update CnC data (does nothing)"""
         return []
 
     ###################################
-    # Radio Update
-    def RadioCommand(self, cmd):
+    # Radio
+    def radio_command(self, cmd):
+        """Update radio data based on command
 
+        Options: BROADCAST, SET_RANGE
+        """
         if "command" in cmd:
             if cmd["command"] == "BROADCAST" and "message" in cmd:
-                self.setData("message", cmd["message"])
+                self.set_data("message", cmd["message"])
 
             elif cmd["command"] == "SET_RANGE" and "range" in cmd:
-                newrange = cmd["range"]
-                if 0 <= newrange <= self.getData("max_range"):
-                    self.setData("cur_range", newrange)
+                new_range = cmd["range"]
+                if 0 <= new_range <= self.get_data("max_range"):
+                    self.set_data("cur_range", new_range)
 
         return []
 
-    def RadioUpdate(self):
-
+    def radio_update(self):
+        """Update radio data based on if there is a message"""
         actions = []
 
-        if self.getData("message") is not None:
+        if self.get_data("message") is not None:
             a = action.Action()
-            a.setType("BROADCAST")
-            a.addData("slot_id", self.getData("slot_id"))
-            a.addData("message", self.getData("message"))
-            a.addData("range", self.getData("cur_range"))
+            a.set_type("BROADCAST")
+            a.add_data("slot_id", self.get_data("slot_id"))
+            a.add_data("message", self.get_data("message"))
+            a.add_data("range", self.get_data("cur_range"))
             actions.append(a)
 
         return actions
 
     ###################################
     # Arm Update
-    def ArmCommand(self, cmd):
+    def arm_command(self, cmd):
+        """Update arm data based on command
+
+        Options: TAKE_ITEM, DROP_ITEM
+        """
         actions = []
 
         if "command" in cmd:
             if cmd["command"] == "TAKE_ITEM":
                 a = action.Action()
-                a.setType("TAKE_ITEM")
-                a.addData("slot_id", self.getData("slot_id"))
+                a.set_type("TAKE_ITEM")
+                a.add_data("slot_id", self.get_data("slot_id"))
 
                 if "item_name" in cmd:
-                    a.addData("item_name", cmd["item_name"])
+                    a.add_data("item_name", cmd["item_name"])
                 else:
-                    a.addData("item_name", None)
+                    a.add_data("item_name", None)
 
                 if "item_index" in cmd:
-                    a.addData("item_index", cmd["item_index"])
+                    a.add_data("item_index", cmd["item_index"])
                 else:
-                    a.addData("item_index", None)
+                    a.add_data("item_index", None)
 
                 if "item_uuid" in cmd:
-                    a.addData("item_uuid", cmd["item_uuid"])
+                    a.add_data("item_uuid", cmd["item_uuid"])
                 else:
-                    a.addData("item_uuid", None)
+                    a.add_data("item_uuid", None)
 
                 if "location" in cmd:
-                    a.addData("location", cmd["location"])
+                    a.add_data("location", cmd["location"])
                 else:
-                    a.addData("location", None)
+                    a.add_data("location", None)
 
                 actions.append(a)
 
             elif cmd["command"] == "DROP_ITEM":
                 a = action.Action()
-                a.setType("DROP_ITEM")
-                a.addData("slot_id", self.getData("slot_id"))
-                a.addData("location", cmd["location"])
+                a.set_type("DROP_ITEM")
+                a.add_data("slot_id", self.get_data("slot_id"))
+                a.add_data("location", cmd["location"])
                 actions.append(a)
 
         return actions
 
-    def ArmUpdate(self):
+    def arm_update(self):
+        "Update Arm data (does nothing)"
+
         return []
 
     ###########################################################################
     ## WEAPON RELATED FUNCTIONS
-    def setReloadTicksToFull(self):
+    def set_reload_ticks_to_full(self):
+        """Set reload ticks to full"""
         self.data["reload_ticks_remaining"] = self.data["reload_ticks"]
 
-    def isLoaded(self):
+    def is_loaded(self):
+        """Deteremines if weapon loaded"""
         return self.data["reload_ticks_remaining"] == 0
 
-    def updateReloading(self):
+    def update_reloading(self):
+        """Decrement reloading ticks"""
         if self.data["reloading"]:
             if self.data["reload_ticks_remaining"] > 0:
                 self.data["reload_ticks_remaining"] -= 1
@@ -342,32 +388,42 @@ class Comp:
 
     ###########################################################################
     ## ENGINE RELATED FUNCTIONS
-    def isMoving(self):
+    def is_moving(self):
+        """Determines if engine is moving"""
         return self.data["cur_speed"] != 0.0
 
-    def isTurning(self):
+    def is_turning(self):
+        """Determines if engine is turning"""
         return self.data["cur_turnrate"] != 0.0
 
     ###########################################################################
     ## RADAR RELATED FUCNTIONS
-    def isTransmitting(self):
-        return self.getData("active")
+    def is_transmitting(self):
+        """Determines if radar is transmitting"""
+        return self.get_data("active")
 
     ###########################################################################
     ## ARM RELATED FUNCTIONS
-    def isHoldingItem(self):
-        return self.getData("item") is not None
+    def is_holding_item(self):
+        """Determines if arm is holding an item"""
+        return self.get_data("item") is not None
 
-    def canTakeItem(self, weight, bulk):
-        return self.getData("max_weight") >= weight and self.getData("max_bulk") >= bulk
+    def can_take_item(self, weight, bulk):
+        """Determines if arm can take item"""
+        return (
+            self.get_data("max_weight") >= weight and self.get_data("max_bulk") >= bulk
+        )
 
     ###########################################################################
     ##
-    def isActive(self):
-        return self.getData("active")
+    def is_active(self):
+        """Determines if component is active"""
+        return self.get_data("active")
 
-    def makeActive(self):
-        self.setData("active", True)
+    def make_active(self):
+        """Makes component active"""
+        self.set_data("active", True)
 
-    def makeInactive(self):
-        self.setData("active", False)
+    def make_inactive(self):
+        """Makes component inactive"""
+        self.set_data("active", False)

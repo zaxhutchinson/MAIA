@@ -26,7 +26,7 @@ ENTRY_BG = "salmon1"
 BOXFILLCOLOR = "#B2C1E3"
 
 
-globalSpriteList = []
+global_sprite_list = []
 
 if platform.system() == "Darwin":
     FONT_SIZE = 16
@@ -140,9 +140,9 @@ class uiEntry(tk.Entry):
             insertbackground=TEXTCOLOR,
             font=("Arial", FONT_SIZE),
         )
-        # self.bind("<FocusOut>", self.validateOut)
+        # self.bind("<FocusOut>", self.validate_out)
 
-    def validateOut(self, event):
+    def validate_out(self, event):
         if self.get().strip() == "":
             self.focus_set()
 
@@ -221,7 +221,8 @@ class uiCanvas(tk.Canvas):
             highlightcolor=TEXTCOLOR,
         )
 
-    def drawTile(self, **kwargs):
+    def draw_tile(self, **kwargs):
+        """Draws tile"""
         x0 = kwargs["x"] * self.cell_size
         y0 = kwargs["y"] * self.cell_size
         x1 = x0 + self.cell_size
@@ -234,7 +235,12 @@ class uiCanvas(tk.Canvas):
         #     {'fill':kwargs['fill']}
         # )
 
-    def drawObj(self, **kwargs):
+    def draw_obj(self, **kwargs):
+        """Draws object
+
+        Tries to draw sprite based on object status
+        Defaults to text based representation if unsuccessful
+        """
         # This function displays the object in the UI
         dd = kwargs["dd"]  # what to draw
         x = (  # x coord
@@ -256,33 +262,36 @@ class uiCanvas(tk.Canvas):
                 facing = (  # sim uses clock-wise coords, ui uses counter-clockwise coords
                     dd["facing"] * -1
                 )
-                globalSpriteList.append(self.sprite.copy())
-                globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
-                globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
-                return self.create_image(x, y, image=globalSpriteList[-1])
+                global_sprite_list.append(self.sprite.copy())
+                global_sprite_list[-1] = global_sprite_list[-1].rotate(facing)
+                global_sprite_list[-1] = ImageTk.PhotoImage(global_sprite_list[-1])
+                return self.create_image(x, y, image=global_sprite_list[-1])
             else:
                 self.sprite = Image.open(dd["death_sprite_path"])
                 facing = (  # sim uses clock-wise coords, ui uses counter-clockwise coords
                     dd["facing"] * -1
                 )
-                globalSpriteList.append(self.sprite.copy())
-                globalSpriteList[-1] = globalSpriteList[-1].rotate(facing)
-                globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
-                return self.create_image(x, y, image=globalSpriteList[-1])
+                global_sprite_list.append(self.sprite.copy())
+                global_sprite_list[-1] = global_sprite_list[-1].rotate(facing)
+                global_sprite_list[-1] = ImageTk.PhotoImage(global_sprite_list[-1])
+                return self.create_image(x, y, image=global_sprite_list[-1])
         except:
             return self.create_text(
                 x, y, text=dd["text"], fill=dd["fill"], font=self.obj_font
             )
 
-    def removeObj(self, objID):
-        self.delete(objID)
+    def remove_obj(self, obj_id):
+        """Removes object"""
+        self.delete(obj_id)
 
-    def redrawObj(self, **kwargs):
-        self.removeObj(kwargs["objID"])
-        return self.drawObj(**kwargs)
+    def redraw_obj(self, **kwargs):
+        """Redraws object"""
+        self.remove_obj(kwargs["obj_id"])
+        return self.draw_obj(**kwargs)
 
-    def updateDrawnObj(self, **kwargs):
-        # self.delete(kwargs['objID'])
+    def update_drawn_obj(self, **kwargs):
+        """Updates drawn object"""
+        # self.delete(kwargs['obj_id'])
         dd = kwargs["dd"]
         x = (
             dd["x"] * self.cell_size
@@ -296,9 +305,14 @@ class uiCanvas(tk.Canvas):
             + self.char_offset
             + self.cell_size
         )
-        self.coords(kwargs["objID"], x, y)
+        self.coords(kwargs["obj_id"], x, y)
 
-    def drawItem(self, **kwargs):
+    def draw_item(self, **kwargs):
+        """Draws item
+
+        Tries to draw sprite
+        Defaults to text based representation if unsuccessful
+        """
         dd = kwargs["dd"]
         x = (
             dd["x"] * self.cell_size
@@ -314,15 +328,16 @@ class uiCanvas(tk.Canvas):
         )
         try:
             self.sprite = Image.open(dd["sprite_path"])
-            globalSpriteList.append(self.sprite.copy())
-            globalSpriteList[-1] = ImageTk.PhotoImage(globalSpriteList[-1])
-            return self.create_image(x, y, image=globalSpriteList[-1])
+            global_sprite_list.append(self.sprite.copy())
+            global_sprite_list[-1] = ImageTk.PhotoImage(global_sprite_list[-1])
+            return self.create_image(x, y, image=global_sprite_list[-1])
         except:
             return self.create_text(
                 x, y, text=dd["text"], fill=dd["fill"], font=self.obj_font
             )
 
-    def updateDrawnItem(self, **kwargs):
+    def update_drawn_item(self, **kwargs):
+        """Updates drawn item"""
         dd = kwargs["dd"]
         x = (
             dd["x"] * self.cell_size
@@ -338,7 +353,8 @@ class uiCanvas(tk.Canvas):
         )
         self.coords(kwargs["itemID"], x, y)
 
-    def drawRCNumber(self, **kwargs):
+    def draw_rc_number(self, **kwargs):
+        """Draws RDNumber"""
         x = kwargs["x"] * self.cell_size + self.obj_char_size / 2 + self.char_offset
         y = kwargs["y"] * self.cell_size + self.obj_char_size / 2 + self.char_offset
         return self.create_text(

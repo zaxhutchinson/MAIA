@@ -5,7 +5,7 @@ class AI:
     def __init__(self):
         None
 
-    def initData(self, sim_data):
+    def init_data(self, sim_data):
         # Store the sim_data in case we need to reference something.
         self.sim_data = sim_data
 
@@ -19,6 +19,6 @@ class AI:
     # IMPORTANT: Must return commands a dictionary that follows the command
     # specifications. Can return empty dictionary or None if there are no
     # commands.
-    def runAI(self, view):
+    def run_ai(self, view):
 
-        return self.cmd_maker.getCmds()
+        return self.cmd_maker.get_cmds()

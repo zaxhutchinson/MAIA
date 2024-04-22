@@ -3,7 +3,10 @@ import agent
 
 
 class Team:
+    """This class is currently depreciated and is not in use"""
+
     def __init__(self, data):
+        """Initializes data to input and creates agents"""
         self.data = {}
         self.logger = None
 
@@ -20,12 +23,12 @@ class Team:
 
         self.required_data = []
 
-        self.setData(data)
+        self.set_data(data)
 
-        self.createAgents()
+        self.create_agents()
 
-    def setData(self, data):
-
+    def set_data(self, data):
+        """Sets data"""
         # Agents are created later based on agent_defs read from the json
         self.data["agents"] = {}
 
@@ -40,28 +43,31 @@ class Team:
 
         self.required_data += req_data
 
-    def getData(self, key):
+    def get_data(self, key):
+        """Gets data"""
         if key in self.data:
             return self.data[key]
         else:
             return None
 
-    def getNumberOfAgents(self):
+    def get_number_of_agents(self):
+        """Gets number of agents"""
         if "agents" in self.data:
             return len(self.data["agents"])
         else:
             0
 
-    def createAgents(self):
-        agent_defs = self.getData("agent_defs")
+    def create_agents(self):
+        """Creates agents"""
+        agent_defs = self.get_data("agent_defs")
 
         if agent_defs is None:
             self.logger.error("AGENT: Agent definition data is missing.")
         else:
             for ID, data in agent_defs.items():
                 ID = int(ID)
-                objid = data["object"]
-                ai_filename = data["AI_file"]
+                obj_id = data["object"]
+                ai_file_name = data["AI_file"]
 
-                _agent = agent.Agent(ID, objid, ai_filename)
+                _agent = agent.Agent(ID, obj_id, ai_file_name)
                 self.data["agents"][ID] = _agent

@@ -131,7 +131,9 @@ class UISettings(tk.Toplevel):
         self.squad_label = uiLabel(master=self.agent_frame, text="Squad:")
         self.squad_entry = EntryHelp(master=self.agent_frame, text="To be added.")
         self.agent_object_label = uiLabel(master=self.agent_frame, text="Object:")
-        self.agent_object_entry = EntryHelp(master=self.agent_frame, text="To be added.")
+        self.agent_object_entry = EntryHelp(
+            master=self.agent_frame, text="To be added."
+        )
         self.ai_file_label = uiLabel(master=self.agent_frame, text="AI File:")
         self.ai_file_entry = EntryHelp(master=self.agent_frame, text="To be added.")
         self.teams_update_button = uiButton(
@@ -145,7 +147,9 @@ class UISettings(tk.Toplevel):
         )
 
         # Place Team Widgets
-        self.teams_column.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10)
+        self.teams_column.pack(
+            side=tk.LEFT, fill=tk.BOTH, expand=True, padx=10, pady=10
+        )
         self.select_team_combo.grid(
             row=1, column=1, columnspan=2, padx=10, pady=10, ipadx=10, ipady=10
         )
@@ -199,7 +203,9 @@ class UISettings(tk.Toplevel):
         # Make Component Widgets
         self.select_component_combo = uiComboBox(master=self.components_column)
         self.select_component_combo.configure(state="readonly")
-        self.components_label = uiLabel(master=self.components_column, text="Components")
+        self.components_label = uiLabel(
+            master=self.components_column, text="Components"
+        )
         self.components_update_button = uiButton(
             master=self.components_column,
             command=self.update_components_json,
@@ -215,38 +221,56 @@ class UISettings(tk.Toplevel):
         self.components_id_entry = EntryHelp(
             master=self.components_column, text="To be added."
         )
-        self.components_name_label = uiLabel(master=self.components_column, text="Name:")
+        self.components_name_label = uiLabel(
+            master=self.components_column, text="Name:"
+        )
         self.components_name_entry = EntryHelp(
             master=self.components_column, text="To be added."
         )
-        self.components_ctype_label = uiLabel(master=self.components_column, text="CType:")
+        self.components_ctype_label = uiLabel(
+            master=self.components_column, text="CType:"
+        )
         self.components_type_label = uiLabel(master=self.components_column, text="")
         self.components_type_combo = uiComboBox(master=self.components_column)
-        self.components_type_attr1_label = uiLabel(master=self.components_column, text="")
+        self.components_type_attr1_label = uiLabel(
+            master=self.components_column, text=""
+        )
         self.components_type_attr1_entry = EntryHelp(
             master=self.components_column, text="To be added."
         )
-        self.components_type_attr2_label = uiLabel(master=self.components_column, text="")
+        self.components_type_attr2_label = uiLabel(
+            master=self.components_column, text=""
+        )
         self.components_type_attr2_entry = EntryHelp(
             master=self.components_column, text="To be added."
         )
-        self.components_type_attr3_label = uiLabel(master=self.components_column, text="")
+        self.components_type_attr3_label = uiLabel(
+            master=self.components_column, text=""
+        )
         self.components_type_attr3_entry = EntryHelp(
             master=self.components_column, text="To be added."
         )
-        self.components_type_attr4_label = uiLabel(master=self.components_column, text="")
+        self.components_type_attr4_label = uiLabel(
+            master=self.components_column, text=""
+        )
         self.components_type_attr4_entry = EntryHelp(
             master=self.components_column, text="To be added."
         )
-        self.components_type_attr5_label = uiLabel(master=self.components_column, text="")
+        self.components_type_attr5_label = uiLabel(
+            master=self.components_column, text=""
+        )
         self.components_type_attr5_entry = EntryHelp(
             master=self.components_column, text="To be added."
         )
-        self.components_type_attr6_label = uiLabel(master=self.components_column, text="")
+        self.components_type_attr6_label = uiLabel(
+            master=self.components_column, text=""
+        )
         self.components_type_attr6_entry = EntryHelp(
             master=self.components_column, text="To be added."
         )
-        self.components_type_attr7_label = uiLabel(master=self.components_column, text="")
+        self.components_type_attr7_label = uiLabel(
+            master=self.components_column, text=""
+        )
         self.components_type_attr7_entry = EntryHelp(
             master=self.components_column, text="To be added."
         )
@@ -347,7 +371,9 @@ class UISettings(tk.Toplevel):
             master=self.objects_column, command=self.delete_object, text="Delete"
         )
         self.objects_id_label = uiLabel(master=self.objects_column, text="ID:")
-        self.objects_id_entry = EntryHelp(master=self.objects_column, text="To be added.")
+        self.objects_id_entry = EntryHelp(
+            master=self.objects_column, text="To be added."
+        )
         self.objects_name_label = uiLabel(master=self.objects_column, text="Name:")
         self.objects_name_entry = EntryHelp(
             master=self.objects_column, text="To be added."
@@ -375,19 +401,27 @@ class UISettings(tk.Toplevel):
         self.objects_health_entry.entry.config(
             validate="all", validatecommand=(self.validate_num, "%P")
         )
-        self.objects_density_label = uiLabel(master=self.objects_column, text="Density:")
+        self.objects_density_label = uiLabel(
+            master=self.objects_column, text="Density:"
+        )
         self.objects_density_entry = EntryHelp(
             master=self.objects_column, text="To be added."
         )
         self.objects_density_entry.entry.config(
             validate="all", validatecommand=(self.validate_num, "%P")
         )
-        self.objects_comp_ids_label = uiLabel(master=self.objects_column, text="Comp IDs:")
-        self.objects_comp_ids_combo = ComboBoxHelp(master=self.objects_column, text="To be Added.")
+        self.objects_comp_ids_label = uiLabel(
+            master=self.objects_column, text="Comp IDs:"
+        )
+        self.objects_comp_ids_combo = ComboBoxHelp(
+            master=self.objects_column, text="To be Added."
+        )
         self.objects_points_count_label = uiLabel(
             master=self.objects_column, text="Points Count:"
         )
-        self.objects_points_count_combo = ComboBoxHelp(master=self.objects_column, text="To be Added.")
+        self.objects_points_count_combo = ComboBoxHelp(
+            master=self.objects_column, text="To be Added."
+        )
 
         # Place Object Widgets
         self.objects_column.pack(
@@ -469,7 +503,9 @@ class UISettings(tk.Toplevel):
         self.maps_edge_obj_id_label = uiLabel(
             master=self.maps_column, text="Edge Object ID:"
         )
-        self.maps_edge_obj_id_entry = EntryHelp(master=self.maps_column, text="To be added.")
+        self.maps_edge_obj_id_entry = EntryHelp(
+            master=self.maps_column, text="To be added."
+        )
         self.maps_desc_label = uiLabel(master=self.maps_column, text="Desc:")
         self.maps_desc_entry = EntryHelp(master=self.maps_column, text="To be added.")
         self.maps_width_label = uiLabel(master=self.maps_column, text="Width:")
@@ -550,7 +586,7 @@ class UISettings(tk.Toplevel):
         """
         # TEAM
         self.team_data = self.ldr.team_templates
-        self.team_names = self.ldr.getTeamNames()
+        self.team_names = self.ldr.get_team_names()
         self.current_team_data = self.team_data[self.team_names[0]]
 
         self.select_team_combo.configure(values=self.team_names)
@@ -563,11 +599,13 @@ class UISettings(tk.Toplevel):
 
         # COMPONENT
         self.component_data = self.ldr.comp_templates
-        self.component_ids = self.ldr.getCompIDs()
-        self.component_names = self.ldr.getCompNames()
+        self.component_ids = self.ldr.get_comp_ids()
+        self.component_names = self.ldr.get_comp_names()
         for i in range(len(self.component_ids)):
-            self.component_ids[i] = self.component_ids[i] + ": " + self.component_names[i]
-        self.component_types = self.ldr.getCompTypes()
+            self.component_ids[i] = (
+                self.component_ids[i] + ": " + self.component_names[i]
+            )
+        self.component_types = self.ldr.get_comp_types()
         self.current_component_data = self.component_data[
             self.component_ids[0].split(":")[0]
         ]
@@ -584,9 +622,9 @@ class UISettings(tk.Toplevel):
 
         # OBJECT
         self.object_data = self.ldr.obj_templates
-        self.object_ids = self.ldr.getObjIDs()
+        self.object_ids = self.ldr.get_obj_ids()
         self.current_object_data = self.object_data[self.object_ids[0]]
-        self.object_names = self.ldr.getObjNames()
+        self.object_names = self.ldr.get_obj_names()
         for i in range(len(self.object_ids)):
             self.object_ids[i] = self.object_ids[i] + ": " + self.object_names[i]
         self.current_object_data = self.object_data[self.object_ids[0].split(":")[0]]
@@ -601,7 +639,7 @@ class UISettings(tk.Toplevel):
 
         # MAP
         self.map_data = self.ldr.map_templates
-        self.map_ids = self.ldr.getMapIDs()
+        self.map_ids = self.ldr.get_map_ids()
         self.current_map_data = self.map_data[self.map_ids[0]]
 
         self.select_maps_combo.configure(values=self.map_ids)
@@ -638,7 +676,8 @@ class UISettings(tk.Toplevel):
             (
                 (self.team_name_entry.entry.get() == self.current_team_data["name"])
                 and (
-                    self.team_size_entry.entry.get() == str(self.current_team_data["size"])
+                    self.team_size_entry.entry.get()
+                    == str(self.current_team_data["size"])
                 )
                 and (
                     self.callsign_entry.entry.get()
@@ -679,78 +718,90 @@ class UISettings(tk.Toplevel):
         """
         self.answer = True
 
-        if self.current_component_data.getData("ctype") == "CnC":
+        if self.current_component_data.get_data("ctype") == "CnC":
             ctype_attributes = self.cnc_keys
-        elif self.current_component_data.getData("ctype") == "FixedGun":
+        elif self.current_component_data.get_data("ctype") == "FixedGun":
             ctype_attributes = self.fixed_gun_keys
-        elif self.current_component_data.getData("ctype") == "Engine":
+        elif self.current_component_data.get_data("ctype") == "Engine":
             ctype_attributes = self.engine_keys
-        elif self.current_component_data.getData("ctype") == "Radar":
+        elif self.current_component_data.get_data("ctype") == "Radar":
             ctype_attributes = self.radar_keys
-        elif self.current_component_data.getData("ctype") == "Radio":
+        elif self.current_component_data.get_data("ctype") == "Radio":
             ctype_attributes = self.radio_keys
-        elif self.current_component_data.getData("ctype") == "Arm":
+        elif self.current_component_data.get_data("ctype") == "Arm":
             ctype_attributes = self.arm_keys
 
         if not (
             (
                 (
                     self.components_id_entry.entry.get()
-                    == self.current_component_data.getData("id")
+                    == self.current_component_data.get_data("id")
                 )
                 and (
                     self.components_name_entry.entry.get()
-                    == self.current_component_data.getData("name")
+                    == self.current_component_data.get_data("name")
                 )
                 and (
                     self.components_type_combo.get()
-                    == self.current_component_data.getData("ctype")
+                    == self.current_component_data.get_data("ctype")
                 )
                 and (
                     self.components_type_attr1_entry.entry.get()
-                    == str(self.current_component_data.getData(ctype_attributes[0]))
+                    == str(self.current_component_data.get_data(ctype_attributes[0]))
                 )
                 and (
                     (len(ctype_attributes) < 2)
                     or (
                         self.components_type_attr2_entry.entry.get()
-                        == str(self.current_component_data.getData(ctype_attributes[1]))
+                        == str(
+                            self.current_component_data.get_data(ctype_attributes[1])
+                        )
                     )
                 )
                 and (
                     (len(ctype_attributes) < 3)
-                    or self.current_component_data.getData(ctype_attributes[2]) is None
+                    or self.current_component_data.get_data(ctype_attributes[2]) is None
                     or (
                         self.components_type_attr3_entry.entry.get()
-                        == str(self.current_component_data.getData(ctype_attributes[2]))
+                        == str(
+                            self.current_component_data.get_data(ctype_attributes[2])
+                        )
                     )
                 )
                 and (
                     (len(ctype_attributes) < 4)
                     or (
                         self.components_type_attr4_entry.entry.get()
-                        == str(self.current_component_data.getData(ctype_attributes[3]))
+                        == str(
+                            self.current_component_data.get_data(ctype_attributes[3])
+                        )
                     )
                 )
                 and (
                     (len(ctype_attributes) < 5)
                     or (
                         self.components_type_attr5_entry.entry.get()
-                        == str(self.current_component_data.getData(ctype_attributes[4]))
+                        == str(
+                            self.current_component_data.get_data(ctype_attributes[4])
+                        )
                     )
                 )
                 and (
                     (len(ctype_attributes) < 6)
                     or (
                         self.components_type_attr6_entry.entry.get()
-                        == str(self.current_component_data.getData(ctype_attributes[5]))
+                        == str(
+                            self.current_component_data.get_data(ctype_attributes[5])
+                        )
                     )
                 )
                 and (
                     (len(ctype_attributes) < 7)
                     or (
                         self.components_type_attr7_entry.entry.get()
-                        == str(self.current_component_data.getData(ctype_attributes[6]))
+                        == str(
+                            self.current_component_data.get_data(ctype_attributes[6])
+                        )
                     )
                 )
             )
@@ -786,36 +837,36 @@ class UISettings(tk.Toplevel):
             (
                 (
                     self.objects_id_entry.entry.get()
-                    == self.current_object_data.getData("id")
+                    == self.current_object_data.get_data("id")
                 )
                 and (
                     self.objects_name_entry.entry.get()
-                    == self.current_object_data.getData("name")
+                    == self.current_object_data.get_data("name")
                 )
                 and (
                     self.objects_fill_alive_entry.entry.get()
-                    == self.current_object_data.getData("fill_alive")
+                    == self.current_object_data.get_data("fill_alive")
                 )
                 and (
                     self.objects_fill_dead_entry.entry.get()
-                    == self.current_object_data.getData("fill_dead")
+                    == self.current_object_data.get_data("fill_dead")
                 )
                 and (
                     self.objects_text_entry.entry.get()
-                    == self.current_object_data.getData("text")
+                    == self.current_object_data.get_data("text")
                 )
                 and (
                     self.objects_health_entry.entry.get()
-                    == str(self.current_object_data.getData("health"))
+                    == str(self.current_object_data.get_data("health"))
                 )
                 and (
                     self.objects_density_entry.entry.get()
-                    == str(self.current_object_data.getData("density"))
+                    == str(self.current_object_data.get_data("density"))
                 )
-                and (comp_ids == self.current_object_data.getData("comp_ids"))
+                and (comp_ids == self.current_object_data.get_data("comp_ids"))
                 and (
                     bool(self.objects_points_count_combo.combobox.current())
-                    == self.current_object_data.getData("points_count")
+                    == self.current_object_data.get_data("points_count")
                 )
             )
         ):
@@ -841,22 +892,25 @@ class UISettings(tk.Toplevel):
 
         if not (
             (
-                (self.maps_name_entry.entry.get() == self.current_map_data.getData("name"))
+                (
+                    self.maps_name_entry.entry.get()
+                    == self.current_map_data.get_data("name")
+                )
                 and (
                     self.maps_edge_obj_id_entry.entry.get()
-                    == self.current_map_data.getData("edge_obj_id")
+                    == self.current_map_data.get_data("edge_obj_id")
                 )
                 and (
                     self.maps_desc_entry.entry.get()
-                    == self.current_map_data.getData("desc")
+                    == self.current_map_data.get_data("desc")
                 )
                 and (
                     int(self.maps_width_entry.entry.get())
-                    == self.current_map_data.getData("width")
+                    == self.current_map_data.get_data("width")
                 )
                 and (
                     int(self.maps_height_entry.entry.get())
-                    == self.current_map_data.getData("height")
+                    == self.current_map_data.get_data("height")
                 )
             )
         ):
@@ -879,15 +933,15 @@ class UISettings(tk.Toplevel):
         """
         self.component_type_attr = current_comp.view_keys
         self.components_id_entry.entry.delete(0, tk.END)
-        self.components_id_entry.entry.insert(0, current_comp.getData("id"))
+        self.components_id_entry.entry.insert(0, current_comp.get_data("id"))
         self.components_name_entry.entry.delete(0, tk.END)
         self.components_name_entry.entry.insert(
             0,
-            current_comp.getData("name"),
+            current_comp.get_data("name"),
         )
         self.components_type_combo.configure(values=self.component_types)
-        self.components_type_combo.set(current_comp.getData("ctype"))
-        self.components_type_label.config(text=current_comp.getData("ctype"))
+        self.components_type_combo.set(current_comp.get_data("ctype"))
+        self.components_type_label.config(text=current_comp.get_data("ctype"))
         self.components_type_attr1_entry.entry.configure(state="normal")
         self.components_type_attr2_entry.entry.configure(state="normal")
         self.components_type_attr3_entry.entry.configure(state="normal")
@@ -923,10 +977,10 @@ class UISettings(tk.Toplevel):
         self.components_type_attr6_entry.entry.delete(0, tk.END)
         self.components_type_attr7_entry.entry.delete(0, tk.END)
 
-        if current_comp.getData("ctype") == "CnC":
+        if current_comp.get_data("ctype") == "CnC":
             self.components_type_attr1_label.config(text=self.component_type_attr[4])
             self.components_type_attr1_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[4])
+                0, current_comp.get_data(self.component_type_attr[4])
             )
             self.components_type_attr2_entry.entry.configure(state="readonly")
             self.components_type_attr3_entry.entry.configure(state="readonly")
@@ -940,22 +994,22 @@ class UISettings(tk.Toplevel):
             self.components_type_attr5_entry.help_button.configure(state="disabled")
             self.components_type_attr6_entry.help_button.configure(state="disabled")
             self.components_type_attr7_entry.help_button.configure(state="disabled")
-        elif current_comp.getData("ctype") == "FixedGun":
+        elif current_comp.get_data("ctype") == "FixedGun":
             self.components_type_attr3_entry.entry.configure(validate="none")
             self.components_type_attr1_label.config(text=self.component_type_attr[4])
             self.components_type_attr1_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[4])
+                0, current_comp.get_data(self.component_type_attr[4])
             )
             self.components_type_attr2_label.config(text=self.component_type_attr[5])
             self.components_type_attr2_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[5])
+                0, current_comp.get_data(self.component_type_attr[5])
             )
             self.components_type_attr3_label.config(text=self.component_type_attr[6])
             self.components_type_attr3_entry.entry.insert(
                 0,
                 (
-                    current_comp.getData(self.component_type_attr[6])
-                    if current_comp.getData("reloading") is not False
+                    current_comp.get_data(self.component_type_attr[6])
+                    if current_comp.get_data("reloading") is not False
                     else "False"
                 ),
             )
@@ -964,53 +1018,53 @@ class UISettings(tk.Toplevel):
             )
             self.components_type_attr4_label.config(text=self.component_type_attr[7])
             self.components_type_attr4_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[7])
+                0, current_comp.get_data(self.component_type_attr[7])
             )
             self.components_type_attr5_label.config(text=self.component_type_attr[8])
             self.components_type_attr5_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[8])
+                0, current_comp.get_data(self.component_type_attr[8])
             )
             self.components_type_attr6_label.config(text=self.component_type_attr[9])
             self.components_type_attr6_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[9])
+                0, current_comp.get_data(self.component_type_attr[9])
             )
             self.components_type_attr7_label.config(text=self.component_type_attr[10])
             self.components_type_attr7_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[10])
+                0, current_comp.get_data(self.component_type_attr[10])
             )
-        elif current_comp.getData("ctype") == "Engine":
+        elif current_comp.get_data("ctype") == "Engine":
             self.components_type_attr1_label.config(text=self.component_type_attr[4])
             self.components_type_attr1_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[4])
+                0, current_comp.get_data(self.component_type_attr[4])
             )
             self.components_type_attr2_label.config(text=self.component_type_attr[5])
             self.components_type_attr2_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[5])
+                0, current_comp.get_data(self.component_type_attr[5])
             )
             self.components_type_attr3_label.config(text=self.component_type_attr[6])
             self.components_type_attr3_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[6])
+                0, current_comp.get_data(self.component_type_attr[6])
             )
             self.components_type_attr4_label.config(text=self.component_type_attr[7])
             self.components_type_attr4_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[7])
+                0, current_comp.get_data(self.component_type_attr[7])
             )
             self.components_type_attr5_label.config(text=self.component_type_attr[8])
             self.components_type_attr5_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[8])
+                0, current_comp.get_data(self.component_type_attr[8])
             )
             self.components_type_attr6_entry.entry.configure(state="readonly")
             self.components_type_attr7_entry.entry.configure(state="readonly")
             self.components_type_attr6_entry.help_button.configure(state="disabled")
             self.components_type_attr7_entry.help_button.configure(state="disabled")
-        elif current_comp.getData("ctype") == "Radar":
+        elif current_comp.get_data("ctype") == "Radar":
             self.components_type_attr1_entry.entry.configure(validate="none")
             self.components_type_attr1_label.config(text=self.component_type_attr[4])
             self.components_type_attr1_entry.entry.insert(
                 0,
                 (
-                    current_comp.getData(self.component_type_attr[4])
-                    if current_comp.getData("active") is not False
+                    current_comp.get_data(self.component_type_attr[4])
+                    if current_comp.get_data("active") is not False
                     else "False"
                 ),
             )
@@ -1019,42 +1073,42 @@ class UISettings(tk.Toplevel):
             )
             self.components_type_attr2_label.config(text=self.component_type_attr[5])
             self.components_type_attr2_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[5])
+                0, current_comp.get_data(self.component_type_attr[5])
             )
             self.components_type_attr3_label.config(text=self.component_type_attr[6])
             self.components_type_attr3_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[6])
+                0, current_comp.get_data(self.component_type_attr[6])
             )
             self.components_type_attr4_label.config(text=self.component_type_attr[7])
             self.components_type_attr4_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[7])
+                0, current_comp.get_data(self.component_type_attr[7])
             )
             self.components_type_attr5_label.config(text=self.component_type_attr[8])
             self.components_type_attr5_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[8])
+                0, current_comp.get_data(self.component_type_attr[8])
             )
             self.components_type_attr6_label.config(text=self.component_type_attr[9])
             self.components_type_attr6_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[9])
+                0, current_comp.get_data(self.component_type_attr[9])
             )
             self.components_type_attr7_entry.entry.configure(state="readonly")
             self.components_type_attr7_entry.help_button.configure(state="disabled")
-        elif current_comp.getData("ctype") == "Radio":
+        elif current_comp.get_data("ctype") == "Radio":
             self.components_type_attr3_entry.entry.configure(validate="none")
             self.components_type_attr1_label.config(text="max_range")
             self.components_type_attr1_entry.entry.insert(
-                0, current_comp.getData("max_range")
+                0, current_comp.get_data("max_range")
             )
             self.components_type_attr2_label.config(text="cur_range")
             self.components_type_attr2_entry.entry.insert(
-                0, current_comp.getData("cur_range")
+                0, current_comp.get_data("cur_range")
             )
             self.components_type_attr3_label.config(text="message")
             self.components_type_attr3_entry.entry.insert(
                 0,
                 (
-                    current_comp.getData("message")
-                    if current_comp.getData("message") is not None
+                    current_comp.get_data("message")
+                    if current_comp.get_data("message") is not None
                     else "null"
                 ),
             )
@@ -1067,22 +1121,22 @@ class UISettings(tk.Toplevel):
             self.components_type_attr5_entry.help_button.configure(state="disabled")
             self.components_type_attr6_entry.help_button.configure(state="disabled")
             self.components_type_attr7_entry.help_button.configure(state="disabled")
-        elif self.current_component_data.getData("ctype") == "Arm":
+        elif self.current_component_data.get_data("ctype") == "Arm":
             self.components_type_attr3_entry.entry.configure(validate="none")
             self.components_type_attr1_label.config(text=self.component_type_attr[4])
             self.components_type_attr1_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[4])
+                0, current_comp.get_data(self.component_type_attr[4])
             )
             self.components_type_attr2_label.config(text=self.component_type_attr[5])
             self.components_type_attr2_entry.entry.insert(
-                0, current_comp.getData(self.component_type_attr[5])
+                0, current_comp.get_data(self.component_type_attr[5])
             )
             self.components_type_attr3_label.config(text=self.component_type_attr[6])
             self.components_type_attr3_entry.entry.insert(
                 0,
                 (
-                    current_comp.getData(self.component_type_attr[6])
-                    if current_comp.getData(self.component_type_attr[6]) is not None
+                    current_comp.get_data(self.component_type_attr[6])
+                    if current_comp.get_data(self.component_type_attr[6]) is not None
                     else "null"
                 ),
             )
@@ -1123,48 +1177,52 @@ class UISettings(tk.Toplevel):
         self.maps_id_entry.entry.delete(0, tk.END)
         self.maps_id_entry.entry.insert(0, self.select_maps_combo.get())
         self.maps_name_entry.entry.delete(0, tk.END)
-        self.maps_name_entry.entry.insert(0, current_map.getData("name"))
+        self.maps_name_entry.entry.insert(0, current_map.get_data("name"))
         self.maps_edge_obj_id_entry.entry.delete(0, tk.END)
         self.maps_edge_obj_id_entry.entry.insert(
-            0, self.current_map_data.getData("edge_obj_id")
+            0, self.current_map_data.get_data("edge_obj_id")
         )
         self.maps_desc_entry.entry.delete(0, tk.END)
-        self.maps_desc_entry.entry.insert(0, current_map.getData("desc"))
+        self.maps_desc_entry.entry.insert(0, current_map.get_data("desc"))
         self.maps_width_entry.entry.delete(0, tk.END)
-        self.maps_width_entry.entry.insert(0, current_map.getData("width"))
+        self.maps_width_entry.entry.insert(0, current_map.get_data("width"))
         self.maps_height_entry.entry.delete(0, tk.END)
-        self.maps_height_entry.entry.insert(0, current_map.getData("height"))
+        self.maps_height_entry.entry.insert(0, current_map.get_data("height"))
 
     def show_object_entry(self, current_obj):
         """
         Updates the values stored in the object entry widgets.
         """
         self.objects_id_entry.entry.delete(0, tk.END)
-        self.objects_id_entry.entry.insert(0, current_obj.getData("id"))
+        self.objects_id_entry.entry.insert(0, current_obj.get_data("id"))
         self.objects_name_entry.entry.delete(0, tk.END)
-        self.objects_name_entry.entry.insert(0, current_obj.getData("name"))
+        self.objects_name_entry.entry.insert(0, current_obj.get_data("name"))
         self.objects_fill_alive_entry.entry.delete(0, tk.END)
-        self.objects_fill_alive_entry.entry.insert(0, current_obj.getData("fill_alive"))
+        self.objects_fill_alive_entry.entry.insert(
+            0, current_obj.get_data("fill_alive")
+        )
         self.objects_fill_dead_entry.entry.delete(0, tk.END)
-        self.objects_fill_dead_entry.entry.insert(0, current_obj.getData("fill_dead"))
+        self.objects_fill_dead_entry.entry.insert(0, current_obj.get_data("fill_dead"))
         self.objects_text_entry.entry.delete(0, tk.END)
-        self.objects_text_entry.entry.insert(0, current_obj.getData("text"))
+        self.objects_text_entry.entry.insert(0, current_obj.get_data("text"))
         self.objects_health_entry.entry.delete(0, tk.END)
-        self.objects_health_entry.entry.insert(0, current_obj.getData("health"))
+        self.objects_health_entry.entry.insert(0, current_obj.get_data("health"))
         self.objects_density_entry.entry.delete(0, tk.END)
-        self.objects_density_entry.entry.insert(0, current_obj.getData("density"))
-        self.current_comp_ids = current_obj.getData("comp_ids")[:]
+        self.objects_density_entry.entry.insert(0, current_obj.get_data("density"))
+        self.current_comp_ids = current_obj.get_data("comp_ids")[:]
         self.objects_comp_ids_combo.combobox.set("")
         self.objects_comp_ids_combo.combobox.configure(values=self.current_comp_ids)
         if len(self.current_comp_ids) != 0:
             self.objects_comp_ids_combo.combobox.current(0)
-        self.objects_comp_ids_combo.combobox.bind("<<ComboboxSelected>>", self.get_current_comp_id)
+        self.objects_comp_ids_combo.combobox.bind(
+            "<<ComboboxSelected>>", self.get_current_comp_id
+        )
         self.objects_comp_ids_combo.combobox.bind("<Enter>", self.add_empty_comp_id)
         self.objects_comp_ids_combo.combobox.bind("<Return>", self.add_new_comp_id)
         self.objects_comp_ids_combo.combobox.bind("<KeyRelease>", self.delete_comp_id)
         self.objects_points_count_combo.combobox.configure(values=["False", "True"])
         self.objects_points_count_combo.combobox.config(state="normal")
-        if bool(current_obj.getData("points_count")) is True:
+        if bool(current_obj.get_data("points_count")) is True:
             self.objects_points_count_combo.combobox.current(1)
         else:
             self.objects_points_count_combo.combobox.current(0)
@@ -1196,7 +1254,9 @@ class UISettings(tk.Toplevel):
         if len(current_comp_id) == 0:
             if self.current_comp_id_idx != len(self.current_comp_ids) - 1:
                 self.current_comp_ids.pop(self.current_comp_id_idx)
-                self.objects_comp_ids_combo.combobox.configure(values=self.current_comp_ids)
+                self.objects_comp_ids_combo.combobox.configure(
+                    values=self.current_comp_ids
+                )
 
     def add_new_comp_id(self, event):
         """
@@ -1281,7 +1341,8 @@ class UISettings(tk.Toplevel):
         """
         if (
             self.components_id_entry.entry.get() in self.component_data.keys()
-            and self.components_id_entry.entry.get() != self.select_component_combo.get().split(":")[0]
+            and self.components_id_entry.entry.get()
+            != self.select_component_combo.get().split(":")[0]
         ):
             showwarning(
                 title="Warning",
@@ -1302,14 +1363,15 @@ class UISettings(tk.Toplevel):
                 self.current_component_data.setData(
                     "ctype", self.components_type_combo.get()
                 )
-                if self.current_component_data.getData("ctype") == "CnC":
+                if self.current_component_data.get_data("ctype") == "CnC":
                     self.current_component_data.setData(
                         "max_cmds_per_tick",
                         int(self.components_type_attr1_entry.entry.get()),
                     )
-                if self.current_component_data.getData("ctype") == "FixedGun":
+                if self.current_component_data.get_data("ctype") == "FixedGun":
                     self.current_component_data.setData(
-                        "reload_ticks", int(self.components_type_attr1_entry.entry.get())
+                        "reload_ticks",
+                        int(self.components_type_attr1_entry.entry.get()),
                     )
                     self.current_component_data.setData(
                         "reload_ticks_remaining",
@@ -1335,7 +1397,7 @@ class UISettings(tk.Toplevel):
                     self.current_component_data.setData(
                         "range", int(self.components_type_attr7_entry.entry.get())
                     )
-                if self.current_component_data.getData("ctype") == "Engine":
+                if self.current_component_data.get_data("ctype") == "Engine":
                     self.current_component_data.setData(
                         "min_speed", float(self.components_type_attr1_entry.entry.get())
                     )
@@ -1346,12 +1408,14 @@ class UISettings(tk.Toplevel):
                         "cur_speed", float(self.components_type_attr3_entry.entry.get())
                     )
                     self.current_component_data.setData(
-                        "max_turnrate", float(self.components_type_attr4_entry.entry.get())
+                        "max_turnrate",
+                        float(self.components_type_attr4_entry.entry.get()),
                     )
                     self.current_component_data.setData(
-                        "cur_turnrate", float(self.components_type_attr5_entry.entry.get())
+                        "cur_turnrate",
+                        float(self.components_type_attr5_entry.entry.get()),
                     )
-                if self.current_component_data.getData("ctype") == "Radar":
+                if self.current_component_data.get_data("ctype") == "Radar":
                     self.current_component_data.setData(
                         "active",
                         (
@@ -1370,12 +1434,13 @@ class UISettings(tk.Toplevel):
                         "visarc", int(self.components_type_attr4_entry.entry.get())
                     )
                     self.current_component_data.setData(
-                        "offset_angle", int(self.components_type_attr5_entry.entry.get())
+                        "offset_angle",
+                        int(self.components_type_attr5_entry.entry.get()),
                     )
                     self.current_component_data.setData(
                         "resolution", int(self.components_type_attr6_entry.entry.get())
                     )
-                if self.current_component_data.getData("ctype") == "Radio":
+                if self.current_component_data.get_data("ctype") == "Radio":
                     self.current_component_data.setData(
                         "max_range", int(self.components_type_attr1_entry.entry.get())
                     )
@@ -1390,7 +1455,7 @@ class UISettings(tk.Toplevel):
                             else None
                         ),
                     )
-                if self.current_component_data.getData("ctype") == "Arm":
+                if self.current_component_data.get_data("ctype") == "Arm":
                     self.current_component_data.setData(
                         "max_weight", int(self.components_type_attr1_entry.entry.get())
                     )
@@ -1410,11 +1475,16 @@ class UISettings(tk.Toplevel):
                     component_json = json.load(f)
 
                 if (
-                    self.current_component_data.getData("id")
+                    self.current_component_data.get_data("id")
                     != self.select_component_combo.get().split(":")[0]
                 ):
-                    if self.select_component_combo.get().split(":")[0] in component_json:
-                        component_json.pop(self.select_component_combo.get().split(":")[0])
+                    if (
+                        self.select_component_combo.get().split(":")[0]
+                        in component_json
+                    ):
+                        component_json.pop(
+                            self.select_component_combo.get().split(":")[0]
+                        )
                     if (
                         self.select_component_combo.get().split(":")[0]
                         in self.component_data
@@ -1424,51 +1494,53 @@ class UISettings(tk.Toplevel):
                         )
                     self.component_ids.pop(self.select_component_combo.current())
                     self.component_ids.append(
-                        self.current_component_data.getData("id")
+                        self.current_component_data.get_data("id")
                         + ": "
-                        + self.current_component_data.getData("name")
+                        + self.current_component_data.get_data("name")
                     )
                     self.select_component_combo.configure(values=self.component_ids)
                     self.select_component_combo.current(len(self.component_ids) - 1)
 
-                component_json[self.current_component_data.getData("id")] = (
+                component_json[self.current_component_data.get_data("id")] = (
                     self.current_component_data.getSelfView()
                 )
                 f.close()
 
-                self.component_data[self.current_component_data.getData("id")] = (
+                self.component_data[self.current_component_data.get_data("id")] = (
                     self.current_component_data
                 )
 
                 if self.select_component_combo.get().split(":")[1] != "" or (
-                    self.current_component_data.getData("name")
-                    != component_json[self.current_component_data.getData("id")]["name"]
+                    self.current_component_data.get_data("name")
+                    != component_json[self.current_component_data.get_data("id")][
+                        "name"
+                    ]
                 ):
                     self.component_ids.pop(self.select_component_combo.current())
                     self.component_ids.append(
-                        self.current_component_data.getData("id")
+                        self.current_component_data.get_data("id")
                         + ": "
-                        + self.current_component_data.getData("name")
+                        + self.current_component_data.get_data("name")
                     )
                     self.select_component_combo.configure(values=self.component_ids)
                     self.select_component_combo.current(len(self.component_ids) - 1)
-                if self.current_component_data.getData("name") != self.component_data[
+                if self.current_component_data.get_data("name") != self.component_data[
                     self.select_component_combo.get().split(":")[0]
-                ].getData("name"):
+                ].get_data("name"):
                     comp_idx = self.select_component_combo.current()
                     self.current_comp_ids[comp_idx] = ": ".join(
                         [
                             self.current_comp_ids[comp_idx].split(":")[0],
-                            self.current_component_data.getData("name"),
+                            self.current_component_data.get_data("name"),
                         ]
                     )
                     self.select_component_combo.configure(values=self.component_ids)
                     self.select_component_combo.current(len(self.component_ids) - 1)
                 if (
                     "slot_id"
-                    in component_json[self.current_component_data.getData("id")].keys()
+                    in component_json[self.current_component_data.get_data("id")].keys()
                 ):
-                    component_json[self.current_component_data.getData("id")].pop(
+                    component_json[self.current_component_data.get_data("id")].pop(
                         "slot_id"
                     )
                 with open("settings/components.json", "w") as f:
@@ -1481,7 +1553,8 @@ class UISettings(tk.Toplevel):
         """
         if (
             self.objects_id_entry.entry.get() in self.object_data.keys()
-            and self.objects_id_entry.entry.get() != self.select_objects_combo.get().split(":")[0]
+            and self.objects_id_entry.entry.get()
+            != self.select_objects_combo.get().split(":")[0]
         ):
             showwarning(
                 title="Warning",
@@ -1497,7 +1570,9 @@ class UISettings(tk.Toplevel):
                 and self.objects_health_entry.entry.get() != ""
                 and self.objects_density_entry.entry.get() != ""
             ):
-                self.current_object_data.setData("id", self.objects_id_entry.entry.get())
+                self.current_object_data.setData(
+                    "id", self.objects_id_entry.entry.get()
+                )
                 self.current_object_data.setData(
                     "name", self.objects_name_entry.entry.get()
                 )
@@ -1521,14 +1596,15 @@ class UISettings(tk.Toplevel):
                         self.current_comp_ids.pop(-1)
                 self.current_object_data.setData("comp_ids", self.current_comp_ids)
                 self.current_object_data.setData(
-                    "points_count", bool(self.objects_points_count_combo.combobox.current())
+                    "points_count",
+                    bool(self.objects_points_count_combo.combobox.current()),
                 )
 
                 with open("settings/objects.json", "r") as f:
                     object_json = json.load(f)
 
                 if (
-                    self.current_object_data.getData("id")
+                    self.current_object_data.get_data("id")
                     != self.select_objects_combo.get().split(":")[0]
                 ):
                     if self.select_objects_combo.get().split(":")[0] in object_json:
@@ -1537,43 +1613,43 @@ class UISettings(tk.Toplevel):
                         self.object_data.pop(self.select_objects_combo.get())
                     self.object_ids.pop(self.select_objects_combo.current())
                     self.object_ids.append(
-                        self.current_object_data.getData("id")
+                        self.current_object_data.get_data("id")
                         + ": "
-                        + self.current_object_data.getData("name")
+                        + self.current_object_data.get_data("name")
                     )
                     self.select_objects_combo.configure(values=self.object_ids)
                     self.select_objects_combo.current(len(self.object_ids) - 1)
 
-                object_json[self.current_object_data.getData("id")] = (
+                object_json[self.current_object_data.get_data("id")] = (
                     self.current_object_data.getJSONView()
                 )
                 f.close()
 
-                self.object_data[self.current_object_data.getData("id")] = (
+                self.object_data[self.current_object_data.get_data("id")] = (
                     self.current_object_data
                 )
 
                 if self.select_objects_combo.get().split(":")[1] != "" or (
-                    self.current_object_data.getData("name")
-                    != object_json[self.current_object_data.getData("id")]["name"]
+                    self.current_object_data.get_data("name")
+                    != object_json[self.current_object_data.get_data("id")]["name"]
                 ):
                     self.object_ids.pop(self.select_objects_combo.current())
                     self.object_ids.append(
-                        self.current_object_data.getData("id")
+                        self.current_object_data.get_data("id")
                         + ": "
-                        + self.current_object_data.getData("name")
+                        + self.current_object_data.get_data("name")
                     )
                     self.select_objects_combo.configure(values=self.object_ids)
                     self.select_objects_combo.current(len(self.object_ids) - 1)
 
-                if self.current_object_data.getData("name") != self.object_data[
+                if self.current_object_data.get_data("name") != self.object_data[
                     self.select_objects_combo.get().split(":")[0]
-                ].getData("name"):
+                ].get_data("name"):
                     obj_idx = self.select_objects_combo.current()
                     self.object_ids[obj_idx] = ": ".join(
                         [
                             self.object_ids[obj_idx].split(":")[0],
-                            self.current_object_data.getData("name"),
+                            self.current_object_data.get_data("name"),
                         ]
                     )
                     self.select_objects_combo.configure(values=self.object_ids)
@@ -1673,7 +1749,8 @@ class UISettings(tk.Toplevel):
             "Component ID", "Please enter an ID for the new component."
         )
         while (
-            len(self.component_id) == 0 or self.component_id in self.component_data.keys()
+            len(self.component_id) == 0
+            or self.component_id in self.component_data.keys()
         ):
             if len(self.component_id) == 0:
                 messagebox.showwarning(
@@ -1728,7 +1805,9 @@ class UISettings(tk.Toplevel):
         """
         Creates a new object and adds it to the object dictionary.
         """
-        self.object_id = askstring("Object ID", "Please enter an ID for the new object.")
+        self.object_id = askstring(
+            "Object ID", "Please enter an ID for the new object."
+        )
         while len(self.object_id) == 0 or self.object_id in self.object_data:
             if len(self.object_id) == 0:
                 messagebox.showwarning(

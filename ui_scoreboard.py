@@ -4,6 +4,8 @@ from ui_widgets import *
 
 class ScoreboardFrame(tk.Frame):
     def __init__(self, teams_scores_dict, controller, ui_sim, sim, master=None):
+        """Sets window and frame information and calls function to build UI"""
+
         super().__init__(master)
         self.master = master
         self.teams_scores_dict = teams_scores_dict
@@ -26,9 +28,14 @@ class ScoreboardFrame(tk.Frame):
         self.grid_rowconfigure(7, weight=1)
         self.grid_rowconfigure(8, weight=1)
 
-        self.BuildUI()
+        self.build_ui()
 
-    def BuildUI(self):
+    def build_ui(self):
+        """Generates UI of scoreboard
+
+        Sets score data, places labels,
+        places home button
+        """
         # This converts the dictionary to tuples
         teams_scores = [
             (team, details["total"]) for team, details in self.teams_scores_dict.items()
@@ -53,9 +60,10 @@ class ScoreboardFrame(tk.Frame):
             team_label.grid(row=index, column=0, columnspan=2, sticky="w")
             score_label.grid(row=index, column=1, columnspan=2, sticky="e")
 
-        home_button = uiButton(master=self, command=self.homepage, text="Home")
+        home_button = uiButton(master=self, command=self.home_page, text="Home")
         home_button.grid(row=index + 1, column=0)
 
-    def homepage(self):
-        self.controller.show_frame("HomePage")
+    def home_page(self):
+        """Shows homepage and destroys sim instance"""
+        self.controller.show_frame("home_page")
         self.ui_sim.destroy()

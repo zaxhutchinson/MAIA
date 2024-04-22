@@ -11,55 +11,66 @@ class Map:
     def __init__(self, data):
         self.data = data
 
-    def setData(self, key, val):
+    def set_data(self, key, val):
+        """Sets data"""
         self.data[key] = val
 
-    def getData(self, key):
+    def get_data(self, key):
+        """Gets data"""
         if key in self.data:
             return self.data[key]
         else:
             return None
 
-    # Build the map 2 hexes wider and taller. This allows for
-    # the placing of blocks around the edge while still keeping
-    # the same playable space outlined in the map json. And
-    # it means we do not have to worry about accounting for edge
-    # boundries as they cannot be reached (if the edge obj is indestructible).
-    def buildMapGrid(self):
+    def build_map_grid(self):
+        """Generates map grid
+
+        Build the map 2 hexes wider and taller. This allows for
+        the placing of blocks around the edge while still keeping
+        the same playable space outlined in the map json. And
+        it means we do not have to worry about accounting for edge
+        boundries as they cannot be reached (if the edge obj is indestructible).
+        """
         obj_grid = []
         item_grid = []
         for x in range(self.data["width"] + 2):
-            obj_newcol = []
-            item_newcol = []
+            obj_new_col = []
+            item_new_col = []
             for y in range(self.data["height"] + 2):
-                obj_newcol.append(None)
-                item_newcol.append([])
-            obj_grid.append(obj_newcol)
-            item_grid.append(item_newcol)
+                obj_new_col.append(None)
+                item_new_col.append([])
+            obj_grid.append(obj_new_col)
+            item_grid.append(item_new_col)
 
         self.data["obj_grid"] = obj_grid
         self.data["item_grid"] = item_grid
 
-    def addObj(self, x, y, _uuid):
+    def add_obj(self, x, y, _uuid):
+        """Adds object"""
         self.data["obj_grid"][x][y] = _uuid
 
-    def removeObj(self, x, y, _uuid):
+    def remove_obj(self, x, y, _uuid):
+        """Removes object"""
         if self.data["obj_grid"][x][y] == _uuid:
             self.data["obj_grid"][x][y] = None
 
-    def addItem(self, x, y, _uuid):
+    def add_item(self, x, y, _uuid):
+        """Adds item"""
         if _uuid not in self.data["item_grid"][x][y]:
             self.data["item_grid"][x][y].append(_uuid)
 
-    def removeItem(self, x, y, _uuid):
+    def remove_item(self, x, y, _uuid):
+        """Removes item"""
         if _uuid in self.data["item_grid"][x][y]:
             self.data["item_grid"][x][y].remove(_uuid)
 
-    def getItemsInCell(self, x, y):
+    def get_items_in_cell(self, x, y):
+        """Gets items in a cell"""
         return self.data["item_grid"][x][y]
 
     # Creates a list of the coordinates of the world edge.
-    def getListOfEdgeCoordinates(self):
+    def get_list_of_edge_coordinates(self):
+        """Gets list of edge coordinates"""
         edge_coords = []
         wide = self.data["width"]
         high = self.data["height"]
@@ -71,36 +82,39 @@ class Map:
             edge_coords.append((wide - 1, y))
         return edge_coords
 
-    def isCellEmpty(self, x, y):
-        return self.getData("obj_grid")[x][y] is None
+    def is_cell_empty(self, x, y):
+        """Determines if a cell is empty"""
+        return self.get_data("obj_grid")[x][y] is None
 
-    def getCellOccupant(self, x, y):
-        return self.getData("obj_grid")[x][y]
+    def get_cell_occupant(self, x, y):
+        """Gets cell occupant"""
+        return self.get_data("obj_grid")[x][y]
 
-    def moveObjFromTo(self, objuuid, from_x, from_y, to_x, to_y):
-        grid = self.getData("obj_grid")
+    def move_obj_from_to(self, objuuid, from_x, from_y, to_x, to_y):
+        """Moves object from one cell to another"""
+        grid = self.get_data("obj_grid")
         if grid[from_x][from_y] == objuuid:
             grid[from_x][from_y] = None
             grid[to_x][to_y] = objuuid
 
-    def getAllObjUUIDAlongTrajectory(self, x, y, angle, distance):
-
+    def get_all_obj_uuid_along_trajectory(self, x, y, angle, distance):
+        """Gets all object uuid's along a trajectory given a start point, angle and distance"""
         found = {}
         found["objects"] = []
         found["items"] = []
 
         # Get refs to the two grids
-        obj_grid = self.getData("obj_grid")
-        item_grid = self.getData("item_grid")
+        obj_grid = self.get_data("obj_grid")
+        item_grid = self.get_data("item_grid")
 
         # Get the cells
-        cells = zmath.getCellsAlongTrajectory(x, y, angle, distance)
+        cells = zmath.get_cells_along_trajectory(x, y, angle, distance)
 
         # So long as we're in the map,
         # If the obj or item grid cell is not None
         # create a ping and save it.
         for cell in cells:
-            if 0 <= cell[0] < self.getData("width") and 0 <= cell[1] < self.getData(
+            if 0 <= cell[0] < self.get_data("width") and 0 <= cell[1] < self.get_data(
                 "height"
             ):
                 if obj_grid[cell[0]][cell[1]] is not None:
