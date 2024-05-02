@@ -50,6 +50,12 @@ Documentation can be found in the *docs* directory. It is constantly under const
 * views.md: Breakdown of *views* which are the dictionary-based way information is fed to AI scripts from the simulation.
 
 ## Contributors
+* Chloe Hodgdon - University of Maine - <chloe.hodgdon@maine.edu> - ACTIVE
 * Zachary Hutchinson - University of Maine - <zachary.s.hutchinson@maine.edu> - ACTIVE
+* Henry Kindler - University of Maine - <henry.kindler@maine.edu> - ACTIVE
+* Sophie Kummer - University of Maine - <sophie.kummer@maine.edu> - ACTIVE
+* Graham Berry - University of Maine - INACTIVE
+* Hannah Kline - University of Maine - INACTIVE
+
 
 If you would like to contribute to this project, or simply have a comment or criticism, send an email to one of the *ACTIVE* contributors.
