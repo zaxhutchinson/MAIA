@@ -13,6 +13,11 @@ import ui_scoreboard
 
 from ui_widgets import *
 
+# The default delay between turns. This value is used by
+# both the continuous and the turn-by-turn modes. If the delay
+# box is empty or contains a non-integer, this value is used instead.
+DEFAULT_TURN_DELAY_IN_MS = 500
+
 
 class UISim(tk.Toplevel):
     def __init__(
@@ -51,6 +56,8 @@ class UISim(tk.Toplevel):
         self.map_height = map_height
 
         self.UIMap = None
+
+        self.continuous_run = False
 
         # Create the left and right frames
         self.map_frame = uiQuietFrame(master=self)
@@ -100,37 +107,79 @@ class UISim(tk.Toplevel):
         self.main_log_scroll.configure(state="disabled")
 
         # Add the buttons
-        self.data_frame_1 = uiQuietFrame(master=self.log_frame)
-        self.data_frame_1.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
-        self.turns_label = uiLabel(master=self.data_frame_1, text="Turns To Run")
-        self.turns_label.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.turns_entry = uiEntry(master=self.data_frame_1)
-        self.turns_entry.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-
+        
         # self.data_frame_2 = uiQuietFrame(master=self.log_frame)
         # self.data_frame_2.pack(fill=tk.BOTH,expand=True,side=tk.TOP)
 
         self.btn_frame_1 = uiQuietFrame(master=self.log_frame)
         self.btn_frame_1.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
+        
+        self.btn_run = uiButton(
+            master = self.btn_frame_1,
+            text = "Run",
+            command=self.run_continuous
+        )
+        self.btn_run.pack(
+            fill=tk.BOTH, 
+            expand=True, 
+            side=tk.LEFT
+        )
+        self.btn_pause = uiButton(
+            master = self.btn_frame_1,
+            text = "Pause",
+            command=self.pause_continuous
+        )
+        self.btn_pause.pack(
+            fill=tk.BOTH, 
+            expand=True, 
+            side=tk.LEFT
+        )
+        self.delay_label = uiLabel(master=self.btn_frame_1, text="Delay (ms)")
+        self.delay_label.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        self.delay_entry = uiEntry(master=self.btn_frame_1)
+        self.delay_entry.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        
+
+        self.btn_frame_2 = uiQuietFrame(master=self.log_frame)
+        self.btn_frame_2.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
         self.turns_button = uiButton(
-            master=self.btn_frame_1, text="Run X Turns", command=self.run_x_turns
+            master=self.btn_frame_2, 
+            text="Run X Turns", 
+            command=self.run_x_turns
         )
-        self.turns_button.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        self.turns_button.pack(
+            fill=tk.BOTH, 
+            expand=True, 
+            side=tk.LEFT
+        )
+        self.turns_label = uiLabel(master=self.btn_frame_2, text="Turns To Run")
+        self.turns_label.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        self.turns_entry = uiEntry(master=self.btn_frame_2)
+        self.turns_entry.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+
+
+        self.btn_frame_3 = uiQuietFrame(master=self.log_frame)
+        self.btn_frame_3.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
         self.display_points_button = uiButton(
-            master=self.btn_frame_1, text="Display Points", command=self.display_points
+            master=self.btn_frame_3, 
+            text="Display Points", 
+            command=self.display_points
         )
-        self.display_points_button.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-
-        self.top_right_frame = uiQuietFrame(master=self.log_frame)
-        self.top_right_frame.pack(fill=tk.NONE, expand=False, side=tk.TOP, anchor="ne")
-
+        self.display_points_button.pack(
+            fill=tk.BOTH, 
+            expand=True, 
+            side=tk.LEFT
+        )
         self.end_game_button = uiButton(
-            master=self.top_right_frame,
+            master=self.btn_frame_3,
             text="End Game",
-            command=self.display_scoreboard,
-            width=10,
+            command=self.display_scoreboard
         )
-        self.end_game_button.pack(padx=5, pady=5)
+        self.end_game_button.pack(
+            fill=tk.BOTH, 
+            expand=True, 
+            side=tk.LEFT
+        )
 
         self.log_frame.after(100, self.update_log)
 
@@ -286,12 +335,46 @@ class UISim(tk.Toplevel):
         """Run sim for a set number of turns"""
         turns_to_run = self.turns_entry.get()
         if turns_to_run.isdigit():
-            turns_to_run = int(turns_to_run)
-            if self.sim.run_sim(turns_to_run):
-                self.display_scoreboard()
 
+            turns_to_run = int(turns_to_run)
+            game_ended = False
+            
+            while turns_to_run > 0:
+               
+                game_ended = self.sim.run_sim(1)
+                turns_to_run -= 1
+                if game_ended:
+                    self.display_scoreboard()
+                    break
+
+            self.update_objects()
+            self.update_items()
+
+    def run_continuous(self):
+        self.continuous_run = True
+        
+        delay = self.delay_entry.get()
+        if delay.isdigit():
+            delay = int(delay)
+        else:
+            delay = DEFAULT_TURN_DELAY_IN_MS
+        
+        self.run_continuous_proxy(delay)
+
+    def run_continuous_proxy(self, delay):
+
+        game_ended = self.sim.run_sim(1)
         self.update_objects()
         self.update_items()
+
+        if game_ended:
+            self.display_scoreboard()
+        else:
+            if self.continuous_run:
+                self.btn_run.after(500, self.run_continuous_proxy, delay)
+
+    def pause_continuous(self):
+        self.continuous_run = False
 
     def display_points(self):
         """Displays points"""
