@@ -363,6 +363,11 @@ class UISim(tk.Toplevel):
 
     def run_continuous_proxy(self, delay):
 
+        # Will abort running another turn if the user has clicked
+        #   pause between turns.
+        if not self.continuous_run:
+            return
+
         game_ended = self.sim.run_sim(1)
         self.update_objects()
         self.update_items()
@@ -371,7 +376,7 @@ class UISim(tk.Toplevel):
             self.display_scoreboard()
         else:
             if self.continuous_run:
-                self.btn_run.after(500, self.run_continuous_proxy, delay)
+                self.btn_run.after(delay, self.run_continuous_proxy, delay)
 
     def pause_continuous(self):
         self.continuous_run = False
