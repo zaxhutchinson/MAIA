@@ -11,7 +11,7 @@ from tkinter import ttk
 import tkinter.scrolledtext as scrolltext
 import platform
 from packages.tkmacosx import Button
-from packages.PIL import ImageTk, Image
+from PIL import ImageTk, Image
 
 
 BGCOLOR = "#E5E5E5"

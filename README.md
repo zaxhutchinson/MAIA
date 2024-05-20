@@ -1,11 +1,13 @@
 ![alt text](images/maia.png)
 
 ## Table of contents
-* [Current State](#current-state)
-* [Description](#description)
-* [Requirements](#requirements)
-* [BasicUse](#basicuse)
-* [Contributors](#contributors)
+- [Table of contents](#table-of-contents)
+- [Current State](#current-state)
+- [Description](#description)
+- [Requirements](#requirements)
+- [Basic Use](#basic-use)
+- [Documentation](#documentation)
+- [Contributors](#contributors)
 
 ## Current State
 Maine AI Arena (MAIA) is still in early, early development and new versions will break content tailored to previous versions. All commands have had limited testing. See *todo.md* under docs for a list of known bugs and planned (short-term) features. See *version_history.md* for recent changes.
@@ -25,7 +27,10 @@ MAIA was inspired by MIT's BattleCode competition: https://www.battlecode.org/. 
 ## Requirements
 MAIA requires:
 * Python 3.8
-* tkinter
+* tkinter (included with the standard Python install)
+  * Currently makes use of the tkmacos module to standardize some widgets. A copy of this module is included with MAIA, so there is no need to install it.
+* [pillow](https://pypi.org/project/pillow/)
+  * Used to display sprites. Our goal is to remove this dependency eventually and move sprite handling into MAIA itself.
 
 ## Basic Use
 
