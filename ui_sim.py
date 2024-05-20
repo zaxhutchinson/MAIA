@@ -117,7 +117,7 @@ class UISim(tk.Toplevel):
         self.btn_run = uiButton(
             master = self.btn_frame_1,
             text = "Run",
-            command=self.run_continuous
+            command=self.run_continuous_proxy
         )
         self.btn_run.pack(
             fill=tk.BOTH, 
@@ -350,7 +350,8 @@ class UISim(tk.Toplevel):
             self.update_objects()
             self.update_items()
 
-    def run_continuous(self):
+    def run_continuous_proxy(self):
+        """A proxy function for continuous mode"""
         self.continuous_run = True
         
         delay = self.delay_entry.get()
@@ -359,9 +360,14 @@ class UISim(tk.Toplevel):
         else:
             delay = DEFAULT_TURN_DELAY_IN_MS
         
-        self.run_continuous_proxy(delay)
+        self.run_continuous(delay)
 
-    def run_continuous_proxy(self, delay):
+    def run_continuous(self, delay):
+        """Responsible for continuous mode
+        
+        This function is rescheduled using tk's after method
+        to create a continuous mode.
+        """
 
         # Will abort running another turn if the user has clicked
         #   pause between turns.
@@ -376,9 +382,10 @@ class UISim(tk.Toplevel):
             self.display_scoreboard()
         else:
             if self.continuous_run:
-                self.btn_run.after(delay, self.run_continuous_proxy, delay)
+                self.btn_run.after(delay, self.run_continuous, delay)
 
     def pause_continuous(self):
+        """Pauses continuous mode"""
         self.continuous_run = False
 
     def display_points(self):
