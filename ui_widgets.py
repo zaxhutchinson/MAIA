@@ -88,16 +88,28 @@ class uiButton(Button):
 class uiLabel(tk.Label):
     def __init__(self, **kwargs):
         super().__init__(kwargs["master"])
-        self.config(
-            text=kwargs["text"],
-            bg=BGCOLOR,
-            fg=TEXTCOLOR,
-            highlightthickness=1,
-            highlightbackground=TEXTCOLOR,
-            highlightcolor=TEXTCOLOR,
-            font=("Arial", FONT_SIZE),
-        )
-
+        
+        if "text" in kwargs:
+            if "font" not in kwargs:
+                kwargs["font"]=("Arial", FONT_SIZE)
+            self.config(
+                text=kwargs["text"],
+                bg=BGCOLOR,
+                fg=TEXTCOLOR,
+                highlightthickness=1,
+                highlightbackground=TEXTCOLOR,
+                highlightcolor=TEXTCOLOR,
+                font=kwargs["font"],
+            )
+        elif "image" in kwargs:
+            self.config(
+                image=kwargs["image"],
+                bg=BGCOLOR,
+                fg=TEXTCOLOR,
+                highlightthickness=1,
+                highlightbackground=TEXTCOLOR,
+                highlightcolor=TEXTCOLOR
+            )
 
 class uiTextbox(tk.Text):
     def __init__(self, **kwargs):

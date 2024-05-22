@@ -7,6 +7,7 @@ import sys
 import os
 import queue
 import logging
+from PIL import ImageTk, Image
 
 import sim
 import loader
@@ -46,29 +47,83 @@ class UIHomepage(tk.Frame):
         places adv config button, places about button
         """
         # self.mainFrame = uiQuietFrame(master=self)
-        self.maia_label = uiLabel(master=self, text="Maine AI Arena")
-        self.maia_label.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        self.start_game_button = uiButton(
-            master=self,
-            text="Start Game",
-            command=lambda: self.controller.show_frame("setup_page"),
-        )
-        self.start_game_button.config(width=400)
-        self.start_game_button.pack(side=tk.BOTTOM, fill="y", expand=True)
+        
+        
 
-        self.adv_config_button = uiButton(
-            master=self,
-            command=lambda: ui_advanced_config.UISettings(self, self.logger),
-            text="Advanced Config",
-        )
-        self.adv_config_button.config(width=400)
-        self.adv_config_button.pack(side=tk.BOTTOM, fill="y", expand=True)
+        self.maia_image = ImageTk.PhotoImage(Image.open('images/maia.png'))
+        self.maia_image_label = uiLabel(master=self, image=self.maia_image)#text="Maine AI Arena")
+        self.maia_image_label.pack(side=tk.TOP, fill="x")
+        self.maia_text_label = uiLabel(master=self, text="Maine AI Arena", font=('Arial', 24))
+        self.maia_text_label.pack(side=tk.TOP, fill="x")
+
+        
+
+        self.general_frame = tk.LabelFrame(self,text="General",labelanchor="n",font=('Arial',15))
+        self.config_frame = tk.LabelFrame(self,text="Config",labelanchor="n",font=('Arial',15))
+        self.match_frame = tk.LabelFrame(self,text="Match",labelanchor="n",font=('Arial',15))
+        self.general_frame.pack(side=tk.TOP)
+        self.config_frame.pack(side=tk.TOP)
+        self.match_frame.pack(side=tk.TOP)
 
         self.about_button = uiButton(
-            master=self,
+            master=self.general_frame,
             text="About MAIA",
             command=lambda: self.controller.show_frame("about_page"),
         )
-        self.about_button.config(width=400)
-        self.about_button.pack(side=tk.BOTTOM, fill="y", expand=True)
+        self.about_button.config(width=400, height=100)
+        self.about_button.pack(side=tk.TOP)
+
+        self.config_teams_button = uiButton(
+            master=self.config_frame,
+            command=lambda: ui_advanced_config.UISettings(self, self.logger),
+            text="Team Config"
+        )
+        self.config_teams_button.config(width=400, height=100)
+        self.config_teams_button.pack(side=tk.TOP)
+
+        self.config_component_button = uiButton(
+            master=self.config_frame,
+            command=lambda: ui_advanced_config.UISettings(self, self.logger),
+            text="Component Config"
+        )
+        self.config_component_button.config(width=400, height=100)
+        self.config_component_button.pack(side=tk.TOP)
+
+        self.config_object_button = uiButton(
+            master=self.config_frame,
+            command=lambda: ui_advanced_config.UISettings(self, self.logger),
+            text="Object Config"
+        )
+        self.config_object_button.config(width=400, height=100)
+        self.config_object_button.pack(side=tk.TOP)
+
+        self.config_map_button = uiButton(
+            master=self.config_frame,
+            command=lambda: ui_advanced_config.UISettings(self, self.logger),
+            text="Map Config"
+        )
+        self.config_map_button.config(width=400, height=100)
+        self.config_map_button.pack(side=tk.TOP)
+
+        self.start_game_button = uiButton(
+            master=self.match_frame,
+            text="Match Setup",
+            command=lambda: self.controller.show_frame("setup_page"),
+        )
+        self.start_game_button.config(width=400, height=100)
+        self.start_game_button.pack(side=tk.TOP)
+
+        # self.adv_config_button = uiButton(
+        #     master=self,
+        #     command=lambda: ui_advanced_config.UISettings(self, self.logger),
+        #     text="Advanced Config",
+        # )
+        # self.adv_config_button.config(width=400, height=100)
+        # self.adv_config_button.pack(side=tk.TOP)
+
+        
+
+
+        
+        
