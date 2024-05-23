@@ -48,20 +48,25 @@ class UIHomepage(tk.Frame):
         """
         # self.mainFrame = uiQuietFrame(master=self)
 
-        
-        
-
-        self.maia_image = ImageTk.PhotoImage(Image.open('images/maia.png'))
-        self.maia_image_label = uiLabel(master=self, image=self.maia_image)#text="Maine AI Arena")
+        self.maia_image = ImageTk.PhotoImage(Image.open("images/maia.png"))
+        self.maia_image_label = uiLabel(
+            master=self, image=self.maia_image
+        )  # text="Maine AI Arena")
         self.maia_image_label.pack(side=tk.TOP, fill="x")
-        self.maia_text_label = uiLabel(master=self, text="Maine AI Arena", font=('Arial', 24))
+        self.maia_text_label = uiLabel(
+            master=self, text="Maine AI Arena", font=("Arial", 24)
+        )
         self.maia_text_label.pack(side=tk.TOP, fill="x")
 
-        
-
-        self.general_frame = tk.LabelFrame(self,text="General",labelanchor="n",font=('Arial',15))
-        self.config_frame = tk.LabelFrame(self,text="Config",labelanchor="n",font=('Arial',15))
-        self.match_frame = tk.LabelFrame(self,text="Match",labelanchor="n",font=('Arial',15))
+        self.general_frame = tk.LabelFrame(
+            self, text="General", labelanchor="n", font=("Arial", 15)
+        )
+        self.config_frame = tk.LabelFrame(
+            self, text="Config", labelanchor="n", font=("Arial", 15)
+        )
+        self.match_frame = tk.LabelFrame(
+            self, text="Match", labelanchor="n", font=("Arial", 15)
+        )
         self.general_frame.pack(side=tk.TOP)
         self.config_frame.pack(side=tk.TOP)
         self.match_frame.pack(side=tk.TOP)
@@ -76,32 +81,32 @@ class UIHomepage(tk.Frame):
 
         self.config_teams_button = uiButton(
             master=self.config_frame,
-            command=lambda: ui_advanced_config.UISettings(self, self.logger),
-            text="Team Config"
+            command=lambda: self.controller.show_frame("config_team"),
+            text="Team Config",
         )
         self.config_teams_button.config(width=400, height=100)
         self.config_teams_button.pack(side=tk.TOP)
 
         self.config_component_button = uiButton(
             master=self.config_frame,
-            command=lambda: ui_advanced_config.UISettings(self, self.logger),
-            text="Component Config"
+            command=lambda: self.controller.show_frame("config_component"),
+            text="Component Config",
         )
         self.config_component_button.config(width=400, height=100)
         self.config_component_button.pack(side=tk.TOP)
 
         self.config_object_button = uiButton(
             master=self.config_frame,
-            command=lambda: ui_advanced_config.UISettings(self, self.logger),
-            text="Object Config"
+            command=lambda: self.controller.show_frame("config_object"),
+            text="Object Config",
         )
         self.config_object_button.config(width=400, height=100)
         self.config_object_button.pack(side=tk.TOP)
 
         self.config_map_button = uiButton(
             master=self.config_frame,
-            command=lambda: ui_advanced_config.UISettings(self, self.logger),
-            text="Map Config"
+            command=lambda: self.controller.show_frame("config_map"),
+            text="Map Config",
         )
         self.config_map_button.config(width=400, height=100)
         self.config_map_button.pack(side=tk.TOP)
@@ -121,9 +126,3 @@ class UIHomepage(tk.Frame):
         # )
         # self.adv_config_button.config(width=400, height=100)
         # self.adv_config_button.pack(side=tk.TOP)
-
-        
-
-
-        
-        

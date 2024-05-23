@@ -8,17 +8,18 @@ import loader
 from ui_widgets import *
 
 
-class UIMapConfig(tk.Toplevel):
-    def __init__(self, _map, master=None, logger=None):
+class UIMapConfig(tk.Frame):
+    def __init__(self, controller, master=None, logger=None):
         """Sets window and frame information and calls function to build ui"""
         super().__init__(master)
+        self.controller = controller
         self.master = master
         self.logger = logger
         self.ldr = loader.Loader(self.logger)
 
-        self.map = _map
-        self.map_width = self.map.get_data("width")
-        self.map_height = self.map.get_data("height")
+        # self.map = None
+        # self.map_width = self.map.get_data("width")
+        # self.map_height = self.map.get_data("height")
 
         self.objs = {}
         self.items = {}
@@ -29,7 +30,10 @@ class UIMapConfig(tk.Toplevel):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        self.build_ui()
+        # ZH: Turned off for now because I want to change it so that you
+        # select the map to display on the map screen.
+
+        # self.build_ui()
 
     def build_ui(self):
         """Generates UI of map
@@ -38,61 +42,66 @@ class UIMapConfig(tk.Toplevel):
         draws placed objects, draws placed items, draws
         ai-controlled objects
         """
-        self.cell_size = 32
-        self.map_obj_char_size = 24
-        self.map_item_char_size = 10
-        self.char_offset = (self.cell_size - self.map_obj_char_size) / 2
-        self.map_obj_font = tk.font.Font(
-            family="TkFixedFont", size=self.map_obj_char_size
-        )
-        self.map_item_font = tk.font.Font(
-            family="TkFixedFont", size=self.map_item_char_size
-        )
+        self.button_frame = uiQuietFrame(master=self)
 
-        self.x_bar = tk.Scrollbar(self.container, orient=tk.HORIZONTAL)
-        self.y_bar = tk.Scrollbar(self.container, orient=tk.VERTICAL)
-        self.canvas = uiCanvas(
-            master=self.container,
-            width=800,
-            height=800,
-            xscrollcommand=self.x_bar.set,
-            yscrollcommand=self.y_bar.set,
-            scrollregion=(
-                0,
-                0,
-                (self.map_width + 2) * self.cell_size,
-                (self.map_height + 2) * self.cell_size,
-            ),
-            cell_size=self.cell_size,
-            obj_char_size=self.map_obj_char_size,
-            item_char_size=self.map_item_char_size,
-            char_offset=self.char_offset,
-            obj_font=self.map_obj_font,
-            item_font=self.map_item_font,
-        )
-        self.y_bar.configure(command=self.canvas.yview)
-        self.x_bar.configure(command=self.canvas.xview)
-        self.y_bar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.x_bar.pack(side=tk.BOTTOM, fill=tk.X)
-        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        # NEED TO RESTORE THIS ONCE MAP SELECTION IS MOVED
+        # INTO THE MAP SCREEN ITSELF>
 
-        self.canvas.yview_moveto(0.0)
-        self.canvas.xview_moveto(0.0)
+        # self.cell_size = 32
+        # self.map_obj_char_size = 24
+        # self.map_item_char_size = 10
+        # self.char_offset = (self.cell_size - self.map_obj_char_size) / 2
+        # self.map_obj_font = tk.font.Font(
+        #     family="TkFixedFont", size=self.map_obj_char_size
+        # )
+        # self.map_item_font = tk.font.Font(
+        #     family="TkFixedFont", size=self.map_item_char_size
+        # )
 
-        self.add_objects()
-        self.add_ai_objects()
-        self.add_items()
+        # self.x_bar = tk.Scrollbar(self.container, orient=tk.HORIZONTAL)
+        # self.y_bar = tk.Scrollbar(self.container, orient=tk.VERTICAL)
+        # self.canvas = uiCanvas(
+        #     master=self.container,
+        #     width=800,
+        #     height=800,
+        #     xscrollcommand=self.x_bar.set,
+        #     yscrollcommand=self.y_bar.set,
+        #     scrollregion=(
+        #         0,
+        #         0,
+        #         (self.map_width + 2) * self.cell_size,
+        #         (self.map_height + 2) * self.cell_size,
+        #     ),
+        #     cell_size=self.cell_size,
+        #     obj_char_size=self.map_obj_char_size,
+        #     item_char_size=self.map_item_char_size,
+        #     char_offset=self.char_offset,
+        #     obj_font=self.map_obj_font,
+        #     item_font=self.map_item_font,
+        # )
+        # self.y_bar.configure(command=self.canvas.yview)
+        # self.x_bar.configure(command=self.canvas.xview)
+        # self.y_bar.pack(side=tk.RIGHT, fill=tk.Y)
+        # self.x_bar.pack(side=tk.BOTTOM, fill=tk.X)
+        # self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        # Draw the background tiles
-        self.canvas_background_tile_ids = []
-        self.canvas_background_RCnum_ids = []
-        self.draw_tiles()
+        # self.canvas.yview_moveto(0.0)
+        # self.canvas.xview_moveto(0.0)
 
-        self.obj_drawIDs = {}
-        self.init_objects()
+        # self.add_objects()
+        # self.add_ai_objects()
+        # self.add_items()
 
-        self.item_drawIDs = {}
-        self.init_items()
+        # # Draw the background tiles
+        # self.canvas_background_tile_ids = []
+        # self.canvas_background_RCnum_ids = []
+        # self.draw_tiles()
+
+        # self.obj_drawIDs = {}
+        # self.init_objects()
+
+        # self.item_drawIDs = {}
+        # self.init_items()
 
     def add_objects(self):
         """Adds edges and placed object to obj list"""
