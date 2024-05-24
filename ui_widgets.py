@@ -20,11 +20,15 @@ TEXTCOLOR = "#222222"
 BTN_DARK = "#495EA7"
 BTN_LIGHT = "#FFFFFF"
 
+CAREFUL_BTN_DARK = "red"
+
 ENTRY_DARK = "#222222"
 ENTRY_BG = "salmon1"
 
 BOXFILLCOLOR = "#B2C1E3"
 
+PADX=5
+PADY=5
 
 global_sprite_list = []
 
@@ -35,8 +39,8 @@ else:
 
 
 class uiListBox(tk.Listbox):
-    def __init__(self, master=None):
-        super().__init__(master)
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, kwargs)
         self.config(
             selectmode=tk.SINGLE,
             bg=BOXFILLCOLOR,
@@ -84,6 +88,22 @@ class uiButton(Button):
             font=("Arial", FONT_SIZE),
         )
 
+class uiCarefulButton(Button):
+    def __init__(self, **kwargs):
+        super().__init__(kwargs["master"])
+        self.config(
+            text=kwargs["text"],
+            command=kwargs["command"],
+            bg=CAREFUL_BTN_DARK,
+            fg=BTN_LIGHT,
+            activeforeground=CAREFUL_BTN_DARK,
+            activebackground=BTN_LIGHT,
+            highlightthickness=1,
+            highlightbackground=BTN_LIGHT,
+            highlightcolor=BTN_LIGHT,
+            relief=tk.FLAT,
+            font=("Arial", FONT_SIZE),
+        )
 
 class uiLabel(tk.Label):
     def __init__(self, **kwargs):
@@ -96,9 +116,9 @@ class uiLabel(tk.Label):
                 text=kwargs["text"],
                 bg=BGCOLOR,
                 fg=TEXTCOLOR,
-                highlightthickness=1,
-                highlightbackground=TEXTCOLOR,
-                highlightcolor=TEXTCOLOR,
+                # highlightthickness=1,
+                # highlightbackground=TEXTCOLOR,
+                # highlightcolor=TEXTCOLOR,
                 font=kwargs["font"],
             )
         elif "image" in kwargs:
@@ -106,9 +126,9 @@ class uiLabel(tk.Label):
                 image=kwargs["image"],
                 bg=BGCOLOR,
                 fg=TEXTCOLOR,
-                highlightthickness=1,
-                highlightbackground=TEXTCOLOR,
-                highlightcolor=TEXTCOLOR,
+                # highlightthickness=1,
+                # highlightbackground=TEXTCOLOR,
+                # highlightcolor=TEXTCOLOR,
             )
 
 
@@ -126,8 +146,24 @@ class uiQuietFrame(tk.Frame):
             borderwidth=0,
             highlightthickness=0,
             highlightbackground=BGCOLOR,
+            padx=PADX,
+            pady=PADY
         )
 
+class uiLabelFrame(tk.LabelFrame):
+    def __init__(self, **kwargs):
+        super().__init__(kwargs["master"])
+        self.config(
+            relief=tk.FLAT,
+            borderwidth=0,
+            highlightthickness=0,
+            highlightbackground=BGCOLOR,
+            text=kwargs["text"],
+            labelanchor="n",
+            font=("Arial",15),
+            padx=PADX,
+            pady=PADY
+        )
 
 class uiNotebook(ttk.Notebook):
     def __init__(self, **kwargs):
@@ -151,7 +187,7 @@ class uiEntry(tk.Entry):
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
             insertbackground=TEXTCOLOR,
-            font=("Arial", FONT_SIZE),
+            font=("Arial", FONT_SIZE)
         )
         # self.bind("<FocusOut>", self.validate_out)
 

@@ -160,6 +160,9 @@ class Loader:
             for k, v in json_obj.items():
                 self.team_templates[k] = v
 
+    def copy_all_team_templates(self):
+        return copy.deepcopy(self.team_templates)
+
     def copy_team_template(self, _id):
         """Produces a deep copy of a team template"""
         try:
@@ -177,6 +180,17 @@ class Loader:
         for t in self.team_templates.values():
             names.append(t["name"])
         return names
+
+    def update_team_template(self, _id, **kwargs):
+        try:
+            team = self.team_templates[_id]
+            for k,v in kwargs.items():
+                try:
+                    team[k] = v
+                except:
+                    self.logger.error(f"LOADER: update_team_template() KeyError {k} is an invalid team attribute.")
+        except KeyError:
+            self.logger.error(f"LOADER: update_team_template() KeyError {_id}")
 
     ##########################################################################
     # Mainconfig

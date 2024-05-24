@@ -1,74 +1,79 @@
 {
     "TeamAlpha": {
-        "size": 1,
-        "name": "TeamAlpha",
         "agent_defs": [
             {
+                "AI_file": "AI_file1.py",
                 "callsign": "Leader",
-                "squad": "A",
                 "object": "player",
-                "AI_file": "AI_file1.py"
+                "squad": "A"
             }
-        ]
+        ],
+        "name": "TeamAlpha",
+        "size": 1
     },
     "TeamBeta": {
-        "size": 1,
+        "agent_defs": [],
         "name": "TeamBeta",
-        "agent_defs": [
-            {
-                "callsign": "Leader",
-                "squad": "B",
-                "object": "player",
-                "AI_file": "AI_file2.py"
-            }
-        ]
-    },
-    "TeamCharlie": {
-        "size": 1,
-        "name": "TeamCharlie",
-        "agent_defs": [
-            {
-                "callsign": "Leader",
-                "squad": "C",
-                "object": "player",
-                "AI_file": "AI_file3.py"
-            }
-        ]
+        "size": 1
     },
     "TeamDelta": {
-        "size": 1,
-        "name": "TeamDelta",
         "agent_defs": [
             {
+                "AI_file": "AI_file4.py",
                 "callsign": "Leader",
-                "squad": "D",
                 "object": "player",
-                "AI_file": "AI_file4.py"
+                "squad": "D"
             }
-        ]
-    },
-    "TeamZach": {
-        "size": 1,
-        "name": "TeamZach",
-        "agent_defs": [
-            {
-                "callsign": "Leader",
-                "squad": "Z",
-                "object": "red_tank",
-                "AI_file": "Zach_AI.py"
-            }
-        ]
+        ],
+        "name": "TeamDelta",
+        "size": 1
     },
     "TeamLADS": {
-        "size": 1,
-        "name": "TeamLADS",
         "agent_defs": [
             {
+                "AI_file": "LADS_AI.py",
                 "callsign": "Leader",
-                "squad": "L",
                 "object": "blue_tank",
-                "AI_file": "LADS_AI.py"
+                "squad": "L"
             }
-        ]
+        ],
+        "name": "TeamLADS",
+        "size": 1
+    },
+    "TeamZach2": {
+        "agent_defs": [
+            {
+                "AI_file": "Zach_AI.py",
+                "callsign": "Leader",
+                "object": "red_tank",
+                "squad": "Z"
+            },
+            {
+                "AI_file": "Missing",
+                "callsign": "New Agent 1",
+                "object": "Missing",
+                "squad": "Missing"
+            },
+            {
+                "AI_file": "Missing",
+                "callsign": "New Agent 2",
+                "object": "Missing",
+                "squad": "Missing"
+            },
+            {
+                "AI_file": "Missing",
+                "callsign": "New Agent 3",
+                "object": "Missing",
+                "squad": "Missing"
+            },
+            {
+                "AI_file": "Missing",
+                "callsign": "New Agent 4",
+                "object": "Missing",
+                "squad": "Missing"
+            }
+        ],
+        "name": "TeamZach2",
+        "size": 1
     }
 }

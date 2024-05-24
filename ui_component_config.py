@@ -171,15 +171,19 @@ class UIComponentConfig(tk.Frame):
             command=self.update_components_json,
             text="Update",
         )
+        self.components_update_button.pack(side=tk.LEFT)
         self.components_create_button = uiButton(
             master=self.button_row, command=self.create_component, text="Create"
         )
+        self.components_create_button.pack(side=tk.LEFT)
         self.components_delete_button = uiButton(
             master=self.button_row, command=self.delete_components, text="Delete"
         )
+        self.components_delete_button.pack(side=tk.LEFT)
         self.home_button = uiButton(
             master=self.button_row, command=self.goto_home, text="Home"
         )
+        self.home_button.pack(side=tk.LEFT)
 
         # Place Component Widgets
         self.components_column.pack(
@@ -234,10 +238,7 @@ class UIComponentConfig(tk.Frame):
         self.components_type_combo.grid(row=13, column=1, columnspan=2, sticky="nsew")
 
 
-        self.components_update_button.pack(side=tk.LEFT)
-        self.components_create_button.pack(side=tk.LEFT)
-        self.components_delete_button.pack(side=tk.LEFT)
-        self.home_button.pack(side=tk.LEFT)
+        
 
         self.init_entry_widgets()
 
