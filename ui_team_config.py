@@ -18,7 +18,7 @@ from ui_widgets import *
 
 
 class UITeamConfig(tk.Frame):
-    def __init__(self, controller, master=None, logger=None):
+    def __init__(self, controller, ldr, master=None, logger=None):
         super().__init__(master)
         self.controller = controller
         self.master = master
@@ -28,8 +28,8 @@ class UITeamConfig(tk.Frame):
         # self.geometry("1450x700")
         # self.minsize(width=1400, height=700)
         self.logger = logger
-        self.ldr = loader.Loader(self.logger)
-        self.team_data = self.ldr.copy_all_team_templates()
+        self.ldr = ldr #loader.Loader(self.logger)
+        # self.team_data = self.ldr.copy_all_team_templates()
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -213,21 +213,9 @@ class UITeamConfig(tk.Frame):
         """
         Gets information from the loader and assigns current values for each setting type.
         """
-        team_names = sorted(self.get_team_names())
+        team_names = sorted(self.ldr.get_team_names())
         self.select_team_listbox.delete(0,tk.END)
         self.select_team_listbox_var.set(team_names)
-        #self.current_team_data = self.team_data[team_names[0]]
-        
-        
-
-        
-
-        # self.select_team_listbox.configure(values=self.team_names)
-
-        
-        # self.select_team_listbox.bind("<Enter>", self.get_previous_team_combo)
-        # self.show_team_entry(self.current_team_data)
-
     
 
         
@@ -351,6 +339,8 @@ class UITeamConfig(tk.Frame):
         """
         Creates a new team and adds it to the team dictionary.
         """
+
+        team_data = self.ldr.get_team_templates()
         
         good_name = False
         while not good_name:
@@ -359,7 +349,7 @@ class UITeamConfig(tk.Frame):
                 messagebox.showwarning(
                     "Warning", "You must enter a team ID to continue"
                 )
-            elif team_id in self.team_data.keys():
+            elif team_id in team_data.keys():
                 messagebox.showwarning(
                     "Warning", "This ID already exists, please enter a new ID."
                 )
@@ -375,7 +365,7 @@ class UITeamConfig(tk.Frame):
             "name": team_id,
             "agent_defs": [],
         }
-        self.team_data.update({team_id: self.current_team_data})
+        team_data.update({team_id: new_team_data})
         
         index = self.select_team_listbox.size()-1
         self.select_team_listbox.selection_clear(0,tk.END)
@@ -388,19 +378,20 @@ class UITeamConfig(tk.Frame):
         """
         Updates the teams JSON values.
         """
+        team_data = self.ldr.get_team_templates()
         current_team = self.get_currently_selected_team()
         if current_team != None:
             new_name = self.team_name_entry.entry.get()
             if new_name != current_team["name"]:
-                if new_name in self.team_data.keys():
+                if new_name in team_data.keys():
                     showwarning(
                         title="Warning",
                         message=f"{new_name} is in use by another team. Please use another name.",
                     )
                 old_name = current_team["name"]
                 current_team["name"] = new_name
-                del self.team_data[old_name]
-                self.team_data[new_name]=current_team
+                del team_data[old_name]
+                team_data[new_name]=current_team
 
                 self.populate_team_listbox()
 
@@ -470,9 +461,10 @@ class UITeamConfig(tk.Frame):
         """
         Deletes the currently selected team from the JSON and team dictionary.
         """
+        team_data = self.ldr.get_team_templates()
         current_team = self.get_currently_selected_team()
         if current_team != None:
-            del self.team_data[current_team["name"]]
+            del team_data[current_team["name"]]
             self.populate_team_listbox()
     
 
@@ -529,21 +521,15 @@ class UITeamConfig(tk.Frame):
         team_index = self.select_team_listbox.curselection()
         if len(team_index) == 1:
             team_name = self.select_team_listbox.get(team_index[0])
-            return self.team_data[team_name]
+            return self.ldr.get_team_template(team_name)
         else:
             return None
 
-    def get_team_names(self):
-        team_names = []
-        for t in self.team_data.values():
-            team_names.append(t["name"])
-        return team_names
-
 
     def save_to_json(self):
-        with open("settings/teams.json", "w") as f:
-            json.dump(self.team_data, f, indent=4, sort_keys=True)
-        f.close()
+        self.ldr.save_team_templates()
+        # with open("settings/teams.json", "w") as f:
+        #     json.dump(self.team_data, f, indent=4, sort_keys=True)
 
     def goto_home(self):
         self.controller.show_frame("home_page")

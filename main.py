@@ -12,6 +12,7 @@ import ui_team_config
 import ui_object_config
 import ui_map_config
 import ui_component_config
+import loader
 
 
 # Initialize the log files
@@ -24,11 +25,12 @@ class App(tk.Tk):
         """
         tk.Tk.__init__(self, *args, **kwargs)
 
-        logger = logging.getLogger("main")
+        self.logger = logging.getLogger("main")
         handler = logging.FileHandler("log/main.log", mode="w")
         formatter = logging.Formatter("%(name)s - %(message)s")
         handler.setFormatter(formatter)
-        logger.addHandler(handler)
+        self.logger.addHandler(handler)
+
         self.title("MAIA")
         self.screen_width = self.winfo_screenwidth()
         self.screen_height = self.winfo_screenheight()
@@ -39,28 +41,31 @@ class App(tk.Tk):
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
 
+        self.ldr = loader.Loader(self.logger)
+
         self.frames = {}
 
         self.frames["home_page"] = ui_homepage.UIHomepage(
-            master=self.container, controller=self, logger=logger
+            master=self.container, controller=self, logger=self.logger
         )
         self.frames["setup_page"] = ui_setup.UISetup(
-            master=self.container, controller=self, logger=logger
+            master=self.container, controller=self, logger=self.logger
         )
         self.frames["about_page"] = ui_about.ui_about(
-            master=self.container, controller=self, logger=logger
+            master=self.container, controller=self, logger=self.logger
         )
         self.frames["config_team"] = ui_team_config.UITeamConfig(
-            master=self.container, controller=self, logger=logger
+            master=self.container, controller=self, logger=self.logger,
+            ldr = self.ldr
         )
         self.frames["config_object"] = ui_object_config.UIObjectConfig(
-            master=self.container, controller=self, logger=logger
+            master=self.container, controller=self, logger=self.logger
         )
         self.frames["config_map"] = ui_map_config.UIMapConfig(
-            master=self.container, controller=self, logger=logger
+            master=self.container, controller=self, logger=self.logger
         )
         self.frames["config_component"] = ui_component_config.UIComponentConfig(
-            master=self.container, controller=self, logger=logger
+            master=self.container, controller=self, logger=self.logger
         )
 
         # the setup page must be placed first to prevent errors

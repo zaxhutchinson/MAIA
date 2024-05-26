@@ -25,21 +25,30 @@ class Loader:
         self.team_templates = {}
         self.gstate_templates = {}
 
-        self.load_main_config("settings/main.json")
-        self.load_comp_templates("settings/components.json")
-        self.load_obj_templates("settings/objects.json")
-        self.load_item_templates("settings/items.json")
-        self.load_map_templates("settings/maps.json")
-        self.load_team_templates("settings/teams.json")
-        self.load_gstate_templates("settings/state.json")
+        self.DIRECTORY = "settings"
+        self.MAIN_JSON_FILENAME = f"{self.DIRECTORY}/main.json"
+        self.COMPONENTS_JSON_FILENAME = f"{self.DIRECTORY}/components.json"
+        self.OBJECT_JSON_FILENAME = f"{self.DIRECTORY}/objects.json"
+        self.ITEM_JSON_FILENAME = f"{self.DIRECTORY}/items.json"
+        self.MAP_JSON_FILENAME = f"{self.DIRECTORY}/maps.json"
+        self.TEAM_JSON_FILENAME = f"{self.DIRECTORY}/teams.json"
+        self.GSTATE_JSON_FILENAME = f"{self.DIRECTORY}/state.json"
+
+        self.load_main_config()
+        self.load_comp_templates()
+        self.load_obj_templates()
+        self.load_item_templates()
+        self.load_map_templates()
+        self.load_team_templates()
+        self.load_gstate_templates()
 
         self.logger = logger
 
     ##########################################################################
     # GSTATE
-    def load_gstate_templates(self, file_name):
+    def load_gstate_templates(self):
         """Loads gstate templates"""
-        with open(file_name, "r") as f:
+        with open(self.GSTATE_JSON_FILENAME, "r") as f:
             json_objs = json.load(f)
             for k, v in json_objs.items():
                 self.gstate_templates[k] = []
@@ -56,9 +65,9 @@ class Loader:
 
     ##########################################################################
     # OBJ
-    def load_obj_templates(self, file_name):
+    def load_obj_templates(self):
         """Loads object templates"""
-        with open(file_name, "r") as f:
+        with open(self.OBJECT_JSON_FILENAME, "r") as f:
             json_objs = json.load(f)
             for k, v in json_objs.items():
                 self.obj_templates[k] = obj.Object(v)
@@ -83,9 +92,9 @@ class Loader:
 
     ##########################################################################
     # ITEMS
-    def load_item_templates(self, file_name):
+    def load_item_templates(self):
         """Loads item templates"""
-        with open(file_name, "r") as f:
+        with open(self.ITEM_JSON_FILENAME, "r") as f:
             json_objs = json.load(f)
             for k, v in json_objs.items():
                 self.item_templates[k] = item.Item(v)
@@ -99,9 +108,9 @@ class Loader:
 
     ##########################################################################
     # COMPS
-    def load_comp_templates(self, file_name):
+    def load_comp_templates(self):
         """Loads component templates"""
-        with open(file_name, "r") as f:
+        with open(self.COMPONENTS_JSON_FILENAME, "r") as f:
             json_objs = json.load(f)
             for k, v in json_objs.items():
                 self.comp_templates[k] = comp.Comp(v)
@@ -133,9 +142,9 @@ class Loader:
 
     ##########################################################################
     # MAPS
-    def load_map_templates(self, file_name):
+    def load_map_templates(self):
         """Loads map templates"""
-        with open(file_name, "r") as f:
+        with open(self.MAP_JSON_FILENAME, "r") as f:
             json_objs = json.load(f)
             for k, v in json_objs.items():
                 self.map_templates[k] = zmap.Map(v)
@@ -153,12 +162,22 @@ class Loader:
 
     ##########################################################################
     # TEAMS
-    def load_team_templates(self, file_name):
+    def load_team_templates(self):
         """Loads team templates"""
-        with open(file_name, "r") as f:
+        with open(self.TEAM_JSON_FILENAME, "r") as f:
             json_obj = json.load(f)
             for k, v in json_obj.items():
                 self.team_templates[k] = v
+
+    def save_team_templates(self):
+        if len(self.team_templates) > 0:
+            with open(self.TEAM_JSON_FILENAME, "w") as f:
+                json.dump(self.team_templates, f, indent=4, sort_keys=True)
+
+    def get_team_templates(self):
+        return self.team_templates
+    def get_team_template(self, _id):
+        return self.team_templates[_id]
 
     def copy_all_team_templates(self):
         return copy.deepcopy(self.team_templates)
@@ -194,9 +213,9 @@ class Loader:
 
     ##########################################################################
     # Mainconfig
-    def load_main_config(self, file_name):
+    def load_main_config(self):
         """Loads main config"""
-        with open(file_name, "r") as f:
+        with open(self.MAIN_JSON_FILENAME, "r") as f:
             self.main_config = json.load(f)
 
     def copy_main_config(self):
