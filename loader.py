@@ -113,7 +113,23 @@ class Loader:
         with open(self.COMPONENTS_JSON_FILENAME, "r") as f:
             json_objs = json.load(f)
             for k, v in json_objs.items():
-                self.comp_templates[k] = comp.Comp(v)
+                self.comp_templates[k] = v
+
+    def save_comp_templates(self):
+        if len(self.comp_templates) > 0:
+            with open(self.COMPONENTS_JSON_FILENAME, "w") as f:
+                json.dump(self.comp_templates, f, indent=4, sort_keys=True)
+
+    def get_comp_template(self, _id):
+        return self.comp_templates[_id]
+    def get_comp_templates(self):
+        return self.comp_templates
+
+    # def get_comp_name(self, _id):
+    #     return self.comp_templates[_id].get_data("name")
+
+    def build_comp(self, _id):
+        return comp.Comp(self.comp_templates[_id])
 
     def copy_comp_template(self, _id):
         """Produces a deep copy of a component template"""
@@ -125,6 +141,18 @@ class Loader:
     def get_comp_ids(self):
         """Gets component ids"""
         return list(self.comp_templates.keys())
+    
+    def get_comp_ids_of_ctype(self, _ctype):
+        comp_ids = []
+        for _id, comp in self.comp_templates.items():
+            if comp["ctype"] == _ctype:
+                comp_ids.append(_id)
+        return comp_ids
+
+    def get_comp(self, _id):
+        return self.comp_templates[_id]
+
+    
 
     def get_comp_names(self):
         """Gets component names"""
@@ -133,12 +161,19 @@ class Loader:
             comp_names.append(component.get_data("name"))
         return comp_names
 
+    def get_comp_names_of_type(self, _type):
+        comps = []
+        for component in self.comp_templates.values():
+            if component.get_data("ctype") == _type:
+                comps.append(component.get_data("name"))
+        return comps
+
     def get_comp_types(self):
         """Gets component types"""
-        self.comp_types = []
-        for self.component in self.comp_templates.values():
-            self.comp_types.append(self.component.get_data("ctype"))
-        return self.comp_types
+        comp_types = []
+        for component in self.comp_templates.values():
+            comp_types.append(component.get_data("ctype"))
+        return comp_types
 
     ##########################################################################
     # MAPS

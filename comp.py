@@ -3,6 +3,46 @@ import math
 import vec2
 import action
 
+CTYPES_LIST = [
+    "FixedGun",
+    "Engine",
+    "Radar",
+    "CnC",
+    "Radio",
+    "Arm"
+]
+
+COMP_ATTRS_BY_CTYPE = {
+    "FixedGun": [
+        ("reload_ticks", 1), 
+        ("ammunition", 0),
+        ("min_damage", 0),
+        ("max_damage", 0),
+        ("range",0)
+    ],
+    "Engine": [
+        ("min_speed", 0.0), 
+        ("max_speed", 0.0), 
+        ("max_turnrate", 0.0)
+    ],
+    "Radar": [
+        ("range", 0),
+        ("level", 0),
+        ("visarc", 0),
+        ("offset_angle", 0), 
+        ("resolution", 0)
+    ],
+    "CnC": [
+        ("max_cmds_per_tick",0)
+    ],
+    "Radio": [
+        ("max_range", 0),
+    ],
+    "Arm": [
+        ("max_bulk", 0),
+        ("max_weight", 0)
+    ]
+}
 
 class Comp:
     def __init__(self, data):
@@ -24,14 +64,19 @@ class Comp:
             self.command = self.fixed_gun_command
             self.update = self.fixed_gun_update
             self.set_view_keys_fixed_gun()
+            self.data["reload_ticks_remaining"] = 0
+            self.data["reloading"] = False
         elif ctype == "Engine":
             self.command = self.engine_command
             self.update = self.engine_update
             self.set_view_keys_engine()
+            self.data["cur_speed"] = 0.0
+            self.data["cur_turnrate"] = 0.0
         elif ctype == "Radar":
             self.command = self.radar_command
             self.update = self.radar_update
             self.set_view_keys_radar()
+            self.data["active"] = False
         elif ctype == "CnC":
             self.command = self.cnc_command
             self.update = self.cnc_update
@@ -40,10 +85,12 @@ class Comp:
             self.command = self.radar_command
             self.update = self.radio_update
             self.set_view_keys_radio()
+            self.data["message"] = None
         elif ctype == "Arm":
             self.command = self.arm_command
             self.update = self.arm_update
             self.set_view_keys_arm()
+            self.data["item"] = None
 
     def get_data(self, key):
         """Gets data"""

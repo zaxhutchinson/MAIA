@@ -277,7 +277,7 @@ class Sim:
 
                 # Create and store components
                 for c in new_obj.get_data("comp_ids"):
-                    new_comp = ldr.copy_comp_template(c)
+                    new_comp = ldr.build_comp(c)
                     new_comp.set_data("parent", new_obj)
                     new_obj.add_comp(new_comp)
 

@@ -65,7 +65,8 @@ class App(tk.Tk):
             master=self.container, controller=self, logger=self.logger
         )
         self.frames["config_component"] = ui_component_config.UIComponentConfig(
-            master=self.container, controller=self, logger=self.logger
+            master=self.container, controller=self, logger=self.logger,
+            ldr = self.ldr
         )
 
         # the setup page must be placed first to prevent errors
@@ -81,8 +82,7 @@ class App(tk.Tk):
 
     def show_frame(self, page_name):
         """Raises frame"""
-        frame = self.frames[page_name]
-        frame.tkraise()
+        self.frames[page_name].tkraise()
 
 
 if __name__ == "__main__":

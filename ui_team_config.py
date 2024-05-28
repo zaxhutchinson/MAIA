@@ -23,50 +23,9 @@ class UITeamConfig(tk.Frame):
         self.controller = controller
         self.master = master
         self.configure(bg=BGCOLOR)
-        # self.title("MAIA - Advanced Configuration")
-
-        # self.geometry("1450x700")
-        # self.minsize(width=1400, height=700)
         self.logger = logger
-        self.ldr = ldr #loader.Loader(self.logger)
-        # self.team_data = self.ldr.copy_all_team_templates()
-
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_columnconfigure(2, weight=1)
-        self.fixed_gun_keys = [
-            "reload_ticks",
-            "reload_ticks_remaining",
-            "reloading",
-            "ammunition",
-            "min_damage",
-            "max_damage",
-            "range",
-        ]
-        self.engine_keys = [
-            "min_speed",
-            "max_speed",
-            "cur_speed",
-            "max_turnrate",
-            "cur_turnrate",
-        ]
-        self.radar_keys = [
-            "active",
-            "range",
-            "level",
-            "visarc",
-            "offset_angle",
-            "resolution",
-        ]
-        self.cnc_keys = ["max_cmds_per_tick"]
-        self.radio_keys = ["max_range", "cur_range", "message"]
-        self.arm_keys = ["max_weight", "max_bulk", "item"]
-
-        self.prev_component_combo = None
-
+        self.ldr = ldr 
         self.build_ui()
-
         self.ui_map = None
 
     def validate_number_entry(self, input):
@@ -394,65 +353,6 @@ class UITeamConfig(tk.Frame):
                 team_data[new_name]=current_team
 
                 self.populate_team_listbox()
-
-
-        # if (
-        #     self.team_name_entry.entry.get() in self.team_data.keys()
-        #     and self.team_name_entry.entry.get() != self.select_team_listbox.get()
-        # ):
-            
-        # else:
-        #     if (
-        #         self.team_size_entry.entry.get() != ""
-        #         and self.callsign_entry.entry.get() != ""
-        #         and self.team_name_entry.entry.get() != ""
-        #         and self.squad_entry.entry.get() != ""
-        #         and self.agent_object_entry.entry.get() != ""
-        #         and self.ai_file_entry.entry.get() != ""
-        #     ):
-        #         self.current_team_data["size"] = int(self.team_size_entry.entry.get())
-        #         self.current_team_data["agent_defs"][0][
-        #             "callsign"
-        #         ] = self.callsign_entry.entry.get()
-        #         self.current_team_data["name"] = self.team_name_entry.entry.get()
-        #         self.current_team_data["agent_defs"][0][
-        #             "squad"
-        #         ] = self.squad_entry.entry.get()
-        #         self.current_team_data["agent_defs"][0][
-        #             "object"
-        #         ] = self.agent_object_entry.entry.get()
-        #         self.current_team_data["agent_defs"][0][
-        #             "AI_file"
-        #         ] = self.ai_file_entry.entry.get()
-
-        #         self.team_data.update(
-        #             {self.current_team_data["name"]: self.current_team_data}
-        #         )
-
-        #         self.teams_json = json.dumps(self.team_data, indent=4)
-
-        #         with open("settings/teams.json", "r") as f:
-        #             team_json = json.load(f)
-
-        #         if self.current_team_data["name"] != self.select_team_listbox.get():
-        #             if self.select_team_listbox.get() in team_json:
-        #                 team_json.pop(self.select_team_listbox.get())
-        #             if self.select_team_listbox.get() in self.team_data:
-        #                 self.team_data.pop(self.select_team_listbox.get())
-        #             self.team_names.pop(self.select_team_listbox.current())
-        #             self.team_names.append(self.current_team_data["name"])
-        #             self.select_team_listbox.config(values=self.team_names)
-        #             self.select_team_listbox.current(len(self.team_names) - 1)
-
-        #         team_json[self.current_team_data["name"]] = self.current_team_data
-
-        #         self.team_data[self.current_team_data["name"]] = self.current_team_data
-
-        #         f.close()
-
-        #         with open("settings/teams.json", "w") as f:
-        #             json.dump(team_json, f, indent=4)
-        #         f.close()
 
     
     ### DELETE ###
