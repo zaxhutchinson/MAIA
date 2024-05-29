@@ -495,6 +495,8 @@ class UIComponentConfig(tk.Frame):
 
     def populate_comp_listbox(self, event=None):
 
+        self.clear_all_fields()
+
         _ctype = self.select_component_type_combo.get()
         
         self.show_ctype_attr_frame(_ctype)
@@ -697,9 +699,9 @@ class UIComponentConfig(tk.Frame):
     def show_component(self):
         selected_comp = self.get_currently_selected_component()
         if selected_comp != None:
-            self.components_id_entry.entry.delete(0, tk.END)
+            self.clear_all_fields()
+
             self.components_id_entry.entry.insert(0, selected_comp["id"])
-            self.components_name_entry.entry.delete(0, tk.END)
             self.components_name_entry.entry.insert(0, selected_comp["name"])
 
             match(selected_comp["ctype"]):
@@ -717,53 +719,56 @@ class UIComponentConfig(tk.Frame):
                     self.show_arm(selected_comp)
 
     def show_fixed_gun(self, comp):
-        self.fg_reload_ticks_entry.entry.delete(0, tk.END)
-        self.fg_ammo_entry.entry.delete(0, tk.END)
-        self.fg_min_damage_entry.entry.delete(0, tk.END)
-        self.fg_max_damage_entry.entry.delete(0, tk.END)
-        self.fg_wpn_range_entry.entry.delete(0, tk.END)
-
         self.fg_reload_ticks_entry.entry.insert(0, comp["reload_ticks"])
         self.fg_ammo_entry.entry.insert(0, comp["ammunition"])
         self.fg_min_damage_entry.entry.insert(0, comp["min_damage"])
         self.fg_max_damage_entry.entry.insert(0, comp["max_damage"])
         self.fg_wpn_range_entry.entry.insert(0, comp["range"])
-
     def show_engine(self, comp):
-        self.engine_min_speed_entry.entry.delete(0, tk.END)
-        self.engine_max_speed_entry.entry.delete(0, tk.END)
-        self.engine_max_turnrate_entry.entry.delete(0, tk.END)
-
         self.engine_min_speed_entry.entry.insert(0, comp["min_speed"])
         self.engine_max_speed_entry.entry.insert(0, comp["max_speed"])
         self.engine_max_turnrate_entry.entry.insert(0, comp["max_turnrate"])
     def show_radar(self, comp):
-        self.radar_range_entry.entry.delete(0, tk.END)
-        self.radar_level_entry.entry.delete(0, tk.END)
-        self.radar_visarc_entry.entry.delete(0, tk.END)
-        self.radar_offset_angle_entry.entry.delete(0, tk.END)
-        self.radar_resolution_entry.entry.delete(0, tk.END)
-
         self.radar_range_entry.entry.insert(0, comp["range"])
         self.radar_level_entry.entry.insert(0, comp["level"])
         self.radar_visarc_entry.entry.insert(0, comp["visarc"])
         self.radar_offset_angle_entry.entry.insert(0, comp["offset_angle"])
         self.radar_resolution_entry.entry.insert(0, comp["resolution"])
-
     def show_cnc(self, comp):
-        self.cnc_max_commands_per_tick_entry.entry.delete(0, tk.END)
-        
         self.cnc_max_commands_per_tick_entry.entry.insert(0, comp["max_cmds_per_tick"])
     def show_radio(self, comp):
-        self.radio_max_broadcast_range_entry.entry.delete(0, tk.END)
-
         self.radio_max_broadcast_range_entry.entry.insert(0, comp["max_range"])
     def show_arm(self, comp):
-        self.arm_max_weight_entry.entry.delete(0, tk.END)
-        self.arm_max_bulk_entry.entry.delete(0, tk.END)
-
         self.arm_max_weight_entry.entry.insert(0, comp["max_weight"])
         self.arm_max_bulk_entry.entry.insert(0, comp["max_bulk"])
+
+    def clear_all_fields(self):
+        # General
+        self.components_id_entry.entry.delete(0, tk.END)
+        self.components_name_entry.entry.delete(0, tk.END)
+        # FixedGun
+        self.fg_reload_ticks_entry.entry.delete(0, tk.END)
+        self.fg_ammo_entry.entry.delete(0, tk.END)
+        self.fg_min_damage_entry.entry.delete(0, tk.END)
+        self.fg_max_damage_entry.entry.delete(0, tk.END)
+        self.fg_wpn_range_entry.entry.delete(0, tk.END)
+        # Engine
+        self.engine_min_speed_entry.entry.delete(0, tk.END)
+        self.engine_max_speed_entry.entry.delete(0, tk.END)
+        self.engine_max_turnrate_entry.entry.delete(0, tk.END)
+        # Radar
+        self.radar_range_entry.entry.delete(0, tk.END)
+        self.radar_level_entry.entry.delete(0, tk.END)
+        self.radar_visarc_entry.entry.delete(0, tk.END)
+        self.radar_offset_angle_entry.entry.delete(0, tk.END)
+        self.radar_resolution_entry.entry.delete(0, tk.END)
+        # CnC
+        self.cnc_max_commands_per_tick_entry.entry.delete(0, tk.END)
+        # Radio
+        self.radio_max_broadcast_range_entry.entry.delete(0, tk.END)
+        # Arm
+        self.arm_max_weight_entry.entry.delete(0, tk.END)
+        self.arm_max_bulk_entry.entry.delete(0, tk.END)
 
     def get_currently_selected_component(self):
         comp_index = self.select_comp_listbox.curselection()
@@ -1081,7 +1086,7 @@ class UIComponentConfig(tk.Frame):
             print(e)
 
 
-
+    
 
         # if (
         #     self.components_id_entry.entry.get() in self.component_data.keys()
@@ -1400,20 +1405,28 @@ class UIComponentConfig(tk.Frame):
         """
         Deletes the currently selected component from the JSON and component dictionary.
         """
-        if self.select_component_combo.get().split(":")[0] in self.component_data:
-            self.component_data.pop(self.select_component_combo.get().split(":")[0])
 
-            with open("settings/components.json", "r") as f:
-                component_json = json.load(f)
-                component_json.pop(self.select_component_combo.get().split(":")[0])
-            f.close()
-            with open("settings/components.json", "w") as f:
-                json.dump(component_json, f, indent=4)
-            f.close()
-            self.component_ids.pop(self.select_component_combo.current())
-            self.select_component_combo.configure(values=self.component_ids)
-            self.select_component_combo.current(len(self.component_ids) - 1)
-            self.change_components_entry_widgets()
+        component_data = self.ldr.get_comp_templates()
+
+        selected_comp = self.get_currently_selected_component()
+        if selected_comp != None:
+            del component_data[selected_comp["id"]]
+            self.populate_comp_listbox()
+
+        # if self.select_component_combo.get().split(":")[0] in self.component_data:
+        #     self.component_data.pop(self.select_component_combo.get().split(":")[0])
+
+        #     with open("settings/components.json", "r") as f:
+        #         component_json = json.load(f)
+        #         component_json.pop(self.select_component_combo.get().split(":")[0])
+        #     f.close()
+        #     with open("settings/components.json", "w") as f:
+        #         json.dump(component_json, f, indent=4)
+        #     f.close()
+        #     self.component_ids.pop(self.select_component_combo.current())
+        #     self.select_component_combo.configure(values=self.component_ids)
+        #     self.select_component_combo.current(len(self.component_ids) - 1)
+        #     self.change_components_entry_widgets()
 
     def goto_home(self):
         self.controller.show_frame("home_page")
