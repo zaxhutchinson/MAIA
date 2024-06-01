@@ -190,7 +190,7 @@ class UIComponentConfig(tk.Frame):
         )
         self.select_comp_listbox.pack(side=tk.LEFT,fill=tk.BOTH)
         self.select_comp_listbox.bind(
-            "<<ListboxSelect>>", self.component_selected
+            "<<ListboxSelect>>", self.show_component
         )
 
         self.build_general_comp_ui()
@@ -544,159 +544,159 @@ class UIComponentConfig(tk.Frame):
             self.current_comp_attribute_frame.pack(side=tk.LEFT, fill=tk.BOTH)
         
 
-    def init_entry_widgets(self):
-        """
-        Gets information from the loader and assigns current values for each setting type.
-        """
+    # def init_entry_widgets(self):
+    #     """
+    #     Gets information from the loader and assigns current values for each setting type.
+    #     """
         
 
-        # COMPONENT
-        self.component_data = self.ldr.comp_templates
-        self.component_ids = self.ldr.get_comp_ids()
-        self.component_names = self.ldr.get_comp_names()
-        for i in range(len(self.component_ids)):
-            self.component_ids[i] = (
-                self.component_ids[i] + ": " + self.component_names[i]
-            )
-        self.component_types = self.ldr.get_comp_types()
-        self.current_component_data = self.component_data[
-            self.component_ids[0].split(":")[0]
-        ]
-        self.component_type_attr = self.current_component_data.view_keys
+    #     # COMPONENT
+    #     self.component_data = self.ldr.comp_templates
+    #     self.component_ids = self.ldr.get_comp_ids()
+    #     self.component_names = self.ldr.get_comp_names()
+    #     for i in range(len(self.component_ids)):
+    #         self.component_ids[i] = (
+    #             self.component_ids[i] + ": " + self.component_names[i]
+    #         )
+    #     self.component_types = self.ldr.get_comp_types()
+    #     self.current_component_data = self.component_data[
+    #         self.component_ids[0].split(":")[0]
+    #     ]
+    #     self.component_type_attr = self.current_component_data.view_keys
 
-        self.select_component_combo.configure(values=self.component_ids)
-        self.select_component_combo.current(0)
-        self.select_component_combo.bind(
-            "<<ComboboxSelected>>", self.change_components_entry_widgets
-        )
-        self.select_component_combo.bind("<Enter>", self.get_previous_component_combo)
+    #     self.select_component_combo.configure(values=self.component_ids)
+    #     self.select_component_combo.current(0)
+    #     self.select_component_combo.bind(
+    #         "<<ComboboxSelected>>", self.change_components_entry_widgets
+    #     )
+    #     self.select_component_combo.bind("<Enter>", self.get_previous_component_combo)
 
-        self.show_component_entries(self.current_component_data)
+    #     self.show_component_entries(self.current_component_data)
 
         
 
-    def get_previous_component_combo(self, event):
-        self.prev_component_combo = self.select_component_combo.current()
+    # def get_previous_component_combo(self, event):
+    #     self.prev_component_combo = self.select_component_combo.current()
 
     
 
-    def change_components_entry_widgets(self, event=None):
-        """
-        Gets the correct component data for the currently selected team.
-        """
-        self.answer = True
+    # def change_components_entry_widgets(self, event=None):
+    #     """
+    #     Gets the correct component data for the currently selected team.
+    #     """
+    #     self.answer = True
 
-        if self.current_component_data.get_data("ctype") == "CnC":
-            ctype_attributes = self.cnc_keys
-        elif self.current_component_data.get_data("ctype") == "FixedGun":
-            ctype_attributes = self.fixed_gun_keys
-        elif self.current_component_data.get_data("ctype") == "Engine":
-            ctype_attributes = self.engine_keys
-        elif self.current_component_data.get_data("ctype") == "Radar":
-            ctype_attributes = self.radar_keys
-        elif self.current_component_data.get_data("ctype") == "Radio":
-            ctype_attributes = self.radio_keys
-        elif self.current_component_data.get_data("ctype") == "Arm":
-            ctype_attributes = self.arm_keys
+    #     if self.current_component_data.get_data("ctype") == "CnC":
+    #         ctype_attributes = self.cnc_keys
+    #     elif self.current_component_data.get_data("ctype") == "FixedGun":
+    #         ctype_attributes = self.fixed_gun_keys
+    #     elif self.current_component_data.get_data("ctype") == "Engine":
+    #         ctype_attributes = self.engine_keys
+    #     elif self.current_component_data.get_data("ctype") == "Radar":
+    #         ctype_attributes = self.radar_keys
+    #     elif self.current_component_data.get_data("ctype") == "Radio":
+    #         ctype_attributes = self.radio_keys
+    #     elif self.current_component_data.get_data("ctype") == "Arm":
+    #         ctype_attributes = self.arm_keys
 
-        if not (
-            (
-                (
-                    self.components_id_entry.entry.get()
-                    == self.current_component_data.get_data("id")
-                )
-                and (
-                    self.components_name_entry.entry.get()
-                    == self.current_component_data.get_data("name")
-                )
-                and (
-                    self.components_type_combo.get()
-                    == self.current_component_data.get_data("ctype")
-                )
-                and (
-                    self.components_type_attr1_entry.entry.get()
-                    == str(self.current_component_data.get_data(ctype_attributes[0]))
-                )
-                and (
-                    (len(ctype_attributes) < 2)
-                    or (
-                        self.components_type_attr2_entry.entry.get()
-                        == str(
-                            self.current_component_data.get_data(ctype_attributes[1])
-                        )
-                    )
-                )
-                and (
-                    (len(ctype_attributes) < 3)
-                    or self.current_component_data.get_data(ctype_attributes[2]) is None
-                    or (
-                        self.components_type_attr3_entry.entry.get()
-                        == str(
-                            self.current_component_data.get_data(ctype_attributes[2])
-                        )
-                    )
-                )
-                and (
-                    (len(ctype_attributes) < 4)
-                    or (
-                        self.components_type_attr4_entry.entry.get()
-                        == str(
-                            self.current_component_data.get_data(ctype_attributes[3])
-                        )
-                    )
-                )
-                and (
-                    (len(ctype_attributes) < 5)
-                    or (
-                        self.components_type_attr5_entry.entry.get()
-                        == str(
-                            self.current_component_data.get_data(ctype_attributes[4])
-                        )
-                    )
-                )
-                and (
-                    (len(ctype_attributes) < 6)
-                    or (
-                        self.components_type_attr6_entry.entry.get()
-                        == str(
-                            self.current_component_data.get_data(ctype_attributes[5])
-                        )
-                    )
-                )
-                and (
-                    (len(ctype_attributes) < 7)
-                    or (
-                        self.components_type_attr7_entry.entry.get()
-                        == str(
-                            self.current_component_data.get_data(ctype_attributes[6])
-                        )
-                    )
-                )
-            )
-        ):
-            self.answer = askyesno(
-                title="confirmation",
-                message="""Warning: You have modified Component values and have not Updated.
-                 Your changes will not be saved. Are you sure you would like continue?""",
-            )
+    #     if not (
+    #         (
+    #             (
+    #                 self.components_id_entry.entry.get()
+    #                 == self.current_component_data.get_data("id")
+    #             )
+    #             and (
+    #                 self.components_name_entry.entry.get()
+    #                 == self.current_component_data.get_data("name")
+    #             )
+    #             and (
+    #                 self.components_type_combo.get()
+    #                 == self.current_component_data.get_data("ctype")
+    #             )
+    #             and (
+    #                 self.components_type_attr1_entry.entry.get()
+    #                 == str(self.current_component_data.get_data(ctype_attributes[0]))
+    #             )
+    #             and (
+    #                 (len(ctype_attributes) < 2)
+    #                 or (
+    #                     self.components_type_attr2_entry.entry.get()
+    #                     == str(
+    #                         self.current_component_data.get_data(ctype_attributes[1])
+    #                     )
+    #                 )
+    #             )
+    #             and (
+    #                 (len(ctype_attributes) < 3)
+    #                 or self.current_component_data.get_data(ctype_attributes[2]) is None
+    #                 or (
+    #                     self.components_type_attr3_entry.entry.get()
+    #                     == str(
+    #                         self.current_component_data.get_data(ctype_attributes[2])
+    #                     )
+    #                 )
+    #             )
+    #             and (
+    #                 (len(ctype_attributes) < 4)
+    #                 or (
+    #                     self.components_type_attr4_entry.entry.get()
+    #                     == str(
+    #                         self.current_component_data.get_data(ctype_attributes[3])
+    #                     )
+    #                 )
+    #             )
+    #             and (
+    #                 (len(ctype_attributes) < 5)
+    #                 or (
+    #                     self.components_type_attr5_entry.entry.get()
+    #                     == str(
+    #                         self.current_component_data.get_data(ctype_attributes[4])
+    #                     )
+    #                 )
+    #             )
+    #             and (
+    #                 (len(ctype_attributes) < 6)
+    #                 or (
+    #                     self.components_type_attr6_entry.entry.get()
+    #                     == str(
+    #                         self.current_component_data.get_data(ctype_attributes[5])
+    #                     )
+    #                 )
+    #             )
+    #             and (
+    #                 (len(ctype_attributes) < 7)
+    #                 or (
+    #                     self.components_type_attr7_entry.entry.get()
+    #                     == str(
+    #                         self.current_component_data.get_data(ctype_attributes[6])
+    #                     )
+    #                 )
+    #             )
+    #         )
+    #     ):
+    #         self.answer = askyesno(
+    #             title="confirmation",
+    #             message="""Warning: You have modified Component values and have not Updated.
+    #              Your changes will not be saved. Are you sure you would like continue?""",
+    #         )
 
-        if self.answer is True:
-            current_component_idx = self.select_component_combo.current()
-            self.component_type_attr = self.component_data[
-                self.component_ids[current_component_idx].split(":")[0]
-            ].view_keys
-            self.current_component_data = self.component_data[
-                self.component_ids[current_component_idx].split(":")[0]
-            ]
-            self.show_component_entries(self.current_component_data)
-        else:
-            self.select_component_combo.current(self.prev_component_combo)
+    #     if self.answer is True:
+    #         current_component_idx = self.select_component_combo.current()
+    #         self.component_type_attr = self.component_data[
+    #             self.component_ids[current_component_idx].split(":")[0]
+    #         ].view_keys
+    #         self.current_component_data = self.component_data[
+    #             self.component_ids[current_component_idx].split(":")[0]
+    #         ]
+    #         self.show_component_entries(self.current_component_data)
+    #     else:
+    #         self.select_component_combo.current(self.prev_component_combo)
 
     
-    def component_selected(self, event=None):
-        self.show_component()
+    # def component_selected(self):
+    #     self.show_component()
 
-    def show_component(self):
+    def show_component(self, event=None):
         selected_comp = self.get_currently_selected_component()
         if selected_comp != None:
             self.clear_all_fields()
@@ -780,229 +780,229 @@ class UIComponentConfig(tk.Frame):
             return None
 
 
-    def show_component_entries(self, current_comp):
-        """
-        Updates the values in the component entry widgets.
-        """
-        self.component_type_attr = current_comp.view_keys
-        self.components_id_entry.entry.delete(0, tk.END)
-        self.components_id_entry.entry.insert(0, current_comp.get_data("id"))
-        self.components_name_entry.entry.delete(0, tk.END)
-        self.components_name_entry.entry.insert(
-            0,
-            current_comp.get_data("name"),
-        )
-        self.components_type_combo.configure(values=self.component_types)
-        self.components_type_combo.set(current_comp.get_data("ctype"))
-        self.components_type_label.config(text=current_comp.get_data("ctype"))
-        self.components_type_attr1_entry.entry.configure(state="normal")
-        self.components_type_attr2_entry.entry.configure(state="normal")
-        self.components_type_attr3_entry.entry.configure(state="normal")
-        self.components_type_attr4_entry.entry.configure(state="normal")
-        self.components_type_attr5_entry.entry.configure(state="normal")
-        self.components_type_attr6_entry.entry.configure(state="normal")
-        self.components_type_attr7_entry.entry.configure(state="normal")
-        self.components_type_attr1_entry.help_button.configure(state="normal")
-        self.components_type_attr2_entry.help_button.configure(state="normal")
-        self.components_type_attr3_entry.help_button.configure(state="normal")
-        self.components_type_attr4_entry.help_button.configure(state="normal")
-        self.components_type_attr5_entry.help_button.configure(state="normal")
-        self.components_type_attr6_entry.help_button.configure(state="normal")
-        self.components_type_attr7_entry.help_button.configure(state="normal")
-        self.components_type_attr1_label.config(text="")
-        self.components_type_attr2_label.config(text="")
-        self.components_type_attr3_label.config(text="")
-        self.components_type_attr4_label.config(text="")
-        self.components_type_attr5_label.config(text="")
-        self.components_type_attr6_label.config(text="")
-        self.components_type_attr7_label.config(text="")
-        self.components_type_attr1_entry.entry.delete(0, tk.END)
-        self.components_type_attr1_entry.entry.config(
-            validate="key", validatecommand=(self.validate_num, "%P")
-        )
-        self.components_type_attr2_entry.entry.delete(0, tk.END)
-        self.components_type_attr3_entry.entry.delete(0, tk.END)
-        self.components_type_attr3_entry.entry.config(
-            validate="key", validatecommand=(self.validate_num, "%P")
-        )
-        self.components_type_attr4_entry.entry.delete(0, tk.END)
-        self.components_type_attr5_entry.entry.delete(0, tk.END)
-        self.components_type_attr6_entry.entry.delete(0, tk.END)
-        self.components_type_attr7_entry.entry.delete(0, tk.END)
+    # def show_component_entries(self, current_comp):
+    #     """
+    #     Updates the values in the component entry widgets.
+    #     """
+    #     self.component_type_attr = current_comp.view_keys
+    #     self.components_id_entry.entry.delete(0, tk.END)
+    #     self.components_id_entry.entry.insert(0, current_comp.get_data("id"))
+    #     self.components_name_entry.entry.delete(0, tk.END)
+    #     self.components_name_entry.entry.insert(
+    #         0,
+    #         current_comp.get_data("name"),
+    #     )
+    #     self.components_type_combo.configure(values=self.component_types)
+    #     self.components_type_combo.set(current_comp.get_data("ctype"))
+    #     self.components_type_label.config(text=current_comp.get_data("ctype"))
+    #     self.components_type_attr1_entry.entry.configure(state="normal")
+    #     self.components_type_attr2_entry.entry.configure(state="normal")
+    #     self.components_type_attr3_entry.entry.configure(state="normal")
+    #     self.components_type_attr4_entry.entry.configure(state="normal")
+    #     self.components_type_attr5_entry.entry.configure(state="normal")
+    #     self.components_type_attr6_entry.entry.configure(state="normal")
+    #     self.components_type_attr7_entry.entry.configure(state="normal")
+    #     self.components_type_attr1_entry.help_button.configure(state="normal")
+    #     self.components_type_attr2_entry.help_button.configure(state="normal")
+    #     self.components_type_attr3_entry.help_button.configure(state="normal")
+    #     self.components_type_attr4_entry.help_button.configure(state="normal")
+    #     self.components_type_attr5_entry.help_button.configure(state="normal")
+    #     self.components_type_attr6_entry.help_button.configure(state="normal")
+    #     self.components_type_attr7_entry.help_button.configure(state="normal")
+    #     self.components_type_attr1_label.config(text="")
+    #     self.components_type_attr2_label.config(text="")
+    #     self.components_type_attr3_label.config(text="")
+    #     self.components_type_attr4_label.config(text="")
+    #     self.components_type_attr5_label.config(text="")
+    #     self.components_type_attr6_label.config(text="")
+    #     self.components_type_attr7_label.config(text="")
+    #     self.components_type_attr1_entry.entry.delete(0, tk.END)
+    #     self.components_type_attr1_entry.entry.config(
+    #         validate="key", validatecommand=(self.validate_num, "%P")
+    #     )
+    #     self.components_type_attr2_entry.entry.delete(0, tk.END)
+    #     self.components_type_attr3_entry.entry.delete(0, tk.END)
+    #     self.components_type_attr3_entry.entry.config(
+    #         validate="key", validatecommand=(self.validate_num, "%P")
+    #     )
+    #     self.components_type_attr4_entry.entry.delete(0, tk.END)
+    #     self.components_type_attr5_entry.entry.delete(0, tk.END)
+    #     self.components_type_attr6_entry.entry.delete(0, tk.END)
+    #     self.components_type_attr7_entry.entry.delete(0, tk.END)
 
-        if current_comp.get_data("ctype") == "CnC":
-            self.components_type_attr1_label.config(text=self.component_type_attr[4])
-            self.components_type_attr1_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[4])
-            )
-            self.components_type_attr2_entry.entry.configure(state="readonly")
-            self.components_type_attr3_entry.entry.configure(state="readonly")
-            self.components_type_attr4_entry.entry.configure(state="readonly")
-            self.components_type_attr5_entry.entry.configure(state="readonly")
-            self.components_type_attr6_entry.entry.configure(state="readonly")
-            self.components_type_attr7_entry.entry.configure(state="readonly")
-            self.components_type_attr2_entry.help_button.configure(state="disabled")
-            self.components_type_attr3_entry.help_button.configure(state="disabled")
-            self.components_type_attr4_entry.help_button.configure(state="disabled")
-            self.components_type_attr5_entry.help_button.configure(state="disabled")
-            self.components_type_attr6_entry.help_button.configure(state="disabled")
-            self.components_type_attr7_entry.help_button.configure(state="disabled")
-        elif current_comp.get_data("ctype") == "FixedGun":
-            self.components_type_attr3_entry.entry.configure(validate="none")
-            self.components_type_attr1_label.config(text=self.component_type_attr[4])
-            self.components_type_attr1_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[4])
-            )
-            self.components_type_attr2_label.config(text=self.component_type_attr[5])
-            self.components_type_attr2_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[5])
-            )
-            self.components_type_attr3_label.config(text=self.component_type_attr[6])
-            self.components_type_attr3_entry.entry.insert(
-                0,
-                (
-                    current_comp.get_data(self.component_type_attr[6])
-                    if current_comp.get_data("reloading") is not False
-                    else "False"
-                ),
-            )
-            self.components_type_attr3_entry.entry.configure(
-                state="readonly", validate="none"
-            )
-            self.components_type_attr4_label.config(text=self.component_type_attr[7])
-            self.components_type_attr4_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[7])
-            )
-            self.components_type_attr5_label.config(text=self.component_type_attr[8])
-            self.components_type_attr5_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[8])
-            )
-            self.components_type_attr6_label.config(text=self.component_type_attr[9])
-            self.components_type_attr6_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[9])
-            )
-            self.components_type_attr7_label.config(text=self.component_type_attr[10])
-            self.components_type_attr7_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[10])
-            )
-        elif current_comp.get_data("ctype") == "Engine":
-            self.components_type_attr1_label.config(text=self.component_type_attr[4])
-            self.components_type_attr1_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[4])
-            )
-            self.components_type_attr2_label.config(text=self.component_type_attr[5])
-            self.components_type_attr2_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[5])
-            )
-            self.components_type_attr3_label.config(text=self.component_type_attr[6])
-            self.components_type_attr3_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[6])
-            )
-            self.components_type_attr4_label.config(text=self.component_type_attr[7])
-            self.components_type_attr4_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[7])
-            )
-            self.components_type_attr5_label.config(text=self.component_type_attr[8])
-            self.components_type_attr5_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[8])
-            )
-            self.components_type_attr6_entry.entry.configure(state="readonly")
-            self.components_type_attr7_entry.entry.configure(state="readonly")
-            self.components_type_attr6_entry.help_button.configure(state="disabled")
-            self.components_type_attr7_entry.help_button.configure(state="disabled")
-        elif current_comp.get_data("ctype") == "Radar":
-            self.components_type_attr1_entry.entry.configure(validate="none")
-            self.components_type_attr1_label.config(text=self.component_type_attr[4])
-            self.components_type_attr1_entry.entry.insert(
-                0,
-                (
-                    current_comp.get_data(self.component_type_attr[4])
-                    if current_comp.get_data("active") is not False
-                    else "False"
-                ),
-            )
-            self.components_type_attr1_entry.entry.configure(
-                state="readonly", validate="none"
-            )
-            self.components_type_attr2_label.config(text=self.component_type_attr[5])
-            self.components_type_attr2_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[5])
-            )
-            self.components_type_attr3_label.config(text=self.component_type_attr[6])
-            self.components_type_attr3_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[6])
-            )
-            self.components_type_attr4_label.config(text=self.component_type_attr[7])
-            self.components_type_attr4_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[7])
-            )
-            self.components_type_attr5_label.config(text=self.component_type_attr[8])
-            self.components_type_attr5_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[8])
-            )
-            self.components_type_attr6_label.config(text=self.component_type_attr[9])
-            self.components_type_attr6_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[9])
-            )
-            self.components_type_attr7_entry.entry.configure(state="readonly")
-            self.components_type_attr7_entry.help_button.configure(state="disabled")
-        elif current_comp.get_data("ctype") == "Radio":
-            self.components_type_attr3_entry.entry.configure(validate="none")
-            self.components_type_attr1_label.config(text="max_range")
-            self.components_type_attr1_entry.entry.insert(
-                0, current_comp.get_data("max_range")
-            )
-            self.components_type_attr2_label.config(text="cur_range")
-            self.components_type_attr2_entry.entry.insert(
-                0, current_comp.get_data("cur_range")
-            )
-            self.components_type_attr3_label.config(text="message")
-            self.components_type_attr3_entry.entry.insert(
-                0,
-                (
-                    current_comp.get_data("message")
-                    if current_comp.get_data("message") is not None
-                    else "null"
-                ),
-            )
-            self.components_type_attr3_entry.entry.configure(state="readonly")
-            self.components_type_attr4_entry.entry.configure(state="readonly")
-            self.components_type_attr5_entry.entry.configure(state="readonly")
-            self.components_type_attr6_entry.entry.configure(state="readonly")
-            self.components_type_attr7_entry.entry.configure(state="readonly")
-            self.components_type_attr4_entry.help_button.configure(state="disabled")
-            self.components_type_attr5_entry.help_button.configure(state="disabled")
-            self.components_type_attr6_entry.help_button.configure(state="disabled")
-            self.components_type_attr7_entry.help_button.configure(state="disabled")
-        elif self.current_component_data.get_data("ctype") == "Arm":
-            self.components_type_attr3_entry.entry.configure(validate="none")
-            self.components_type_attr1_label.config(text=self.component_type_attr[4])
-            self.components_type_attr1_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[4])
-            )
-            self.components_type_attr2_label.config(text=self.component_type_attr[5])
-            self.components_type_attr2_entry.entry.insert(
-                0, current_comp.get_data(self.component_type_attr[5])
-            )
-            self.components_type_attr3_label.config(text=self.component_type_attr[6])
-            self.components_type_attr3_entry.entry.insert(
-                0,
-                (
-                    current_comp.get_data(self.component_type_attr[6])
-                    if current_comp.get_data(self.component_type_attr[6]) is not None
-                    else "null"
-                ),
-            )
-            self.components_type_attr3_entry.entry.configure(state="readonly")
-            self.components_type_attr4_entry.entry.configure(state="readonly")
-            self.components_type_attr5_entry.entry.configure(state="readonly")
-            self.components_type_attr6_entry.entry.configure(state="readonly")
-            self.components_type_attr7_entry.entry.configure(state="readonly")
-            self.components_type_attr4_entry.help_button.configure(state="disabled")
-            self.components_type_attr5_entry.help_button.configure(state="disabled")
-            self.components_type_attr6_entry.help_button.configure(state="disabled")
-            self.components_type_attr7_entry.help_button.configure(state="disabled")
-        self.comp_general_frame.update_idletasks()
+    #     if current_comp.get_data("ctype") == "CnC":
+    #         self.components_type_attr1_label.config(text=self.component_type_attr[4])
+    #         self.components_type_attr1_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[4])
+    #         )
+    #         self.components_type_attr2_entry.entry.configure(state="readonly")
+    #         self.components_type_attr3_entry.entry.configure(state="readonly")
+    #         self.components_type_attr4_entry.entry.configure(state="readonly")
+    #         self.components_type_attr5_entry.entry.configure(state="readonly")
+    #         self.components_type_attr6_entry.entry.configure(state="readonly")
+    #         self.components_type_attr7_entry.entry.configure(state="readonly")
+    #         self.components_type_attr2_entry.help_button.configure(state="disabled")
+    #         self.components_type_attr3_entry.help_button.configure(state="disabled")
+    #         self.components_type_attr4_entry.help_button.configure(state="disabled")
+    #         self.components_type_attr5_entry.help_button.configure(state="disabled")
+    #         self.components_type_attr6_entry.help_button.configure(state="disabled")
+    #         self.components_type_attr7_entry.help_button.configure(state="disabled")
+    #     elif current_comp.get_data("ctype") == "FixedGun":
+    #         self.components_type_attr3_entry.entry.configure(validate="none")
+    #         self.components_type_attr1_label.config(text=self.component_type_attr[4])
+    #         self.components_type_attr1_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[4])
+    #         )
+    #         self.components_type_attr2_label.config(text=self.component_type_attr[5])
+    #         self.components_type_attr2_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[5])
+    #         )
+    #         self.components_type_attr3_label.config(text=self.component_type_attr[6])
+    #         self.components_type_attr3_entry.entry.insert(
+    #             0,
+    #             (
+    #                 current_comp.get_data(self.component_type_attr[6])
+    #                 if current_comp.get_data("reloading") is not False
+    #                 else "False"
+    #             ),
+    #         )
+    #         self.components_type_attr3_entry.entry.configure(
+    #             state="readonly", validate="none"
+    #         )
+    #         self.components_type_attr4_label.config(text=self.component_type_attr[7])
+    #         self.components_type_attr4_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[7])
+    #         )
+    #         self.components_type_attr5_label.config(text=self.component_type_attr[8])
+    #         self.components_type_attr5_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[8])
+    #         )
+    #         self.components_type_attr6_label.config(text=self.component_type_attr[9])
+    #         self.components_type_attr6_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[9])
+    #         )
+    #         self.components_type_attr7_label.config(text=self.component_type_attr[10])
+    #         self.components_type_attr7_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[10])
+    #         )
+    #     elif current_comp.get_data("ctype") == "Engine":
+    #         self.components_type_attr1_label.config(text=self.component_type_attr[4])
+    #         self.components_type_attr1_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[4])
+    #         )
+    #         self.components_type_attr2_label.config(text=self.component_type_attr[5])
+    #         self.components_type_attr2_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[5])
+    #         )
+    #         self.components_type_attr3_label.config(text=self.component_type_attr[6])
+    #         self.components_type_attr3_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[6])
+    #         )
+    #         self.components_type_attr4_label.config(text=self.component_type_attr[7])
+    #         self.components_type_attr4_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[7])
+    #         )
+    #         self.components_type_attr5_label.config(text=self.component_type_attr[8])
+    #         self.components_type_attr5_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[8])
+    #         )
+    #         self.components_type_attr6_entry.entry.configure(state="readonly")
+    #         self.components_type_attr7_entry.entry.configure(state="readonly")
+    #         self.components_type_attr6_entry.help_button.configure(state="disabled")
+    #         self.components_type_attr7_entry.help_button.configure(state="disabled")
+    #     elif current_comp.get_data("ctype") == "Radar":
+    #         self.components_type_attr1_entry.entry.configure(validate="none")
+    #         self.components_type_attr1_label.config(text=self.component_type_attr[4])
+    #         self.components_type_attr1_entry.entry.insert(
+    #             0,
+    #             (
+    #                 current_comp.get_data(self.component_type_attr[4])
+    #                 if current_comp.get_data("active") is not False
+    #                 else "False"
+    #             ),
+    #         )
+    #         self.components_type_attr1_entry.entry.configure(
+    #             state="readonly", validate="none"
+    #         )
+    #         self.components_type_attr2_label.config(text=self.component_type_attr[5])
+    #         self.components_type_attr2_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[5])
+    #         )
+    #         self.components_type_attr3_label.config(text=self.component_type_attr[6])
+    #         self.components_type_attr3_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[6])
+    #         )
+    #         self.components_type_attr4_label.config(text=self.component_type_attr[7])
+    #         self.components_type_attr4_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[7])
+    #         )
+    #         self.components_type_attr5_label.config(text=self.component_type_attr[8])
+    #         self.components_type_attr5_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[8])
+    #         )
+    #         self.components_type_attr6_label.config(text=self.component_type_attr[9])
+    #         self.components_type_attr6_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[9])
+    #         )
+    #         self.components_type_attr7_entry.entry.configure(state="readonly")
+    #         self.components_type_attr7_entry.help_button.configure(state="disabled")
+    #     elif current_comp.get_data("ctype") == "Radio":
+    #         self.components_type_attr3_entry.entry.configure(validate="none")
+    #         self.components_type_attr1_label.config(text="max_range")
+    #         self.components_type_attr1_entry.entry.insert(
+    #             0, current_comp.get_data("max_range")
+    #         )
+    #         self.components_type_attr2_label.config(text="cur_range")
+    #         self.components_type_attr2_entry.entry.insert(
+    #             0, current_comp.get_data("cur_range")
+    #         )
+    #         self.components_type_attr3_label.config(text="message")
+    #         self.components_type_attr3_entry.entry.insert(
+    #             0,
+    #             (
+    #                 current_comp.get_data("message")
+    #                 if current_comp.get_data("message") is not None
+    #                 else "null"
+    #             ),
+    #         )
+    #         self.components_type_attr3_entry.entry.configure(state="readonly")
+    #         self.components_type_attr4_entry.entry.configure(state="readonly")
+    #         self.components_type_attr5_entry.entry.configure(state="readonly")
+    #         self.components_type_attr6_entry.entry.configure(state="readonly")
+    #         self.components_type_attr7_entry.entry.configure(state="readonly")
+    #         self.components_type_attr4_entry.help_button.configure(state="disabled")
+    #         self.components_type_attr5_entry.help_button.configure(state="disabled")
+    #         self.components_type_attr6_entry.help_button.configure(state="disabled")
+    #         self.components_type_attr7_entry.help_button.configure(state="disabled")
+    #     elif self.current_component_data.get_data("ctype") == "Arm":
+    #         self.components_type_attr3_entry.entry.configure(validate="none")
+    #         self.components_type_attr1_label.config(text=self.component_type_attr[4])
+    #         self.components_type_attr1_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[4])
+    #         )
+    #         self.components_type_attr2_label.config(text=self.component_type_attr[5])
+    #         self.components_type_attr2_entry.entry.insert(
+    #             0, current_comp.get_data(self.component_type_attr[5])
+    #         )
+    #         self.components_type_attr3_label.config(text=self.component_type_attr[6])
+    #         self.components_type_attr3_entry.entry.insert(
+    #             0,
+    #             (
+    #                 current_comp.get_data(self.component_type_attr[6])
+    #                 if current_comp.get_data(self.component_type_attr[6]) is not None
+    #                 else "null"
+    #             ),
+    #         )
+    #         self.components_type_attr3_entry.entry.configure(state="readonly")
+    #         self.components_type_attr4_entry.entry.configure(state="readonly")
+    #         self.components_type_attr5_entry.entry.configure(state="readonly")
+    #         self.components_type_attr6_entry.entry.configure(state="readonly")
+    #         self.components_type_attr7_entry.entry.configure(state="readonly")
+    #         self.components_type_attr4_entry.help_button.configure(state="disabled")
+    #         self.components_type_attr5_entry.help_button.configure(state="disabled")
+    #         self.components_type_attr6_entry.help_button.configure(state="disabled")
+    #         self.components_type_attr7_entry.help_button.configure(state="disabled")
+    #     self.comp_general_frame.update_idletasks()
 
     
 
@@ -1339,9 +1339,9 @@ class UIComponentConfig(tk.Frame):
 
         comp_data.update({result["id"]: result})
 
-        comp_entry = f"{result["id"]}:{result["name"]}"
+        # comp_entry = f"{result["id"]}:{result["name"]}"
         
-
+        self.populate_comp_listbox()
 
         # self.component_id = askstring(
         #     "Component ID", "Please enter an ID for the new component."

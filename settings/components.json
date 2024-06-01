@@ -33,6 +33,14 @@
         "min_speed": -1.0,
         "name": "Small Engine"
     },
+    "2100": {
+        "ctype": "Engine",
+        "id": "2100",
+        "max_speed": 1.5,
+        "max_turnrate": 90.0,
+        "min_speed": -1.5,
+        "name": "Medium Engine"
+    },
     "3000": {
         "ctype": "Radar",
         "id": "3000",
