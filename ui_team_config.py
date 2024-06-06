@@ -347,12 +347,13 @@ class UITeamConfig(tk.Frame):
                         title="Warning",
                         message=f"{new_name} is in use by another team. Please use another name.",
                     )
-                old_name = current_team["name"]
-                current_team["name"] = new_name
-                del team_data[old_name]
-                team_data[new_name]=current_team
-
-                self.populate_team_listbox()
+                else:
+                    old_name = current_team["name"]
+                    current_team["name"] = new_name
+                    del team_data[old_name]
+            
+            team_data[new_name]=current_team
+            self.populate_team_listbox()
 
     
     ### DELETE ###

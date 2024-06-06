@@ -15,3 +15,12 @@ def action_to_string(action):
     for k, v in action.data.items():
         s += f"{k} [{str(v)}] "
     return s
+
+def is_int(i):
+    """Tests if i can be cast to an int."""
+    try:
+        int(i)
+    except:
+        return False
+    else:
+        return True

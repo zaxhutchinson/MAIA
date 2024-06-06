@@ -1,51 +1,35 @@
 {
     "0": {
+        "alive_sprite_filename": "metal_blocks.png",
+        "character": "X",
+        "color_alive": "gray1",
+        "color_dead": "black",
+        "comp_ids": [],
+        "dead_sprite_filename": "tombstone.png",
+        "density": 1000,
+        "health": 100000000000000000000,
         "id": "0",
-        "name" : "Indestructible Block",
-        "fill_alive":"gray1",
-        "fill_dead":"black",
-        "text":"X",
-        "health" : 100000000000000000000,
-        "density":1000,
-        "comp_ids" : [],
-        "points_count" : false,
-        "sprite_path" : "images/metal_blocks.png",
-        "death_sprite_path" : "images/tombstone.png"
+        "name": "Indestructible Block",
+        "points": 0
     },
     "1": {
+        "alive_sprite_filename": "finalBox.png",
+        "character": "B",
+        "color_alive": "tan4",
+        "color_dead": "black",
+        "comp_ids": [],
+        "dead_sprite_filename": "tombstone.png",
+        "density": "1000",
+        "health": "10",
         "id": "1",
-        "name" : "Box",
-        "fill_alive":"tan4",
-        "fill_dead":"black",
-        "text":"B",
-        "health" : 10,
-        "density":1000,
-        "comp_ids" : [],
-        "points_count" : false,
-        "sprite_path" : "images/finalBox.png",
-        "death_sprite_path" : "images/tombstone.png"
+        "name": "Box",
+        "points": "0"
     },
-    "blue_tank": {
-        "id": "blue_tank",
-        "name" : "Blue Tank",
-        "fill_alive":"blue1",
-        "fill_dead":"black",
-        "text":"L",     
-        "health" : 100,
-        "density":1000,
-        "comp_ids" : ["0","1000","2000","3000","4000","5000"],
-        "points_count" : true,
-        "sprite_path" : "images/blue_right1.png",
-        "death_sprite_path" : "images/tombstone.png"
-    },
-    "red_tank": {
-        "id": "red_tank",
-        "name": "Red Tank",
-        "fill_alive": "red1",
-        "fill_dead": "black",
-        "text": "&",
-        "health": 100,
-        "density": 1000,
+    "2": {
+        "alive_sprite_filename": "blue_right1.png",
+        "character": "L",
+        "color_alive": "blue1",
+        "color_dead": "black",
         "comp_ids": [
             "0",
             "1000",
@@ -54,65 +38,111 @@
             "4000",
             "5000"
         ],
-        "points_count": true,
-        "sprite_path" : "images/red_right1.png",
-        "death_sprite_path" : "images/tombstone.png"
-    },
-    "player": {
-        "id": "player",
-        "name": "player",
-        "fill_alive": "green",
-        "fill_dead": "black",
-        "text": "&",
-        "health": 100,
+        "dead_sprite_filename": "tombstone.png",
         "density": 1000,
+        "health": 100,
+        "id": "2",
+        "name": "Blue Tank",
+        "points": 100
+    },
+    "3": {
+        "alive_sprite_filename": "red_right1.png",
+        "character": "&",
+        "color_alive": "red1",
+        "color_dead": "black",
+        "comp_ids": [
+            "0",
+            "1000",
+            "2000",
+            "3000",
+            "4000",
+            "5000"
+        ],
+        "dead_sprite_filename": "tombstone.png",
+        "density": 1000,
+        "health": 100,
+        "id": "3",
+        "name": "Red Tank",
+        "points": 100
+    },
+    "4": {
+        "alive_sprite_filename": "stick.png",
+        "character": "&",
+        "color_alive": "green",
+        "color_dead": "black",
         "comp_ids": [
             "0",
             "2000",
             "3000"
         ],
-        "points_count": true,
-        "sprite_path": "images/stick.png",
-        "death_sprite_path" : "images/tombstone.png"
+        "dead_sprite_filename": "tombstone.png",
+        "density": 1000,
+        "health": 100,
+        "id": "4",
+        "name": "player",
+        "points": 100
     },
-    "start_loc": {
-        "id": "start_loc",
-        "name": "Starting Location",
-        "fill_alive": "white",
-        "fill_dead": "black",
-        "text": "S",
-        "health": 0,
-        "density": 0,
+    "5": {
+        "alive_sprite_filename": "wild_flower_13.png",
+        "character": "S",
+        "color_alive": "white",
+        "color_dead": "black",
         "comp_ids": [],
-        "points_count": false,
-        "sprite_path":"images/wild_flower_13.png",
-        "death_sprite_path" : "images/tombstone.png"
+        "dead_sprite_filename": "tombstone.png",
+        "density": 0,
+        "health": 0,
+        "id": "5",
+        "name": "Starting Location",
+        "points": 0
     },
-    "cliff": {
-        "id":"cliff",
-        "name":"cliff",
-        "fill_alive":"red",
-        "fill_dead":"black",
-        "text":"R",
-        "health" : 100,
-        "density":1000,
-        "comp_ids" : ["0","1000","2000","3000","4000","5000"],
-        "points_count" : true,
-        "sprite_path" : "images/cliff.png",
-        "death_sprite_path" : "images/tombstone.png"
-        
+    "6": {
+        "alive_sprite_filename": "cliff.png",
+        "character": "R",
+        "color_alive": "red",
+        "color_dead": "black",
+        "comp_ids": [
+            "0",
+            "1000",
+            "2000",
+            "3000",
+            "4000",
+            "5000"
+        ],
+        "dead_sprite_filename": "tombstone.png",
+        "density": 1000,
+        "health": 100,
+        "id": "6",
+        "name": "cliff",
+        "points": 100
     },
-    "fastplayer": {
-        "id": "player",
-        "name" : "player",
-        "fill_alive":"red",
-        "fill_dead":"black",
-        "text":"P",
-        "health" : 100,
-        "density":1000,
-        "comp_ids" : ["0","2000","3000"],
-        "points_count" : true,
-        "sprite_path": "images/arrow.png",
-        "death_sprite_path" : "images/tombstone.png"
+    "7": {
+        "alive_sprite_filename": "arrow.png",
+        "character": "P",
+        "color_alive": "red",
+        "color_dead": "black",
+        "comp_ids": [
+            "0",
+            "2000",
+            "3000"
+        ],
+        "dead_sprite_filename": "tombstone.png",
+        "density": 1000,
+        "health": 100,
+        "id": "7",
+        "name": "player",
+        "points": 100
+    },
+    "90": {
+        "alive_sprite_filename": "",
+        "character": "O",
+        "color_alive": "green",
+        "color_dead": "red",
+        "comp_ids": [],
+        "dead_sprite_filename": "",
+        "density": 0,
+        "health": 0,
+        "id": "90",
+        "name": "None",
+        "points": 0
     }
 }

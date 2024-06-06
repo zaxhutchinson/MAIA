@@ -41,8 +41,10 @@ else:
 class uiListBox(tk.Listbox):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, kwargs)
+        if "selectmode" not in kwargs:
+            kwargs["selectmode"]=tk.SINGLE
         self.config(
-            selectmode=tk.SINGLE,
+            selectmode=kwargs["selectmode"],
             bg=BOXFILLCOLOR,
             fg=TEXTCOLOR,
             highlightthickness=1,

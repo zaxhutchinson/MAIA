@@ -59,7 +59,8 @@ class App(tk.Tk):
             ldr = self.ldr
         )
         self.frames["config_object"] = ui_object_config.UIObjectConfig(
-            master=self.container, controller=self, logger=self.logger
+            master=self.container, controller=self, logger=self.logger,
+            ldr = self.ldr
         )
         self.frames["config_map"] = ui_map_config.UIMapConfig(
             master=self.container, controller=self, logger=self.logger

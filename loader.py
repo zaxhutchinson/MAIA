@@ -28,7 +28,7 @@ class Loader:
         self.DIRECTORY = "settings"
         self.MAIN_JSON_FILENAME = f"{self.DIRECTORY}/main.json"
         self.COMPONENTS_JSON_FILENAME = f"{self.DIRECTORY}/components.json"
-        self.OBJECT_JSON_FILENAME = f"{self.DIRECTORY}/objects.json"
+        self.OBJECTS_JSON_FILENAME = f"{self.DIRECTORY}/objects.json"
         self.ITEM_JSON_FILENAME = f"{self.DIRECTORY}/items.json"
         self.MAP_JSON_FILENAME = f"{self.DIRECTORY}/maps.json"
         self.TEAM_JSON_FILENAME = f"{self.DIRECTORY}/teams.json"
@@ -67,10 +67,28 @@ class Loader:
     # OBJ
     def load_obj_templates(self):
         """Loads object templates"""
-        with open(self.OBJECT_JSON_FILENAME, "r") as f:
+        with open(self.OBJECTS_JSON_FILENAME, "r") as f:
             json_objs = json.load(f)
             for k, v in json_objs.items():
-                self.obj_templates[k] = obj.Object(v)
+                self.obj_templates[k] = v
+
+    def save_obj_templates(self):
+        if len(self.obj_templates) > 0:
+            with open(self.OBJECTS_JSON_FILENAME, "w") as f:
+                json.dump(self.obj_templates, f, indent=4, sort_keys=True)
+
+    def build_obj(self, _id):
+        "Builds an object from a template"
+        return obj.Object(self.obj_templates[_id])
+
+    def get_obj_template(self, _id):
+        "Returns the object template specified by the _id"
+        return self.obj_templates[_id]
+
+    def get_obj_templates(self):
+        "Returns all templates"
+        return self.obj_templates
+
 
     def copy_obj_template(self, _id):
         """Produces a deep copy of a object template"""
@@ -108,6 +126,9 @@ class Loader:
 
     ##########################################################################
     # COMPS
+    # TODO: Need to clean up the comp template functions. Some are old
+    #   and should not be used any longer.
+
     def load_comp_templates(self):
         """Loads component templates"""
         with open(self.COMPONENTS_JSON_FILENAME, "r") as f:
