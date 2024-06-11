@@ -27,7 +27,6 @@ class UIObjectConfig(tk.Frame):
         self.logger = logger
         self.ldr = ldr
         self.build_ui()
-        self.ui_map = None
 
     def validate_number_entry(self, input):
         """
@@ -82,7 +81,7 @@ class UIObjectConfig(tk.Frame):
         self.select_obj_listbox = uiListBox(
             master=self.obj_selection_frame,
             listvariable=self.select_obj_listbox_var,
-            selectmode='browse'
+            selectmode='single'
         )
         self.select_obj_listbox.pack(side=tk.LEFT, fill=tk.BOTH)
         self.select_obj_listbox.bind(
@@ -164,7 +163,7 @@ class UIObjectConfig(tk.Frame):
         self.obj_create_button = uiButton(
             master=self.button_row,
             command=self.create_obj,
-            text="Add Object"
+            text="New Object"
         )
         self.obj_create_button.pack(side=tk.LEFT)
         self.obj_update_button = uiButton(

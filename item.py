@@ -1,7 +1,9 @@
+import copy
+
 class Item:
     def __init__(self, data):
         """Initializes item data"""
-        self.data = data
+        self.data = copy.deepcopy(data)
         self.data["x"] = None
         self.data["y"] = None
         self.data["owner"] = None

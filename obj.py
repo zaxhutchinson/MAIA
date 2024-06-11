@@ -1,6 +1,7 @@
 import random
 import math
 import logging
+import copy
 
 import vec2
 import line
@@ -12,7 +13,7 @@ _2PI = 2.0 * math.pi
 class Object:
     def __init__(self, data):
         """Initializes default data and view_keys"""
-        self.data = data
+        self.data = copy.deepcopy(data)
         self.JSON_keys = list(self.data.keys())
         self.data["damage"] = 0.0
         self.data["facing"] = 0.0

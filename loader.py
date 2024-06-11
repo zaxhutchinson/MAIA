@@ -115,7 +115,21 @@ class Loader:
         with open(self.ITEM_JSON_FILENAME, "r") as f:
             json_objs = json.load(f)
             for k, v in json_objs.items():
-                self.item_templates[k] = item.Item(v)
+                self.item_templates[k] = v
+
+    def save_item_templates(self):
+        if len(self.item_templates) > 0:
+            with open(self.ITEM_JSON_FILENAME, "w") as f:
+                json.dump(self.item_templates, f, indent=4, sort_keys=True)
+
+    def get_item_template(self, _id):
+        return self.item_templates[_id]
+
+    def get_item_templates(self):
+        return self.item_templates
+
+    def build_item(self, _id):
+        return item.Item(self.item_templates[_id])
 
     def copy_item_template(self, _id):
         """Produces a deep copy of an item template"""
@@ -203,7 +217,20 @@ class Loader:
         with open(self.MAP_JSON_FILENAME, "r") as f:
             json_objs = json.load(f)
             for k, v in json_objs.items():
-                self.map_templates[k] = zmap.Map(v)
+                self.map_templates[k] = v
+
+    def save_map_templates(self):
+        if len(self.map_templates) > 0:
+            with open(self.MAP_JSON_FILENAME, "w") as f:
+                json.dump(self.map_templates, f, indent=4, sort_keys=True)
+
+    def build_map(self, _id):
+        return zmap.Map(self.map_templates[_id])
+
+    def get_map_template(self, _id):
+        return self.map_templates[_id]
+    def get_map_templates(self):
+        return self.map_templates
 
     def copy_map_template(self, _id):
         """Produces a deep copy of a map template"""

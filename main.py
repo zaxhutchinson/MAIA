@@ -13,6 +13,7 @@ import ui_object_config
 import ui_map_config
 import ui_component_config
 import loader
+import sprite_manager
 
 
 # Initialize the log files
@@ -43,6 +44,9 @@ class App(tk.Tk):
 
         self.ldr = loader.Loader(self.logger)
 
+        # initialize the sprite_manager
+        sprite_manager.init(self.ldr)
+
         self.frames = {}
 
         self.frames["home_page"] = ui_homepage.UIHomepage(
@@ -63,7 +67,8 @@ class App(tk.Tk):
             ldr = self.ldr
         )
         self.frames["config_map"] = ui_map_config.UIMapConfig(
-            master=self.container, controller=self, logger=self.logger
+            master=self.container, controller=self, logger=self.logger,
+            ldr = self.ldr
         )
         self.frames["config_component"] = ui_component_config.UIComponentConfig(
             master=self.container, controller=self, logger=self.logger,

@@ -1,6 +1,6 @@
 {
     "0": {
-        "alive_sprite_filename": "metal_blocks.png",
+        "alive_sprite_filename": "metal_block.png",
         "character": "X",
         "color_alive": "gray1",
         "color_dead": "black",

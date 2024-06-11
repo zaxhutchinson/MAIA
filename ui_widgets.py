@@ -13,6 +13,8 @@ import platform
 from packages.tkmacosx import Button
 from PIL import ImageTk, Image
 
+import sprite_manager
+
 
 BGCOLOR = "#E5E5E5"
 TEXTCOLOR = "#222222"
@@ -206,10 +208,10 @@ class EntryHelp:
         self.frame = uiQuietFrame(master=master)
         self.frame.grid(sticky="nsew")
 
-        self.frame.columnconfigure(7)
+        # self.frame.columnconfigure(2)
 
-        self.entry = uiEntry(master=self.frame)
-        self.entry.grid(row=0, column=0, columnspan=6)
+        self.entry = uiEntry(master=self.frame, width=16)
+        self.entry.grid(row=0, column=0)
 
         self.help_button = uiButton(
             master=self.frame,
@@ -217,7 +219,7 @@ class EntryHelp:
             command=lambda: messagebox.showinfo("Help", self.text, parent=self.master),
         )
         self.help_button.configure(width=26)
-        self.help_button.grid(row=0, column=7)
+        self.help_button.grid(row=0, column=1)
 
 
 class ComboBoxHelp:
@@ -252,6 +254,7 @@ class uiCanvas(tk.Canvas):
     def __init__(self, **kwargs):
         super().__init__(kwargs["master"])
         self.cell_size = kwargs["cell_size"]
+        self.border_size = kwargs["border_size"]
         self.obj_char_size = kwargs["obj_char_size"]
         self.item_char_size = kwargs["item_char_size"]
         self.char_offset = kwargs["char_offset"]
@@ -259,6 +262,9 @@ class uiCanvas(tk.Canvas):
         self.item_font = kwargs["item_font"]
         self.rcfont = tk.font.Font(
             family="TkFixedFont", size=int(self.obj_char_size / 2)
+        )
+        self.map_font = tk.font.Font(
+            family="TkFixedFont", size=int(self.cell_size-10)
         )
         self.config(
             width=kwargs["width"],
@@ -271,69 +277,120 @@ class uiCanvas(tk.Canvas):
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
         )
+        self.sprites = []
+        self.tiles = {}
+        self.objects = {}
+        self.items = {}
+        self.starting_locations = {}
+
+    def mousexy_to_cellxy(self, x, y):
+        x = int((self.canvasx(x) - self.border_size) // self.cell_size)
+        y = int((self.canvasy(y) - self.border_size) // self.cell_size)
+        return x,y
+
 
     def draw_tile(self, **kwargs):
         """Draws tile"""
-        x0 = kwargs["x"] * self.cell_size
-        y0 = kwargs["y"] * self.cell_size
+        x = kwargs["x"]
+        y = kwargs["y"]
+        x0 = x * self.cell_size + self.border_size
+        y0 = y * self.cell_size + self.border_size
         x1 = x0 + self.cell_size
         y1 = y0 + self.cell_size
-        return self.create_rectangle(x0, y0, x1, y1, fill=kwargs["fill"])
+        tile = self.create_rectangle(x0, y0, x1, y1, fill=kwargs["fill"], width=2)
+        self.tiles[(x,y)] = tile
 
         # self._create(
         #     'rectangle',
         #     [x0,y0,x1,y1],
         #     {'fill':kwargs['fill']}
         # )
+    
 
-    def draw_obj(self, **kwargs):
+    def draw_circle(self, x, y, color, diameter):
+        x0 = x * self.cell_size + self.border_size + ((self.cell_size - diameter) // 2)
+        y0 = y * self.cell_size + self.border_size + ((self.cell_size - diameter) // 2)
+        x1 = x0 + diameter
+        y1 = y0 + diameter
+        self.create_oval(x0, y0, x1, y1, fill=color)
+
+    def draw_character(self, x, y, character, color):
+        x0 = x * self.cell_size + self.border_size + (self.cell_size // 2)
+         # Magic number 4 almost certainly does not work for other font sizes.
+        y0 = y * self.cell_size + self.border_size + ((self.cell_size-4) // 2)
+        self.create_text(x0, y0, text=character, fill=color, font=self.map_font)
+
+    def draw_starting_location(self, x, y, loc_num, color):
+        circ_id = self.draw_circle(x, y, color, self.cell_size-5)
+        char_id = self.draw_character(x, y, str(loc_num), "black")
+        self.starting_locations[(x,y)] = (circ_id, char_id)
+
+    def draw_sprite(self, **kwargs):
         """Draws object
 
         Tries to draw sprite based on object status
         Defaults to text based representation if unsuccessful
         """
-        # This function displays the object in the UI
-        dd = kwargs["dd"]  # what to draw
         x = (  # x coord
-            dd["x"] * self.cell_size
-            + self.obj_char_size / 2
-            + self.char_offset
-            + self.cell_size
+            kwargs["x"] * self.cell_size
+            + self.border_size
         )
         y = (  # y coord
-            dd["y"] * self.cell_size
-            + self.obj_char_size / 2
-            + self.char_offset
-            + self.cell_size
+            kwargs["y"] * self.cell_size
+            + self.border_size
         )
 
         try:
-            if dd["alive"] is True:
-                self.sprite = Image.open(dd["sprite_path"])
-                facing = (  # sim uses clock-wise coords, ui uses counter-clockwise coords
-                    dd["facing"] * -1
-                )
-                global_sprite_list.append(self.sprite.copy())
-                global_sprite_list[-1] = global_sprite_list[-1].rotate(facing)
-                global_sprite_list[-1] = ImageTk.PhotoImage(global_sprite_list[-1])
-                return self.create_image(x, y, image=global_sprite_list[-1])
-            else:
-                self.sprite = Image.open(dd["death_sprite_path"])
-                facing = (  # sim uses clock-wise coords, ui uses counter-clockwise coords
-                    dd["facing"] * -1
-                )
-                global_sprite_list.append(self.sprite.copy())
-                global_sprite_list[-1] = global_sprite_list[-1].rotate(facing)
-                global_sprite_list[-1] = ImageTk.PhotoImage(global_sprite_list[-1])
-                return self.create_image(x, y, image=global_sprite_list[-1])
+            sprite = sprite_manager.load_image(kwargs["sprite_filename"])
+            width, height = sprite.size
+            x += (width // 2) + ((self.cell_size - width) // 2)
+            y += (height // 2) + ((self.cell_size - height) // 2)
+            facing = 0
+            if "facing" in kwargs:
+                # sim uses clock-wise coords, ui uses counter-clockwise coords
+                facing = kwargs["facing"] * -1
+            sprite.rotate(facing)
+            tk_sprite = ImageTk.PhotoImage(sprite)
+            self.sprites.append(tk_sprite)
+            obj = self.create_image(x, y, image=tk_sprite)
+            self.objects[(kwargs["x"], kwargs["y"])] = obj
         except:
-            return self.create_text(
-                x, y, text=dd["text"], fill=dd["fill"], font=self.obj_font
-            )
+            raise
+                # x += self.char_offset + (self.obj_char_size / 2)
+                # y += self.char_offset + (self.obj_char_size / 2)
+                # return self.create_text(
+                #     x, y, text=kwargs["character"], fill=kwargs["color_alive"], font=self.obj_font
+                # )
+        # else:
+        #     try:
+        #         self.sprite = sprite_manager.load_image(kwargs["dead_sprite_filename"])
+        #         width, height = sprite.size
+        #         x += (width // 2) + ((self.cell_size - width) // 2)
+        #         y += (height // 2) + ((self.cell_size - height) // 2)
+        #         facing = 0
+        #         if "facing" in kwargs:
+        #             # sim uses clock-wise coords, ui uses counter-clockwise coords
+        #             facing = kwargs["facing"] * -1
+        #         sprite.rotate(facing)
+        #         tk_sprite = ImageTk.PhotoImage(sprite)
+        #         self.sprites.append(tk_sprite)
+        #         obj = self.create_image(x, y, image=tk_sprite)
+        #         self.objects[(kwargs["x"], kwargs["y"])] = obj
+        #     except:
+        #         raise
+        #         # x += self.char_offset + (self.obj_char_size // 2)
+        #         # y += self.char_offset + (self.obj_char_size // 2)
+        #         # return self.create_text(
+        #         #     x, y, text=kwargs["character"], fill=kwargs["color_dead"], font=self.obj_font
+        #         # )
+
+    def remove_obj_at(self, x, y):
+        self.remove_obj(self.objects[(x,y)])
 
     def remove_obj(self, obj_id):
         """Removes object"""
         self.delete(obj_id)
+
 
     def redraw_obj(self, **kwargs):
         """Redraws object"""
@@ -387,6 +444,10 @@ class uiCanvas(tk.Canvas):
                 x, y, text=dd["text"], fill=dd["fill"], font=self.obj_font
             )
 
+    def remove_item(self, item_id):
+        """Removes an item from the canvas"""
+        self.delete(item_id)
+
     def update_drawn_item(self, **kwargs):
         """Updates drawn item"""
         dd = kwargs["dd"]
@@ -403,6 +464,68 @@ class uiCanvas(tk.Canvas):
             + self.cell_size
         )
         self.coords(kwargs["itemID"], x, y)
+
+    def draw_row_labels(self, **kwargs):
+        width = kwargs["width"]
+        height = kwargs["height"]
+
+        label_ids = []
+
+        top = self.obj_char_size / 2 + self.char_offset
+        bottom = height * self.cell_size + self.obj_char_size / 2 + self.char_offset + self.border_size
+
+        for i in range(width):
+            x = i * self.cell_size + self.obj_char_size / 2 + self.char_offset + self.border_size
+            label_ids.append(
+                self.create_text(
+                    x, top,
+                    text=str(i),
+                    fill=kwargs["fill"],
+                    font=self.rcfont
+                )
+            )
+
+            label_ids.append(
+                self.create_text(
+                    x, bottom,
+                    text=str(i),
+                    fill=kwargs["fill"],
+                    font=self.rcfont
+                )
+            )
+
+        return label_ids
+
+    def draw_column_labels(self, **kwargs):
+        width = kwargs["width"]
+        height = kwargs["height"]
+
+        label_ids = []
+
+        left = self.obj_char_size / 2 + self.char_offset
+        right = width * self.cell_size + self.obj_char_size / 2 + self.char_offset + self.border_size
+
+        for i in range(height):
+            y = i * self.cell_size + self.obj_char_size / 2 + self.char_offset + self.border_size
+            label_ids.append(
+                self.create_text(
+                    left, y,
+                    text=str(i),
+                    fill=kwargs["fill"],
+                    font=self.rcfont
+                )
+            )
+
+            label_ids.append(
+                self.create_text(
+                    right, y,
+                    text=str(i),
+                    fill=kwargs["fill"],
+                    font=self.rcfont
+                )
+            )
+
+        return label_ids
 
     def draw_rc_number(self, **kwargs):
         """Draws RDNumber"""

@@ -1,4 +1,5 @@
 import math
+import copy
 
 import vec2
 import action
@@ -52,7 +53,7 @@ class Comp:
         Sets command, update, and view_keys functions based on component type
         """
 
-        self.data = data
+        self.data = copy.deepcopy(data)
 
         self.command = self.no_command
         self.update = self.no_update
