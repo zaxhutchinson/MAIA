@@ -51,10 +51,20 @@ class Loader:
         with open(self.GSTATE_JSON_FILENAME, "r") as f:
             json_objs = json.load(f)
             for k, v in json_objs.items():
-                self.gstate_templates[k] = []
-                for g in v:
-                    gs = gstate.GState(g)
-                    self.gstate_templates[k].append(gs)
+                self.gstate_templates[k] = v
+                # for g in v:
+                #     gs = gstate.GState(g)
+                #     self.gstate_templates[k].append(gs)
+    def save_gstate_templates(self):
+        if len(self.gstate_templates) > 0:
+            with open(self.GSTATE_JSON_FILENAME, "w") as f:
+                json.dump(self.gstate_templates, f, indent=4, sort_keys=True)
+    def build_gstate(self, _id):
+        return gstate.GState(self.gstate_templates[_id])
+    def get_gstate_template(self, _id):
+        return self.gstate_templates[_id]
+    def get_gstate_templates(self):
+        return self.gstate_templates
 
     def copy_gstate_template(self, _id):
         """Produces a deep copy of a gstate template"""
@@ -83,7 +93,10 @@ class Loader:
 
     def get_obj_template(self, _id):
         "Returns the object template specified by the _id"
-        return self.obj_templates[_id]
+        try:
+            return self.obj_templates[_id]
+        except KeyError as e:
+            return None
 
     def get_obj_templates(self):
         "Returns all templates"
@@ -231,6 +244,8 @@ class Loader:
         return self.map_templates[_id]
     def get_map_templates(self):
         return self.map_templates
+    def delete_map(self, map_id):
+        del self.map_templates[map_id]
 
     def copy_map_template(self, _id):
         """Produces a deep copy of a map template"""

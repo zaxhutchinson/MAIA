@@ -24,3 +24,10 @@ def is_int(i):
         return False
     else:
         return True
+
+def to_bool(value):
+    value = str(value).lower()
+    if value in ["true", "t", "y", "1", "yes"]:
+        return True
+    else:
+        return False

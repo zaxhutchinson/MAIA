@@ -74,6 +74,10 @@ class uiScrollText(tk.scrolledtext.ScrolledText):
             font=("Arial", FONT_SIZE),
         )
 
+class uiScrollFrame(tk.scrolledtext.ScrolledText):
+    def __init__(self, master):
+        super().__init__(master, cursor="arrow")
+        
 
 class uiButton(Button):
     def __init__(self, **kwargs):
@@ -223,7 +227,7 @@ class EntryHelp:
 
 
 class ComboBoxHelp:
-    def __init__(self, master, text):
+    def __init__(self, master, text, **kwargs):
         self.master = master
         self.text = text
 
@@ -232,7 +236,7 @@ class ComboBoxHelp:
 
         self.frame.columnconfigure(7)
 
-        self.combobox = uiComboBox(master=self.frame)
+        self.combobox = uiComboBox(master=self.frame, **kwargs)
         self.combobox.grid(row=0, column=0, columnspan=6)
 
         self.help_button = uiButton(
@@ -312,18 +316,24 @@ class uiCanvas(tk.Canvas):
         y0 = y * self.cell_size + self.border_size + ((self.cell_size - diameter) // 2)
         x1 = x0 + diameter
         y1 = y0 + diameter
-        self.create_oval(x0, y0, x1, y1, fill=color)
+        return self.create_oval(x0, y0, x1, y1, fill=color)
 
     def draw_character(self, x, y, character, color):
         x0 = x * self.cell_size + self.border_size + (self.cell_size // 2)
          # Magic number 4 almost certainly does not work for other font sizes.
         y0 = y * self.cell_size + self.border_size + ((self.cell_size-4) // 2)
-        self.create_text(x0, y0, text=character, fill=color, font=self.map_font)
+        return self.create_text(x0, y0, text=character, fill=color, font=self.map_font)
 
     def draw_starting_location(self, x, y, loc_num, color):
         circ_id = self.draw_circle(x, y, color, self.cell_size-5)
         char_id = self.draw_character(x, y, str(loc_num), "black")
         self.starting_locations[(x,y)] = (circ_id, char_id)
+
+    def remove_all_starting_locations(self):
+        for sl in self.starting_locations.values():
+            self.remove_start(sl)
+        self.starting_locations = {}
+
 
     def draw_sprite(self, **kwargs):
         """Draws object
@@ -340,6 +350,8 @@ class uiCanvas(tk.Canvas):
             + self.border_size
         )
 
+        sprite_type = kwargs["sprite_type"]
+
         try:
             sprite = sprite_manager.load_image(kwargs["sprite_filename"])
             width, height = sprite.size
@@ -352,8 +364,15 @@ class uiCanvas(tk.Canvas):
             sprite.rotate(facing)
             tk_sprite = ImageTk.PhotoImage(sprite)
             self.sprites.append(tk_sprite)
-            obj = self.create_image(x, y, image=tk_sprite)
-            self.objects[(kwargs["x"], kwargs["y"])] = obj
+            sprite_id = self.create_image(x, y, image=tk_sprite)
+
+            match(sprite_type):
+                case "object":
+                    self.objects[(kwargs["x"], kwargs["y"])] = sprite_id
+                case "item":
+                    self.items[(kwargs["x"], kwargs["y"], kwargs["id"])] = sprite_id
+                case "start":
+                    self.starting_locations[(kwargs["x"], kwargs["y"])] = sprite_id
         except:
             raise
                 # x += self.char_offset + (self.obj_char_size / 2)
@@ -386,10 +405,18 @@ class uiCanvas(tk.Canvas):
 
     def remove_obj_at(self, x, y):
         self.remove_obj(self.objects[(x,y)])
-
     def remove_obj(self, obj_id):
         """Removes object"""
         self.delete(obj_id)
+    def remove_item_at(self, x, y, _id):
+        self.remove_item(self.items[(x,y,_id)])
+    def remove_item(self, item_id):
+        self.delete(item_id)
+    def remove_start_at(self, x, y):
+        self.remove_start(self.starting_locations[(x,y)])
+    def remove_start(self, start_ids):
+        self.delete(start_ids[0])
+        self.delete(start_ids[1])
 
 
     def redraw_obj(self, **kwargs):

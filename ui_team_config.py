@@ -303,7 +303,7 @@ class UITeamConfig(tk.Frame):
         
         good_name = False
         while not good_name:
-            team_id = askstring("Team ID", "Please enter an ID for the new team.")
+            team_id = askstring("New Team ID", "Please enter an ID for the new team.")
             if len(team_id) == 0:
                 messagebox.showwarning(
                     "Warning", "You must enter a team ID to continue"
@@ -429,8 +429,6 @@ class UITeamConfig(tk.Frame):
 
     def save_to_json(self):
         self.ldr.save_team_templates()
-        # with open("settings/teams.json", "w") as f:
-        #     json.dump(self.team_data, f, indent=4, sort_keys=True)
 
     def goto_home(self):
         self.controller.show_frame("home_page")
