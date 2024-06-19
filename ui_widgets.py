@@ -74,9 +74,33 @@ class uiScrollText(tk.scrolledtext.ScrolledText):
             font=("Arial", FONT_SIZE),
         )
 
-class uiScrollFrame(tk.scrolledtext.ScrolledText):
+class uiScrollFrame(tk.Frame):
     def __init__(self, master):
         super().__init__(master, cursor="arrow")
+        self.columnconfigure(0,weight=1)
+        self.rowconfigure(0,weight=1)
+        self.canvas = tk.Canvas(self)
+        self.canvas.grid(row=0,column=0,sticky="ns")
+        self.scroll_y = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.scroll_y.grid(row=0,column=1,sticky="ns")
+        self.sub_frame = tk.Frame(self.canvas)
+        self.canvas.create_window(0,0,anchor="nw",window=self.sub_frame,tag="window")
+        self.sub_frame.bind("<Configure>", self.config_sub_frame)
+        self.canvas.bind("<Configure>", self.config_scrollframe)
+        #self.canvas.bind("<MouseWheel>", self.on_mouse_wheel)
+
+    def focus(self,event):
+        self.canvas.bind_all("<MouseWheel>", self.on_mouse_wheel)
+    def unfocus(self,event):
+        self.canvas.unbind_all("<MouseWheel>")
+
+    def config_sub_frame(self, event):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"), yscrollcommand=self.scroll_y.set)
+    def config_scrollframe(self, event):
+        event.widget.itemconfig("window",width=event.width)
+    def on_mouse_wheel(self, event):
+        self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+
         
 
 class uiButton(Button):
@@ -214,7 +238,7 @@ class EntryHelp:
 
         # self.frame.columnconfigure(2)
 
-        self.entry = uiEntry(master=self.frame, width=16)
+        self.entry = uiEntry(master=self.frame)
         self.entry.grid(row=0, column=0)
 
         self.help_button = uiButton(
@@ -234,10 +258,10 @@ class ComboBoxHelp:
         self.frame = uiQuietFrame(master=master)
         self.frame.grid(sticky="nsew")
 
-        self.frame.columnconfigure(7)
+        # self.frame.columnconfigure(7)
 
         self.combobox = uiComboBox(master=self.frame, **kwargs)
-        self.combobox.grid(row=0, column=0, columnspan=6)
+        self.combobox.grid(row=0, column=0)
 
         self.help_button = uiButton(
             master=self.frame,
@@ -245,7 +269,7 @@ class ComboBoxHelp:
             command=lambda: messagebox.showinfo("Help", self.text, parent=self.master),
         )
         self.help_button.configure(width=26)
-        self.help_button.grid(row=0, column=7)
+        self.help_button.grid(row=0, column=1)
 
 
 class uiComboBox(ttk.Combobox):

@@ -10,6 +10,7 @@ import ui_homepage
 import ui_about
 import ui_team_config
 import ui_object_config
+import ui_item_config
 import ui_map_config
 import ui_component_config
 import loader
@@ -74,6 +75,10 @@ class App(tk.Tk):
             master=self.container, controller=self, logger=self.logger,
             ldr = self.ldr
         )
+        self.frames["config_item"] = ui_item_config.UIItemConfig(
+            master=self.container, controller=self, logger=self.logger,
+            ldr = self.ldr
+        )
 
         # the setup page must be placed first to prevent errors
         self.frames["setup_page"].grid(row=0, column=0, sticky="nsew")
@@ -83,6 +88,7 @@ class App(tk.Tk):
         self.frames["config_object"].grid(row=0, column=0, sticky="nsew")
         self.frames["config_map"].grid(row=0, column=0, sticky="nsew")
         self.frames["config_component"].grid(row=0, column=0, sticky="nsew")
+        self.frames["config_item"].grid(row=0, column=0, sticky="nsew")
 
         self.show_frame("home_page")
 

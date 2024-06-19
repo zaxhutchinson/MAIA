@@ -57,12 +57,13 @@ class UIMapConfig(tk.Frame):
         ai-controlled objects
         """
         self.main_frame = uiQuietFrame(master=self)
-        self.map_selection_frame = uiLabelFrame(master=self.main_frame, text="Maps")
+        self.left_frame = uiScrollFrame(master=self.main_frame)
+        self.map_selection_frame = uiLabelFrame(master=self.left_frame.sub_frame, text="Maps")
         self.map_container_frame = uiQuietFrame(master=self.main_frame)
         self.map_frame = uiQuietFrame(master=self.map_container_frame)
-        self.map_data_frame = uiScrollFrame(master=self.map_container_frame)
-        self.map_info_frame = uiLabelFrame(master=self.map_data_frame, text="Map Info")
-        self.side_frame = uiLabelFrame(master=self.map_data_frame, text="Sides")
+        # self.map_data_frame = uiScrollFrame(master=self.left_frame)
+        self.map_info_frame = uiLabelFrame(master=self.left_frame.sub_frame, text="Map Info")
+        self.side_frame = uiLabelFrame(master=self.left_frame.sub_frame, text="Sides")
         self.paint_frame = uiQuietFrame(master=self.main_frame)
         self.add_remove_frame = uiQuietFrame(master=self.paint_frame)
         self.obj_selection_frame = uiLabelFrame(master=self.paint_frame, text="Objects")
@@ -70,17 +71,21 @@ class UIMapConfig(tk.Frame):
         self.button_row = uiQuietFrame(master=self.main_frame)
         self.title_label = uiLabel(master=self.main_frame, text="Map Configuration")
 
-        self.main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
         self.title_label.pack(side=tk.TOP, fill="x")
         self.button_row.pack(side=tk.BOTTOM, fill="x")
-        self.map_selection_frame.pack(side=tk.LEFT, fill="y")
+        self.left_frame.pack(side=tk.LEFT, fill="y", expand=False)
         self.map_container_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         
-        self.map_data_frame.pack(side=tk.LEFT, fill="y")
-        self.map_info_frame.pack(side=tk.TOP, fill=tk.BOTH)
-        self.side_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        # self.map_data_frame.pack(side=tk.TOP, fill="y")
+        self.map_selection_frame.pack(side=tk.TOP, fill="y")
+        self.map_selection_frame.rowconfigure(0,weight=1)
+        self.map_info_frame.pack(side=tk.TOP, fill="y")
+        self.map_info_frame.rowconfigure(0,weight=1)
+        self.side_frame.pack(side=tk.TOP, fill="y")
+        self.side_frame.rowconfigure(0,weight=1)
         self.map_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        self.paint_frame.pack(side=tk.RIGHT, fill="y")
+        self.paint_frame.pack(side=tk.RIGHT, fill="y", before=self.map_frame)
         self.add_remove_frame.pack(side=tk.TOP, fill="x")
         self.add_remove_frame.rowconfigure(0,weight=1)
         self.add_remove_frame.columnconfigure(0,weight=1)
@@ -98,14 +103,14 @@ class UIMapConfig(tk.Frame):
             listvariable=self.map_select_listbox_var,
             selectmode='single'
         )
-        self.map_select_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.map_select_listbox.grid(row=0,column=0,sticky="ew")
         self.map_select_listbox.bind(
             "<<ListboxSelect>>", self.show_map
         )
 
 
         # MAP INFO
-        self.map_info_frame.columnconfigure(1,weight=1)
+        # self.map_info_frame.columnconfigure(1,weight=1)
 
         self.map_id_label = uiLabel(master=self.map_info_frame, text="ID")
         self.map_id_entry = EntryHelp(master=self.map_info_frame, text="The unique ID of the map.")
@@ -129,13 +134,13 @@ class UIMapConfig(tk.Frame):
         self.map_width_entry.frame.grid(row=2, column=1, sticky="ew")
         self.map_height_label.grid(row=3, column=0, sticky="ew")
         self.map_height_entry.frame.grid(row=3, column=1, sticky="ew")
-        self.map_desc_label.grid(row=4, column=0, columnspan=2,sticky="w")
-        self.map_desc_text.grid(row=5, column=0, columnspan=2,sticky="nesw")
+        self.map_desc_label.grid(row=4, column=0, columnspan=2,sticky="ew")
+        self.map_desc_text.grid(row=5, column=0, columnspan=2,sticky="ew")
         self.map_edge_id_label.grid(row=6, column=0, sticky="ew")
         self.map_edge_id_entry.frame.grid(row=6, column=1, sticky="ew")
 
         # SIDE INFO
-        self.side_frame.columnconfigure(0,weight=1)
+        # self.side_frame.columnconfigure(0,weight=1)
         self.side_select_listbox_var = tk.StringVar()
         self.side_select_listbox = uiListBox(
             master=self.side_frame,
