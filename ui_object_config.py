@@ -255,7 +255,7 @@ class UIObjectConfig(tk.Frame):
         comp_entries = []
         for cid in obj["comp_ids"]:
             comp = comp_data[cid]
-            entry = f"{comp["id"]}:{comp["name"]}"
+            entry = f"{comp['id']}:{comp['name']}"
             comp_entries.append(entry)
         comp_entries = sorted(comp_entries)
         self.obj_comp_remove_listbox_var.set(comp_entries)
@@ -264,7 +264,7 @@ class UIObjectConfig(tk.Frame):
         comp_data = self.ldr.get_comp_templates()
         entries = []
         for comp in comp_data.values():
-            entry = f"{comp["id"]}:{comp["name"]}"
+            entry = f"{comp['id']}:{comp['name']}"
             entries.append(entry)
         entries = sorted(entries)
         self.obj_comp_add_listbox_var.set(entries)
