@@ -16,6 +16,7 @@ def action_to_string(action):
         s += f"{k} [{str(v)}] "
     return s
 
+
 def is_int(i):
     """Tests if i can be cast to an int."""
     try:
@@ -24,6 +25,7 @@ def is_int(i):
         return False
     else:
         return True
+
 
 def to_bool(value):
     value = str(value).lower()

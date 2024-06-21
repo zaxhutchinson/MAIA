@@ -4,46 +4,31 @@ import copy
 import vec2
 import action
 
-CTYPES_LIST = [
-    "FixedGun",
-    "Engine",
-    "Radar",
-    "CnC",
-    "Radio",
-    "Arm"
-]
+CTYPES_LIST = ["FixedGun", "Engine", "Radar", "CnC", "Radio", "Arm"]
 
 COMP_ATTRS_BY_CTYPE = {
     "FixedGun": [
-        ("reload_ticks", 1), 
+        ("reload_ticks", 1),
         ("ammunition", 0),
         ("min_damage", 0),
         ("max_damage", 0),
-        ("range",0)
+        ("range", 0),
     ],
-    "Engine": [
-        ("min_speed", 0.0), 
-        ("max_speed", 0.0), 
-        ("max_turnrate", 0.0)
-    ],
+    "Engine": [("min_speed", 0.0), ("max_speed", 0.0), ("max_turnrate", 0.0)],
     "Radar": [
         ("range", 0),
         ("level", 0),
         ("visarc", 0),
-        ("offset_angle", 0), 
-        ("resolution", 0)
+        ("offset_angle", 0),
+        ("resolution", 0),
     ],
-    "CnC": [
-        ("max_cmds_per_tick",0)
-    ],
+    "CnC": [("max_cmds_per_tick", 0)],
     "Radio": [
         ("max_range", 0),
     ],
-    "Arm": [
-        ("max_bulk", 0),
-        ("max_weight", 0)
-    ]
+    "Arm": [("max_bulk", 0), ("max_weight", 0)],
 }
+
 
 class Comp:
     def __init__(self, data):

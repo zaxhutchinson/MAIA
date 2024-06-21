@@ -10,6 +10,7 @@ from tkinter.font import Font
 from tkinter import ttk
 import tkinter.scrolledtext as scrolltext
 import platform
+
 # from packages.tkmacosx import Button
 from PIL import ImageTk, Image
 
@@ -29,8 +30,8 @@ ENTRY_BG = "salmon1"
 
 BOXFILLCOLOR = "#B2C1E3"
 
-PADX=5
-PADY=5
+PADX = 5
+PADY = 5
 
 global_sprite_list = []
 
@@ -44,7 +45,7 @@ class uiListBox(tk.Listbox):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, kwargs)
         if "selectmode" not in kwargs:
-            kwargs["selectmode"]=tk.SINGLE
+            kwargs["selectmode"] = tk.SINGLE
         self.config(
             selectmode=kwargs["selectmode"],
             bg=BOXFILLCOLOR,
@@ -74,34 +75,41 @@ class uiScrollText(tk.scrolledtext.ScrolledText):
             font=("Arial", FONT_SIZE),
         )
 
+
 class uiScrollFrame(tk.Frame):
     def __init__(self, master):
         super().__init__(master, cursor="arrow")
-        self.columnconfigure(0,weight=1)
-        self.rowconfigure(0,weight=1)
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
         self.canvas = tk.Canvas(self)
-        self.canvas.grid(row=0,column=0,sticky="ns")
+        self.canvas.grid(row=0, column=0, sticky="ns")
         self.scroll_y = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
-        self.scroll_y.grid(row=0,column=1,sticky="ns")
+        self.scroll_y.grid(row=0, column=1, sticky="ns")
         self.sub_frame = tk.Frame(self.canvas)
-        self.canvas.create_window(0,0,anchor="nw",window=self.sub_frame,tag="window")
+        self.canvas.create_window(
+            0, 0, anchor="nw", window=self.sub_frame, tag="window"
+        )
         self.sub_frame.bind("<Configure>", self.config_sub_frame)
         self.canvas.bind("<Configure>", self.config_scrollframe)
-        #self.canvas.bind("<MouseWheel>", self.on_mouse_wheel)
+        # self.canvas.bind("<MouseWheel>", self.on_mouse_wheel)
 
-    def focus(self,event):
+    def focus(self, event):
         self.canvas.bind_all("<MouseWheel>", self.on_mouse_wheel)
-    def unfocus(self,event):
+
+    def unfocus(self, event):
         self.canvas.unbind_all("<MouseWheel>")
 
     def config_sub_frame(self, event):
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"), yscrollcommand=self.scroll_y.set)
-    def config_scrollframe(self, event):
-        event.widget.itemconfig("window",width=event.width)
-    def on_mouse_wheel(self, event):
-        self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+        self.canvas.configure(
+            scrollregion=self.canvas.bbox("all"), yscrollcommand=self.scroll_y.set
+        )
 
-        
+    def config_scrollframe(self, event):
+        event.widget.itemconfig("window", width=event.width)
+
+    def on_mouse_wheel(self, event):
+        self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
 
 class uiButton(tk.Button):
     def __init__(self, **kwargs):
@@ -120,6 +128,7 @@ class uiButton(tk.Button):
             font=("Arial", FONT_SIZE),
         )
 
+
 class uiCarefulButton(tk.Button):
     def __init__(self, **kwargs):
         super().__init__(kwargs["master"])
@@ -136,6 +145,7 @@ class uiCarefulButton(tk.Button):
             relief=tk.FLAT,
             font=("Arial", FONT_SIZE),
         )
+
 
 class uiLabel(tk.Label):
     def __init__(self, **kwargs):
@@ -167,10 +177,7 @@ class uiLabel(tk.Label):
 class uiTextbox(tk.Text):
     def __init__(self, **kwargs):
         super().__init__(kwargs.pop("master"), **kwargs)
-        self.config(
-            wrap="word", 
-            font=("Arial", FONT_SIZE)
-        )
+        self.config(wrap="word", font=("Arial", FONT_SIZE))
 
 
 class uiQuietFrame(tk.Frame):
@@ -182,8 +189,9 @@ class uiQuietFrame(tk.Frame):
             highlightthickness=0,
             highlightbackground=BGCOLOR,
             padx=PADX,
-            pady=PADY
+            pady=PADY,
         )
+
 
 class uiLabelFrame(tk.LabelFrame):
     def __init__(self, **kwargs):
@@ -195,10 +203,11 @@ class uiLabelFrame(tk.LabelFrame):
             highlightbackground=BGCOLOR,
             text=kwargs["text"],
             labelanchor="n",
-            font=("Arial",15),
+            font=("Arial", 15),
             padx=PADX,
-            pady=PADY
+            pady=PADY,
         )
+
 
 class uiNotebook(ttk.Notebook):
     def __init__(self, **kwargs):
@@ -222,7 +231,7 @@ class uiEntry(tk.Entry):
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
             insertbackground=TEXTCOLOR,
-            font=("Arial", FONT_SIZE)
+            font=("Arial", FONT_SIZE),
         )
         # self.bind("<FocusOut>", self.validate_out)
 
@@ -296,7 +305,7 @@ class uiCanvas(tk.Canvas):
             family="TkFixedFont", size=int(self.obj_char_size / 2)
         )
         self.map_font = tk.font.Font(
-            family="TkFixedFont", size=int(self.cell_size-10)
+            family="TkFixedFont", size=int(self.cell_size - 10)
         )
         self.config(
             width=kwargs["width"],
@@ -318,8 +327,7 @@ class uiCanvas(tk.Canvas):
     def mousexy_to_cellxy(self, x, y):
         x = int((self.canvasx(x) - self.border_size) // self.cell_size)
         y = int((self.canvasy(y) - self.border_size) // self.cell_size)
-        return x,y
-
+        return x, y
 
     def draw_tile(self, **kwargs):
         """Draws tile"""
@@ -330,14 +338,13 @@ class uiCanvas(tk.Canvas):
         x1 = x0 + self.cell_size
         y1 = y0 + self.cell_size
         tile = self.create_rectangle(x0, y0, x1, y1, fill=kwargs["fill"], width=2)
-        self.tiles[(x,y)] = tile
+        self.tiles[(x, y)] = tile
 
         # self._create(
         #     'rectangle',
         #     [x0,y0,x1,y1],
         #     {'fill':kwargs['fill']}
         # )
-    
 
     def draw_circle(self, x, y, color, diameter):
         x0 = x * self.cell_size + self.border_size + ((self.cell_size - diameter) // 2)
@@ -348,20 +355,19 @@ class uiCanvas(tk.Canvas):
 
     def draw_character(self, x, y, character, color):
         x0 = x * self.cell_size + self.border_size + (self.cell_size // 2)
-         # Magic number 4 almost certainly does not work for other font sizes.
-        y0 = y * self.cell_size + self.border_size + ((self.cell_size-4) // 2)
+        # Magic number 4 almost certainly does not work for other font sizes.
+        y0 = y * self.cell_size + self.border_size + ((self.cell_size - 4) // 2)
         return self.create_text(x0, y0, text=character, fill=color, font=self.map_font)
 
     def draw_starting_location(self, x, y, loc_num, color):
-        circ_id = self.draw_circle(x, y, color, self.cell_size-5)
+        circ_id = self.draw_circle(x, y, color, self.cell_size - 5)
         char_id = self.draw_character(x, y, str(loc_num), "black")
-        self.starting_locations[(x,y)] = (circ_id, char_id)
+        self.starting_locations[(x, y)] = (circ_id, char_id)
 
     def remove_all_starting_locations(self):
         for sl in self.starting_locations.values():
             self.remove_start(sl)
         self.starting_locations = {}
-
 
     def draw_sprite(self, **kwargs):
         """Draws object
@@ -369,14 +375,8 @@ class uiCanvas(tk.Canvas):
         Tries to draw sprite based on object status
         Defaults to text based representation if unsuccessful
         """
-        x = (  # x coord
-            kwargs["x"] * self.cell_size
-            + self.border_size
-        )
-        y = (  # y coord
-            kwargs["y"] * self.cell_size
-            + self.border_size
-        )
+        x = kwargs["x"] * self.cell_size + self.border_size  # x coord
+        y = kwargs["y"] * self.cell_size + self.border_size  # y coord
 
         sprite_type = kwargs["sprite_type"]
 
@@ -394,7 +394,7 @@ class uiCanvas(tk.Canvas):
             self.sprites.append(tk_sprite)
             sprite_id = self.create_image(x, y, image=tk_sprite)
 
-            match(sprite_type):
+            match (sprite_type):
                 case "object":
                     self.objects[(kwargs["x"], kwargs["y"])] = sprite_id
                 case "item":
@@ -403,11 +403,11 @@ class uiCanvas(tk.Canvas):
                     self.starting_locations[(kwargs["x"], kwargs["y"])] = sprite_id
         except:
             raise
-                # x += self.char_offset + (self.obj_char_size / 2)
-                # y += self.char_offset + (self.obj_char_size / 2)
-                # return self.create_text(
-                #     x, y, text=kwargs["character"], fill=kwargs["color_alive"], font=self.obj_font
-                # )
+            # x += self.char_offset + (self.obj_char_size / 2)
+            # y += self.char_offset + (self.obj_char_size / 2)
+            # return self.create_text(
+            #     x, y, text=kwargs["character"], fill=kwargs["color_alive"], font=self.obj_font
+            # )
         # else:
         #     try:
         #         self.sprite = sprite_manager.load_image(kwargs["dead_sprite_filename"])
@@ -432,20 +432,24 @@ class uiCanvas(tk.Canvas):
         #         # )
 
     def remove_obj_at(self, x, y):
-        self.remove_obj(self.objects[(x,y)])
+        self.remove_obj(self.objects[(x, y)])
+
     def remove_obj(self, obj_id):
         """Removes object"""
         self.delete(obj_id)
+
     def remove_item_at(self, x, y, _id):
-        self.remove_item(self.items[(x,y,_id)])
+        self.remove_item(self.items[(x, y, _id)])
+
     def remove_item(self, item_id):
         self.delete(item_id)
+
     def remove_start_at(self, x, y):
-        self.remove_start(self.starting_locations[(x,y)])
+        self.remove_start(self.starting_locations[(x, y)])
+
     def remove_start(self, start_ids):
         self.delete(start_ids[0])
         self.delete(start_ids[1])
-
 
     def redraw_obj(self, **kwargs):
         """Redraws object"""
@@ -527,25 +531,29 @@ class uiCanvas(tk.Canvas):
         label_ids = []
 
         top = self.obj_char_size / 2 + self.char_offset
-        bottom = height * self.cell_size + self.obj_char_size / 2 + self.char_offset + self.border_size
+        bottom = (
+            height * self.cell_size
+            + self.obj_char_size / 2
+            + self.char_offset
+            + self.border_size
+        )
 
         for i in range(width):
-            x = i * self.cell_size + self.obj_char_size / 2 + self.char_offset + self.border_size
+            x = (
+                i * self.cell_size
+                + self.obj_char_size / 2
+                + self.char_offset
+                + self.border_size
+            )
             label_ids.append(
                 self.create_text(
-                    x, top,
-                    text=str(i),
-                    fill=kwargs["fill"],
-                    font=self.rcfont
+                    x, top, text=str(i), fill=kwargs["fill"], font=self.rcfont
                 )
             )
 
             label_ids.append(
                 self.create_text(
-                    x, bottom,
-                    text=str(i),
-                    fill=kwargs["fill"],
-                    font=self.rcfont
+                    x, bottom, text=str(i), fill=kwargs["fill"], font=self.rcfont
                 )
             )
 
@@ -558,25 +566,29 @@ class uiCanvas(tk.Canvas):
         label_ids = []
 
         left = self.obj_char_size / 2 + self.char_offset
-        right = width * self.cell_size + self.obj_char_size / 2 + self.char_offset + self.border_size
+        right = (
+            width * self.cell_size
+            + self.obj_char_size / 2
+            + self.char_offset
+            + self.border_size
+        )
 
         for i in range(height):
-            y = i * self.cell_size + self.obj_char_size / 2 + self.char_offset + self.border_size
+            y = (
+                i * self.cell_size
+                + self.obj_char_size / 2
+                + self.char_offset
+                + self.border_size
+            )
             label_ids.append(
                 self.create_text(
-                    left, y,
-                    text=str(i),
-                    fill=kwargs["fill"],
-                    font=self.rcfont
+                    left, y, text=str(i), fill=kwargs["fill"], font=self.rcfont
                 )
             )
 
             label_ids.append(
                 self.create_text(
-                    right, y,
-                    text=str(i),
-                    fill=kwargs["fill"],
-                    font=self.rcfont
+                    right, y, text=str(i), fill=kwargs["fill"], font=self.rcfont
                 )
             )
 

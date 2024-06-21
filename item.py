@@ -1,5 +1,6 @@
 import copy
 
+
 class Item:
     def __init__(self, data):
         """Initializes item data"""

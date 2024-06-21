@@ -55,14 +55,18 @@ class Loader:
                 # for g in v:
                 #     gs = gstate.GState(g)
                 #     self.gstate_templates[k].append(gs)
+
     def save_gstate_templates(self):
         if len(self.gstate_templates) > 0:
             with open(self.GSTATE_JSON_FILENAME, "w") as f:
                 json.dump(self.gstate_templates, f, indent=4, sort_keys=True)
+
     def build_gstate(self, _id):
         return gstate.GState(self.gstate_templates[_id])
+
     def get_gstate_template(self, _id):
         return self.gstate_templates[_id]
+
     def get_gstate_templates(self):
         return self.gstate_templates
 
@@ -101,7 +105,6 @@ class Loader:
     def get_obj_templates(self):
         "Returns all templates"
         return self.obj_templates
-
 
     def copy_obj_template(self, _id):
         """Produces a deep copy of a object template"""
@@ -170,6 +173,7 @@ class Loader:
 
     def get_comp_template(self, _id):
         return self.comp_templates[_id]
+
     def get_comp_templates(self):
         return self.comp_templates
 
@@ -189,7 +193,7 @@ class Loader:
     def get_comp_ids(self):
         """Gets component ids"""
         return list(self.comp_templates.keys())
-    
+
     def get_comp_ids_of_ctype(self, _ctype):
         comp_ids = []
         for _id, comp in self.comp_templates.items():
@@ -199,8 +203,6 @@ class Loader:
 
     def get_comp(self, _id):
         return self.comp_templates[_id]
-
-    
 
     def get_comp_names(self):
         """Gets component names"""
@@ -242,8 +244,10 @@ class Loader:
 
     def get_map_template(self, _id):
         return self.map_templates[_id]
+
     def get_map_templates(self):
         return self.map_templates
+
     def delete_map(self, map_id):
         del self.map_templates[map_id]
 
@@ -274,6 +278,7 @@ class Loader:
 
     def get_team_templates(self):
         return self.team_templates
+
     def get_team_template(self, _id):
         return self.team_templates[_id]
 
@@ -301,11 +306,13 @@ class Loader:
     def update_team_template(self, _id, **kwargs):
         try:
             team = self.team_templates[_id]
-            for k,v in kwargs.items():
+            for k, v in kwargs.items():
                 try:
                     team[k] = v
                 except:
-                    self.logger.error(f"LOADER: update_team_template() KeyError {k} is an invalid team attribute.")
+                    self.logger.error(
+                        f"LOADER: update_team_template() KeyError {k} is an invalid team attribute."
+                    )
         except KeyError:
             self.logger.error(f"LOADER: update_team_template() KeyError {_id}")
 
