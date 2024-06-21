@@ -81,7 +81,7 @@ class App(tk.Tk):
                 controller=self,
                 logger=self.logger,
                 ldr=self.ldr
-            )
+        )
         self.frames["config_item"] = ui_item_config.UIItemConfig(
             master=self.container,
             controller=self,
