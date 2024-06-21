@@ -20,16 +20,17 @@ class ui_about(tk.Frame):
         Sets description text, places description,
         places label, places home button
         """
-        desc_text = "MAIA is a platform designed for AI competitions that "
-        + "provides a modular 2D simulation environment for which students "
-        + "write AI to control competing agents.\n The goal is to give coders "
-        + "all the tools necessary so that they can focus primarily on "
-        + "analysis of information and decision-making.\n\n MAIA was "
-        + "developed by Dr. Zachary Hutchinson during his graduate studies "
-        + "at the University of Maine, Orono.\n Version 0.22, the most "
-        + "current version of MAIA, was released in October of 2020.\n "
-        + "Further documentation, including overviews of the AI scripts, "
-        + "can be found in the docs directory."
+        desc_text = "MAIA is a platform designed for AI competitions that " \
+            + "provides a modular 2D simulation environment for which " \
+            + "students write AI to control competing agents.\n The goal is "\
+            + "to give coders all the tools necessary so that they can focus "\
+            + "primarily on analysis of information and decision-making.\n\n" \
+            + "MAIA was developed by Dr. Zachary Hutchinson during his " \
+            + "graduate studies at the University of Maine, Orono.\n" \
+            + "Version 0.22, the most current version of MAIA, was " \
+            + "released in October of 2020.\n Further documentation, " \
+            + "including overviews of the AI scripts, can be found in the " \
+            + "docs directory."
         desc_text = desc_text.replace("            ", "")
 
         self.maia_label = uiw.uiLabel(master=self, text="Maine AI Arena")

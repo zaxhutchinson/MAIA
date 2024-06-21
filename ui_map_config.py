@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.font
 import enum
 import zfunctions
 import ui_widgets as uiw

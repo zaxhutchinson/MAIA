@@ -5,6 +5,7 @@
 ##############################################################################
 
 import tkinter as tk
+import tkinter.scrolledtext
 from tkinter import messagebox
 from tkinter import ttk
 import platform

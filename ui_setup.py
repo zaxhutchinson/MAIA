@@ -3,7 +3,6 @@ import queue
 import sim
 import loader
 import ui_sim
-import ui_advanced_config
 import msgs
 import zexceptions
 import ui_widgets as uiw
@@ -325,4 +324,5 @@ class UISetup(tk.Frame):
 
     def run_advanced_settings(self):
         """Opens advanced config settings"""
-        self.UIMap = ui_advanced_config.UISettings(self, self.logger)
+        pass
+        # self.UIMap = ui_advanced_config.UISettings(self, self.logger)
