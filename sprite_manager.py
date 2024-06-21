@@ -1,4 +1,4 @@
-from PIL import ImageTk, Image
+from PIL import Image
 
 SPRITE_PATH = ""
 
@@ -11,5 +11,5 @@ def init(ldr):
 def load_image(filename):
     try:
         return Image.open(f"{SPRITE_PATH}/{filename}")
-    except:
+    except Exception:
         raise

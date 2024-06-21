@@ -1,20 +1,5 @@
 import tkinter as tk
-from tkinter.font import Font
-import tkinter.scrolledtext as scrolltext
-import queue
-import cProfile
-import logging
-import loader
-import json
-import comp
-import obj
-import zmap
-from tkinter.messagebox import askyesno
-from tkinter.messagebox import showwarning
-from tkinter.simpledialog import askstring
-
-import ui_map_config
-from ui_widgets import *
+import ui_widgets as uiw
 
 
 class UITeamConfig(tk.Frame):
@@ -22,7 +7,7 @@ class UITeamConfig(tk.Frame):
         super().__init__(master)
         self.controller = controller
         self.master = master
-        self.configure(bg=BGCOLOR)
+        self.configure(bg=uiw.BGCOLOR)
         self.logger = logger
         self.ldr = ldr
         self.build_ui()
@@ -53,13 +38,23 @@ class UITeamConfig(tk.Frame):
         """
         # Make main frames
 
-        self.main_frame = uiQuietFrame(master=self)
-        self.team_selection_column = uiLabelFrame(master=self.main_frame, text="Teams")
-        self.teams_column = uiLabelFrame(master=self.main_frame, text="Team Info")
-        self.agents_column = uiLabelFrame(master=self.main_frame, text="Agent Info")
-        self.button_row = uiQuietFrame(master=self.main_frame)
-        self.title_label = uiLabel(master=self.main_frame, text="Team Config")
-        self.validate_num = self.main_frame.register(self.validate_number_entry)
+        self.main_frame = uiw.uiQuietFrame(master=self)
+        self.team_selection_column = uiw.uiLabelFrame(
+            master=self.main_frame, text="Teams"
+        )
+        self.teams_column = uiw.uiLabelFrame(
+            master=self.main_frame, text="Team Info"
+        )
+        self.agents_column = uiw.uiLabelFrame(
+            master=self.main_frame, text="Agent Info"
+        )
+        self.button_row = uiw.uiQuietFrame(master=self.main_frame)
+        self.title_label = uiw.uiLabel(
+            master=self.main_frame, text="Team Config"
+        )
+        self.validate_num = self.main_frame.register(
+            self.validate_number_entry
+        )
 
         # Place frames
         self.main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
@@ -71,7 +66,7 @@ class UITeamConfig(tk.Frame):
 
         # Team Selection Widgets
         self.select_team_listbox_var = tk.StringVar()
-        self.select_team_listbox = uiListBox(
+        self.select_team_listbox = uiw.uiListBox(
             master=self.team_selection_column,
             listvariable=self.select_team_listbox_var,
             selectmode="browse",
@@ -79,37 +74,52 @@ class UITeamConfig(tk.Frame):
         self.select_team_listbox.pack(side=tk.LEFT, fill=tk.BOTH)
 
         # Team Info Widgets
-        self.team_size_label = uiLabel(master=self.teams_column, text="Size:")
-        self.team_size_entry = EntryHelp(
+        self.team_size_label = uiw.uiLabel(
+            master=self.teams_column, text="Size:"
+        )
+        self.team_size_entry = uiw.EntryHelp(
             master=self.teams_column,
             text=(
-                "The team size field represents how many agents you want in the selected team."
+                "The team size field represents how many agents you want "
+                + "in the selected team."
                 " This field takes numeric values only."
             ),
         )
         self.team_size_entry.entry.config(
             validate="all", validatecommand=(self.validate_num, "%P")
         )
-        self.team_name_label = uiLabel(master=self.teams_column, text="Name:")
-        self.team_name_entry = EntryHelp(master=self.teams_column, text="To be added.")
-        self.agent_list_label = uiLabel(master=self.teams_column, text="Agents")
+        self.team_name_label = uiw.uiLabel(
+            master=self.teams_column, text="Name:"
+        )
+        self.team_name_entry = uiw.EntryHelp(
+            master=self.teams_column, text="To be added."
+        )
+        self.agent_list_label = uiw.uiLabel(
+            master=self.teams_column, text="Agents"
+        )
         self.agent_listbox_var = tk.StringVar()
-        self.agent_listbox = uiListBox(
+        self.agent_listbox = uiw.uiListBox(
             master=self.teams_column,
             listvariable=self.agent_listbox_var,
             selectmode="browse",
         )
-        self.add_agent_button = uiButton(
+        self.add_agent_button = uiw.uiButton(
             master=self.teams_column, command=self.add_agent, text="Add Agent"
         )
-        self.del_agent_button = uiCarefulButton(
-            master=self.teams_column, command=self.del_agent, text="Delete Agent"
+        self.del_agent_button = uiw.uiCarefulButton(
+            master=self.teams_column,
+            command=self.del_agent,
+            text="Delete Agent"
         )
-        self.update_agent_button = uiButton(
-            master=self.teams_column, command=self.update_agent, text="Update Agent"
+        self.update_agent_button = uiw.uiButton(
+            master=self.teams_column,
+            command=self.update_agent,
+            text="Update Agent"
         )
 
-        self.select_team_listbox.bind("<<ListboxSelect>>", self.cmd_new_team_selection)
+        self.select_team_listbox.bind(
+            "<<ListboxSelect>>", self.cmd_new_team_selection
+        )
         self.agent_listbox.bind("<<ListboxSelect>>", self.cmd_show_agent)
 
         self.team_size_label.grid(row=0, column=0, sticky="ew")
@@ -119,20 +129,36 @@ class UITeamConfig(tk.Frame):
         self.agent_list_label.grid(row=2, column=0, columnspan=2, sticky="ew")
         self.agent_listbox.grid(row=3, column=0, columnspan=2, sticky="ew")
         self.add_agent_button.grid(row=4, column=0, columnspan=2, sticky="ew")
-        self.update_agent_button.grid(row=5, column=0, columnspan=2, sticky="ew")
+        self.update_agent_button.grid(
+            row=5, column=0, columnspan=2, sticky="ew"
+        )
         self.del_agent_button.grid(row=6, column=0, columnspan=2, sticky="ew")
 
         # Agent Info Widgets
-        self.callsign_label = uiLabel(master=self.agents_column, text="Callsign:")
-        self.callsign_entry = EntryHelp(master=self.agents_column, text="To be added.")
-        self.squad_label = uiLabel(master=self.agents_column, text="Squad:")
-        self.squad_entry = EntryHelp(master=self.agents_column, text="To be added.")
-        self.agent_object_label = uiLabel(master=self.agents_column, text="Object:")
-        self.agent_object_entry = EntryHelp(
+        self.callsign_label = uiw.uiLabel(
+            master=self.agents_column, text="Callsign:"
+        )
+        self.callsign_entry = uiw.EntryHelp(
             master=self.agents_column, text="To be added."
         )
-        self.ai_file_label = uiLabel(master=self.agents_column, text="AI File:")
-        self.ai_file_entry = EntryHelp(master=self.agents_column, text="To be added.")
+        self.squad_label = uiw.uiLabel(
+            master=self.agents_column, text="Squad:"
+        )
+        self.squad_entry = uiw.EntryHelp(
+            master=self.agents_column, text="To be added."
+        )
+        self.agent_object_label = uiw.uiLabel(
+            master=self.agents_column, text="Object:"
+        )
+        self.agent_object_entry = uiw.EntryHelp(
+            master=self.agents_column, text="To be added."
+        )
+        self.ai_file_label = uiw.uiLabel(
+            master=self.agents_column, text="AI File:"
+        )
+        self.ai_file_entry = uiw.EntryHelp(
+            master=self.agents_column, text="To be added."
+        )
 
         self.callsign_label.grid(row=1, column=1, sticky="ew")
         self.callsign_entry.frame.grid(row=1, column=2, sticky="ew")
@@ -145,26 +171,32 @@ class UITeamConfig(tk.Frame):
 
         # Team Buttons
 
-        self.teams_create_button = uiButton(
+        self.teams_create_button = uiw.uiButton(
             master=self.button_row, command=self.create_team, text="Add Team"
         )
         self.teams_create_button.pack(side=tk.LEFT)
-        self.teams_update_button = uiButton(
-            master=self.button_row, command=self.update_team, text="Update Team"
+        self.teams_update_button = uiw.uiButton(
+            master=self.button_row,
+            command=self.update_team,
+            text="Update Team"
         )
         self.teams_update_button.pack(side=tk.LEFT)
-        self.teams_delete_button = uiCarefulButton(
-            master=self.button_row, command=self.delete_team, text="Delete Team"
+        self.teams_delete_button = uiw.uiCarefulButton(
+            master=self.button_row,
+            command=self.delete_team,
+            text="Delete Team"
         )
         self.teams_delete_button.pack(side=tk.LEFT)
 
         # High-level Buttons
-        self.home_button = uiButton(
+        self.home_button = uiw.uiButton(
             master=self.button_row, command=self.goto_home, text="Home"
         )
         self.home_button.pack(side=tk.RIGHT)
-        self.save_to_json_button = uiCarefulButton(
-            master=self.button_row, command=self.save_to_json, text="Save Teams to JSON"
+        self.save_to_json_button = uiw.uiCarefulButton(
+            master=self.button_row,
+            command=self.save_to_json,
+            text="Save Teams to JSON"
         )
         self.save_to_json_button.pack(side=tk.RIGHT)
 
@@ -172,7 +204,8 @@ class UITeamConfig(tk.Frame):
 
     def populate_team_listbox(self):
         """
-        Gets information from the loader and assigns current values for each setting type.
+        Gets information from the loader and assigns current values
+        for each setting type.
         """
         team_names = sorted(self.ldr.get_team_names())
         self.select_team_listbox.delete(0, tk.END)
@@ -188,62 +221,12 @@ class UITeamConfig(tk.Frame):
         """
         self.show_team_entry()
 
-        # DISABLED CHECKING IF TEAM HAS BEEN ALTERED. NOT SURE IF WE
-        #   NEED THIS. Current approach is to update the local copy
-        #   of the team_data. And only save back to json on an actual
-        #   "save".
-
-        # # the answer variable defaults to true
-        # self.answer = True
-        # self.get_focused_entry()
-        # # if any of the team entry values differ from their starting values,
-        # # the user is warned that they could be overwritten
-        # if not (
-        #     (
-        #         (self.team_name_entry.entry.get() == self.current_team_data["name"])
-        #         and (
-        #             self.team_size_entry.entry.get()
-        #             == str(self.current_team_data["size"])
-        #         )
-        #         and (
-        #             self.callsign_entry.entry.get()
-        #             == self.current_team_data["agent_defs"][0]["callsign"]
-        #         )
-        #         and (
-        #             self.squad_entry.entry.get()
-        #             == self.current_team_data["agent_defs"][0]["squad"]
-        #         )
-        #         and (
-        #             self.agent_object_entry.entry.get()
-        #             == self.current_team_data["agent_defs"][0]["object"]
-        #         )
-        #         and (
-        #             self.ai_file_entry.entry.get()
-        #             == self.current_team_data["agent_defs"][0]["AI_file"]
-        #         )
-        #     )
-        # ):
-        #     self.answer = askyesno(
-        #         title="confirmation",
-        #         message="""Warning: You have modified Team values and have not Updated.
-        #           Your changes will not be saved. Are you sure you would like continue?""",
-        #     )
-
-        # # the current team is successfully changed if the user made no changes,
-        # # or if the user confirms they are fine with their changes being overwritten
-        # if self.answer:
-        #     # currentTeamIdx = self.selectTeamCombo.current()
-        #     self.current_team_data = self.team_data[self.select_team_listbox.get()]
-        #     self.show_team_entry(self.current_team_data)
-        # else:
-        #     self.select_team_listbox.current(self.prev_team_combo)
-
     def show_team_entry(self):
         """
         Updates the values stored in the team entry widgets.
         """
         current_team = self.get_currently_selected_team()
-        if current_team != None:
+        if current_team is not None:
 
             self.team_name_entry.entry.delete(0, tk.END)
             self.team_name_entry.entry.insert(0, current_team["name"])
@@ -270,10 +253,8 @@ class UITeamConfig(tk.Frame):
         self.ai_file_entry.entry.delete(0, tk.END)
 
     def show_agent_entry(self):
-        # agent_selection = self.agent_listbox.curselection()[0]
-        team_name = self.team_name_entry.entry.get()
         current_team = self.get_currently_selected_team()
-        if current_team != None:
+        if current_team is not None:
             self.clear_agent_info()
             index = self.agent_listbox.curselection()
             if len(index) == 1:
@@ -291,7 +272,7 @@ class UITeamConfig(tk.Frame):
                     0, current_team["agent_defs"][index]["AI_file"]
                 )
 
-    ### CREATE NEW ###
+    # CREATE NEW
     def create_team(self):
         """
         Creates a new team and adds it to the team dictionary.
@@ -301,13 +282,15 @@ class UITeamConfig(tk.Frame):
 
         good_name = False
         while not good_name:
-            team_id = askstring("New Team ID", "Please enter an ID for the new team.")
+            team_id = tk.simpledialog.askstring(
+                "New Team ID", "Please enter an ID for the new team."
+            )
             if len(team_id) == 0:
-                messagebox.showwarning(
+                tk.messagebox.showwarning(
                     "Warning", "You must enter a team ID to continue"
                 )
             elif team_id in team_data.keys():
-                messagebox.showwarning(
+                tk.messagebox.showwarning(
                     "Warning", "This ID already exists, please enter a new ID."
                 )
             else:
@@ -328,20 +311,21 @@ class UITeamConfig(tk.Frame):
         self.select_team_listbox.activate(index)
         self.cmd_new_team_selection()
 
-    ### UPDATE JSON FILES###
+    # UPDATE JSON FILES
     def update_team(self):
         """
         Updates the teams JSON values.
         """
         team_data = self.ldr.get_team_templates()
         current_team = self.get_currently_selected_team()
-        if current_team != None:
+        if current_team is not None:
             new_name = self.team_name_entry.entry.get()
             if new_name != current_team["name"]:
                 if new_name in team_data.keys():
-                    showwarning(
+                    tk.simpledialog.showwarning(
                         title="Warning",
-                        message=f"{new_name} is in use by another team. Please use another name.",
+                        message=f"{new_name} is in use by another team. "
+                        + "Please use another name.",
                     )
                 else:
                     old_name = current_team["name"]
@@ -351,7 +335,7 @@ class UITeamConfig(tk.Frame):
             team_data[new_name] = current_team
             self.populate_team_listbox()
 
-    ### DELETE ###
+    # DELETE
 
     def delete_team(self):
         """
@@ -359,13 +343,13 @@ class UITeamConfig(tk.Frame):
         """
         team_data = self.ldr.get_team_templates()
         current_team = self.get_currently_selected_team()
-        if current_team != None:
+        if current_team is not None:
             del team_data[current_team["name"]]
             self.populate_team_listbox()
 
     def add_agent(self, event=None):
         current_team = self.get_currently_selected_team()
-        if current_team != None:
+        if current_team is not None:
             cur_size_of_team = len(current_team["agent_defs"])
             cur_size_of_team = int(cur_size_of_team)
             new_agent = {}
@@ -382,7 +366,7 @@ class UITeamConfig(tk.Frame):
 
     def del_agent(self, event=None):
         current_team = self.get_currently_selected_team()
-        if current_team != None:
+        if current_team is not None:
             agent_index = self.agent_listbox.curselection()
             if len(agent_index) == 1:
                 self.agent_listbox.delete(agent_index[0])
@@ -392,7 +376,7 @@ class UITeamConfig(tk.Frame):
 
     def update_agent(self, event=None):
         current_team = self.get_currently_selected_team()
-        if current_team != None:
+        if current_team is not None:
             agent_index = self.agent_listbox.curselection()
             agent = current_team["agent_defs"][agent_index[0]]
             if len(agent_index) == 1:
@@ -406,7 +390,9 @@ class UITeamConfig(tk.Frame):
                     or len(object_name) == 0
                     or len(ai_file) == 0
                 ):
-                    messagebox.showwarning("Warning", "Cannot have blank agent fields.")
+                    tk.messagebox.showwarning(
+                        "Warning", "Cannot have blank agent fields."
+                    )
                 else:
                     agent["callsign"] = callsign
                     agent["squad"] = squad

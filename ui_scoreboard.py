@@ -1,9 +1,16 @@
 import tkinter as tk
-from ui_widgets import *
+import ui_widgets as uiw
 
 
 class ScoreboardFrame(tk.Frame):
-    def __init__(self, teams_scores_dict, controller, ui_sim, sim, master=None):
+    def __init__(
+        self,
+        teams_scores_dict,
+        controller,
+        ui_sim,
+        sim,
+        master=None
+    ):
         """Sets window and frame information and calls function to build UI"""
 
         super().__init__(master)
@@ -38,7 +45,8 @@ class ScoreboardFrame(tk.Frame):
         """
         # This converts the dictionary to tuples
         teams_scores = [
-            (team, details["total"]) for team, details in self.teams_scores_dict.items()
+            (team, details["total"])
+            for team, details in self.teams_scores_dict.items()
         ]
 
         # Sort tuples in descending order
@@ -47,20 +55,30 @@ class ScoreboardFrame(tk.Frame):
         )
 
         # Title
-        title_label = uiLabel(master=self, text="Final Scores", font=("Arial", 16))
+        title_label = uiw.uiLabel(
+            master=self, text="Final Scores", font=("Arial", 16)
+        )
         title_label.config(highlightthickness=0)
         title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
 
         # Scores
-        for index, (team, score) in enumerate(self.teams_scores_sorted, start=1):
-            team_label = uiLabel(master=self, text=f"{team}", font=("Arial", 14))
+        for index, (team, score) in enumerate(
+            self.teams_scores_sorted, start=1
+        ):
+            team_label = uiw.uiLabel(
+                master=self, text=f"{team}", font=("Arial", 14)
+            )
             team_label.config(highlightthickness=0)
-            score_label = uiLabel(master=self, text=f"{score}", font=("Arial", 14))
+            score_label = uiw.uiLabel(
+                master=self, text=f"{score}", font=("Arial", 14)
+            )
             score_label.config(highlightthickness=0)
             team_label.grid(row=index, column=0, columnspan=2, sticky="w")
             score_label.grid(row=index, column=1, columnspan=2, sticky="e")
 
-        home_button = uiButton(master=self, command=self.home_page, text="Home")
+        home_button = uiw.uiButton(
+            master=self, command=self.home_page, text="Home"
+        )
         home_button.grid(row=index + 1, column=0)
 
     def home_page(self):

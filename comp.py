@@ -1,7 +1,4 @@
-import math
 import copy
-
-import vec2
 import action
 
 CTYPES_LIST = ["FixedGun", "Engine", "Radar", "CnC", "Radio", "Arm"]
@@ -187,7 +184,10 @@ class Comp:
                     a.set_type("HIGHSPEED_PROJECTILE")
                     a.add_data("slot_id", self.get_data("slot_id"))
                     a.add_data("compname", self.get_data("name"))
-                    a.add_data("direction", self.get_data("parent").get_data("facing"))
+                    a.add_data(
+                        "direction",
+                        self.get_data("parent").get_data("facing")
+                    )
                     a.add_data("min_damage", self.get_data("min_damage"))
                     a.add_data("max_damage", self.get_data("max_damage"))
                     a.add_data("range", self.get_data("range"))
@@ -247,7 +247,8 @@ class Comp:
                     if abs(new_turnrate) <= self.get_data("max_turnrate"):
                         self.data["cur_turnrate"] = new_turnrate
                     else:
-                        self.data["cur_turnrate"] = self.get_data("max_turnrate")
+                        self.data["cur_turnrate"] = \
+                            self.get_data("max_turnrate")
 
         return actions
 
@@ -400,7 +401,7 @@ class Comp:
         return []
 
     ###########################################################################
-    ## WEAPON RELATED FUNCTIONS
+    # WEAPON RELATED FUNCTIONS
     def set_reload_ticks_to_full(self):
         """Set reload ticks to full"""
         self.data["reload_ticks_remaining"] = self.data["reload_ticks"]
@@ -420,7 +421,7 @@ class Comp:
                 self.data["reloading"] = False
 
     ###########################################################################
-    ## ENGINE RELATED FUNCTIONS
+    # ENGINE RELATED FUNCTIONS
     def is_moving(self):
         """Determines if engine is moving"""
         return self.data["cur_speed"] != 0.0
@@ -430,13 +431,13 @@ class Comp:
         return self.data["cur_turnrate"] != 0.0
 
     ###########################################################################
-    ## RADAR RELATED FUCNTIONS
+    # RADAR RELATED FUCNTIONS
     def is_transmitting(self):
         """Determines if radar is transmitting"""
         return self.get_data("active")
 
     ###########################################################################
-    ## ARM RELATED FUNCTIONS
+    # ARM RELATED FUNCTIONS
     def is_holding_item(self):
         """Determines if arm is holding an item"""
         return self.get_data("item") is not None
@@ -444,11 +445,12 @@ class Comp:
     def can_take_item(self, weight, bulk):
         """Determines if arm can take item"""
         return (
-            self.get_data("max_weight") >= weight and self.get_data("max_bulk") >= bulk
+            self.get_data("max_weight") >= weight and
+            self.get_data("max_bulk") >= bulk
         )
 
     ###########################################################################
-    ##
+    #
     def is_active(self):
         """Determines if component is active"""
         return self.get_data("active")

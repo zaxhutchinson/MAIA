@@ -10,7 +10,8 @@ import sys
 def pretty_print_view(view, out=sys.stdout, indent=""):
     """View coming from the simulation
 
-    This method will print an indented version of the view (dict of world state) using the
+    This method will print an indented version of the view (dict of world
+    state) using the
     output file specified. By default it sends output to stdout.
     Users can but in general should not need to pass in a value for indent.
     """
@@ -41,7 +42,7 @@ def get_sub_view(view, *args):
         return get_sub_view(subview, *args[1:])
     except IndexError:
         return view
-    except:
+    except Exception:
         return None
 
 
@@ -193,7 +194,8 @@ def search_radar_for_obj_name(view, name):
 def get_comp_views_of_vtype(view, vtype):
     """Gets component views of a vtype
 
-    Returns a list of all the views within the comp view with a specific vtype."""
+    Returns a list of all the views within the comp view with a specific
+    vtype."""
     views = []
     comp_subview = get_sub_view(view, "comp")
     if comp_subview is not None:

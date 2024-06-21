@@ -4,14 +4,10 @@
 # The main UI element for a simulation in progress.
 ##############################################################################
 import tkinter as tk
-from tkinter.font import Font
-import tkinter.scrolledtext as scrolltext
 import queue
-import cProfile
-import logging
 import ui_scoreboard
 
-from ui_widgets import *
+import ui_widgets as uiw
 
 # The default delay between turns. This value is used by
 # both the continuous and the turn-by-turn modes. If the delay
@@ -21,7 +17,14 @@ DEFAULT_TURN_DELAY_IN_MS = 500
 
 class UISim(tk.Toplevel):
     def __init__(
-        self, map_width, map_height, sim, omsgr, controller, master=None, logger=None
+        self,
+        map_width,
+        map_height,
+        sim,
+        omsgr,
+        controller,
+        master=None,
+        logger=None
     ):
         """Sets window and frame information and generates the sim UI
 
@@ -33,7 +36,7 @@ class UISim(tk.Toplevel):
         """
         super().__init__(master)
         self.master = master
-        self.configure(bg=BGCOLOR)
+        self.configure(bg=uiw.BGCOLOR)
         self.title("MAIA - Sim UI")
         self.logger = logger
         self.controller = controller
@@ -60,16 +63,16 @@ class UISim(tk.Toplevel):
         self.continuous_run = False
 
         # Create the left and right frames
-        self.map_frame = uiQuietFrame(master=self)
+        self.map_frame = uiw.uiQuietFrame(master=self)
         self.map_frame.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.log_frame = uiQuietFrame(master=self)
+        self.log_frame = uiw.uiQuietFrame(master=self)
         self.log_frame.pack(fill=tk.BOTH, expand=True, side=tk.RIGHT)
 
         # Create the map canvas
         self.x_bar = tk.Scrollbar(self.map_frame, orient=tk.HORIZONTAL)
         self.y_bar = tk.Scrollbar(self.map_frame, orient=tk.VERTICAL)
 
-        self.canvas = uiCanvas(
+        self.canvas = uiw.uiCanvas(
             master=self.map_frame,
             width=800,
             height=800,
@@ -97,12 +100,12 @@ class UISim(tk.Toplevel):
 
         # Create the log notebook and tabs
 
-        self.log_notebook = uiNotebook(master=self.log_frame)
+        self.log_notebook = uiw.uiNotebook(master=self.log_frame)
         self.log_notebook.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
 
-        self.main_log_frame = uiQuietFrame(master=self.log_notebook)
+        self.main_log_frame = uiw.uiQuietFrame(master=self.log_notebook)
         self.log_notebook.add(self.main_log_frame, text="Main")
-        self.main_log_scroll = uiScrollText(master=self.main_log_frame)
+        self.main_log_scroll = uiw.uiScrollText(master=self.main_log_frame)
         self.main_log_scroll.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
         self.main_log_scroll.configure(state="disabled")
 
@@ -111,41 +114,57 @@ class UISim(tk.Toplevel):
         # self.data_frame_2 = uiQuietFrame(master=self.log_frame)
         # self.data_frame_2.pack(fill=tk.BOTH,expand=True,side=tk.TOP)
 
-        self.btn_frame_1 = uiQuietFrame(master=self.log_frame)
+        self.btn_frame_1 = uiw.uiQuietFrame(master=self.log_frame)
         self.btn_frame_1.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
 
-        self.btn_run = uiButton(
-            master=self.btn_frame_1, text="Run", command=self.run_continuous_proxy
+        self.btn_run = uiw.uiButton(
+            master=self.btn_frame_1,
+            text="Run",
+            command=self.run_continuous_proxy
         )
         self.btn_run.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.btn_pause = uiButton(
-            master=self.btn_frame_1, text="Pause", command=self.pause_continuous
+        self.btn_pause = uiw.uiButton(
+            master=self.btn_frame_1,
+            text="Pause",
+            command=self.pause_continuous
         )
         self.btn_pause.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.delay_label = uiLabel(master=self.btn_frame_1, text="Delay (ms)")
+        self.delay_label = uiw.uiLabel(
+            master=self.btn_frame_1, text="Delay (ms)"
+        )
         self.delay_label.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.delay_entry = uiEntry(master=self.btn_frame_1)
+        self.delay_entry = uiw.uiEntry(master=self.btn_frame_1)
         self.delay_entry.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
-        self.btn_frame_2 = uiQuietFrame(master=self.log_frame)
+        self.btn_frame_2 = uiw.uiQuietFrame(master=self.log_frame)
         self.btn_frame_2.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
-        self.turns_button = uiButton(
-            master=self.btn_frame_2, text="Run X Turns", command=self.run_x_turns
+        self.turns_button = uiw.uiButton(
+            master=self.btn_frame_2,
+            text="Run X Turns",
+            command=self.run_x_turns
         )
         self.turns_button.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.turns_label = uiLabel(master=self.btn_frame_2, text="Turns To Run")
+        self.turns_label = uiw.uiLabel(
+            master=self.btn_frame_2, text="Turns To Run"
+        )
         self.turns_label.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.turns_entry = uiEntry(master=self.btn_frame_2)
+        self.turns_entry = uiw.uiEntry(master=self.btn_frame_2)
         self.turns_entry.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
-        self.btn_frame_3 = uiQuietFrame(master=self.log_frame)
+        self.btn_frame_3 = uiw.uiQuietFrame(master=self.log_frame)
         self.btn_frame_3.pack(fill=tk.BOTH, expand=True, side=tk.TOP)
-        self.display_points_button = uiButton(
-            master=self.btn_frame_3, text="Display Points", command=self.display_points
+        self.display_points_button = uiw.uiButton(
+            master=self.btn_frame_3,
+            text="Display Points",
+            command=self.display_points
         )
-        self.display_points_button.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.end_game_button = uiButton(
-            master=self.btn_frame_3, text="End Game", command=self.display_scoreboard
+        self.display_points_button.pack(
+            fill=tk.BOTH, expand=True, side=tk.LEFT
+        )
+        self.end_game_button = uiw.uiButton(
+            master=self.btn_frame_3,
+            text="End Game",
+            command=self.display_scoreboard
         )
         self.end_game_button.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
@@ -366,10 +385,14 @@ class UISim(tk.Toplevel):
         for widget in self.log_frame.winfo_children():
             widget.pack_forget()
 
-        scoreboard_frame = uiQuietFrame(master=self.log_frame)
+        scoreboard_frame = uiw.uiQuietFrame(master=self.log_frame)
         scoreboard_frame.pack(fill=tk.BOTH, expand=True)
 
         scoreboard_frame = ui_scoreboard.ScoreboardFrame(
-            teams_scores, self.controller, self, self.sim, master=self.log_frame
+            teams_scores,
+            self.controller,
+            self,
+            self.sim,
+            master=self.log_frame
         )
         scoreboard_frame.pack(fill=tk.BOTH, expand=True)

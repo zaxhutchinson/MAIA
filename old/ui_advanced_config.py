@@ -1,9 +1,4 @@
 import tkinter as tk
-from tkinter.font import Font
-import tkinter.scrolledtext as scrolltext
-import queue
-import cProfile
-import logging
 import loader
 import json
 import comp
@@ -14,14 +9,14 @@ from tkinter.messagebox import showwarning
 from tkinter.simpledialog import askstring
 
 import ui_map_config
-from ui_widgets import *
+import ui_widgets as uiw
 
 
 class UISettings(tk.Toplevel):
     def __init__(self, master=None, logger=None):
         super().__init__(master)
         self.master = master
-        self.configure(bg=BGCOLOR)
+        self.configure(bg=uiw.BGCOLOR)
         self.title("MAIA - Advanced Configuration")
 
         self.geometry("1450x700")
@@ -92,54 +87,62 @@ class UISettings(tk.Toplevel):
         """
         # Make main widgets
 
-        self.main_frame = uiQuietFrame(master=self)
-        self.teams_column = uiQuietFrame(master=self.main_frame)
-        self.components_column = uiQuietFrame(master=self.main_frame)
-        self.objects_column = uiQuietFrame(master=self.main_frame)
-        self.maps_column = uiQuietFrame(master=self.main_frame)
-        self.title_label = uiLabel(master=self.main_frame, text="Advanced Settings")
+        self.main_frame = uiw.uiQuietFrame(master=self)
+        self.teams_column = uiw.uiQuietFrame(master=self.main_frame)
+        self.components_column = uiw.uiQuietFrame(master=self.main_frame)
+        self.objects_column = uiw.uiQuietFrame(master=self.main_frame)
+        self.maps_column = uiw.uiQuietFrame(master=self.main_frame)
+        self.title_label = uiw.uiLabel(
+            master=self.main_frame, text="Advanced Settings"
+        )
 
-        self.validate_num = self.teams_column.register(self.validate_number_entry)
+        self.validate_num = self.teams_column.register(
+            self.validate_number_entry
+        )
 
         # Place main widgets
         self.main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-        self.title_label.pack(side=tk.TOP, fill=tk.BOTH, expand=False, padx=10, pady=10)
+        self.title_label.pack(
+            side=tk.TOP, fill=tk.BOTH, expand=False, padx=10, pady=10
+        )
 
         # Make Team Widgets
 
-        self.select_team_combo = uiComboBox(master=self.teams_column)
+        self.select_team_combo = uiw.uiComboBox(master=self.teams_column)
         self.select_team_combo.configure(state="readonly")
-        self.teams_label = uiLabel(master=self.teams_column, text="Teams")
-        self.team_size_label = uiLabel(master=self.teams_column, text="Size:")
-        self.team_size_entry = EntryHelp(
+        self.teams_label = uiw.uiLabel(master=self.teams_column, text="Teams")
+        self.team_size_label = uiw.uiLabel(
+            master=self.teams_column, text="Size:"
+        )
+        self.team_size_entry = uiw.EntryHelp(
             master=self.teams_column,
             text=(
-                "The team size field represents how many agents you want in the selected team."
-                " This field takes numeric values only."
+                "The team size field represents how many agents you want in "
+                + "the selected team. This field takes numeric values only."
             ),
         )
         self.team_size_entry.entry.config(
             validate="all", validatecommand=(self.validate_num, "%P")
         )
-        self.team_name_label = uiLabel(master=self.teams_column, text="Name:")
-        self.team_name_entry = EntryHelp(master=self.teams_column, text="To be added.")
-        self.agent_frame = uiQuietFrame(
+        self.team_name_label = uiw.uiLabel(master=self.teams_column, text="Name:")
+        self.team_name_entry = uiw.EntryHelp(master=self.teams_column, text="To be added.")
+        self.agent_frame = uiw.uiQuietFrame(
             master=self.teams_column, borderwidth=5, relief="ridge", sticky="nsew"
         )
-        self.callsign_label = uiLabel(master=self.agent_frame, text="Callsign:")
-        self.callsign_entry = EntryHelp(master=self.agent_frame, text="To be added.")
-        self.squad_label = uiLabel(master=self.agent_frame, text="Squad:")
-        self.squad_entry = EntryHelp(master=self.agent_frame, text="To be added.")
-        self.agent_object_label = uiLabel(master=self.agent_frame, text="Object:")
-        self.agent_object_entry = EntryHelp(
+        self.callsign_label = uiw.uiLabel(master=self.agent_frame, text="Callsign:")
+        self.callsign_entry = uiw.EntryHelp(master=self.agent_frame, text="To be added.")
+        self.squad_label = uiw.uiLabel(master=self.agent_frame, text="Squad:")
+        self.squad_entry = uiw.EntryHelp(master=self.agent_frame, text="To be added.")
+        self.agent_object_label = uiw.uiLabel(master=self.agent_frame, text="Object:")
+        self.agent_object_entry = uiw.EntryHelp(
             master=self.agent_frame, text="To be added."
         )
-        self.ai_file_label = uiLabel(master=self.agent_frame, text="AI File:")
-        self.ai_file_entry = EntryHelp(master=self.agent_frame, text="To be added.")
-        self.teams_update_button = uiButton(
+        self.ai_file_label = uiw.uiLabel(master=self.agent_frame, text="AI File:")
+        self.ai_file_entry = uiw.EntryHelp(master=self.agent_frame, text="To be added.")
+        self.teams_update_button = uiw.uiButton(
             master=self.teams_column, command=self.update_teams_json, text="Update"
         )
-        self.teams_create_button = uiButton(
+        self.teams_create_button = uiw.uiButton(
             master=self.teams_column, command=self.create_team, text="Create"
         )
         self.teams_delete_button = uiButton(

@@ -1,17 +1,13 @@
 # Loads teams and other stuff
 
 import json
-import importlib
 
 import obj
 import copy
 import zmap
 import item
 import comp
-import vec2
-import team
 import gstate
-import logging
 
 
 class Loader:
@@ -75,7 +71,9 @@ class Loader:
         try:
             return copy.deepcopy(self.gstate_templates[_id])
         except KeyError:
-            self.logger.error("LOADER: copyGStateTemplate() KeyError " + str(_id))
+            self.logger.error(
+                "LOADER: copyGStateTemplate() KeyError " + str(_id)
+            )
 
     ##########################################################################
     # OBJ
@@ -99,7 +97,7 @@ class Loader:
         "Returns the object template specified by the _id"
         try:
             return self.obj_templates[_id]
-        except KeyError as e:
+        except KeyError:
             return None
 
     def get_obj_templates(self):
@@ -152,7 +150,9 @@ class Loader:
         try:
             return copy.deepcopy(self.item_templates[_id])
         except KeyError:
-            self.logger.error("LOADER: copyItemTemplate() KeyError " + str(_id))
+            self.logger.error(
+                "LOADER: copyItemTemplate() KeyError " + str(_id)
+            )
 
     ##########################################################################
     # COMPS
@@ -188,7 +188,9 @@ class Loader:
         try:
             return copy.deepcopy(self.comp_templates[_id])
         except KeyError:
-            self.logger.error("LOADER: copyCompTemplate() KeyError " + str(_id))
+            self.logger.error(
+                "LOADER: copyCompTemplate() KeyError " + str(_id)
+            )
 
     def get_comp_ids(self):
         """Gets component ids"""
@@ -196,8 +198,8 @@ class Loader:
 
     def get_comp_ids_of_ctype(self, _ctype):
         comp_ids = []
-        for _id, comp in self.comp_templates.items():
-            if comp["ctype"] == _ctype:
+        for _id, _comp in self.comp_templates.items():
+            if _comp["ctype"] == _ctype:
                 comp_ids.append(_id)
         return comp_ids
 
@@ -290,7 +292,9 @@ class Loader:
         try:
             return copy.deepcopy(self.team_templates[_id])
         except KeyError:
-            self.logger.error("LOADER: copyTeamTemplate() KeyError " + str(_id))
+            self.logger.error(
+                "LOADER: copyTeamTemplate() KeyError " + str(_id)
+            )
 
     def get_team_ids(self):
         """Gets team ids"""
@@ -305,13 +309,14 @@ class Loader:
 
     def update_team_template(self, _id, **kwargs):
         try:
-            team = self.team_templates[_id]
+            _team = self.team_templates[_id]
             for k, v in kwargs.items():
                 try:
-                    team[k] = v
-                except:
+                    _team[k] = v
+                except KeyError:
                     self.logger.error(
-                        f"LOADER: update_team_template() KeyError {k} is an invalid team attribute."
+                        f"LOADER: update_team_template() KeyError {k} is an "
+                        + "invalid team attribute."
                     )
         except KeyError:
             self.logger.error(f"LOADER: update_team_template() KeyError {_id}")
@@ -332,4 +337,4 @@ class Loader:
         try:
             return self.main_config[key]
         except KeyError:
-            self.logger.error("LOADER: getMainConfigData() KeyError " + str(key))
+            self.logger.error(f"LOADER: getMainConfigData() KeyError {key}")

@@ -3,7 +3,7 @@ def cmd_to_string(cmd):
 
     Used in logging
     """
-    s = f"COMMAND: "
+    s = "COMMAND: "
     for k, v in cmd.items():
         s += f"{k} [{str(v)}] "
     return s
@@ -11,7 +11,7 @@ def cmd_to_string(cmd):
 
 def action_to_string(action):
     """Creates a string out of the action dictionary"""
-    s = f"ACTION: "
+    s = "ACTION: "
     for k, v in action.data.items():
         s += f"{k} [{str(v)}] "
     return s
@@ -21,7 +21,7 @@ def is_int(i):
     """Tests if i can be cast to an int."""
     try:
         int(i)
-    except:
+    except Exception:
         return False
     else:
         return True

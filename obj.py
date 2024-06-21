@@ -1,10 +1,6 @@
-import random
 import math
 import logging
 import copy
-
-import vec2
-import line
 import zfunctions
 
 _2PI = 2.0 * math.pi
@@ -148,7 +144,7 @@ class Object:
         new_damage = old_damage + amt
         self.set_data("damage", new_damage)
 
-        self.log_info("Damaged for " + str(amt) + " - Total Damage: " + str(new_damage))
+        self.log_info(f"Damaged for {amt} - Total Damage: {new_damage}")
 
         points = 0
         if self.get_data("points_count"):

@@ -13,23 +13,12 @@ GSTATE_TYPES = [
 ]
 
 GOAL_ATTRS_BY_TYPE = {
-    "ITEMS_TOUCH": [
-        ("items",[])
-    ],
-    "OBJ_ITEMS_TOUCH": [
-        ("items",[]),
-        ("object","")
-    ],
-    "N_OBJS_DESTROYED": [
-        ("amount",0),
-        ("objects",[])
-    ],
-    "N_OBJS_IN_LOCS": [
-        ("amount",0),
-        ("objects",[]),
-        ("locations",[])
-    ]
+    "ITEMS_TOUCH": [("items", [])],
+    "OBJ_ITEMS_TOUCH": [("items", []), ("object", "")],
+    "N_OBJS_DESTROYED": [("amount", 0), ("objects", [])],
+    "N_OBJS_IN_LOCS": [("amount", 0), ("objects", []), ("locations", [])],
 }
+
 
 class GState:
     def __init__(self, data):
@@ -65,8 +54,8 @@ class GState:
     ############################################################
     # N_OBJS_IN_LOCS
     #   This gstate tracks if a specific amount of objects have
-    #   reached a set of locations. 
-    #   
+    #   reached a set of locations.
+    #
     #   A simple scenario is 1 obj and 1 location: i.e., maze.
     #
     #   Fox-hound scenarios where 1 obj is trying to reach
@@ -77,7 +66,7 @@ class GState:
     #   locations.
     def init_n_objs_in_locs(self, objs, items):
         """Initializes data for object in a cell
-        
+
         N of the objects must be in one of the specified cells.
         """
 

@@ -6,30 +6,22 @@
 
 import tkinter as tk
 from tkinter import messagebox
-from tkinter.font import Font
 from tkinter import ttk
-import tkinter.scrolledtext as scrolltext
 import platform
 
 # from packages.tkmacosx import Button
 from PIL import ImageTk, Image
-
 import sprite_manager
 
-
+# Constants
 BGCOLOR = "#E5E5E5"
 TEXTCOLOR = "#222222"
-
 BTN_DARK = "#495EA7"
 BTN_LIGHT = "#FFFFFF"
-
 CAREFUL_BTN_DARK = "red"
-
 ENTRY_DARK = "#222222"
 ENTRY_BG = "salmon1"
-
 BOXFILLCOLOR = "#B2C1E3"
-
 PADX = 5
 PADY = 5
 
@@ -83,7 +75,9 @@ class uiScrollFrame(tk.Frame):
         self.rowconfigure(0, weight=1)
         self.canvas = tk.Canvas(self)
         self.canvas.grid(row=0, column=0, sticky="ns")
-        self.scroll_y = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.scroll_y = tk.Scrollbar(
+            self, orient="vertical", command=self.canvas.yview
+        )
         self.scroll_y.grid(row=0, column=1, sticky="ns")
         self.sub_frame = tk.Frame(self.canvas)
         self.canvas.create_window(
@@ -101,7 +95,8 @@ class uiScrollFrame(tk.Frame):
 
     def config_sub_frame(self, event):
         self.canvas.configure(
-            scrollregion=self.canvas.bbox("all"), yscrollcommand=self.scroll_y.set
+            scrollregion=self.canvas.bbox("all"),
+            yscrollcommand=self.scroll_y.set
         )
 
     def config_scrollframe(self, event):
@@ -257,7 +252,9 @@ class EntryHelp:
         self.help_button = uiButton(
             master=self.frame,
             text="?",
-            command=lambda: messagebox.showinfo("Help", self.text, parent=self.master),
+            command=lambda: messagebox.showinfo(
+                "Help", self.text, parent=self.master
+            ),
         )
         self.help_button.configure(width=1)
         self.help_button.grid(row=0, column=1)
@@ -279,7 +276,9 @@ class ComboBoxHelp:
         self.help_button = uiButton(
             master=self.frame,
             text="?",
-            command=lambda: messagebox.showinfo("Help", self.text, parent=self.master),
+            command=lambda: messagebox.showinfo(
+                "Help", self.text, parent=self.master
+            ),
         )
         self.help_button.configure(width=1)
         self.help_button.grid(row=0, column=1)
@@ -337,18 +336,16 @@ class uiCanvas(tk.Canvas):
         y0 = y * self.cell_size + self.border_size
         x1 = x0 + self.cell_size
         y1 = y0 + self.cell_size
-        tile = self.create_rectangle(x0, y0, x1, y1, fill=kwargs["fill"], width=2)
+        tile = self.create_rectangle(
+            x0, y0, x1, y1, fill=kwargs["fill"], width=2
+        )
         self.tiles[(x, y)] = tile
 
-        # self._create(
-        #     'rectangle',
-        #     [x0,y0,x1,y1],
-        #     {'fill':kwargs['fill']}
-        # )
-
     def draw_circle(self, x, y, color, diameter):
-        x0 = x * self.cell_size + self.border_size + ((self.cell_size - diameter) // 2)
-        y0 = y * self.cell_size + self.border_size + ((self.cell_size - diameter) // 2)
+        x0 = x * self.cell_size + self.border_size \
+            + ((self.cell_size - diameter) // 2)
+        y0 = y * self.cell_size + self.border_size \
+            + ((self.cell_size - diameter) // 2)
         x1 = x0 + diameter
         y1 = y0 + diameter
         return self.create_oval(x0, y0, x1, y1, fill=color)
@@ -356,8 +353,11 @@ class uiCanvas(tk.Canvas):
     def draw_character(self, x, y, character, color):
         x0 = x * self.cell_size + self.border_size + (self.cell_size // 2)
         # Magic number 4 almost certainly does not work for other font sizes.
-        y0 = y * self.cell_size + self.border_size + ((self.cell_size - 4) // 2)
-        return self.create_text(x0, y0, text=character, fill=color, font=self.map_font)
+        y0 = y * self.cell_size + self.border_size \
+            + ((self.cell_size - 4) // 2)
+        return self.create_text(
+            x0, y0, text=character, fill=color, font=self.map_font
+        )
 
     def draw_starting_location(self, x, y, loc_num, color):
         circ_id = self.draw_circle(x, y, color, self.cell_size - 5)
@@ -398,38 +398,13 @@ class uiCanvas(tk.Canvas):
                 case "object":
                     self.objects[(kwargs["x"], kwargs["y"])] = sprite_id
                 case "item":
-                    self.items[(kwargs["x"], kwargs["y"], kwargs["id"])] = sprite_id
+                    self.items[(kwargs["x"], kwargs["y"], kwargs["id"])] \
+                        = sprite_id
                 case "start":
-                    self.starting_locations[(kwargs["x"], kwargs["y"])] = sprite_id
-        except:
+                    self.starting_locations[(kwargs["x"], kwargs["y"])] \
+                        = sprite_id
+        except Exception:
             raise
-            # x += self.char_offset + (self.obj_char_size / 2)
-            # y += self.char_offset + (self.obj_char_size / 2)
-            # return self.create_text(
-            #     x, y, text=kwargs["character"], fill=kwargs["color_alive"], font=self.obj_font
-            # )
-        # else:
-        #     try:
-        #         self.sprite = sprite_manager.load_image(kwargs["dead_sprite_filename"])
-        #         width, height = sprite.size
-        #         x += (width // 2) + ((self.cell_size - width) // 2)
-        #         y += (height // 2) + ((self.cell_size - height) // 2)
-        #         facing = 0
-        #         if "facing" in kwargs:
-        #             # sim uses clock-wise coords, ui uses counter-clockwise coords
-        #             facing = kwargs["facing"] * -1
-        #         sprite.rotate(facing)
-        #         tk_sprite = ImageTk.PhotoImage(sprite)
-        #         self.sprites.append(tk_sprite)
-        #         obj = self.create_image(x, y, image=tk_sprite)
-        #         self.objects[(kwargs["x"], kwargs["y"])] = obj
-        #     except:
-        #         raise
-        #         # x += self.char_offset + (self.obj_char_size // 2)
-        #         # y += self.char_offset + (self.obj_char_size // 2)
-        #         # return self.create_text(
-        #         #     x, y, text=kwargs["character"], fill=kwargs["color_dead"], font=self.obj_font
-        #         # )
 
     def remove_obj_at(self, x, y):
         self.remove_obj(self.objects[(x, y)])
@@ -498,14 +473,10 @@ class uiCanvas(tk.Canvas):
             global_sprite_list.append(self.sprite.copy())
             global_sprite_list[-1] = ImageTk.PhotoImage(global_sprite_list[-1])
             return self.create_image(x, y, image=global_sprite_list[-1])
-        except:
+        except Exception:
             return self.create_text(
                 x, y, text=dd["text"], fill=dd["fill"], font=self.obj_font
             )
-
-    def remove_item(self, item_id):
-        """Removes an item from the canvas"""
-        self.delete(item_id)
 
     def update_drawn_item(self, **kwargs):
         """Updates drawn item"""
@@ -553,7 +524,11 @@ class uiCanvas(tk.Canvas):
 
             label_ids.append(
                 self.create_text(
-                    x, bottom, text=str(i), fill=kwargs["fill"], font=self.rcfont
+                    x,
+                    bottom,
+                    text=str(i),
+                    fill=kwargs["fill"],
+                    font=self.rcfont
                 )
             )
 
@@ -582,13 +557,21 @@ class uiCanvas(tk.Canvas):
             )
             label_ids.append(
                 self.create_text(
-                    left, y, text=str(i), fill=kwargs["fill"], font=self.rcfont
+                    left,
+                    y,
+                    text=str(i),
+                    fill=kwargs["fill"],
+                    font=self.rcfont
                 )
             )
 
             label_ids.append(
                 self.create_text(
-                    right, y, text=str(i), fill=kwargs["fill"], font=self.rcfont
+                    right,
+                    y,
+                    text=str(i),
+                    fill=kwargs["fill"],
+                    font=self.rcfont
                 )
             )
 
@@ -596,19 +579,10 @@ class uiCanvas(tk.Canvas):
 
     def draw_rc_number(self, **kwargs):
         """Draws RDNumber"""
-        x = kwargs["x"] * self.cell_size + self.obj_char_size / 2 + self.char_offset
-        y = kwargs["y"] * self.cell_size + self.obj_char_size / 2 + self.char_offset
+        x = kwargs["x"] * self.cell_size + self.obj_char_size / 2 \
+            + self.char_offset
+        y = kwargs["y"] * self.cell_size + self.obj_char_size / 2 \
+            + self.char_offset
         return self.create_text(
             x, y, text=kwargs["text"], fill=kwargs["fill"], font=self.rcfont
         )
-
-        # Circumvents a tk call...speed up is marginal.
-        # self._create(
-        #     'text',
-        #     [x,y],
-        #     {
-        #         'text':kwargs['text'],
-        #         'fill':kwargs['fill'],
-        #         'font':self.rcfont
-        #     }
-        # )

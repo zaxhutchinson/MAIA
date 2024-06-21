@@ -1,11 +1,7 @@
 import tkinter as tk
-import sys
 import logging
 
 import ui_setup
-import vec2
-import math
-import zmap
 import ui_homepage
 import ui_about
 import ui_team_config
@@ -24,7 +20,8 @@ class App(tk.Tk):
     def __init__(self, *args, **kwargs):
         """Initializes MAIA window
 
-        Instances of home page, about page, and set up page frames are stored in array to be raised as needed
+        Instances of home page, about page, and set up page frames
+        are stored in array to be raised as needed
         """
         tk.Tk.__init__(self, *args, **kwargs)
 
@@ -61,22 +58,41 @@ class App(tk.Tk):
             master=self.container, controller=self, logger=self.logger
         )
         self.frames["config_team"] = ui_team_config.UITeamConfig(
-            master=self.container, controller=self, logger=self.logger, ldr=self.ldr
+            master=self.container,
+            controller=self,
+            logger=self.logger,
+            ldr=self.ldr
         )
         self.frames["config_object"] = ui_object_config.UIObjectConfig(
-            master=self.container, controller=self, logger=self.logger, ldr=self.ldr
+            master=self.container,
+            controller=self,
+            logger=self.logger,
+            ldr=self.ldr
         )
         self.frames["config_map"] = ui_map_config.UIMapConfig(
-            master=self.container, controller=self, logger=self.logger, ldr=self.ldr
+            master=self.container,
+            controller=self,
+            logger=self.logger,
+            ldr=self.ldr
         )
-        self.frames["config_component"] = ui_component_config.UIComponentConfig(
-            master=self.container, controller=self, logger=self.logger, ldr=self.ldr
-        )
+        self.frames["config_component"] = \
+            ui_component_config.UIComponentConfig(
+                master=self.container,
+                controller=self,
+                logger=self.logger,
+                ldr=self.ldr
+            )
         self.frames["config_item"] = ui_item_config.UIItemConfig(
-            master=self.container, controller=self, logger=self.logger, ldr=self.ldr
+            master=self.container,
+            controller=self,
+            logger=self.logger,
+            ldr=self.ldr
         )
         self.frames["config_gstate"] = ui_gstate_config.UIGStateConfig(
-            master=self.container, controller=self, logger=self.logger, ldr=self.ldr
+            master=self.container,
+            controller=self,
+            logger=self.logger,
+            ldr=self.ldr
         )
 
         # the setup page must be placed first to prevent errors

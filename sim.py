@@ -1,21 +1,12 @@
 import importlib
 import uuid
 import random
-
-import copy
-import zmap
-import comp
-import vec2
-import loader
 import zmath
 import msgs
-from zexceptions import *
 import valid
 import views
-import gstate
 import zfunctions
-
-from ui_sim import UISim
+import zexceptions
 
 
 class Sim:
@@ -157,11 +148,13 @@ class Sim:
         Builds map and set win state(s)
         """
         if not self.has_map():
-            raise BuildException("No map was selected.")
+            raise zexceptions.BuildException("No map was selected.")
 
         for k, v in self.sides.items():
             if v["teamname"] is None:
-                raise BuildException("Side " + k + " has no team assignment.")
+                raise zexceptions.BuildException(
+                    f"Side {k} has no team assignment."
+                )
 
         # Get the main config dict
         config = ldr.copy_main_config()
@@ -263,7 +256,8 @@ class Sim:
                 # Load and set AI
                 ai_file_name = agent["AI_file"]
                 ai_spec = importlib.util.spec_from_file_location(
-                    ai_file_name, team_dir + "/" + team_name + "/" + ai_file_name
+                    ai_file_name,
+                    f"{team_dir}/{team_name}/{ai_file_name}"
                 )
                 ai_module = importlib.util.module_from_spec(ai_spec)
                 ai_spec.loader.exec_module(ai_module)
@@ -326,26 +320,6 @@ class Sim:
             rtn = rtn or r
         return rtn
 
-        # Only 1 team remaining
-        # teams_remaining = []
-        # for name,data in self.sides.items():
-        #     team_eliminated = True
-
-        #     for obj in data['team']['agents'].values():
-        #         if obj.get_data('alive'):
-        #             team_eliminated=False
-        #             break
-        #     if not team_eliminated:
-        #         teams_remaining.append(name)
-
-        # if len(teams_remaining) == 1:
-        #     self.imsgr.addMsg(msgs.Msg(self.tick,"---GAME OVER---","The winning side is: " + teams_remaining[0]))
-        #     return True
-        # if len(teams_remaining) == 0:
-        #     self.imsgr.addMsg(msgs.Msg(self.tick,"---GAME OVER---","All teams are dead???"))
-        #     return True
-        # return False
-
     def get_points_data(self):
         """Gets points data"""
         msg = ""
@@ -374,7 +348,8 @@ class Sim:
 
             for agent_name, curr_obj in data["team"]["agents"].items():
                 agent_score = curr_obj.get_data("points")
-                team_scores["agents"][curr_obj.get_best_display_name()] = agent_score
+                team_scores["agents"][curr_obj.get_best_display_name()] = \
+                    agent_score
                 team_scores["total"] += agent_score
 
             final_scores[name] = team_scores
@@ -432,7 +407,8 @@ class Sim:
             for tick in range(self.ticks_per_turn):
                 self.imsgr.add_msg(msgs.Msg(self.tick, "---NEW TICK---", ""))
 
-                # Advance turn order sequentially by rotating list of all active agents by 1.
+                # Advance turn order sequentially by rotating list of all
+                # active agents by 1.
                 obj_uuids_list[1:]
 
                 # Check all commands to see if there is
@@ -584,7 +560,9 @@ class Sim:
         if new_x != old_x or new_y != old_y:
 
             # Might be moving more than 1 cell. Get trajectory.
-            cell_path = zmath.get_cells_along_trajectory(x, y, facing, cur_speed)
+            cell_path = zmath.get_cells_along_trajectory(
+                x, y, facing, cur_speed
+            )
 
             cur_cell = (old_x, old_y)
             collision = False
@@ -623,8 +601,8 @@ class Sim:
                 # CRASH INTO SOMETHING
 
                 # We need to move the obj to the edge
-                # of the old cell to simulate that they reached the edge of it before
-                # crashing.
+                # of the old cell to simulate that they reached the edge of it
+                # before crashing.
                 if new_x != old_x:
                     if new_x > old_x:
                         curr_obj.set_data("cell_x", 0.99)
@@ -663,7 +641,8 @@ class Sim:
         view["slot_id"] = actn.get_data("slot_id")
 
         # Set up the necessary data for easy access
-        radar_facing = curr_obj.get_data("facing") + actn.get_data("offset_angle")
+        radar_facing = curr_obj.get_data("facing") + \
+            actn.get_data("offset_angle")
         start = radar_facing - actn.get_data("visarc")
         end = radar_facing + actn.get_data("visarc")
         angle = start
@@ -677,9 +656,12 @@ class Sim:
         # While we're in our arc of visibility
         while angle <= end:
             # Get all object/item pings along this angle
-            pings = self.map.get_all_obj_uuid_along_trajectory(x, y, angle, _range)
+            pings = self.map.get_all_obj_uuid_along_trajectory(
+                x, y, angle, _range
+            )
             # Pings should be in order. Start adding if they're not there.
-            # If the radar's level is less than the obj's density, stop. We can't see through.
+            # If the radar's level is less than the obj's density, stop.
+            # We can't see through.
             # Else keep going.
             obj_pings = pings["objects"]
             item_pings = pings["items"]
@@ -711,9 +693,8 @@ class Sim:
                     temp_view.append(ping)
 
                     # If our radar level can't penetrate the object, stop.
-                    if actn.get_data("level") < self.objs[ping["uuid"]].get_data(
-                        "density"
-                    ):
+                    if actn.get_data("level") < \
+                            self.objs[ping["uuid"]].get_data("density"):
                         break
 
             for ping in item_pings:
@@ -873,7 +854,11 @@ class Sim:
             # Check for held/stored items
             held_items_uuids = dead_obj.get_and_remove_all_held_stored_items()
             for i in held_items_uuids:
-                self.map.add_item(dead_obj.get_data("x"), dead_obj.get_data("y"), i)
+                self.map.add_item(
+                    dead_obj.get_data("x"),
+                    dead_obj.get_data("y"),
+                    i
+                )
 
             # Remove from map
             self.map.remove_obj(

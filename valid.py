@@ -1,7 +1,8 @@
 ##############################################################################
 # VALID
 #
-# Is used to validate AI commands returning to the simulation. This makes it easier
+# Is used to validate AI commands returning to the simulation. This makes it
+# easier
 # on the rest of the code if we've weeded out badly formed commands before they
 # ever hit the processing part.
 ##############################################################################
@@ -17,7 +18,9 @@ class CommandValidator:
         self.commands["SET_TURNRATE"] = {"turnrate": [int, float]}
         self.commands["ACTIVATE_RADAR"] = {}
         self.commands["DEATIVATE_RADAR"] = {}
-        self.commands["BROADCAST"] = {"message": [int, float, str, list, tuple, dict]}
+        self.commands["BROADCAST"] = {"message": [
+            int, float, str, list, tuple, dict
+        ]}
         self.commands["SET_RANGE"] = {"range": [int, float]}
         self.commands["TAKE_ITEM"] = {
             "item_name": [str, type(None)],
@@ -47,13 +50,11 @@ class CommandValidator:
             # Not a dictionary, remove
             if type(slot_dict) is not dict:
                 bad_cmds1.append(tick)
-                # log.LogDebug("COMMAND VALIDATOR: Not a dictionary\n"+str(slot_dict))
                 continue
 
             # Empty dict, remove
             if len(slot_dict) == 0:
                 bad_cmds1.append(tick)
-                # log.LogDebug("COMMAND VALIDATOR: Empty dictionary\n"+str(slot_dict))
                 continue
 
             bad_cmds2 = []
@@ -63,18 +64,15 @@ class CommandValidator:
                 # Command isn't a dict.
                 if type(command) is not dict:
                     bad_cmds2.append(slot_id)
-                    # log.LogDebug("COMMAND VALIDATOR: Command is not a dictionary\n"+str(command))
                     continue
 
                 # Command is missing the command entry
                 if "command" not in command:
                     bad_cmds2.append(slot_id)
-                    # log.LogDebug("COMMAND VALIDATOR: Command is missing command entry")
                     continue
 
                 if command["command"] not in self.commands:
                     bad_cmds2.append(slot_id)
-                    # log.LogDebug("COMMAND VALIDATOR: Command "+str(command['command'])+" is not a valid command.")
                     continue
 
                 cmd_format = self.commands[command["command"]]
@@ -82,7 +80,6 @@ class CommandValidator:
                 # command contains extra junk
                 if len(cmd_format) + 1 != len(command):
                     bad_cmds2.append(slot_id)
-                    # log.LogDebug("COMMAND VALIDATOR: Command contains extra stuff.")
                     continue
 
                 for k, v in cmd_format.items():
@@ -90,12 +87,11 @@ class CommandValidator:
                     # Required command info is missing
                     if k not in command:
                         bad_cmds2.append(slot_id)
-                        # log.LogDebug("COMMAND VALIDATOR: Required info is missing")
                         break
 
-                    # If the command info is of the wrong data type, throw it away.
+                    # If the command info is of the wrong data type,
+                    # throw it away.
                     if type(command[k]) not in v:
-                        # log.LogDebug("COMMAND VALIDATOR: Data '"+str(k)+"' has wrong type "+str(type(command[k])))
                         bad_cmds2.append(slot_id)
                         break
 
@@ -104,7 +100,8 @@ class CommandValidator:
             for bc in bad_cmds2:
                 del cmds[tick][bc]
 
-            # We might have emptied all commands for this tick. Check for empty again.
+            # We might have emptied all commands for this tick. Check for
+            # empty again.
             # Empty dict, remove
             if len(slot_dict) == 0:
                 bad_cmds1.append(tick)

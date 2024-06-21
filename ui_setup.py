@@ -1,20 +1,12 @@
 import tkinter as tk
-from tkinter import messagebox
-from tkinter.font import Font
-import tkinter.scrolledtext as scrolltext
-import importlib.util
-import sys
-import os
 import queue
-import logging
-
 import sim
 import loader
 import ui_sim
 import ui_advanced_config
 import msgs
-from zexceptions import *
-from ui_widgets import *
+import zexceptions
+import ui_widgets as uiw
 
 
 class UISetup(tk.Frame):
@@ -48,7 +40,9 @@ class UISetup(tk.Frame):
             self.teams_list.insert(tk.END, name)
         for k, v in self.sim.get_sides().items():
             self.sides_list.insert(tk.END, k)
-            self.team_assignments_list.insert(tk.END, str(self.sim.get_team_name(k)))
+            self.team_assignments_list.insert(
+                tk.END, str(self.sim.get_team_name(k))
+            )
 
     def update_map_names(self):
         """Updates map names"""
@@ -68,16 +62,18 @@ class UISetup(tk.Frame):
 
             # Locate the map, copy and give to sim
             map_ids = self.ldr.get_map_ids()
-            selected_map = self.ldr.copy_map_template(map_ids[cur_selection[0]])
+            selected_map = self.ldr.copy_map_template(
+                map_ids[cur_selection[0]]
+            )
             self.sim.set_map(selected_map)
 
             # Construct the map info string
-            map_info = "NAME:   " + selected_map.get_data("name") + "\n"
-            map_info += "DESC:   " + selected_map.get_data("desc") + "\n"
-            map_info += "WIDTH:  " + str(selected_map.get_data("width")) + "\n"
-            map_info += "HEIGHT: " + str(selected_map.get_data("height")) + "\n"
-            map_info += "TEAMS:  " + str(selected_map.get_data("teams")) + "\n"
-            map_info += "AGENTS: " + str(selected_map.get_data("agents")) + "\n"
+            map_info = f"NAME:   {selected_map.get_data('name')}\n"
+            map_info += f"DESC:   {selected_map.get_data('desc')}\n"
+            map_info += f"WIDTH:  {selected_map.get_data('width')}\n"
+            map_info += f"HEIGHT: {selected_map.get_data('height')}\n"
+            map_info += f"TEAMS:  {selected_map.get_data('teams')}\n"
+            map_info += f"AGENTS: {selected_map.get_data("agents")}\n"
             map_info += "RANDOMLY PLACED OBJECTS:\n"
             if "rand_objects" in selected_map.data:
                 for k, v in selected_map.data["rand_objects"].items():
@@ -87,7 +83,7 @@ class UISetup(tk.Frame):
             map_info += "HAND-PLACED OBJECTS\n"
             if "placed_objects" in selected_map.data:
                 for k, v in selected_map.data["placed_objects"].items():
-                    map_info += "   ID:" + str(k) + " AMT:" + str(len(v)) + "\n"
+                    map_info += f"   ID:{k} AMT:{len(v)}\n"
             else:
                 map_info += "   NONE\n"
 
@@ -103,50 +99,58 @@ class UISetup(tk.Frame):
         Places map select, places team/side assignments,
         places adv config button, places start button
         """
-        ## PAGE TITLE
+        # PAGE TITLE
 
-        self.title_label = uiLabel(master=self, text="CONFIGURATION")
+        self.title_label = uiw.uiLabel(master=self, text="CONFIGURATION")
         self.title_label.pack(side=tk.TOP)
 
         #######################################################################
-        ## SIM UI
+        # SIM UI
         #######################################################################
-        self.sim_frame = uiQuietFrame(master=self)
-        self.sim_frame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=10)
+        self.sim_frame = uiw.uiQuietFrame(master=self)
+        self.sim_frame.pack(
+            side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=10, pady=10
+        )
 
-        self.start_button_frame = uiQuietFrame(master=self.sim_frame)
+        self.start_button_frame = uiw.uiQuietFrame(master=self.sim_frame)
         self.start_button_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
-        self.adv_config_button_frame = uiQuietFrame(master=self.sim_frame)
-        self.adv_config_button_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.adv_config_button_frame = uiw.uiQuietFrame(master=self.sim_frame)
+        self.adv_config_button_frame.pack(
+            side=tk.LEFT, fill=tk.BOTH, expand=True
+        )
 
-        self.start_button = uiButton(
+        self.start_button = uiw.uiButton(
             master=self.start_button_frame,
             command=self.build_and_run_sim,
             text="Start Game",
         )  # Start Game Button
-        self.start_button.pack(side=tk.RIGHT, padx=50, fill=tk.BOTH, expand=True)
+        self.start_button.pack(
+            side=tk.RIGHT, padx=50, fill=tk.BOTH, expand=True
+        )
 
-        self.adv_config_button = uiButton(
+        self.adv_config_button = uiw.uiButton(
             master=self.adv_config_button_frame,
             command=self.run_advanced_settings,
             text="Advanced Config",
         )
-        self.adv_config_button.pack(side=tk.LEFT, padx=50, fill=tk.BOTH, expand=True)
+        self.adv_config_button.pack(
+            side=tk.LEFT, padx=50, fill=tk.BOTH, expand=True
+        )
 
         #######################################################################
-        ## MAP UI
+        # MAP UI
         #######################################################################
-        self.maps_frame = uiQuietFrame(master=self)  # map section
+        self.maps_frame = uiw.uiQuietFrame(master=self)  # map section
         self.maps_frame.pack(side=tk.LEFT, fill=tk.BOTH, padx=10, pady=10)
 
-        self.maps_list_frame = uiQuietFrame(master=self.maps_frame)
+        self.maps_list_frame = uiw.uiQuietFrame(master=self.maps_frame)
         self.maps_list_frame.pack(side=tk.TOP, fill=tk.BOTH)
 
-        self.maps_label = uiLabel(master=self.maps_list_frame, text="MAPS")
+        self.maps_label = uiw.uiLabel(master=self.maps_list_frame, text="MAPS")
         self.maps_label.pack(side=tk.TOP, fill=tk.BOTH)
 
-        self.maps_list = uiListBox(
+        self.maps_list = uiw.uiListBox(
             self.maps_list_frame
         )  # this is the box that says Map 1 maps_list
         self.maps_list.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
@@ -155,24 +159,26 @@ class UISetup(tk.Frame):
             "<<ListboxSelect>>", self.select_map
         )  # this calls select_map(self, whateverMapIsSelectedInTheBox)
 
-        self.map_info_frame = uiQuietFrame(master=self.maps_frame)
+        self.map_info_frame = uiw.uiQuietFrame(master=self.maps_frame)
         self.map_info_frame.pack(side=tk.BOTTOM)
 
-        self.map_info_label = uiLabel(
+        self.map_info_label = uiw.uiLabel(
             master=self.map_info_frame, text="MAP INFORMATION"
         )
         self.map_info_label.pack(side=tk.TOP, fill=tk.BOTH)
 
-        self.map_info_text = uiScrollText(self.map_info_frame)  # info on selected frame
+        # info on selected frame
+        self.map_info_text = uiw.uiScrollText(self.map_info_frame)
         self.map_info_text.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
         self.map_info_text.insert(tk.END, "No map info")
 
-        self.update_map_names()  # this function call gets Map 1 (later other maps) into the box
+        # this function call gets Map 1 (later other maps) into the box
+        self.update_map_names()
 
         #######################################################################
-        ## TEAM UI
+        # TEAM UI
         ######################################################################
-        self.team_frame = uiQuietFrame(
+        self.team_frame = uiw.uiQuietFrame(
             master=self
         )  # team frame is everything team UI #top line creates frame
         self.team_frame.pack_propagate(0)
@@ -180,71 +186,92 @@ class UISetup(tk.Frame):
             side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10, pady=10
         )  # bottom line is frame settings
 
-        self.team_pool_frame = uiQuietFrame(
+        self.team_pool_frame = uiw.uiQuietFrame(
             master=self.team_frame
         )  # Left half of team frame
         self.team_pool_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        self.team_pool_left_frame = uiQuietFrame(
+        self.team_pool_left_frame = uiw.uiQuietFrame(
             master=self.team_pool_frame
         )  # part of pool frame, pool section
         self.team_pool_left_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        self.team_pool_label = uiLabel(
+        self.team_pool_label = uiw.uiLabel(
             master=self.team_pool_left_frame, text="TEAM POOL"
         )  # label that says "Team Pool" section of pool left frame
         self.team_pool_label.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
 
-        self.teams_list = uiListBox(self.team_pool_left_frame)
+        self.teams_list = uiw.uiListBox(self.team_pool_left_frame)
         self.teams_list.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
-        self.team_pool_right_frame = uiQuietFrame(
+        self.team_pool_right_frame = uiw.uiQuietFrame(
             master=self.team_pool_frame
         )  # pool right frame is the sides section, also part of Pool Frame
-        self.team_pool_right_frame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        self.team_pool_right_frame.pack(
+            side=tk.BOTTOM, fill=tk.BOTH, expand=True
+        )
 
-        self.sides_label = uiLabel(master=self.team_pool_right_frame, text="SIDES")
+        self.sides_label = uiw.uiLabel(
+            master=self.team_pool_right_frame, text="SIDES"
+        )
         self.sides_label.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
 
-        self.sides_list = uiListBox(self.team_pool_right_frame)
+        self.sides_list = uiw.uiListBox(self.team_pool_right_frame)
         self.sides_list.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
-        self.play_pool_frame = uiQuietFrame(
+        # Assigned is other half of team frame, "Play pool" is teams
+        # that are playing
+        self.play_pool_frame = uiw.uiQuietFrame(
             master=self.team_frame
-        )  # Assigned is other half of team frame, "Play pool" is teams that are playing
+        )
+
         self.play_pool_frame.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
-        self.play_pool_right_frame = uiQuietFrame(master=self.play_pool_frame)
+        self.play_pool_right_frame = uiw.uiQuietFrame(
+            master=self.play_pool_frame
+        )
         self.play_pool_right_frame.pack(
             side=tk.RIGHT, fill=tk.BOTH, expand=True, pady=5
         )
 
-        self.play_pool_label = uiLabel(
+        self.play_pool_label = uiw.uiLabel(
             master=self.play_pool_right_frame, text="ASSIGNED TEAMS"
         )
         self.play_pool_label.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
 
-        self.sub_play_pool_frame = uiQuietFrame(master=self.play_pool_right_frame)
-        self.sub_play_pool_frame.pack(fill=tk.BOTH, side=tk.BOTTOM, expand=True)
+        self.sub_play_pool_frame = uiw.uiQuietFrame(
+            master=self.play_pool_right_frame
+        )
+        self.sub_play_pool_frame.pack(
+            fill=tk.BOTH, side=tk.BOTTOM, expand=True
+        )
 
-        self.team_assignments_list = uiListBox(self.sub_play_pool_frame)
-        self.team_assignments_list.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+        self.team_assignments_list = uiw.uiListBox(self.sub_play_pool_frame)
+        self.team_assignments_list.pack(
+            side=tk.RIGHT, fill=tk.BOTH, expand=True
+        )
 
         self.update_team_names()
 
         self.pack(fill=tk.BOTH, expand=True)
 
-        self.add_team_button = uiButton(
-            master=self.play_pool_frame, text="Add Team >>>", command=self.add_team
+        self.add_team_button = uiw.uiButton(
+            master=self.play_pool_frame,
+            text="Add Team >>>",
+            command=self.add_team
         )
-        self.add_team_button.pack(side=tk.TOP, fill=tk.BOTH, expand=True, pady=5)
+        self.add_team_button.pack(
+            side=tk.TOP, fill=tk.BOTH, expand=True, pady=5
+        )
 
-        self.remove_team_button = uiButton(
+        self.remove_team_button = uiw.uiButton(
             master=self.play_pool_frame,
             text="<<< Remove Team",
             command=self.remove_team,
         )
-        self.remove_team_button.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, pady=5)
+        self.remove_team_button.pack(
+            side=tk.BOTTOM, fill=tk.BOTH, expand=True, pady=5
+        )
 
     def add_team(self):
         """Adds team/side assignment to sim"""
@@ -260,7 +287,9 @@ class UISetup(tk.Frame):
                 self.sim.add_team_name(side_selection, team_name)
                 self.update_team_names()
             else:
-                self.logger.error("App::add_team() - No side or team selected.")
+                self.logger.error(
+                    "App::add_team() - No side or team selected."
+                )
         else:
             self.logger.error("App::add_team() - Sim is missing the map.")
 
@@ -277,10 +306,11 @@ class UISetup(tk.Frame):
         """Builds and runs sim"""
         try:
             self.sim.build_sim(self.ldr)
-        except BuildException as e:
+        except zexceptions.BuildException as e:
             tk.messagebox.showinfo(title="Build Exception", message=e)
         else:
-            # tk.messagebox.showinfo(title="Success",message="Sim build was successful.")    --this line makes a pop up
+            # tk.messagebox.showinfo(title="Success",message=
+            # "Sim build was successful.")    --this line makes a pop up
             map_width = self.sim.get_map().get_data("width")
             map_height = self.sim.get_map().get_data("height")
             self.UIMap = ui_sim.UISim(
