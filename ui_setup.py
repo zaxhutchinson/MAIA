@@ -72,7 +72,7 @@ class UISetup(tk.Frame):
             map_info += f"WIDTH:  {selected_map.get_data('width')}\n"
             map_info += f"HEIGHT: {selected_map.get_data('height')}\n"
             map_info += f"TEAMS:  {selected_map.get_data('teams')}\n"
-            map_info += f"AGENTS: {selected_map.get_data("agents")}\n"
+            map_info += f"AGENTS: {selected_map.get_data('agents')}\n"
             map_info += "RANDOMLY PLACED OBJECTS:\n"
             if "rand_objects" in selected_map.data:
                 for k, v in selected_map.data["rand_objects"].items():
