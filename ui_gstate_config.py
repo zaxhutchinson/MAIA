@@ -77,7 +77,7 @@ class UIGetObjects():
         obj_data = ldr.get_obj_templates()
         for obj in obj_data.values():
             obj_entries.append(
-                f"{obj["id"]}:{obj["name"]}"
+                f"{obj['id']}:{obj['name']}"
             )
 
         self.listbox_var = tk.StringVar()

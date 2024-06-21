@@ -364,7 +364,7 @@ class UIMapConfig(tk.Frame):
         map_data = self.ldr.get_map_templates()
         entries = []
         for m in map_data.values():
-            entry = f"{m["id"]}:{m["name"]}"
+            entry = f"{m['id']}:{m['name']}"
             entries.append(entry)
         self.map_select_listbox_var.set(entries)
 

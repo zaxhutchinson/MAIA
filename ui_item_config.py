@@ -143,7 +143,7 @@ class UIItemConfig(tk.Frame):
 
         item_entries = []
         for itm in item_data.values():
-            entry = f"{itm["id"]}:{itm["name"]}"
+            entry = f"{itm['id']}:{itm['name']}"
             item_entries.append(entry)
 
         self.select_item_listbox.delete(0,tk.END)

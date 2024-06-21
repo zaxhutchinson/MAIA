@@ -200,7 +200,7 @@ class UIObjectConfig(tk.Frame):
         obj_data = self.ldr.get_obj_templates()
         entries = []
         for obj in obj_data.values():
-            entry = f"{obj["id"]}:{obj["name"]}"
+            entry = f"{obj['id']}:{obj['name']}"
             entries.append(entry)
         entries = sorted(entries)
         self.select_obj_listbox.delete(0,tk.END)

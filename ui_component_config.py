@@ -409,7 +409,7 @@ class UIComponentConfig(tk.Frame):
 
         for comp in comp_data.values():
             if comp["ctype"] == _ctype:
-                keys.append(f"{comp["id"]}:{comp["name"]}")
+                keys.append(f"{comp['id']}:{comp['name']}")
 
 
         self.select_comp_listbox.delete(0,tk.END)

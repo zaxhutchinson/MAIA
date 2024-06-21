@@ -104,7 +104,7 @@ class GState:
         locations = self.data["locations"]
         for o in self.objs:
             for loc in locations:
-                if loc == f"{o.get_data("x")},{o.get_data("y")}":
+                if loc == f"{o.get_data('x')},{o.get_data('y')}":
                     amt -= 1
                     break
 
