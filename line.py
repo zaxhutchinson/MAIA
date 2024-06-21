@@ -22,27 +22,27 @@ class LineSeg:
     def intersects_line_seg(self, ls):
         """Determines if line intersects another line"""
         a = (
-            (ls.v2.get_x() - ls.v1.get_x()) *
-            (self.v1.get_y() - ls.v1.get_y())
-            - (ls.v2.get_y() - ls.v1.get_y()) *
-            (self.v1.get_x() - ls.v1.get_x())
+            (ls.v2.get_x() - ls.v1.get_x())
+            * (self.v1.get_y() - ls.v1.get_y())
+            - (ls.v2.get_y() - ls.v1.get_y())
+            * (self.v1.get_x() - ls.v1.get_x())
         ) / (
-            (ls.v2.get_y() - ls.v1.get_y()) *
-            (self.v2.get_x() - self.v1.get_x())
-            - (ls.v2.get_x() - ls.v1.get_x()) *
-            (self.v2.get_y() - self.v1.get_y())
+            (ls.v2.get_y() - ls.v1.get_y())
+            * (self.v2.get_x() - self.v1.get_x())
+            - (ls.v2.get_x() - ls.v1.get_x())
+            * (self.v2.get_y() - self.v1.get_y())
         )
 
         b = (
-            (self.v2.get_x() - self.v1.get_x()) *
-            (self.v1.get_y() - ls.v1.get_y())
-            - (self.v2.get_y() - self.v1.get_y()) *
-            (self.v1.get_x() - ls.v1.get_x())
-        ) / (
-            (ls.v2.get_y() - ls.v1.get_y()) *
             (self.v2.get_x() - self.v1.get_x())
-            - (ls.v2.get_x() - ls.v1.get_x()) *
-            (self.v2.get_y() - self.v1.get_y())
+            * (self.v1.get_y() - ls.v1.get_y())
+            - (self.v2.get_y() - self.v1.get_y())
+            * (self.v1.get_x() - ls.v1.get_x())
+        ) / (
+            (ls.v2.get_y() - ls.v1.get_y())
+            * (self.v2.get_x() - self.v1.get_x())
+            - (ls.v2.get_x() - ls.v1.get_x())
+            * (self.v2.get_y() - self.v1.get_y())
         )
 
         return a >= 0 and a <= 1 and b >= 0 and b <= 1

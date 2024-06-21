@@ -445,8 +445,8 @@ class Comp:
     def can_take_item(self, weight, bulk):
         """Determines if arm can take item"""
         return (
-            self.get_data("max_weight") >= weight and
-            self.get_data("max_bulk") >= bulk
+            self.get_data("max_weight") >= weight
+            and self.get_data("max_bulk") >= bulk
         )
 
     ###########################################################################
