@@ -126,7 +126,7 @@ class UIGetItems():
         item_data = ldr.get_item_templates()
         for itm in item_data.values():
             item_entries.append(
-                f"{itm["id"]}:{itm["name"]}"
+                f"{itm['id']}:{itm['name']}"
             )
 
         self.listbox_var = tk.StringVar()
@@ -492,7 +492,7 @@ class UIGStateConfig(tk.Frame):
 
         for goal in goal_data.values():
             if goal["type"] == goal_type:
-                keys.append(f"{goal["id"]}")
+                keys.append(f"{goal['id']}")
 
 
         self.select_goal_listbox.delete(0,tk.END)

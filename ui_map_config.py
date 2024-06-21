@@ -374,7 +374,7 @@ class UIMapConfig(tk.Frame):
         obj_data = self.ldr.get_obj_templates()
         entries = []
         for o in obj_data.values():
-            entry = f"{o["id"]}:{o["name"]}"
+            entry = f"{o['id']}:{o['name']}"
             entries.append(entry)
         self.obj_select_listbox_var.set(entries)
 
@@ -384,7 +384,7 @@ class UIMapConfig(tk.Frame):
         item_data = self.ldr.get_item_templates()
         entries = []
         for i in item_data.values():
-            entry = f"{i["id"]}:{i["name"]}"
+            entry = f"{i['id']}:{i['name']}"
             entries.append(entry)
         self.item_select_listbox_var.set(entries)
 
@@ -732,7 +732,7 @@ class UIMapConfig(tk.Frame):
         # Add sides to the side listbox
         side_entries = []
         for side in cur_map["sides"].values():
-            entry = f"{side["id"]}:{side["name"]}"
+            entry = f"{side['id']}:{side['name']}"
             side_entries.append(entry)
         self.side_select_listbox_var.set(side_entries)
     
@@ -951,7 +951,7 @@ class UIMapConfig(tk.Frame):
                 for index in things["item_indexes"]:
                     itm_map_entry = cur_map["items"][index]
                     itm = self.ldr.get_item_template(itm_map_entry["id"])
-                    msg += f"[{index}] {itm["id"]} {itm["name"]}\n"
+                    msg += f"[{index}] {itm['id']} {itm['name']}\n"
                 msg += "\nGive number in the square brackets of the item you wish to remove from the cell."
 
                 index = tk.simpledialog.askinteger("Remove Item", msg)

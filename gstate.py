@@ -87,7 +87,7 @@ class GState:
             if o.get_data("id") in self.data["objects"]:
                 self.objs.append(o)
 
-    def check_n_objs_in_locs():
+    def check_n_objs_in_locs(self):
         amt = self.data["amount"]
 
         # First check if N objects are still alive.
