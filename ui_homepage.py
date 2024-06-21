@@ -76,61 +76,63 @@ class UIHomepage(tk.Frame):
             text="About MAIA",
             command=lambda: self.controller.show_frame("about_page"),
         )
-        self.about_button.config(width=400, height=100)
-        self.about_button.pack(side=tk.TOP)
+        self.about_button.config(width=20, height=3)
+        self.about_button.grid(row=0, column=0, sticky="ew")
 
         self.config_teams_button = uiButton(
             master=self.config_frame,
             command=lambda: self.controller.show_frame("config_team"),
             text="Team Config",
         )
-        self.config_teams_button.config(width=400, height=100)
-        self.config_teams_button.grid(row=0,column=0,sticky="nsew")
+        self.config_teams_button.config(width=20, height=3)
+        self.config_teams_button.grid(row=0,column=0,sticky="ew")
 
         self.config_component_button = uiButton(
             master=self.config_frame,
             command=lambda: self.controller.show_frame("config_component"),
             text="Component Config",
         )
-        self.config_component_button.config(width=400, height=100)
-        self.config_component_button.grid(row=0,column=1,sticky="nsew")
+        self.config_component_button.config(width=20, height=3)
+        self.config_component_button.grid(row=0,column=1,sticky="ew")
 
         self.config_object_button = uiButton(
             master=self.config_frame,
             command=lambda: self.controller.show_frame("config_object"),
             text="Object Config",
         )
-        self.config_object_button.config(width=400, height=100)
-        self.config_object_button.grid(row=1,column=0,sticky="nsew")
+        self.config_object_button.config(width=20, height=3)
+        self.config_object_button.grid(row=1,column=0,sticky="ew")
 
         self.config_item_button = uiButton(
             master=self.config_frame,
             command=lambda: self.controller.show_frame("config_item"),
             text="Item Config"
         )
-        self.config_item_button.config(width=400, height=100)
-        self.config_item_button.grid(row=1, column=1, sticky="nsew")
+        self.config_item_button.config(width=20, height=3)
+        self.config_item_button.grid(row=1, column=1, sticky="ew")
 
         self.config_map_button = uiButton(
             master=self.config_frame,
             command=lambda: self.controller.show_frame("config_map"),
             text="Map Config",
         )
-        self.config_map_button.config(width=400, height=100)
-        self.config_map_button.grid(row=2, column=0, sticky="nsew")
+        self.config_map_button.config(width=20, height=3)
+        self.config_map_button.grid(row=2, column=0, sticky="ew")
+
+        self.config_gstate_button = uiButton(
+            master=self.config_frame,
+            command=lambda: self.controller.show_frame("config_gstate"),
+            text="Goal Config"
+        )
+        self.config_gstate_button.config(width=20, height=3)
+        self.config_gstate_button.grid(row=2,column=1, sticky="we")
+
 
         self.start_game_button = uiButton(
             master=self.match_frame,
             text="Match Setup",
             command=lambda: self.controller.show_frame("setup_page"),
         )
-        self.start_game_button.config(width=400, height=100)
+        self.start_game_button.config(width=20, height=3)
         self.start_game_button.pack(side=tk.TOP)
 
-        # self.adv_config_button = uiButton(
-        #     master=self,
-        #     command=lambda: ui_advanced_config.UISettings(self, self.logger),
-        #     text="Advanced Config",
-        # )
-        # self.adv_config_button.config(width=400, height=100)
-        # self.adv_config_button.pack(side=tk.TOP)

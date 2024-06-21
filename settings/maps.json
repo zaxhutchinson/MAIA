@@ -487,7 +487,7 @@
         "sides": {
             "0": {
                 "color": "#5555FF",
-                "gstate": "blue_vs_red_all",
+                "gstate": "blue_vs_red",
                 "id": "0",
                 "name": "Blue",
                 "num_agents": 4,
@@ -517,7 +517,7 @@
             },
             "1": {
                 "color": "#FF5555",
-                "gstate": "red_vs_blue_all",
+                "gstate": "red_vs_blue",
                 "id": "1",
                 "name": "Red",
                 "num_agents": 4,

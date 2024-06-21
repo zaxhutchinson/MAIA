@@ -13,6 +13,7 @@ import ui_object_config
 import ui_item_config
 import ui_map_config
 import ui_component_config
+import ui_gstate_config
 import loader
 import sprite_manager
 
@@ -79,6 +80,10 @@ class App(tk.Tk):
             master=self.container, controller=self, logger=self.logger,
             ldr = self.ldr
         )
+        self.frames["config_gstate"] = ui_gstate_config.UIGStateConfig(
+            master=self.container, controller=self, logger=self.logger,
+            ldr = self.ldr
+        )
 
         # the setup page must be placed first to prevent errors
         self.frames["setup_page"].grid(row=0, column=0, sticky="nsew")
@@ -89,6 +94,7 @@ class App(tk.Tk):
         self.frames["config_map"].grid(row=0, column=0, sticky="nsew")
         self.frames["config_component"].grid(row=0, column=0, sticky="nsew")
         self.frames["config_item"].grid(row=0, column=0, sticky="nsew")
+        self.frames["config_gstate"].grid(row=0, column=0, sticky="nsew")
 
         self.show_frame("home_page")
 

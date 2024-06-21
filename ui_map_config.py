@@ -165,7 +165,10 @@ class UIMapConfig(tk.Frame):
         self.side_gstate_label = uiLabel(master=self.side_frame, text="Goal State")
         self.side_gstate_combo_var = tk.StringVar()
         self.side_gstate_combo = ComboBoxHelp(master=self.side_frame, textvariable=self.side_gstate_combo_var, text="The goal state defines the 'win' condition.")
-        gstate_ids = list(self.ldr.get_gstate_templates().keys())
+        gstate_ids = []
+        gstate_data = self.ldr.get_gstate_templates()
+        for gstate in gstate_data.values():
+            gstate_ids.append(gstate["id"])
         self.side_gstate_combo.combobox.configure(values=gstate_ids)
 
         self.side_select_listbox.grid(row=0, column=0, columnspan=2, sticky="ew")

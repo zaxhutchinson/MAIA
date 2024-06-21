@@ -10,7 +10,7 @@ from tkinter.font import Font
 from tkinter import ttk
 import tkinter.scrolledtext as scrolltext
 import platform
-from packages.tkmacosx import Button
+# from packages.tkmacosx import Button
 from PIL import ImageTk, Image
 
 import sprite_manager
@@ -103,7 +103,7 @@ class uiScrollFrame(tk.Frame):
 
         
 
-class uiButton(Button):
+class uiButton(tk.Button):
     def __init__(self, **kwargs):
         super().__init__(kwargs["master"])
         self.config(
@@ -120,7 +120,7 @@ class uiButton(Button):
             font=("Arial", FONT_SIZE),
         )
 
-class uiCarefulButton(Button):
+class uiCarefulButton(tk.Button):
     def __init__(self, **kwargs):
         super().__init__(kwargs["master"])
         self.config(
@@ -167,7 +167,10 @@ class uiLabel(tk.Label):
 class uiTextbox(tk.Text):
     def __init__(self, **kwargs):
         super().__init__(kwargs.pop("master"), **kwargs)
-        self.config(wrap="word", font=("Arial", FONT_SIZE))
+        self.config(
+            wrap="word", 
+            font=("Arial", FONT_SIZE)
+        )
 
 
 class uiQuietFrame(tk.Frame):
@@ -239,6 +242,7 @@ class EntryHelp:
         # self.frame.columnconfigure(2)
 
         self.entry = uiEntry(master=self.frame)
+        self.entry.configure(disabledforeground="black")
         self.entry.grid(row=0, column=0)
 
         self.help_button = uiButton(
@@ -246,7 +250,7 @@ class EntryHelp:
             text="?",
             command=lambda: messagebox.showinfo("Help", self.text, parent=self.master),
         )
-        self.help_button.configure(width=26)
+        self.help_button.configure(width=1)
         self.help_button.grid(row=0, column=1)
 
 
@@ -268,7 +272,7 @@ class ComboBoxHelp:
             text="?",
             command=lambda: messagebox.showinfo("Help", self.text, parent=self.master),
         )
-        self.help_button.configure(width=26)
+        self.help_button.configure(width=1)
         self.help_button.grid(row=0, column=1)
 
 

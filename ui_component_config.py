@@ -229,50 +229,6 @@ class UIComponentConfig(tk.Frame):
         )
         self.save_to_json_button.pack(side=tk.RIGHT)
 
-        # Place Component Widgets
-        
-        # self.select_component_combo.grid(
-        #     row=1, column=1, columnspan=2, padx=10, pady=10, ipadx=10, ipady=10
-        # )
-        
-
-        # self.components_type_attr1_label.grid(row=6, column=1, sticky="nsew")
-        # self.components_type_attr1_entry.frame.grid(row=6, column=2, sticky="nsew")
-        # self.components_type_attr1_entry.entry.config(
-        #     validate="key", validatecommand=(self.validate_num, "%P")
-        # )
-        # self.components_type_attr2_label.grid(row=7, column=1, sticky="nsew")
-        # self.components_type_attr2_entry.frame.grid(row=7, column=2, sticky="nsew")
-        # self.components_type_attr2_entry.entry.config(
-        #     validate="key", validatecommand=(self.validate_num, "%P")
-        # )
-        # self.components_type_attr3_label.grid(row=8, column=1, sticky="nsew")
-        # self.components_type_attr3_entry.frame.grid(row=8, column=2, sticky="nsew")
-        # self.components_type_attr3_entry.entry.config(
-        #     validate="all", validatecommand=(self.validate_num, "%P")
-        # )
-        # self.components_type_attr4_label.grid(row=9, column=1, sticky="nsew")
-        # self.components_type_attr4_entry.frame.grid(row=9, column=2, sticky="nsew")
-        # self.components_type_attr4_entry.entry.config(
-        #     validate="all", validatecommand=(self.validate_num, "%P")
-        # )
-        # self.components_type_attr5_label.grid(row=10, column=1, sticky="nsew")
-        # self.components_type_attr5_entry.frame.grid(row=10, column=2, sticky="nsew")
-        # self.components_type_attr5_entry.entry.config(
-        #     validate="all", validatecommand=(self.validate_num, "%P")
-        # )
-        # self.components_type_attr6_label.grid(row=11, column=1, sticky="nsew")
-        # self.components_type_attr6_entry.frame.grid(row=11, column=2, sticky="nsew")
-        # self.components_type_attr6_entry.entry.config(
-        #     validate="all", validatecommand=(self.validate_num, "%P")
-        # )
-        # self.components_type_attr7_label.grid(row=12, column=1, sticky="nsew")
-        # self.components_type_attr7_entry.frame.grid(row=12, column=2, sticky="nsew")
-        # self.components_type_attr7_entry.entry.config(
-        #     validate="all", validatecommand=(self.validate_num, "%P")
-        # )
-        # self.components_type_combo.grid(row=13, column=1, columnspan=2, sticky="nsew")
-
         self.populate_comp_listbox()
 
     def build_general_comp_ui(self):
