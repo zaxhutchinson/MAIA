@@ -5,6 +5,7 @@ import sim
 import loader
 import msgs
 import ui_widgets as uiw
+import consts
 
 
 class UIHomepage(tk.Frame):
@@ -43,6 +44,13 @@ class UIHomepage(tk.Frame):
             master=self, text="Maine AI Arena", font=("Arial", 24)
         )
         self.maia_text_label.pack(side=tk.TOP, fill="x")
+
+        self.maia_version_label = uiw.uiLabel(
+            master=self,
+            text=f"Version {consts.VERSION_MAJOR}.{consts.VERSION_MINOR}",
+            font=("Arial", 10)
+        )
+        self.maia_version_label.pack(side=tk.TOP, fill="x")
 
         self.general_frame = tk.LabelFrame(
             self, text="General", labelanchor="n", font=("Arial", 15)
