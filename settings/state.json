@@ -1,55 +1,73 @@
 {
-    "touchdown": [
-        {
-            "type": "ITEMS_TOUCH",
-            "items":["red_flag","red_base"],
-            "state":false,
-            "msg": "Red Wins"
-        },
-        {
-            "type": "ITEMS_TOUCH",
-            "items":["blue_flag","blue_base"],
-            "state":false,
-            "msg": "Blue wins"
-        }
-    ],
-    "reach_goal": [
-        {
-            "type": "OBJ_ITEMS_TOUCH",
-            "items": ["goal"],
-            "objs": ["player"],
-            "state": false,
-            "msg":"Goal was reached!"
-        }
-    ],
-    "domination": [
-        {
-            "type": "ALL_OBJS_DESTROYED",
-            "objs": ["Blue Tank"],
-            "state":false,
-            "msg": "Red wins"
-        },
-        {
-            "type": "ALL_OBJS_DESTROYED",
-            "objs": ["Red Tank"],
-            "state":false,
-            "msg":"Blue wins"
-        }
-    ],
-    "destroy_1": [
-        {
-            "type": "N_OBJS_DESTROYED",
-            "number": 1,
-            "objs": ["Blue Tank"],
-            "state":false,
-            "msg":"Red wins"
-        },
-        {
-            "type": "N_OBJS_DESTROYED",
-            "number": 1,
-            "objs": ["Red Tank"],
-            "state":false,
-            "msg": "Blue wins"
-        }
-    ]
+    "blue_vs_red": {
+        "amount": 1,
+        "id": "blue_vs_red",
+        "msg": "Blue wins\n\n",
+        "objects": [
+            "Red Tank"
+        ],
+        "type": "N_OBJS_DESTROYED"
+    },
+    "reach_goal": {
+        "id": "reach_goal",
+        "items": [
+            "goal"
+        ],
+        "msg": "Goal was reached!",
+        "object": "player",
+        "type": "OBJ_ITEMS_TOUCH"
+    },
+    "reach_home": {
+        "amount": 1,
+        "id": "reach_home",
+        "locations": [
+            "9,9",
+            "8,8",
+            "9,8"
+        ],
+        "msg": "The red tank arrive home.",
+        "objects": [
+            "Red Tank"
+        ],
+        "type": "N_OBJS_IN_LOCS"
+    },
+    "reach_origin": {
+        "amount": 1,
+        "id": "reach_origin",
+        "locations": [
+            "0,0"
+        ],
+        "msg": "You reached the origin. Yay!\n",
+        "objects": [
+            "2:Blue Tank"
+        ],
+        "type": "N_OBJS_IN_LOCS"
+    },
+    "red_vs_blue": {
+        "amount": 1,
+        "id": "red_vs_blue",
+        "msg": "Red destroyed one of blue's agents. Red wins.",
+        "objects": [
+            "Blue Tank"
+        ],
+        "type": "N_OBJS_DESTROYED"
+    },
+    "touchdown_blue": {
+        "id": "touchdown_blue",
+        "items": [
+            "blue_flag",
+            "blue_base"
+        ],
+        "msg": "Blue wins",
+        "type": "ITEMS_TOUCH"
+    },
+    "touchdown_red": {
+        "id": "touchdown_red",
+        "items": [
+            "red_flag",
+            "red_base"
+        ],
+        "msg": "Red Wins",
+        "type": "ITEMS_TOUCH"
+    }
 }

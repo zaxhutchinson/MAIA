@@ -11,5 +11,6 @@
         "TURN":5,
         "MOVE":6,
         "TRANSMIT_RADAR":7
-    }
+    },
+    "sprite_path":"images"
 }

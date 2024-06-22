@@ -1,7 +1,30 @@
-import math
-
-import vec2
+import copy
 import action
+
+CTYPES_LIST = ["FixedGun", "Engine", "Radar", "CnC", "Radio", "Arm"]
+
+COMP_ATTRS_BY_CTYPE = {
+    "FixedGun": [
+        ("reload_ticks", 1),
+        ("ammunition", 0),
+        ("min_damage", 0),
+        ("max_damage", 0),
+        ("range", 0),
+    ],
+    "Engine": [("min_speed", 0.0), ("max_speed", 0.0), ("max_turnrate", 0.0)],
+    "Radar": [
+        ("range", 0),
+        ("level", 0),
+        ("visarc", 0),
+        ("offset_angle", 0),
+        ("resolution", 0),
+    ],
+    "CnC": [("max_cmds_per_tick", 0)],
+    "Radio": [
+        ("max_range", 0),
+    ],
+    "Arm": [("max_bulk", 0), ("max_weight", 0)],
+}
 
 
 class Comp:
@@ -12,7 +35,7 @@ class Comp:
         Sets command, update, and view_keys functions based on component type
         """
 
-        self.data = data
+        self.data = copy.deepcopy(data)
 
         self.command = self.no_command
         self.update = self.no_update
@@ -24,14 +47,19 @@ class Comp:
             self.command = self.fixed_gun_command
             self.update = self.fixed_gun_update
             self.set_view_keys_fixed_gun()
+            self.data["reload_ticks_remaining"] = 0
+            self.data["reloading"] = False
         elif ctype == "Engine":
             self.command = self.engine_command
             self.update = self.engine_update
             self.set_view_keys_engine()
+            self.data["cur_speed"] = 0.0
+            self.data["cur_turnrate"] = 0.0
         elif ctype == "Radar":
             self.command = self.radar_command
             self.update = self.radar_update
             self.set_view_keys_radar()
+            self.data["active"] = False
         elif ctype == "CnC":
             self.command = self.cnc_command
             self.update = self.cnc_update
@@ -40,10 +68,12 @@ class Comp:
             self.command = self.radar_command
             self.update = self.radio_update
             self.set_view_keys_radio()
+            self.data["message"] = None
         elif ctype == "Arm":
             self.command = self.arm_command
             self.update = self.arm_update
             self.set_view_keys_arm()
+            self.data["item"] = None
 
     def get_data(self, key):
         """Gets data"""
@@ -154,7 +184,10 @@ class Comp:
                     a.set_type("HIGHSPEED_PROJECTILE")
                     a.add_data("slot_id", self.get_data("slot_id"))
                     a.add_data("compname", self.get_data("name"))
-                    a.add_data("direction", self.get_data("parent").get_data("facing"))
+                    a.add_data(
+                        "direction",
+                        self.get_data("parent").get_data("facing")
+                    )
                     a.add_data("min_damage", self.get_data("min_damage"))
                     a.add_data("max_damage", self.get_data("max_damage"))
                     a.add_data("range", self.get_data("range"))
@@ -214,7 +247,8 @@ class Comp:
                     if abs(new_turnrate) <= self.get_data("max_turnrate"):
                         self.data["cur_turnrate"] = new_turnrate
                     else:
-                        self.data["cur_turnrate"] = self.get_data("max_turnrate")
+                        self.data["cur_turnrate"] = \
+                            self.get_data("max_turnrate")
 
         return actions
 
@@ -367,7 +401,7 @@ class Comp:
         return []
 
     ###########################################################################
-    ## WEAPON RELATED FUNCTIONS
+    # WEAPON RELATED FUNCTIONS
     def set_reload_ticks_to_full(self):
         """Set reload ticks to full"""
         self.data["reload_ticks_remaining"] = self.data["reload_ticks"]
@@ -387,7 +421,7 @@ class Comp:
                 self.data["reloading"] = False
 
     ###########################################################################
-    ## ENGINE RELATED FUNCTIONS
+    # ENGINE RELATED FUNCTIONS
     def is_moving(self):
         """Determines if engine is moving"""
         return self.data["cur_speed"] != 0.0
@@ -397,13 +431,13 @@ class Comp:
         return self.data["cur_turnrate"] != 0.0
 
     ###########################################################################
-    ## RADAR RELATED FUCNTIONS
+    # RADAR RELATED FUCNTIONS
     def is_transmitting(self):
         """Determines if radar is transmitting"""
         return self.get_data("active")
 
     ###########################################################################
-    ## ARM RELATED FUNCTIONS
+    # ARM RELATED FUNCTIONS
     def is_holding_item(self):
         """Determines if arm is holding an item"""
         return self.get_data("item") is not None
@@ -411,11 +445,12 @@ class Comp:
     def can_take_item(self, weight, bulk):
         """Determines if arm can take item"""
         return (
-            self.get_data("max_weight") >= weight and self.get_data("max_bulk") >= bulk
+            self.get_data("max_weight") >= weight
+            and self.get_data("max_bulk") >= bulk
         )
 
     ###########################################################################
-    ##
+    #
     def is_active(self):
         """Determines if component is active"""
         return self.get_data("active")

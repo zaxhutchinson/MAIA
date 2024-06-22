@@ -1,9 +1,3 @@
-import random
-
-import loader
-import obj
-import vec2
-import log
 import zmath
 
 
@@ -29,7 +23,8 @@ class Map:
         the placing of blocks around the edge while still keeping
         the same playable space outlined in the map json. And
         it means we do not have to worry about accounting for edge
-        boundries as they cannot be reached (if the edge obj is indestructible).
+        boundries as they cannot be reached (if the edge obj is
+        indestructible).
         """
         obj_grid = []
         item_grid = []
@@ -98,7 +93,8 @@ class Map:
             grid[to_x][to_y] = objuuid
 
     def get_all_obj_uuid_along_trajectory(self, x, y, angle, distance):
-        """Gets all object uuid's along a trajectory given a start point, angle and distance"""
+        """Gets all object uuid's along a trajectory given a start point,
+        angle and distance"""
         found = {}
         found["objects"] = []
         found["items"] = []
@@ -114,7 +110,8 @@ class Map:
         # If the obj or item grid cell is not None
         # create a ping and save it.
         for cell in cells:
-            if 0 <= cell[0] < self.get_data("width") and 0 <= cell[1] < self.get_data(
+            if 0 <= cell[0] < self.get_data("width") and \
+                0 <= cell[1] < self.get_data(
                 "height"
             ):
                 if obj_grid[cell[0]][cell[1]] is not None:
@@ -131,7 +128,9 @@ class Map:
                         ping = {}
                         ping["x"] = cell[0]
                         ping["y"] = cell[1]
-                        ping["distance"] = zmath.distance(x, y, cell[0], cell[1])
+                        ping["distance"] = zmath.distance(
+                            x, y, cell[0], cell[1]
+                        )
                         ping["uuid"] = i
                         ping["type"] = "item"
                         found["items"].append(ping)

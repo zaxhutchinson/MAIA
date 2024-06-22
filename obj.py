@@ -1,9 +1,6 @@
-import random
 import math
 import logging
-
-import vec2
-import line
+import copy
 import zfunctions
 
 _2PI = 2.0 * math.pi
@@ -12,7 +9,7 @@ _2PI = 2.0 * math.pi
 class Object:
     def __init__(self, data):
         """Initializes default data and view_keys"""
-        self.data = data
+        self.data = copy.deepcopy(data)
         self.JSON_keys = list(self.data.keys())
         self.data["damage"] = 0.0
         self.data["facing"] = 0.0
@@ -147,7 +144,7 @@ class Object:
         new_damage = old_damage + amt
         self.set_data("damage", new_damage)
 
-        self.log_info("Damaged for " + str(amt) + " - Total Damage: " + str(new_damage))
+        self.log_info(f"Damaged for {amt} - Total Damage: {new_damage}")
 
         points = 0
         if self.get_data("points_count"):
