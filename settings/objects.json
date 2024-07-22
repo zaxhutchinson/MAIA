@@ -1,35 +1,26 @@
 {
     "0": {
         "alive_sprite_filename": "metal_block.png",
-        "character": "X",
-        "color_alive": "gray1",
-        "color_dead": "black",
         "comp_ids": [],
         "dead_sprite_filename": "tombstone.png",
         "density": 1000,
         "health": 100000000000000000000,
         "id": "0",
         "name": "Indestructible Block",
-        "points": 0
+        "damage_as_points": 0.0
     },
     "1": {
         "alive_sprite_filename": "finalBox.png",
-        "character": "B",
-        "color_alive": "tan4",
-        "color_dead": "black",
         "comp_ids": [],
         "dead_sprite_filename": "tombstone.png",
         "density": "1000",
         "health": "10",
         "id": "1",
         "name": "Box",
-        "points": "0"
+        "damage_as_points": 0.0
     },
     "2": {
         "alive_sprite_filename": "blue_right1.png",
-        "character": "L",
-        "color_alive": "blue1",
-        "color_dead": "black",
         "comp_ids": [
             "0",
             "1000",
@@ -43,13 +34,10 @@
         "health": 100,
         "id": "2",
         "name": "Blue Tank",
-        "points": 100
+        "damage_as_points": 0.0
     },
     "3": {
         "alive_sprite_filename": "red_right1.png",
-        "character": "&",
-        "color_alive": "red1",
-        "color_dead": "black",
         "comp_ids": [
             "0",
             "1000",
@@ -63,13 +51,10 @@
         "health": 100,
         "id": "3",
         "name": "Red Tank",
-        "points": 100
+        "damage_as_points": 0.0
     },
     "4": {
         "alive_sprite_filename": "stick.png",
-        "character": "&",
-        "color_alive": "green",
-        "color_dead": "black",
         "comp_ids": [
             "0",
             "2000",
@@ -80,26 +65,20 @@
         "health": 100,
         "id": "4",
         "name": "player",
-        "points": 100
+        "damage_as_points": 0.0
     },
     "5": {
         "alive_sprite_filename": "wild_flower_13.png",
-        "character": "S",
-        "color_alive": "white",
-        "color_dead": "black",
         "comp_ids": [],
         "dead_sprite_filename": "tombstone.png",
         "density": 0,
         "health": 0,
         "id": "5",
         "name": "Starting Location",
-        "points": 0
+        "damage_as_points": 0.0
     },
     "6": {
         "alive_sprite_filename": "cliff.png",
-        "character": "R",
-        "color_alive": "red",
-        "color_dead": "black",
         "comp_ids": [
             "0",
             "1000",
@@ -113,13 +92,10 @@
         "health": 100,
         "id": "6",
         "name": "cliff",
-        "points": 100
+        "damage_as_points": 0.0
     },
     "7": {
         "alive_sprite_filename": "arrow.png",
-        "character": "P",
-        "color_alive": "red",
-        "color_dead": "black",
         "comp_ids": [
             "0",
             "2000",
@@ -130,19 +106,6 @@
         "health": 100,
         "id": "7",
         "name": "player",
-        "points": 100
-    },
-    "90": {
-        "alive_sprite_filename": "",
-        "character": "O",
-        "color_alive": "green",
-        "color_dead": "red",
-        "comp_ids": [],
-        "dead_sprite_filename": "",
-        "density": 0,
-        "health": 0,
-        "id": "90",
-        "name": "None",
-        "points": 0
+        "damage_as_points": 0.0
     }
 }

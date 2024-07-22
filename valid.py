@@ -42,76 +42,43 @@ class CommandValidator:
             # log.LogDebug("COMMAND VALIDATOR: Not a dictionary\n"+str(cmd))
             return {}
 
-        bad_cmds1 = []
+        good_cmds = []
 
         # k = tick, v = cmds by slot id
-        for tick, slot_dict in cmds.items():
+        for ctype, command in cmds.items():
 
             # Not a dictionary, remove
-            if type(slot_dict) is not dict:
-                bad_cmds1.append(tick)
-                continue
+            if type(command) is not dict:
+                del cmds[ctype]
 
             # Empty dict, remove
-            if len(slot_dict) == 0:
-                bad_cmds1.append(tick)
-                continue
+            elif len(command) == 0:
+                del cmds[ctype]
 
-            bad_cmds2 = []
+            # No command entry
+            elif "command" not in command:
+                del cmds[ctype]
 
-            for slot_id, command in slot_dict.items():
+            # There is a command entry, but it is not a valid one.
+            elif command["command"] not in self.commands:
+                del cmds[ctype]
 
-                # Command isn't a dict.
-                if type(command) is not dict:
-                    bad_cmds2.append(slot_id)
-                    continue
+            # Now check the contents of the command
+            else:
 
-                # Command is missing the command entry
-                if "command" not in command:
-                    bad_cmds2.append(slot_id)
-                    continue
-
-                if command["command"] not in self.commands:
-                    bad_cmds2.append(slot_id)
-                    continue
-
+                # The command contains additional garbage.
                 cmd_format = self.commands[command["command"]]
-
-                # command contains extra junk
                 if len(cmd_format) + 1 != len(command):
-                    bad_cmds2.append(slot_id)
-                    continue
+                    del cmds[ctype]
 
                 for k, v in cmd_format.items():
-
-                    # Required command info is missing
                     if k not in command:
-                        bad_cmds2.append(slot_id)
+                        del cmds[ctype]
                         break
 
-                    # If the command info is of the wrong data type,
-                    # throw it away.
                     if type(command[k]) not in v:
-                        bad_cmds2.append(slot_id)
+                        del cmds[ctype]
                         break
-
-            # Delete all the malformed component commands
-
-            for bc in bad_cmds2:
-                del cmds[tick][bc]
-
-            # We might have emptied all commands for this tick. Check for
-            # empty again.
-            # Empty dict, remove
-            if len(slot_dict) == 0:
-                bad_cmds1.append(tick)
-                # log.LogDebug("COMMAND VALIDATOR: Empty Dict")
-                continue
-
-        # Delete all commands for this tick.
-
-        for bc in bad_cmds1:
-            del cmds[bc]
 
         return cmds
 

@@ -22,7 +22,7 @@ class UIHomepage(tk.Frame):
         self.omsgr = msgs.OMsgr(self.msg_queue)
 
         self.ldr = loader.Loader(self.logger)
-        self.sim = sim.Sim(self.imsgr)
+        # self.sim = sim.Sim(self.imsgr)
 
         self.build_ui()
         self.UIMap = None

@@ -1,11 +1,11 @@
-# gstate.py
+# goal.py
 # Global State
 # By ZSH
 # Created 9-1-2020
 
 # Provides a global repository for state information.
 
-GSTATE_TYPES = [
+GOAL_TYPES = [
     "ITEMS_TOUCH",
     "OBJ_ITEMS_TOUCH",
     "N_OBJS_DESTROYED",
@@ -20,9 +20,9 @@ GOAL_ATTRS_BY_TYPE = {
 }
 
 
-class GState:
+class Goal:
     def __init__(self, data):
-        """Initializes gstate data
+        """Initializes goal data
 
         Sets data to input
         Sets check_state and init_state based on end-state type
@@ -53,7 +53,7 @@ class GState:
 
     ############################################################
     # N_OBJS_IN_LOCS
-    #   This gstate tracks if a specific amount of objects have
+    #   This goal tracks if a specific amount of objects have
     #   reached a set of locations.
     #
     #   A simple scenario is 1 obj and 1 location: i.e., maze.

@@ -26,20 +26,23 @@ COMP_ATTRS_BY_CTYPE = {
     "Arm": [("max_bulk", 0), ("max_weight", 0)],
 }
 
+MIN_NONZERO_SPEED = 0.001
+
 
 class Comp:
-    def __init__(self, data):
+    def __init__(self, template):
         """Initializes component data
 
         Sets data to input
         Sets command, update, and view_keys functions based on component type
         """
 
-        self.data = copy.deepcopy(data)
-
+        self.data = template
+        self.ctype = template["ctype"]
         self.command = self.no_command
         self.update = self.no_update
         self.view_keys = []
+        self.parent = None
         self.set_view_keys_basic()
 
         ctype = self.data["ctype"]
@@ -85,6 +88,15 @@ class Comp:
     def set_data(self, key, value):
         """Sets data"""
         self.data[key] = value
+
+    def get_ctype(self):
+        return self.ctype
+
+    def get_parent(self):
+        return self.parent
+
+    def set_parent(self, parent):
+        self.parent = parent
 
     ###########################################################################
     # Self View dispatch
@@ -236,6 +248,8 @@ class Comp:
                         self.data["cur_speed"] = self.get_data("min_speed")
                     elif new_speed > self.get_data("max_speed"):
                         self.data["cur_speed"] = self.get_data("max_speed")
+                    elif -MIN_NONZERO_SPEED < new_speed < MIN_NONZERO_SPEED:
+                        self.data["cur_speed"] = 0
                     else:
                         self.data["cur_speed"] = new_speed
 

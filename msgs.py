@@ -2,15 +2,15 @@ import queue
 
 
 class Msg:
-    def __init__(self, tick, title, text):
-        """Initializes tick, title, and text with associated parameters"""
-        self.tick = str(tick)
+    def __init__(self, turn, title, text):
+        """Initializes turn, title, and text with associated parameters"""
+        self.turn = str(turn)
         self.title = str(title)
         self.text = str(text)
 
     def get_text(self):
         """Gets text"""
-        return "[" + self.tick + "] " + self.title + "\n" + self.text
+        return "[" + self.turn + "] " + self.title + "\n" + self.text
 
 
 class IMsgr:

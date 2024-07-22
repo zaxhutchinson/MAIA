@@ -1,15 +1,15 @@
 import math
 
 
-def translate_point(x, y, angle, distance):
+def translate_point(x, y, angle, dist):
     """Translates the x and y along an angle and distance
 
     Angle is expected in degrees since they will come from the player
     """
     rad_angle = math.radians(angle)
-    new_x = x + distance * math.cos(rad_angle)
-    new_y = y + distance * math.sin(rad_angle)
-    return (new_x, new_y)
+    new_x = x + dist * math.cos(rad_angle)
+    new_y = y + dist * math.sin(rad_angle)
+    return new_x, new_y
 
 
 def sign(_n):
@@ -22,47 +22,58 @@ def distance(x0, y0, x1, y1):
     return math.sqrt((x1 - x0) ** 2.0 + (y1 - y0) ** 2.0)
 
 
-def get_cells_along_trajectory(x, y, angle, distance):
+def get_cells_along_trajectory(x, y, angle, dist):
     """Gets cells along trajectory given a start point, angle, and distance
 
     Z note: I am pretty sure this came from some internet source. It has been
     passed down through several of my projects and I've lost the
     original citation. Hats off to whomever wrote it.
     """
-    A = (x, y)
-    B = translate_point(x, y, angle, distance)
-    B = (int(B[0]), int(B[1]))
+    ix = int(x)
+    iy = int(y)
+    path = [(ix, iy)]
+    ex, ey = translate_point(x, y, angle, dist)
+    while distance(x, y, ex, ey) > 0.001:
+        x, y = translate_point(x, y, angle, 0.001)
+        ix = int(x)
+        iy = int(y)
+        if (ix, iy) != path[-1]:
+            path.append((ix, iy))
 
-    D = (B[0] - A[0], B[1] - A[1])
-    S = (sign(D[0]), sign(D[1]))
-    GA = (math.floor(A[0]), math.floor(A[1]))
-    GB = (math.floor(B[0]), math.floor(B[1]))
-    (dx, dy) = GA
-
-    traversed = [GA]
-
-    tIx = D[1] * (dx + S[0] - A[0])
-    tIy = D[0] * (dy + S[1] - A[1])
-
-    if D[0] == 0:
-        tIx = float("+inf")
-    if D[1] == 0:
-        tIy = float("+inf")
-
-    while (dx, dy) != GB:
-        movx = abs(tIx) <= abs(tIy)
-        movy = abs(tIy) <= abs(tIx)
-
-        if movx:
-            dx += S[0]
-            tIx = D[1] * (dx + S[0] - A[0])
-        if movy:
-            dy += S[1]
-            tIy = D[0] * (dy + S[1] - A[1])
-
-        traversed.append((dx, dy))
-
-    return traversed
+    return path
+    # dx = int(ex) - int(x)
+    # dy = int(ey) - int(y)
+    # sx = sign(dx)
+    # sy = sign(dy)
+    # S = math.floor(x), math.floor(y)
+    # E = math.floor(ex), math.floor(ey)
+    # G = math.floor(x), math.floor(y)
+    #
+    # traversed = [G[:]]
+    #
+    # tx = dy * (G[0] + sx - S[0])
+    # ty = dx * (G[1] + sy - S[1])
+    #
+    # if dx == 0:
+    #     tx = float("+inf")
+    # if dy == 0:
+    #     ty = float("+inf")
+    #
+    # while G[0] != E[0] or G[1] != E[1]:
+    #     mvx = abs(tx) <= abs(ty)
+    #     mvy = abs(ty) <= abs(tx)
+    #
+    #     if mvx:
+    #         G = (G[0] + sx, G[1])
+    #         tx = dy * (G[0] + sx - x)
+    #     if mvy:
+    #         G = (G[0], G[1] + sy)
+    #         ty = dx * (G[1] + sy - y)
+    #
+    #     if G != traversed[-1]:
+    #         traversed.append(G[:])
+    #
+    # return traversed
 
 
 def get_vector_to(x0, y0, x1, y1):

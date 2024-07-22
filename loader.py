@@ -1,14 +1,14 @@
 # Loads teams and other stuff
 
 import json
-
+import uuid
 import obj
 import copy
-import zmap
+import map
 import item
 import comp
-import gstate
-
+import goal
+import team
 
 class Loader:
     def __init__(self, logger=None):
@@ -19,7 +19,7 @@ class Loader:
         self.comp_templates = {}
         self.map_templates = {}
         self.team_templates = {}
-        self.gstate_templates = {}
+        self.goal_templates = {}
 
         self.DIRECTORY = "settings"
         self.MAIN_JSON_FILENAME = f"{self.DIRECTORY}/main.json"
@@ -28,7 +28,7 @@ class Loader:
         self.ITEM_JSON_FILENAME = f"{self.DIRECTORY}/items.json"
         self.MAP_JSON_FILENAME = f"{self.DIRECTORY}/maps.json"
         self.TEAM_JSON_FILENAME = f"{self.DIRECTORY}/teams.json"
-        self.GSTATE_JSON_FILENAME = f"{self.DIRECTORY}/state.json"
+        self.GOALS_JSON_FILENAME = f"{self.DIRECTORY}/goals.json"
 
         self.load_main_config()
         self.load_comp_templates()
@@ -36,44 +36,32 @@ class Loader:
         self.load_item_templates()
         self.load_map_templates()
         self.load_team_templates()
-        self.load_gstate_templates()
+        self.load_goal_templates()
 
         self.logger = logger
 
     ##########################################################################
     # GSTATE
-    def load_gstate_templates(self):
-        """Loads gstate templates"""
-        with open(self.GSTATE_JSON_FILENAME, "r") as f:
+    def load_goal_templates(self):
+        """Loads goal templates"""
+        with open(self.GOALS_JSON_FILENAME, "r") as f:
             json_objs = json.load(f)
             for k, v in json_objs.items():
-                self.gstate_templates[k] = v
-                # for g in v:
-                #     gs = gstate.GState(g)
-                #     self.gstate_templates[k].append(gs)
+                self.goal_templates[k] = v
 
-    def save_gstate_templates(self):
-        if len(self.gstate_templates) > 0:
-            with open(self.GSTATE_JSON_FILENAME, "w") as f:
-                json.dump(self.gstate_templates, f, indent=4, sort_keys=True)
+    def save_goal_templates(self):
+        if len(self.goal_templates) > 0:
+            with open(self.GOALS_JSON_FILENAME, "w") as f:
+                json.dump(self.goal_templates, f, indent=4, sort_keys=True)
 
-    def build_gstate(self, _id):
-        return gstate.GState(self.gstate_templates[_id])
+    def build_goal(self, _id):
+        return goal.Goal(self.goal_templates[_id])
 
-    def get_gstate_template(self, _id):
-        return self.gstate_templates[_id]
+    def get_goal_template(self, _id):
+        return self.goal_templates[_id]
 
-    def get_gstate_templates(self):
-        return self.gstate_templates
-
-    def copy_gstate_template(self, _id):
-        """Produces a deep copy of a gstate template"""
-        try:
-            return copy.deepcopy(self.gstate_templates[_id])
-        except KeyError:
-            self.logger.error(
-                "LOADER: copyGStateTemplate() KeyError " + str(_id)
-            )
+    def get_goal_templates(self):
+        return self.goal_templates
 
     ##########################################################################
     # OBJ
@@ -90,11 +78,11 @@ class Loader:
                 json.dump(self.obj_templates, f, indent=4, sort_keys=True)
 
     def build_obj(self, _id):
-        "Builds an object from a template"
-        return obj.Object(self.obj_templates[_id])
+        """Builds an object from a template"""
+        return obj.Object(uuid.uuid4(), self.obj_templates[_id])
 
     def get_obj_template(self, _id):
-        "Returns the object template specified by the _id"
+        """Returns the object template specified by the _id"""
         try:
             return self.obj_templates[_id]
         except KeyError:
@@ -143,7 +131,7 @@ class Loader:
         return self.item_templates
 
     def build_item(self, _id):
-        return item.Item(self.item_templates[_id])
+        return item.Item(uuid.uuid4(), self.item_templates[_id])
 
     def copy_item_template(self, _id):
         """Produces a deep copy of an item template"""
@@ -242,7 +230,7 @@ class Loader:
                 json.dump(self.map_templates, f, indent=4, sort_keys=True)
 
     def build_map(self, _id):
-        return zmap.Map(self.map_templates[_id])
+        return map.Map(self.map_templates[_id])
 
     def get_map_template(self, _id):
         return self.map_templates[_id]
@@ -252,13 +240,6 @@ class Loader:
 
     def delete_map(self, map_id):
         del self.map_templates[map_id]
-
-    def copy_map_template(self, _id):
-        """Produces a deep copy of a map template"""
-        try:
-            return copy.deepcopy(self.map_templates[_id])
-        except KeyError:
-            self.logger.error("LOADER: copyMapTemplate() KeyError " + str(_id))
 
     def get_map_ids(self):
         """Gets map ids"""
@@ -277,6 +258,9 @@ class Loader:
         if len(self.team_templates) > 0:
             with open(self.TEAM_JSON_FILENAME, "w") as f:
                 json.dump(self.team_templates, f, indent=4, sort_keys=True)
+
+    def build_team(self, _id):
+        return team.Team(self.team_templates[_id])
 
     def get_team_templates(self):
         return self.team_templates

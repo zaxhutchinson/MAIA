@@ -10,6 +10,7 @@ import ui_item_config
 import ui_map_config
 import ui_component_config
 import ui_gstate_config
+import ui_sim
 import loader
 import sprite_manager
 
@@ -52,7 +53,10 @@ class App(tk.Tk):
             master=self.container, controller=self, logger=self.logger
         )
         self.frames["setup_page"] = ui_setup.UISetup(
-            master=self.container, controller=self, logger=self.logger
+            master=self.container,
+            controller=self,
+            logger=self.logger,
+            ldr=self.ldr
         )
         self.frames["about_page"] = ui_about.ui_about(
             master=self.container, controller=self, logger=self.logger
@@ -94,6 +98,12 @@ class App(tk.Tk):
             logger=self.logger,
             ldr=self.ldr
         )
+        self.frames["match"] = ui_sim.UISim(
+            master=self.container,
+            controller=self,
+            logger=self.logger,
+            ldr=self.ldr
+        )
 
         # the setup page must be placed first to prevent errors
         self.frames["setup_page"].grid(row=0, column=0, sticky="nsew")
@@ -105,8 +115,12 @@ class App(tk.Tk):
         self.frames["config_component"].grid(row=0, column=0, sticky="nsew")
         self.frames["config_item"].grid(row=0, column=0, sticky="nsew")
         self.frames["config_gstate"].grid(row=0, column=0, sticky="nsew")
+        self.frames["match"].grid(row=0, column=0, sticky="nsew")
 
         self.show_frame("home_page")
+
+    def get_frame(self, name):
+        return self.frames[name]
 
     def show_frame(self, page_name):
         """Raises frame"""

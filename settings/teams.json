@@ -1,158 +1,26 @@
 {
-    "AnotherTeam": {
+    "TeamA": {
         "agent_defs": [
             {
-                "AI_file": "Missing",
-                "callsign": "New Agent 0",
-                "object": "Missing",
-                "squad": "Missing"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 2",
-                "object": "Missing",
-                "squad": "Missing"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 3",
-                "object": "Missing",
-                "squad": "A"
-            }
-        ],
-        "name": "AnotherTeam",
-        "size": "0"
-    },
-    "TeamAlpha": {
-        "agent_defs": [
-            {
-                "AI_file": "AI_file1.py",
+                "AI_file": "team_A_AI.py",
                 "callsign": "Leader",
-                "object": "player",
-                "squad": "A"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 1",
-                "object": "Missing",
-                "squad": "Missing"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 2",
-                "object": "Missing",
-                "squad": "Missing"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 3",
-                "object": "Missing",
-                "squad": "Missing"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 4",
-                "object": "Missing",
-                "squad": "Missing"
+                "object": "2",
+                "squad": "1"
             }
         ],
-        "name": "TeamAlpha",
+        "name": "TeamA",
         "size": 1
     },
-    "TeamBeta": {
+    "TeamB": {
         "agent_defs": [
             {
-                "AI_file": "Missing",
-                "callsign": "New Agent 0",
-                "object": "Missing",
-                "squad": "Missing"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 1",
-                "object": "Missing",
-                "squad": "Missing"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 2",
-                "object": "Missing",
-                "squad": "Missing"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 3",
-                "object": "Missing",
-                "squad": "Missing"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 4",
-                "object": "Missing",
-                "squad": "Q"
-            }
-        ],
-        "name": "TeamBeta",
-        "size": 1
-    },
-    "TeamDelta": {
-        "agent_defs": [
-            {
-                "AI_file": "AI_file4.py",
+                "AI_file": "team_B_AI.py",
                 "callsign": "Leader",
-                "object": "player",
-                "squad": "D"
+                "object": "3",
+                "squad": "1"
             }
         ],
-        "name": "TeamDelta",
-        "size": 1
-    },
-    "TeamLADS": {
-        "agent_defs": [
-            {
-                "AI_file": "LADS_AI.py",
-                "callsign": "Leader",
-                "object": "blue_tank",
-                "squad": "L"
-            }
-        ],
-        "name": "TeamLADS",
-        "size": 1
-    },
-    "TeamZach2": {
-        "agent_defs": [
-            {
-                "AI_file": "Zach_AI.py",
-                "callsign": "Leader",
-                "object": "red_tank",
-                "squad": "Z"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 1",
-                "object": "Missing",
-                "squad": "Missing"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 2",
-                "object": "Missing",
-                "squad": "Missing"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 3",
-                "object": "Missing",
-                "squad": "Missing"
-            },
-            {
-                "AI_file": "Missing",
-                "callsign": "New Agent 4",
-                "object": "Missing",
-                "squad": "Missing"
-            }
-        ],
-        "name": "TeamZach2",
+        "name": "TeamB",
         "size": 1
     }
 }

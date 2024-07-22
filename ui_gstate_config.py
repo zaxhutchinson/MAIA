@@ -1,5 +1,5 @@
 import tkinter as tk
-import gstate
+import goal
 import ui_widgets as uiw
 
 
@@ -26,7 +26,7 @@ class UINewGoal:
         self.type_label.grid(row=2, column=0)
         # box_value = tk.StringVar()
         self.combo = uiw.uiComboBox(master=self.top)
-        self.combo.config(values=gstate.GSTATE_TYPES)
+        self.combo.config(values=gstate.GOAL_TYPES)
         self.combo.grid(row=2, column=1, padx=50, pady=10)
         self.combo.bind("<<ComboBoxSelect>>", lambda: ())
 
@@ -232,7 +232,7 @@ class UIGStateConfig(tk.Frame):
             master=self.goal_selection_frame
         )
         self.select_goal_type_combo.configure(
-            state="readonly", values=gstate.GSTATE_TYPES
+            state="readonly", values=goal.GOAL_TYPES
         )
         self.select_goal_type_combo.pack(side=tk.TOP, fill=tk.BOTH)
         self.select_goal_type_combo.bind(
@@ -541,7 +541,7 @@ class UIGStateConfig(tk.Frame):
         goal_type = self.select_goal_type_combo.get()
         self.show_goal_type_attr_frame(goal_type)
 
-        goal_data = self.ldr.get_gstate_templates()
+        goal_data = self.ldr.get_goal_templates()
         keys = []
 
         for goal in goal_data.values():
@@ -634,7 +634,7 @@ class UIGStateConfig(tk.Frame):
         goal_index = self.select_goal_listbox.curselection()
         if len(goal_index) == 1:
             goal_id = self.select_goal_listbox.get(goal_index[0])
-            return self.ldr.get_gstate_template(goal_id)
+            return self.ldr.get_goal_template(goal_id)
         else:
             return None
 
@@ -653,7 +653,7 @@ class UIGStateConfig(tk.Frame):
         """
         Updates the components JSON. values
         """
-        goal_data = self.ldr.get_gstate_templates()
+        goal_data = self.ldr.get_goal_templates()
         selected_goal = self.get_currently_selected_goal()
         if selected_goal is not None:
 
@@ -779,7 +779,7 @@ class UIGStateConfig(tk.Frame):
         Creates a new goal template and adds it to the goal dictionary.
         """
 
-        goal_data = self.ldr.get_gstate_templates()
+        goal_data = self.ldr.get_goal_templates()
 
         good = False
         while not good:
@@ -787,7 +787,7 @@ class UIGStateConfig(tk.Frame):
             dialog = UINewGoal()
             result = dialog.get_result()
 
-            if result["type"] in gstate.GSTATE_TYPES:
+            if result["type"] in gstate.GOAL_TYPES:
                 if len(result["id"]) > 0 and result["id"] not in [
                     x["id"] for x in goal_data.values()
                 ]:
@@ -802,7 +802,7 @@ class UIGStateConfig(tk.Frame):
                     "A goal must have a valid type."
                 )
 
-        goal_attrs = gstate.GOAL_ATTRS_BY_TYPE[result["type"]]
+        goal_attrs = goal.GOAL_ATTRS_BY_TYPE[result["type"]]
 
         for attr, val in goal_attrs:
             result[attr] = val
@@ -817,7 +817,7 @@ class UIGStateConfig(tk.Frame):
         dictionary.
         """
 
-        goal_data = self.ldr.get_gstate_templates()
+        goal_data = self.ldr.get_goal_templates()
 
         selected_goal = self.get_currently_selected_goal()
         if selected_goal is not None:
@@ -911,4 +911,4 @@ class UIGStateConfig(tk.Frame):
         self.controller.show_frame("home_page")
 
     def save_to_json(self):
-        self.ldr.save_gstate_templates()
+        self.ldr.save_goal_templates()

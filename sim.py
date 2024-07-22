@@ -1,35 +1,63 @@
-import importlib
-import uuid
+import importlib.util
 import random
+import time
+import uuid
+
+import obj
 import zmath
 import msgs
 import valid
 import views
 import zfunctions
-import zexceptions
+import sprite_manager
 
 
 class Sim:
-    def __init__(self, imsgr):
+    def __init__(
+            self,
+            ldr,
+            logger,
+            map_template,
+            team_side_assignments,
+            *args, **kwargs
+    ):
         """Initializes default sim values and an empty action dispatch table"""
-        self.reset()
-        self.imsgr = imsgr
+        self.ldr = ldr
+        self.logger = logger
+        self.map_template = map_template
+        self.map = None
+        self.team_side_assignments = team_side_assignments
+        self.imsgr = kwargs["imsgr"]
+        self.objects = {}
+        self.items = {}
+        self.destroyed_objs = {}
+        self.sides = {}
+        self.turn = 0
+        self.win_states = []
+        self.comp_views = {}
+        self.actions = {}
+        self.action_priority = {}
+        self.action_priority_keys = []
+        self.agent_turn_order = []
+        self.cur_agent_index = None
+        self.randomize_order = False
+        self.randomise_order_every_turn = False
         self.command_validator = valid.CommandValidator()
-
         self.action_dispatch_table = {}
         self.build_action_dispatch_table()
-
         self.view_manager = views.ViewManager()
+        self.config = self.ldr.copy_main_config()
+        self.build_action_priority(self.config)
 
     def reset(self):
         """Resets default sim values"""
         self.map = None
-        self.objs = {}
+        self.team_side_assignments = None
+        self.objects = {}
         self.items = {}
         self.destroyed_objs = {}
         self.sides = {}
-        self.ticks_per_turn = 1
-        self.tick = 0
+        self.turn = 0
         self.win_states = []
         self.comp_views = {}
         self.actions = {}
@@ -50,49 +78,58 @@ class Sim:
 
     ##########################################################################
     # MAP
-    def set_map(self, _map):
-        """Sets map"""
-        self.map = _map
-        sides = self.map.get_data("sides")
-        for k, v in sides.items():
-            self.add_side(k, v)
+    # def set_map(self, _map):
+    #     """Sets map"""
+    #     self.world = _map
+    #     sides = self.world.get_data("sides")
+    #     for k, v in sides.items():
+    #         self.add_side(k, v)
+    #
+    def get_turn(self):
+        return self.turn
 
     def get_map(self):
         """Gets map"""
         return self.map
 
-    def has_map(self):
-        """Determines if sim has map"""
-        return self.map is not None
+    def get_objects(self):
+        return self.objects
 
-    ##########################################################################
-    # SIDES
-    def add_side_id(self, ID):
-        """Adds side id"""
-        self.sides[ID] = None
-
-    def add_side(self, ID, side):
-        """Adds side"""
-        self.sides[ID] = side
-        self.sides[ID]["teamname"] = None
-
-    def get_sides(self):
-        """Gets sides"""
-        return self.sides
-
-    ##########################################################################
-    # TEAMS
-    def add_team_name(self, ID, team_name):
-        """Adds team name"""
-        self.sides[ID]["teamname"] = team_name
-
-    def get_team_name(self, ID):
-        """Gets team name from id"""
-        return self.sides[ID]["teamname"]
-
-    def del_team_name(self, ID):
-        """Deletes team name"""
-        self.sides[ID]["teamname"] = None
+    def get_items(self):
+        return self.items
+    #
+    # def has_map(self):
+    #     """Determines if sim has map"""
+    #     return self.world is not None
+    #
+    # ##########################################################################
+    # # SIDES
+    # def add_side_id(self, ID):
+    #     """Adds side id"""
+    #     self.sides[ID] = None
+    #
+    # def add_side(self, ID, side):
+    #     """Adds side"""
+    #     self.sides[ID] = side
+    #     self.sides[ID]["teamname"] = None
+    #
+    # def get_sides(self):
+    #     """Gets sides"""
+    #     return self.sides
+    #
+    # ##########################################################################
+    # # TEAMS
+    # def add_team_name(self, ID, team_name):
+    #     """Adds team name"""
+    #     self.sides[ID]["teamname"] = team_name
+    #
+    # def get_team_name(self, ID):
+    #     """Gets team name from id"""
+    #     return self.sides[ID]["teamname"]
+    #
+    # def del_team_name(self, ID):
+    #     """Deletes team name"""
+    #     self.sides[ID]["teamname"] = None
 
     ##########################################################################
     # VIEWS
@@ -140,161 +177,173 @@ class Sim:
         """Adds win state"""
         self.win_states.append(ws)
 
-    ##########################################################################
-    # BUILD SIM
-    def build_sim(self, ldr):
-        """Builds sim
+    def build_sim(self):
+        self.build_map()
+        self.build_teams()
 
-        Builds map and set win state(s)
-        """
-        if not self.has_map():
-            raise zexceptions.BuildException("No map was selected.")
+    # BUILD MAP
+    def build_map(self):
+        map_id = self.map_template["id"]
+        self.map = self.ldr.build_map(map_id)
 
-        for k, v in self.sides.items():
-            if v["teamname"] is None:
-                raise zexceptions.BuildException(
-                    f"Side {k} has no team assignment."
-                )
+        # Add all edge objects
+        edge_obj_id = self.map.get_edge_obj_id()
+        map_width = self.map.get_width()
+        map_height = self.map.get_height()
+        for x in range(map_width):
+            new_obj = self.ldr.build_obj(edge_obj_id)
+            new_obj.init_basic_data(
+                x=x,
+                y=0,
+                facing=0
+            )
+            self.objects[new_obj.get_uuid()] = new_obj
+            self.map.add_object_to(x, 0, new_obj.get_uuid())
 
-        # Get the main config dict
-        config = ldr.copy_main_config()
+            new_obj = self.ldr.build_obj(edge_obj_id)
+            new_obj.init_basic_data(
+                x=x,
+                y=map_height-1,
+                facing=0
+            )
+            self.objects[new_obj.get_uuid()] = new_obj
+            self.map.add_object_to(x, map_height-1, new_obj.get_uuid())
 
-        # Set the team directory
-        team_dir = config["team_dir"]
+        for y in range(map_height):
+            new_obj = self.ldr.build_obj(edge_obj_id)
+            new_obj.init_basic_data(
+                x=0,
+                y=y,
+                facing=0
+            )
+            self.objects[new_obj.get_uuid()] = new_obj
+            self.map.add_object_to(0, y, new_obj.get_uuid())
 
-        # Set the action Priority and sorted keys.
-        self.build_action_priority(config)
+            new_obj = self.ldr.build_obj(edge_obj_id)
+            new_obj.init_basic_data(
+                x=map_width-1,
+                y=y,
+                facing=0
+            )
+            self.objects[new_obj.get_uuid()] = new_obj
+            self.map.add_object_to(map_width-1, y, new_obj.get_uuid())
 
-        # Set the number of ticks per turn
-        self.ticks_per_turn = config["ticks_per_turn"]
-        self.tick = 0
-
-        # Build the map grid
-        self.map.build_map_grid()
-
-        # Create the map border
-        edge_obj_id = self.map.get_data("edge_obj_id")
-        edge_coords = self.map.get_list_of_edge_coordinates()
-        for ec in edge_coords:
-            # Copy the obj
-            new_obj = ldr.copy_obj_template(edge_obj_id)
-            # Create obj place data
-            data = {}
-            data["x"] = ec[0]
-            data["y"] = ec[1]
-            data["uuid"] = uuid.uuid4()
-            # Place, add to objDict and add to map
-            new_obj.place(data)
-            self.objs[data["uuid"]] = new_obj
-            self.map.add_obj(data["x"], data["y"], data["uuid"])
-
-        # Add all placed objects
-        pl_objs = self.map.get_data("placed_objects")
-        for oid, lst in pl_objs.items():
-            for o in lst:
-                # If an object entry in placed_objs does not
-                # have a position, it is ignored.
-                if "x" in o and "y" in o:
-                    new_obj = ldr.copy_obj_template(oid)
-                    data = o
-                    data["uuid"] = uuid.uuid4()
-                    if new_obj.place:
-                        new_obj.place(data)
-                    self.objs[data["uuid"]] = new_obj
-                    self.map.add_obj(data["x"], data["y"], data["uuid"])
+        # Add all objects
+        objects = self.map_template["objects"]
+        for o in objects:
+            new_obj = self.ldr.build_obj(o["id"])
+            new_obj.x = o["x"] # have to fill these in manually.
+            new_obj.y = o["y"] # probably a better way
+            self.objects[new_obj.get_uuid()] = new_obj
+            self.map.add_object_to(
+                new_obj.get_cell_x(),
+                new_obj.get_cell_y(),
+                new_obj.get_uuid()
+            )
 
         # Add all placed items
-        pl_items = self.map.get_data("placed_items")
-        for iid, lst in pl_items.items():
-            for i in lst:
-                # If an item entry does not have a position, ignore.
-                if "x" in i and "y" in i:
-                    new_item = ldr.copy_item_template(iid)
-                    data = i
-                    data["uuid"] = uuid.uuid4()
-                    new_item.place(data)
-                    self.items[data["uuid"]] = new_item
-                    self.map.add_item(data["x"], data["y"], data["uuid"])
+        items = self.map_template["items"]
+        for i in items:
+            item_id = i["id"]
+            new_item = self.ldr.build_item(item_id)
+            self.items[new_item.get_uuid()] = new_item
+            self.map.add_item_to(
+                new_item.get_cell_x(),
+                new_item.get_cell_y(),
+                new_item.get_uuid()
+            )
 
-        # Add teams and ai-controlled objs
-        for k, v in self.sides.items():
-            team_data = ldr.copy_team_template(v["teamname"])
-            team_data["side"] = k
-            team_data["agents"] = {}
-            team_name = team_data["name"]
-            # Copy so we don't f-up the original
-            starting_locations = list(v["starting_locations"])
+    def build_teams(self):
 
-            for agent in team_data["agent_defs"]:
-                new_obj = ldr.copy_obj_template(agent["object"])
-                data = {}
-                data["side"] = k
-                data["ticks_per_turn"] = config["ticks_per_turn"]
-                data["callsign"] = agent["callsign"]
-                data["teamname"] = team_data["name"]
-                data["squad"] = agent["squad"]
-                data["object"] = agent["object"]
-                data["uuid"] = uuid.uuid4()
+        team_dir = self.config["team_dir"]
 
-                # Randomly choose a starting location
-                sl = random.randint(0, len(starting_locations) - 1)
-                data["x"] = starting_locations[sl][0]
-                data["y"] = starting_locations[sl][1]
+        for side_id, team_id in self.team_side_assignments.items():
 
-                # Delete the chosen location so no other team mate gets it.
-                del starting_locations[sl]
+            # Create new team object
+            new_team = self.ldr.build_team(team_id)
 
-                # select a random facing.
-                facing = v["facing"]
-                if facing == "None":
-                    facing = random.random() * 360.0
-                else:
-                    facing = float(facing)
+            # Get team data elements
+            team_name = new_team.get_name()
+            agent_defs = new_team.get_agent_defs()
+            triggers = new_team.get_triggers()
 
-                data["facing"] = facing
+            # Get and init side data
+            self.sides = self.map_template["sides"]
+            side_data = self.sides[side_id]
+            starting_locations = side_data["starting_locations"]
+            if side_data["random_placement"]:
+                random.shuffle(starting_locations)
+
+            for index, ad in enumerate(agent_defs):
+                agent_object = self.ldr.build_obj(ad["object"])
+
+                # Build all components
+                agent_object.build_comps(self.ldr)
+
+                # Load sprite for object
+                agent_sprite_filename = agent_object.get_sprite_filename_based_on_damage()
+                agent_sprite = sprite_manager.load_image(agent_sprite_filename)
+
+                # Init sim data
+                loc = starting_locations[index]
+                # agent_object.init_for_sim(
+                #     x=loc["x"],
+                #     y=loc["y"],
+                #     facing=loc["facing"]
+                # )
 
                 # Load and set AI
-                ai_file_name = agent["AI_file"]
+                ai_file_name = ad["AI_file"]
                 ai_spec = importlib.util.spec_from_file_location(
                     ai_file_name,
                     f"{team_dir}/{team_name}/{ai_file_name}"
                 )
                 ai_module = importlib.util.module_from_spec(ai_spec)
                 ai_spec.loader.exec_module(ai_module)
-                AI = ai_module.AI()
-                AI.init_data(data)
+                ai_script = ai_module.AI()
 
-                # Store the AI object after initialization
-                # to avoid including it in the data dict passed
-                # to the AI itself.
-                data["ai"] = AI
+                # Finalize any additional agent data. This also calls the
+                # AI script's init and passes on a limited amount of
+                # starting data in case AI authors want to do any setup.
+                agent_object.init_basic_data(
+                    x=loc["x"],
+                    y=loc["y"],
+                    facing=loc["facing"]
+                )
 
-                # Create and store components
-                for c in new_obj.get_data("comp_ids"):
-                    new_comp = ldr.build_comp(c)
-                    new_comp.set_data("parent", new_obj)
-                    new_obj.add_comp(new_comp)
+                agent_object.init_agent_data(
+                    damage=0,
+                    sprite=agent_sprite,
+                    ai_script=ai_script,
+                    team_name=team_name,
+                    callsign=ad["callsign"],
+                    squad=ad["squad"]
+                )
 
-                # Place and store and add to map
-                new_obj.place(data)
-                self.objs[data["uuid"]] = new_obj
-                self.map.add_obj(data["x"], data["y"], data["uuid"])
+                ai_script.init_ai(**agent_object.get_self_view())
 
-                # Add agent obj to team dictionary of agents
-                team_data["agents"][data["uuid"]] = new_obj
+                # Add the agent to the turn order.
+                self.agent_turn_order.append(agent_object)
 
-            # Add the team data to the side entry
-            v["team"] = team_data
+                # Add to team
+                new_team.add_agent(agent_object)
 
-        # Set the Global States
-        self.set_all_win_states(ldr, self.map.get_data("win_states"))
+                # Add to objects
+                self.objects[agent_object.get_uuid()] = agent_object
+
+                # Add to map at starting location
+                self.map.add_object_to(
+                    agent_object.get_cell_x(),
+                    agent_object.get_cell_y(),
+                    agent_object.get_uuid()
+                )
 
     ##########################################################################
     # Get the world view
     def get_general_view(self):
         """Gets general world view"""
         view = {}
-        view["tick"] = self.tick
+        view["turn"] = self.turn
         return view
 
     ##########################################################################
@@ -312,7 +361,7 @@ class Sim:
             if r:
                 self.imsgr.add_msg(
                     msgs.Msg(
-                        self.tick,
+                        self.turn,
                         "GAME OVER",
                         win_state.get_data("msg"),
                     )
@@ -337,7 +386,7 @@ class Sim:
                 total += curr_obj.get_data("points")
             msg += "    TOTAL: " + str(total) + "\n"
 
-        m = msgs.Msg(str(self.tick), "CURRENT POINTS", msg)
+        m = msgs.Msg(str(self.turn), "CURRENT POINTS", msg)
         self.imsgr.add_msg(m)
 
     def get_final_scores(self):
@@ -357,45 +406,42 @@ class Sim:
         return final_scores
 
     ##########################################################################
+
+    def run_next_agent(self, cur_agent):
+        cmds = []
+        view = self.get_general_view()
+        agent_uuid = cur_agent.get_uuid()
+        if agent_uuid in self.comp_views:
+            view["comp"] = self.comp_views[agent_uuid]
+        cmds = cur_agent.update(view)
+        return self.command_validator.validate_commands(cmds)
+
     # RUN SIM
-    def run_sim(self, turns):
+    def run_sim(self, ui, turns, delay):
         """Runs sim
 
         For given number of turns:
         - update view and objects
         - get new sets of commands
-        - run through each tick
+        - run through each turn
 
-        For each tick:
+        For each turn:
         - process commands to run
         - perform action based on action priority
         """
         for turn in range(turns):
-            # A place to store the commands by uuid and tick
+            # A place to store the commands by uuid and turn
             cmds_by_uuid = {}
-
-            # get the general view to pass onto objects.
-            general_view = self.get_general_view()
 
             # Run all obj's updates, storing the returned commands
             # Don't need to shuffle order while getting commands
-            for obj_uuid, curr_obj in self.objs.items():
+            for cur_agent in self.agent_turn_order:
+                agent_uuid = cur_agent.get_uuid()
+                cmds = self.run_next_agent(cur_agent)
+                if cmds is not None:
+                    cmds_by_uuid[agent_uuid] = cmds
+                ui.draw_object(cur_agent)
 
-                cmd = None
-                view = {}
-                view["general"] = general_view
-                if obj_uuid in self.comp_views:
-                    view["comp"] = self.comp_views[obj_uuid]
-
-                # Call update and get commands
-                cmd = curr_obj.update(view)
-
-                # Validate commands
-                cmd = self.command_validator.validate_commands(cmd)
-
-                if cmd is not None:
-                    if type(cmd) is dict and len(cmd) > 0:
-                        cmds_by_uuid[obj_uuid] = cmd
 
             # Flush the obj_views, so no one gets old data.
             self.comp_views = {}
@@ -403,63 +449,57 @@ class Sim:
             # Get the list of obj uuids which have issued cmds.
             obj_uuids_list = list(cmds_by_uuid.keys())
 
-            # Run each tick
-            for tick in range(self.ticks_per_turn):
-                self.imsgr.add_msg(msgs.Msg(self.tick, "---NEW TICK---", ""))
+            self.imsgr.add_msg(msgs.Msg(self.turn, "---NEW TURN---", ""))
 
-                # Advance turn order sequentially by rotating list of all
-                # active agents by 1.
-                obj_uuids_list[1:]
+            self.process_commands(cmds_by_uuid)
 
-                # Check all commands to see if there is
-                # something to do this tick.
-                # for objuuid,objcmds in cmds_by_uuid.items():
-                for objuuid in obj_uuids_list:
-                    objcmds = cmds_by_uuid[objuuid]
-                    if str(tick) in objcmds:
-                        cmds_this_tick = objcmds[str(tick)]
-                        self.process_commands(objuuid, cmds_this_tick)
+            # Check all commands to see if there is
+            # something to do this turn.
+            # for objuuid,objcmds in cmds_by_uuid.items():
+            # for objuuid in obj_uuids_list:
+            #     objcmds = cmds_by_uuid[objuuid]
+            #     self.process_commands(objuuid, objcmds)
 
-                self.process_updates()
+            self.process_updates()
 
-                # Run all actions by type in the order specified in the main
-                # config's action_priority
-                for ap in self.action_priority_keys:
-                    action_type = self.action_priority[ap]
+            # Run all actions by type in the order specified in the main
+            # config's action_priority
+            for ap in self.action_priority_keys:
+                action_type = self.action_priority[ap]
 
-                    cur_actions = self.actions[action_type]
+                cur_actions = self.actions[action_type]
 
-                    # act is a tuple: (obj,action)
-                    for act in cur_actions:
-                        # Log the action with the object's logger.
-                        act[0].log_info(zfunctions.action_to_string(act[1]))
-                        # Execute action.
-                        self.action_dispatch_table[action_type](act[0], act[1])
+                # act is a tuple: (obj,action)
+                for act in cur_actions:
+                    # Log the action with the object's logger.
+                    act[0].log_info(zfunctions.action_to_string(act[1]))
+                    # Execute action.
+                    self.action_dispatch_table[action_type](act[0], act[1])
 
-                # All actions have been run, now clear action dict.
-                self.reset_action_dict()
+            # All actions have been run, now clear action dict.
+            self.reset_action_dict()
 
-                # Check if the sim is over.
-                if self.check_end_of_sim():
-                    return True
-                else:
-                    self.tick += 1
+            # Check if the sim is over.
+            if self.check_end_of_sim():
+                return True
+            else:
+                self.turn += 1
 
-    def process_commands(self, obj_uuid, cmds):
+    def process_commands(self, cmds):
         """Processes commands
 
         Only alive objects can perfrom commands
         For each alive object, turn commands into actions
         """
-        # Prevents commands from objs destroyed in this tick
+        # Prevents commands from objs destroyed in this turn
         # from taking place.
-        if obj_uuid in self.objs:
+        for agent_uuid, commands in cmds.items():
 
-            curr_obj = self.objs[obj_uuid]
+            curr_obj = self.objects[agent_uuid]
 
             # Send the commands to the object so they can be
             # processed. This returns a list of actions.
-            actions = self.objs[obj_uuid].process_commands(cmds)
+            actions = curr_obj.process_commands(commands)
 
             # Dispatch each action to the function that
             # handles its execution.
@@ -475,14 +515,14 @@ class Sim:
 
         For each item, turn updates into actions
         """
-        for objuuid, obj in self.objs.items():
+        for o in self.objects.values():
 
-            actions = obj.process_updates()
+            actions = o.process_updates()
 
             for a in actions:
 
                 # Add obj ref and action as a tuple.
-                self.actions[a.get_type()].append((obj, a))
+                self.actions[a.get_type()].append((o, a))
 
     ##########################################################################
     # ACTION PROCESSING FUNCTIONS
@@ -511,7 +551,7 @@ class Sim:
         # If there's something in a cell, damage the first thing
         # along the path and quit.
         for cell in cells_hit:
-            id_in_cell = self.map.get_cell_occupant(cell[0], cell[1])
+            id_in_cell = self.world.get_cell_occupant(cell[0], cell[1])
             if id_in_cell == curr_obj.get_data("uuid"):
                 continue
             elif id_in_cell is not None:
@@ -541,84 +581,116 @@ class Sim:
     def actn_move(self, curr_obj, actn):
         """Move action"""
         # Get current data
-        facing = curr_obj.get_data("facing")
+        facing = curr_obj.get_facing()
         cur_speed = actn.get_data("speed")
-        old_x = curr_obj.get_data("x")
-        old_y = curr_obj.get_data("y")
-        old_cell_x = curr_obj.get_data("cell_x")
-        old_cell_y = curr_obj.get_data("cell_y")
-        x = old_x + old_cell_x
-        y = old_y + old_cell_y
+        old_cell_x = curr_obj.get_cell_x()
+        old_cell_y = curr_obj.get_cell_y()
+        # old_cell_x = curr_obj.get_data("cell_x")
+        # old_cell_y = curr_obj.get_data("cell_y")
+        x = curr_obj.get_x()
+        y = curr_obj.get_y()
         # translate and new data
         new_position = zmath.translate_point(x, y, facing, cur_speed)
-        new_x = int(new_position[0])
-        new_y = int(new_position[1])
-        new_cell_x = abs(new_position[0] - abs(new_x))
-        new_cell_y = abs(new_position[1] - abs(new_y))
+        new_x = new_position[0]
+        new_y = new_position[1]
+        new_cell_x = int(new_x)
+        new_cell_y = int(new_y)
 
         # see if move is possible.
-        if new_x != old_x or new_y != old_y:
+        if new_cell_x != old_cell_x or new_cell_y != old_cell_y:
 
             # Might be moving more than 1 cell. Get trajectory.
             cell_path = zmath.get_cells_along_trajectory(
                 x, y, facing, cur_speed
             )
 
-            cur_cell = (old_x, old_y)
-            collision = False
+            print(cell_path)
+
+            cur_cell = (old_cell_x, old_cell_y)
+            has_collided = False
+            collided_cell = None
 
             # for all cells in the path, update if empty.
             for cell in cell_path:
-                if cell == (old_x, old_y):
+                if cell == (old_cell_x, old_cell_y):
                     continue
                 else:
-                    if self.map.is_cell_empty(cell[0], cell[1]):
+                    if not self.map.contains_object(cell[0], cell[1]):
                         cur_cell = cell
                     else:
-                        collision = True
+                        has_collided = True
+                        collided_cell = cell
                         break
 
-            new_x = cur_cell[0]
-            new_y = cur_cell[1]
+            new_cell_x = cur_cell[0]
+            new_cell_y = cur_cell[1]
 
             # Move the object
             self.map.move_obj_from_to(
-                curr_obj.get_data("uuid"), old_x, old_y, new_x, new_y
+                curr_obj.get_uuid(), old_cell_x, old_cell_y, new_cell_x, new_cell_y
             )
-            curr_obj.set_data("x", new_x)
-            curr_obj.set_data("y", new_y)
-            curr_obj.set_data("cell_x", new_cell_x)
-            curr_obj.set_data("cell_y", new_cell_y)
+
+            if has_collided:
+
+                # CRASH INTO SOMETHING
+                dest_cell_x = int(new_x)
+                dest_cell_y = int(new_y)
+                print("BEFORE COLLISION:", new_cell_x, new_cell_y, collided_cell[0], collided_cell[1], x, y, new_x,
+                      new_y)
+                if new_x - x != 0.0:
+                    a = (new_y-y) / (new_x-x)
+                    b = y - a * x
+
+                    # y = ax+b
+                    if collided_cell[0] != new_cell_x and collided_cell[1] == new_cell_y:
+                        if collided_cell[0] < new_cell_x:
+                            new_x = float(new_cell_x)
+                            new_y = a * new_x + b
+                        else:
+                            new_x = new_cell_x + 0.999
+                            new_y = a * new_x + b
+                    elif collided_cell[0] == new_cell_x and collided_cell[1] != new_cell_y:
+                        if collided_cell[1] < new_cell_y:
+                            new_y = float(new_cell_y)
+                            new_x = (new_y - b) / a
+                        else:
+                            new_y = new_cell_y + 0.999
+                            new_x = (new_y - b) / a
+                    elif collided_cell[0] != new_cell_x and collided_cell[1] != new_cell_y:
+                        if collided_cell[0] < new_cell_x:
+                            new_x = float(new_cell_x)
+                            new_y = a * new_x + b
+                        else:
+                            new_x = new_cell_x + 0.999
+                            new_y = a * new_x + b
+                        if collided_cell[1] < new_cell_y:
+                            new_y = float(new_cell_y)
+                            new_x = (new_y - b) / a
+                        else:
+                            new_y = new_cell_y + 0.999
+                            new_x = (new_y - b) / a
+
+                else:
+                    new_x = x
+
+                print("AFTER COLLISION:", new_cell_x, new_cell_y, collided_cell[0], collided_cell[1], x, y, new_x, new_y)
+
+            curr_obj.set_x(new_x)
+            curr_obj.set_y(new_y)
 
             # Update held item's locations
             item_uuids = curr_obj.get_all_held_stored_items()
             for _uuid in item_uuids:
                 i = self.items[_uuid]
-                i.set_data("x", new_x)
-                i.set_data("y", new_y)
+                i.set_x(new_x)
+                i.set_y(new_y)
 
-            if collision:
-                # CRASH INTO SOMETHING
 
-                # We need to move the obj to the edge
-                # of the old cell to simulate that they reached the edge of it
-                # before crashing.
-                if new_x != old_x:
-                    if new_x > old_x:
-                        curr_obj.set_data("cell_x", 0.99)
-                    else:
-                        curr_obj.set_data("cell_x", 0.0)
-                if new_y != old_y:
-                    if new_y > old_y:
-                        curr_obj.set_data("cell_y", 0.99)
-                    else:
-                        curr_obj.set_data("cell_y", 0.0)
 
         # Didn't leave the cell, update in-cell coords.
         else:
-            curr_obj.set_data("cell_x", new_cell_x)
-            curr_obj.set_data("cell_y", new_cell_y)
-            pass
+            curr_obj.set_x(new_x)
+            curr_obj.set_y(new_y)
 
     # Turns the obj
     def actn_turn(self, curr_obj, actn):
@@ -635,7 +707,7 @@ class Sim:
     def actn_transmit_radar(self, curr_obj, actn):
         """Radar transmission action"""
         view = self.view_manager.get_view_template("radar")
-        view["tick"] = self.tick
+        view["turn"] = self.turn
         view["ctype"] = actn.get_data("ctype")
         view["compname"] = actn.get_data("compname")
         view["slot_id"] = actn.get_data("slot_id")
@@ -656,7 +728,7 @@ class Sim:
         # While we're in our arc of visibility
         while angle <= end:
             # Get all object/item pings along this angle
-            pings = self.map.get_all_obj_uuid_along_trajectory(
+            pings = self.world.get_all_obj_uuid_along_trajectory(
                 x, y, angle, _range
             )
             # Pings should be in order. Start adding if they're not there.
@@ -730,7 +802,7 @@ class Sim:
         """Broadcast message action"""
         view = {}
         view["vtype"] = "message"
-        view["tick"] = self.tick
+        view["turn"] = self.turn
         view["message"] = actn.get_data("message")
 
         for curr_uuid, other_obj in self.objs.items():
@@ -758,7 +830,7 @@ class Sim:
 
             obj_x = curr_obj.get_data("x")
             obj_y = curr_obj.get_data("y")
-            items_in_obj_cell = self.map.get_items_in_cell(obj_x, obj_y)
+            items_in_obj_cell = self.world.get_items_in_cell(obj_x, obj_y)
 
             if len(items_in_obj_cell) > 0:
                 item_name = actn.get_data("item_name")
@@ -802,7 +874,7 @@ class Sim:
                             item_to_take.get_data("bulk"),
                         ):
                             arm_comp.set_data("item", matching_item)
-                            self.map.remove_item(obj_x, obj_y, matching_item)
+                            self.world.remove_item(obj_x, obj_y, matching_item)
                             item_to_take.take_item(curr_obj.get_data("uuid"))
                             print("Take successful.")
                         else:
@@ -832,7 +904,7 @@ class Sim:
             # the item is dropped.
             if drop_location == "cell":
                 print("Drop successful")
-                self.map.add_item(obj_x, obj_y, held_item_uuid)
+                self.world.add_item(obj_x, obj_y, held_item_uuid)
                 arm_comp.set_data("item", None)
                 held_item.drop_item()
 
@@ -854,14 +926,14 @@ class Sim:
             # Check for held/stored items
             held_items_uuids = dead_obj.get_and_remove_all_held_stored_items()
             for i in held_items_uuids:
-                self.map.add_item(
+                self.world.add_item(
                     dead_obj.get_data("x"),
                     dead_obj.get_data("y"),
                     i
                 )
 
             # Remove from map
-            self.map.remove_obj(
+            self.world.remove_obj(
                 dead_obj.get_data("x"),
                 dead_obj.get_data("y"),
                 dead_obj.get_data("uuid"),
@@ -875,27 +947,6 @@ class Sim:
 
         return points
 
-    ##########################################################################
-    # DRAWING DATA
-    # This gets and returns a list of all drawing necessary data from the
-    # live objects.
-    ##########################################################################
-
-    def get_obj_draw_data(self):
-        """Gets object draw data"""
-        dd = []
-        for curr_obj in self.destroyed_objs.values():
-            dd.append(curr_obj.get_draw_data())
-        for curr_obj in self.objs.values():
-            dd.append(curr_obj.get_draw_data())
-        return dd
-
-    def get_item_draw_data(self):
-        """Gets item draw data"""
-        dd = []
-        for item in self.items.values():
-            dd.append(item.get_draw_data())
-        return dd
 
     ##########################################################################
     # SEND MESSAGE TO HANDLER
@@ -903,4 +954,4 @@ class Sim:
     # Convenience function to create a message for the UI's log
     def log_msg(self, title, text):
         """Logs message"""
-        self.imsgr.add_msg(msgs.Msg(self.tick, title, text))
+        self.imsgr.add_msg(msgs.Msg(self.turn, title, text))

@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.font
 import enum
 import zfunctions
+import trigger
 import ui_widgets as uiw
 
 
@@ -14,6 +15,111 @@ class AddRemove(enum.Enum):
     AddStart = 5
     DelStart = 6
 
+
+class UITrigger:
+    def __init__(self, items, items_on_map, cur_trigger=None):
+
+        self.cur_trigger = cur_trigger
+
+        self.name_var = tk.StringVar()
+        self.type_var = tk.StringVar()
+        self.points_var = tk.IntVar()
+        self.item_ids = []
+
+        self.top = tk.Toplevel()  # use Toplevel() instead of Tk()
+        self.top.minsize(300,400)
+
+        self.frame = uiw.uiQuietFrame(
+            master=self.top
+        )
+        self.frame.configure(
+            padx=10, pady=10
+        )
+        self.frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+        self.name_label = uiw.uiLabel(master=self.frame, text="Name")
+        self.name_entry = uiw.EntryHelp(
+            master=self.frame,
+            text="Custom name for the trigger."
+        )
+        self.type_label = uiw.uiLabel(master=self.frame, text="Type")
+        self.type_combo = uiw.uiComboBox(master=self.frame)
+        self.type_combo.config(values=trigger.TRIGGER_TYPES)
+        self.type_combo.bind("<<ComboBoxSelect>>", lambda: ())
+        self.points_label = uiw.uiLabel(master=self.frame, text="Points")
+        self.points_entry = uiw.EntryHelp(master=self.frame, text="Points awarded for activating this trigger.")
+        self.items_label = uiw.uiLabel(master=self.frame, text="Items")
+        self.items_listbox_var = tk.StringVar()
+        self.items_listbox = uiw.uiListBox(
+            master=self.frame, listvariable=self.items_listbox_var, selectmode="multiple"
+        )
+        entries = []
+        for i in items_on_map:
+            item_id = i["id"]
+            item_name = items[item_id]["name"]
+            entry = f"{item_id}:{item_name} ({i["x"]},{i["y"]})"
+            entries.append(entry)
+        self.items_listbox_var.set(entries)
+
+        self.fill_fields(items)
+
+        self.btn = uiw.uiButton(
+            master=self.frame, text="Select", command=self.select
+        )
+
+        self.name_label.grid(row=0, column=0, sticky="ew")
+        self.name_entry.frame.grid(row=0, column=1, sticky="ew")
+        self.type_label.grid(row=1, column=0, sticky="ew")
+        self.type_combo.grid(row=1, column=1, sticky="ew")
+        self.points_label.grid(row=2, column=0, sticky="ew")
+        self.points_entry.frame.grid(row=2, column=1, sticky="ew")
+        self.items_label.grid(row=3, column=0, columnspan=2, sticky="ew")
+        self.items_listbox.grid(row=4, column=0, columnspan=2, sticky="ew")
+        self.btn.grid(row=5, column=0, columnspan=2)
+
+        self.top.wait_visibility()
+        self.top.grab_set()
+        self.top.wait_window(
+            self.top
+        )  # wait for itself destroyed, so like a modal dialog
+
+    def fill_fields(self, items):
+        if self.cur_trigger is not None:
+            self.name_entry.entry.delete(0, tk.END)
+            self.points_entry.entry.delete(0, tk.END)
+            self.name_entry.entry.insert(0,self.cur_trigger["name"])
+            self.type_combo.set(self.cur_trigger["type"])
+            self.points_entry.entry.insert(0, self.cur_trigger["points"])
+
+            for item_id in self.cur_trigger["item_ids"]:
+                for i, entry in enumerate(self.items_listbox.get(0, tk.END)):
+                    _id, _name = entry.split(":")
+                    if item_id == _id:
+                        self.items_listbox.select_set(i)
+                        self.items_listbox.activate(i)
+                        break
+
+    def destroy(self):
+        self.top.destroy()
+
+    def select(self):
+        self.name_var = self.name_entry.entry.get()
+        self.type_var = self.type_combo.get()
+        self.points_var = self.points_entry.entry.get()
+        selected_items = self.items_listbox.curselection()
+        for i in selected_items:
+            item_entry = self.items_listbox.get(i)
+            item_id, item_data = item_entry.split(":")
+            self.item_ids.append(item_id)
+        self.destroy()
+
+    def get_result(self):
+        return {
+            "name":self.name_var,
+            "type":self.type_var,
+            "points":self.points_var,
+            "item_ids":self.item_ids
+        }
 
 class UIMapConfig(tk.Frame):
     def __init__(self, controller, ldr, master=None, logger=None):
@@ -230,20 +336,47 @@ class UIMapConfig(tk.Frame):
             + "by order. true, t, 1, yes, y eval to true. Everything else is "
             + "false.",
         )
-        self.side_gstate_label = uiw.uiLabel(
-            master=self.side_frame, text="Goal State"
+
+        # #####################################################################################
+        # Trigger UI
+        self.side_trigger_frame = uiw.uiLabelFrame(
+            master=self.side_frame, text="Triggers"
         )
-        self.side_gstate_combo_var = tk.StringVar()
-        self.side_gstate_combo = uiw.ComboBoxHelp(
-            master=self.side_frame,
-            textvariable=self.side_gstate_combo_var,
-            text="The goal state defines the 'win' condition.",
+        self.side_trigger_frame.configure(
+            padx=20, pady=20
         )
-        gstate_ids = []
-        gstate_data = self.ldr.get_gstate_templates()
-        for gstate in gstate_data.values():
-            gstate_ids.append(gstate["id"])
-        self.side_gstate_combo.combobox.configure(values=gstate_ids)
+
+        self.side_trigger_listbox_var = tk.StringVar()
+        self.side_trigger_listbox = uiw.uiListBox(
+            master=self.side_trigger_frame,
+            listvariable=self.side_trigger_listbox_var,
+            selectmode='single'
+        )
+
+        self.side_add_trigger_button = uiw.uiButton(
+            master=self.side_trigger_frame,
+            text="Add Trigger",
+            command=self.add_trigger
+        )
+
+        self.side_alter_trigger_button = uiw.uiButton(
+            master=self.side_trigger_frame,
+            text="Alter Trigger",
+            command=self.alter_trigger
+        )
+
+        self.side_remove_trigger_button = uiw.uiButton(
+            master=self.side_trigger_frame,
+            text="Remove Trigger",
+            command=self.remove_trigger
+        )
+
+        self.side_trigger_listbox.pack(side=tk.TOP, fill="x")
+        self.side_add_trigger_button.pack(side=tk.TOP, fill="x")
+        self.side_alter_trigger_button.pack(side=tk.TOP, fill="x")
+        self.side_remove_trigger_button.pack(side=tk.TOP, fill="x")
+
+        # #######################################################################################
 
         self.side_select_listbox.grid(
             row=0, column=0, columnspan=2, sticky="ew"
@@ -258,8 +391,7 @@ class UIMapConfig(tk.Frame):
         self.side_color_entry.frame.grid(row=4, column=1, sticky="ew")
         self.side_random_label.grid(row=5, column=0, sticky="ew")
         self.side_random_entry.frame.grid(row=5, column=1, sticky="ew")
-        self.side_gstate_label.grid(row=6, column=0, sticky="ew")
-        self.side_gstate_combo.frame.grid(row=6, column=1, sticky="ew")
+        self.side_trigger_frame.grid(row=6, column=0, columnspan=2, sticky="ew")
 
         self.side_new_button = uiw.uiButton(
             master=self.side_frame, command=self.new_side, text="Create Side"
@@ -501,7 +633,7 @@ class UIMapConfig(tk.Frame):
                 "desc": "",
                 "objects": [],
                 "items": [],
-                "sides": [],
+                "sides": {},
             }
 
             map_data.update({map_id: new_map_data})
@@ -556,7 +688,7 @@ class UIMapConfig(tk.Frame):
                         "Map name cannot be empty."
                     )
             map_desc = self.map_desc_text.get(1.0, tk.END)
-            cur_map["desc"] = map_desc
+            cur_map["desc"] = map_desc.strip()
             map_width = self.map_width_entry.entry.get()
             map_height = self.map_height_entry.entry.get()
             try:
@@ -617,6 +749,38 @@ class UIMapConfig(tk.Frame):
     def save_to_json(self):
         self.ldr.save_map_templates()
 
+    def add_trigger(self):
+        cur_side = self.get_currently_selected_side()
+        if cur_side is not None:
+            cur_map = self.get_currently_selected_map()
+            items_on_map = cur_map["items"]
+            dialog = UITrigger(self.ldr.get_item_templates(), items_on_map)
+            result = dialog.get_result()
+            cur_side["triggers"].append(result)
+            self.show_triggers(cur_side)
+
+    def alter_trigger(self):
+        cur_trigger = self.get_currently_selected_trigger()
+        if cur_trigger is not None:
+            cur_side = self.get_currently_selected_side()
+            cur_map = self.get_currently_selected_map()
+            items_on_map = cur_map["items"]
+            dialog = UITrigger(self.ldr.get_item_templates(), items_on_map, cur_trigger)
+            result = dialog.get_result()
+            cur_trigger["type"] = result["type"]
+            cur_trigger["name"] = result["name"]
+            cur_trigger["points"] = result["points"]
+            cur_trigger["item_ids"] = result["item_ids"]
+            self.show_triggers(cur_side)
+
+    def remove_trigger(self):
+        trigger_index = self.side_trigger_listbox.curselection()
+        if len(trigger_index) == 1:
+            cur_side = self.get_currently_selected_side()
+            triggers = cur_side["triggers"]
+            del triggers[trigger_index]
+            self.show_triggers(cur_side)
+
     def new_side(self, event=None):
         cur_map = self.get_currently_selected_map()
         if cur_map is not None:
@@ -643,7 +807,7 @@ class UIMapConfig(tk.Frame):
                         "num_agents": 0,
                         "random_placement": False,
                         "starting_locations": [],
-                        "gstate": None,
+                        "triggers":[]
                     }
                     sides[side_id] = new_side
                     self.show_map_info(cur_map)
@@ -688,14 +852,14 @@ class UIMapConfig(tk.Frame):
             side["random_placement"] = zfunctions.to_bool(rand_placement)
 
             # Goal State
-            goal_state = self.side_gstate_combo.combobox.get()
-            if len(goal_state) == 0:
-                tk.messagebox.showwarning(
-                    "Invalid Goal State",
-                    "A side must have a goal state. It cannot be empty.",
-                )
-            else:
-                side["gstate"] = goal_state
+            # goal_state = self.side_gstate_combo.combobox.get()
+            # if len(goal_state) == 0:
+            #     tk.messagebox.showwarning(
+            #         "Invalid Goal State",
+            #         "A side must have a goal state. It cannot be empty.",
+            #     )
+            # else:
+            #     side["gstate"] = goal_state
 
             # ID
             side_id = self.side_id_entry.entry.get()
@@ -756,6 +920,17 @@ class UIMapConfig(tk.Frame):
         else:
             return None
 
+    def get_currently_selected_trigger(self):
+        cur_side = self.get_currently_selected_side()
+        if cur_side is not None:
+            trigger_index = self.side_trigger_listbox.curselection()
+            if len(trigger_index) == 1:
+                triggers = cur_side["triggers"]
+                return triggers[trigger_index[0]]
+        return None
+
+
+
     def get_currently_selected_obj(self):
         obj_index = self.obj_select_listbox.curselection()
         if len(obj_index) == 1:
@@ -811,7 +986,7 @@ class UIMapConfig(tk.Frame):
         self.clear_side()
         # Add sides to the side listbox
         side_entries = []
-        for side in cur_map["sides"].values():
+        for side_id, side in cur_map["sides"].items():
             entry = f"{side['id']}:{side['name']}"
             side_entries.append(entry)
         self.side_select_listbox_var.set(side_entries)
@@ -889,6 +1064,7 @@ class UIMapConfig(tk.Frame):
         self.side_color_entry.entry.delete(0, tk.END)
         self.side_random_entry.entry.delete(0, tk.END)
 
+
     def show_side(self, event=None):
         self.clear_side()
         cur_side = self.get_currently_selected_side()
@@ -900,10 +1076,18 @@ class UIMapConfig(tk.Frame):
             self.side_random_entry.entry.insert(
                 0, cur_side["random_placement"]
             )
+            self.show_triggers(cur_side)
 
-            for i, gs in enumerate(self.side_gstate_combo.combobox["values"]):
-                if cur_side["gstate"] == gs:
-                    self.side_gstate_combo.combobox.current(i)
+    def clear_triggers(self):
+        self.side_trigger_listbox.delete(0, tk.END)
+
+    def show_triggers(self, cur_side):
+        self.clear_triggers()
+        trigger_entries = []
+        for i, t in enumerate(cur_side["triggers"]):
+            entry = f"{i}:{t['name']}"
+            trigger_entries.append(entry)
+        self.side_trigger_listbox_var.set(trigger_entries)
 
     def map_mouse_click(self, event):
         """
@@ -998,7 +1182,7 @@ class UIMapConfig(tk.Frame):
                         x=x,
                         y=y,
                         sprite_filename=obj["alive_sprite_filename"],
-                        sprite_type="object",
+                        sprite_type="object"
                     )
         elif self.add_remove_var == AddRemove.DelObject:
             if things["object_index"] is not None:
@@ -1053,7 +1237,8 @@ class UIMapConfig(tk.Frame):
                         "Error", "Invalid index entered."
                     )
             else:
-                print("Nothing to delete")
+                pass
+                # print("Nothing to delete")
 
     def handle_add_remove_start(self, x, y, things, cur_map):
 
@@ -1066,8 +1251,13 @@ class UIMapConfig(tk.Frame):
                         things["object_index"] is None:
                     facing = tk.simpledialog.askinteger(
                         "Enter Facing",
-                        "Which direction (in degrees) will the agent face "
-                        + "when the match starts [0, 360]?",
+                        "The direction (in degrees) will the agent face "
+                        + "when the match starts [0, 360)? 0 degrees faces "
+                        + "east. Positive values rotate counter clockwise:\n"
+                        + "0 - East\n"
+                        + "90 - North\n"
+                        + "180 - West\n"
+                        + "270 - South"
                     )
 
                     if facing < 0 or facing > 360:
@@ -1075,7 +1265,7 @@ class UIMapConfig(tk.Frame):
                             "Error", "Facing must be 0 to 360 degrees."
                         )
                     else:
-                        start = {"x": x, "y": y, "facing": 0}
+                        start = {"x": x, "y": y, "facing": float(facing)}
                         index = len(side["starting_locations"])
                         side["starting_locations"].append(start)
                         self.canvas.draw_starting_location(
@@ -1101,10 +1291,8 @@ class UIMapConfig(tk.Frame):
 
     def draw_tiles(self, width, height):
         """Draws tiles on canvas"""
-
         for x in range(width):
             for y in range(height):
-
                 self.canvas.draw_tile(x=x, y=y, fill="#DDDDDD")
 
     def draw_rc_labels(self, width, height):
@@ -1189,7 +1377,6 @@ class UIMapConfig(tk.Frame):
         for item_entry in cur_map["items"]:
 
             obj = self.ldr.get_item_template(item_entry["id"])
-
             sprite_filename = obj["sprite_filename"]
 
             self.canvas.draw_sprite(
