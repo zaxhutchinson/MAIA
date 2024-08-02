@@ -60,7 +60,7 @@ class UITrigger:
         for i in items_on_map:
             item_id = i["id"]
             item_name = items[item_id]["name"]
-            entry = f"{item_id}:{item_name} ({i["x"]},{i["y"]})"
+            entry = f"{item_id}:{item_name} ({i['x']},{i['y']})"
             entries.append(entry)
         self.items_listbox_var.set(entries)
 
