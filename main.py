@@ -9,7 +9,6 @@ import ui_object_config
 import ui_item_config
 import ui_map_config
 import ui_component_config
-import ui_gstate_config
 import ui_sim
 import loader
 import sprite_manager
