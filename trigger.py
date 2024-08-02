@@ -39,6 +39,7 @@ class Trigger:
                     ix = i.get_cell_x()
                     iy = i.get_cell_y()
                     if ix == ox and iy == oy:
+                        self.active = False
                         return self.points
         return 0
 
@@ -58,6 +59,7 @@ class Trigger:
                     bx = b.get_cell_x()
                     by = b.get_cell_y()
                     if ax == bx and ay == by:
+                        self.active = False
                         return self.points
         return 0
 

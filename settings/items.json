@@ -1,37 +1,30 @@
 {
-    "0": {
-        "bulk": 1,
-        "id": "0",
-        "name": "blue_flag",
-        "sprite_filename": "blueFlag.png",
-        "weight": 1
-    },
-    "1": {
-        "bulk": 1,
-        "id": "1",
-        "name": "red_flag",
-        "sprite_filename": "redFlag.png",
-        "weight": 1
-    },
-    "bluebase": {
-        "bulk": 100000000,
-        "id": "bluebase",
-        "name": "blue_base",
+    "blue_base": {
+        "bulk": 1000,
+        "id": "blue_base",
+        "name": "Blue Base",
         "sprite_filename": "blueBase.png",
-        "weight": 1000000
+        "weight": 1000
     },
-    "goal": {
-        "bulk": 100000000,
-        "id": "goal",
-        "name": "goal",
-        "sprite_filename": "goal.png",
-        "weight": 1000000
+    "blue_flag": {
+        "bulk": 0,
+        "id": "blue_flag",
+        "name": "Blue Flag",
+        "sprite_filename": "blueFlag.png",
+        "weight": 0
     },
-    "redbase": {
-        "bulk": 100000000,
-        "id": "redbase",
-        "name": "red_base",
+    "red_base": {
+        "bulk": 1000,
+        "id": "red_base",
+        "name": "Red Base",
         "sprite_filename": "redBase.png",
-        "weight": 1000000
+        "weight": 1000
+    },
+    "red_flag": {
+        "bulk": 0,
+        "id": "red_flag",
+        "name": "Red Flag",
+        "sprite_filename": "redFlag.png",
+        "weight": 0
     }
 }

@@ -55,6 +55,9 @@ class Item:
     def get_name(self):
         return self.name
 
+    def get_sprite_filename(self):
+        return self.sprite_filename
+
     def get_draw_data(self):
         """Get draw data"""
         return {

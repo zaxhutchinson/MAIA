@@ -92,12 +92,12 @@ class App(tk.Tk):
             logger=self.logger,
             ldr=self.ldr
         )
-        self.frames["config_gstate"] = ui_gstate_config.UIGStateConfig(
-            master=self.container,
-            controller=self,
-            logger=self.logger,
-            ldr=self.ldr
-        )
+        # self.frames["config_gstate"] = ui_gstate_config.UIGStateConfig(
+        #     master=self.container,
+        #     controller=self,
+        #     logger=self.logger,
+        #     ldr=self.ldr
+        # )
         self.frames["match"] = ui_sim.UISim(
             master=self.container,
             controller=self,
@@ -114,7 +114,7 @@ class App(tk.Tk):
         self.frames["config_map"].grid(row=0, column=0, sticky="nsew")
         self.frames["config_component"].grid(row=0, column=0, sticky="nsew")
         self.frames["config_item"].grid(row=0, column=0, sticky="nsew")
-        self.frames["config_gstate"].grid(row=0, column=0, sticky="nsew")
+        # self.frames["config_gstate"].grid(row=0, column=0, sticky="nsew")
         self.frames["match"].grid(row=0, column=0, sticky="nsew")
 
         self.show_frame("home_page")

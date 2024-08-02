@@ -572,7 +572,7 @@ class Sim:
 
                 points = self.damage_obj(id_in_cell, damage)
 
-                curr_obj.set_data("points", points)
+                curr_obj.add_points(points)
 
                 break
 
@@ -604,8 +604,6 @@ class Sim:
                 x, y, facing, cur_speed
             )
 
-            print(cell_path)
-
             cur_cell = (old_cell_x, old_cell_y)
             has_collided = False
             collided_cell = None
@@ -635,8 +633,7 @@ class Sim:
                 # CRASH INTO SOMETHING
                 dest_cell_x = int(new_x)
                 dest_cell_y = int(new_y)
-                print("BEFORE COLLISION:", new_cell_x, new_cell_y, collided_cell[0], collided_cell[1], x, y, new_x,
-                      new_y)
+
                 if new_x - x != 0.0:
                     a = (new_y-y) / (new_x-x)
                     b = y - a * x
@@ -672,8 +669,6 @@ class Sim:
 
                 else:
                     new_x = x
-
-                print("AFTER COLLISION:", new_cell_x, new_cell_y, collided_cell[0], collided_cell[1], x, y, new_x, new_y)
 
             curr_obj.set_x(new_x)
             curr_obj.set_y(new_y)
@@ -865,7 +860,7 @@ class Sim:
                     # Get the arm component and make sure it isn't None
                     arm_comp = curr_obj.get_comp(actn.get_data("slot_id"))
                     if arm_comp is None:
-                        print("ArmComp is None")
+                        # print("ArmComp is None")
                         return
 
                     if not arm_comp.is_holding_item():
@@ -876,17 +871,17 @@ class Sim:
                             arm_comp.set_data("item", matching_item)
                             self.world.remove_item(obj_x, obj_y, matching_item)
                             item_to_take.take_item(curr_obj.get_data("uuid"))
-                            print("Take successful.")
+                            # print("Take successful.")
                         else:
-                            print("Item too heavy or bulky.")
+                            # print("Item too heavy or bulky.")
                             pass
                     else:
-                        print("Arm is already packing.")
+                        # print("Arm is already packing.")
                         pass
 
     def actn_drop_item(self, curr_obj, actn):
         """Drop item action"""
-        print("Dropping item")
+        # print("Dropping item")
         obj_x = curr_obj.get_data("x")
         obj_y = curr_obj.get_data("y")
 
@@ -903,7 +898,7 @@ class Sim:
             # Action must specify a valid drop location before
             # the item is dropped.
             if drop_location == "cell":
-                print("Drop successful")
+                # print("Drop successful")
                 self.world.add_item(obj_x, obj_y, held_item_uuid)
                 arm_comp.set_data("item", None)
                 held_item.drop_item()

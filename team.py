@@ -1,6 +1,6 @@
 import copy
 import logging
-import agent
+from old_code import agent
 import uuid
 import random
 

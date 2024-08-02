@@ -1,26 +1,26 @@
 {
-    "TeamA": {
+    "Blue Team": {
         "agent_defs": [
             {
-                "AI_file": "team_A_AI.py",
+                "AI_file": "ai.py",
                 "callsign": "Leader",
-                "object": "2",
+                "object": "blue_tank",
                 "squad": "1"
             }
         ],
-        "name": "TeamA",
-        "size": 1
+        "name": "Blue Team",
+        "size": "0"
     },
-    "TeamB": {
+    "Red Team": {
         "agent_defs": [
             {
-                "AI_file": "team_B_AI.py",
+                "AI_file": "ai.py",
                 "callsign": "Leader",
-                "object": "3",
+                "object": "red_tank",
                 "squad": "1"
             }
         ],
-        "name": "TeamB",
-        "size": 1
+        "name": "Red Team",
+        "size": "0"
     }
 }

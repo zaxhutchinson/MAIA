@@ -21,9 +21,9 @@ class UITrigger:
 
         self.cur_trigger = cur_trigger
 
-        self.name_var = tk.StringVar()
-        self.type_var = tk.StringVar()
-        self.points_var = tk.IntVar()
+        self.name_var = ""
+        self.type_var = ""
+        self.points_var = 0
         self.item_ids = []
 
         self.top = tk.Toplevel()  # use Toplevel() instead of Tk()
@@ -47,7 +47,10 @@ class UITrigger:
         self.type_combo.config(values=trigger.TRIGGER_TYPES)
         self.type_combo.bind("<<ComboBoxSelect>>", lambda: ())
         self.points_label = uiw.uiLabel(master=self.frame, text="Points")
-        self.points_entry = uiw.EntryHelp(master=self.frame, text="Points awarded for activating this trigger.")
+        self.points_entry = uiw.EntryHelp(
+            master=self.frame,
+            text="Points awarded for activating this trigger."
+        )
         self.items_label = uiw.uiLabel(master=self.frame, text="Items")
         self.items_listbox_var = tk.StringVar()
         self.items_listbox = uiw.uiListBox(
@@ -99,6 +102,42 @@ class UITrigger:
                         self.items_listbox.activate(i)
                         break
 
+    def verify(self):
+
+        if len(self.name_var) == 0:
+            tk.messagebox.showwarning(
+                "Error", "Missing a name for the new trigger. Names are descriptive. They do not have to be unique."
+            )
+            return False
+
+        try:
+            self.points_var = int(self.points_var)
+        except ValueError:
+            tk.messagebox.showwarning(
+                "Error", "Missing a valid integer value for the points awarded by this trigger."
+            )
+            return False
+
+
+        if self.type_var == "ITEM_AT_ITEM":
+            if len(self.item_ids) == 2:
+                return True
+            else:
+                tk.messagebox.showwarning(
+                    "Error", "ITEM_AT_ITEM triggers must have exactly 2 items selected."
+                )
+                return False
+        elif self.type_var == "OBJECT_AT_ITEM":
+            if len(self.item_ids) == 1:
+                return True
+            else:
+                tk.messagebox.showwarning(
+                    "Error", "OBJECT_AT_ITEM triggers must have exactly 1 item selected."
+                )
+                return False
+        else:
+            return False
+
     def destroy(self):
         self.top.destroy()
 
@@ -106,20 +145,29 @@ class UITrigger:
         self.name_var = self.name_entry.entry.get()
         self.type_var = self.type_combo.get()
         self.points_var = self.points_entry.entry.get()
+        self.item_ids.clear()
         selected_items = self.items_listbox.curselection()
         for i in selected_items:
             item_entry = self.items_listbox.get(i)
             item_id, item_data = item_entry.split(":")
             self.item_ids.append(item_id)
-        self.destroy()
+        if self.verify():
+            self.destroy()
+        else:
+            self.top.lift()
+            self.top.attributes('-topmost',True)
+            self.top.after_idle(self.top.attributes,'-topmost',False)
 
     def get_result(self):
-        return {
-            "name":self.name_var,
-            "type":self.type_var,
-            "points":self.points_var,
-            "item_ids":self.item_ids
-        }
+        if self.verify():
+            return {
+                "name":self.name_var,
+                "type":self.type_var,
+                "points":self.points_var,
+                "item_ids":self.item_ids
+            }
+        else:
+            return None
 
 class UIMapConfig(tk.Frame):
     def __init__(self, controller, ldr, master=None, logger=None):
@@ -153,6 +201,8 @@ class UIMapConfig(tk.Frame):
         self.populate_map_listbox()
         self.populate_obj_listbox()
         self.populate_item_listbox()
+
+        self.bind("<<ShowFrame>>", self.reload_ui)
 
     def build_ui(self):
         """Generates UI of map
@@ -310,7 +360,7 @@ class UIMapConfig(tk.Frame):
             master=self.side_frame,
             text="The number of agents a team must have. Team size cannot "
             + "be larger than the number of starting locations. It can be "
-            + "less a asymmetric match is desired or if random placement is "
+            + "less if an asymmetric match is desired or if random placement is "
             + "enabled.",
         )
         self.side_color_label = uiw.uiLabel(
@@ -335,6 +385,16 @@ class UIMapConfig(tk.Frame):
             + "starting locations. If 'false, starting location is determined "
             + "by order. true, t, 1, yes, y eval to true. Everything else is "
             + "false.",
+        )
+        self.side_points_to_win_label = uiw.uiLabel(
+            master=self.side_frame, text="Points to Win"
+        )
+        self.side_points_to_win_entry = uiw.EntryHelp(
+            master=self.side_frame,
+            text="This positive integer value specifies how many points "
+            + "this team must score to win the match. All teams start with "
+            + "zero points. Points are scored by damaging other agents or by "
+            + "activating triggers."
         )
 
         # #####################################################################################
@@ -391,19 +451,21 @@ class UIMapConfig(tk.Frame):
         self.side_color_entry.frame.grid(row=4, column=1, sticky="ew")
         self.side_random_label.grid(row=5, column=0, sticky="ew")
         self.side_random_entry.frame.grid(row=5, column=1, sticky="ew")
-        self.side_trigger_frame.grid(row=6, column=0, columnspan=2, sticky="ew")
+        self.side_points_to_win_label.grid(row=6, column=0, sticky="ew")
+        self.side_points_to_win_entry.frame.grid(row=6, column=1, sticky="ew")
+        self.side_trigger_frame.grid(row=7, column=0, columnspan=2, sticky="ew")
 
         self.side_new_button = uiw.uiButton(
             master=self.side_frame, command=self.new_side, text="Create Side"
         )
-        self.side_new_button.grid(row=7, column=0, columnspan=2, sticky="ew")
+        self.side_new_button.grid(row=8, column=0, columnspan=2, sticky="ew")
         self.side_update_button = uiw.uiButton(
             master=self.side_frame,
             command=self.update_side,
             text="Update Side"
         )
         self.side_update_button.grid(
-            row=8, column=0, columnspan=2, sticky="ew"
+            row=9, column=0, columnspan=2, sticky="ew"
         )
         self.side_delete_button = uiw.uiCarefulButton(
             master=self.side_frame,
@@ -411,7 +473,7 @@ class UIMapConfig(tk.Frame):
             text="Delete Side"
         )
         self.side_delete_button.grid(
-            row=9, column=0, columnspan=2, sticky="ew"
+            row=10, column=0, columnspan=2, sticky="ew"
         )
 
         # OBJ SELECTION
@@ -509,6 +571,11 @@ class UIMapConfig(tk.Frame):
             text="Save Map to JSON"
         )
         self.save_to_json_button.pack(side=tk.RIGHT)
+
+    def reload_ui(self, event=None):
+        self.populate_map_listbox()
+        self.populate_obj_listbox()
+        self.populate_item_listbox()
 
     def all_toggles_red(self):
         self.add_obj_button.config(bg="red")
@@ -756,7 +823,8 @@ class UIMapConfig(tk.Frame):
             items_on_map = cur_map["items"]
             dialog = UITrigger(self.ldr.get_item_templates(), items_on_map)
             result = dialog.get_result()
-            cur_side["triggers"].append(result)
+            if result is not None:
+                cur_side["triggers"].append(result)
             self.show_triggers(cur_side)
 
     def alter_trigger(self):
@@ -767,10 +835,11 @@ class UIMapConfig(tk.Frame):
             items_on_map = cur_map["items"]
             dialog = UITrigger(self.ldr.get_item_templates(), items_on_map, cur_trigger)
             result = dialog.get_result()
-            cur_trigger["type"] = result["type"]
-            cur_trigger["name"] = result["name"]
-            cur_trigger["points"] = result["points"]
-            cur_trigger["item_ids"] = result["item_ids"]
+            if result is not None:
+                cur_trigger["type"] = result["type"]
+                cur_trigger["name"] = result["name"]
+                cur_trigger["points"] = result["points"]
+                cur_trigger["item_ids"] = result["item_ids"]
             self.show_triggers(cur_side)
 
     def remove_trigger(self):
@@ -778,7 +847,7 @@ class UIMapConfig(tk.Frame):
         if len(trigger_index) == 1:
             cur_side = self.get_currently_selected_side()
             triggers = cur_side["triggers"]
-            del triggers[trigger_index]
+            del triggers[trigger_index[0]]
             self.show_triggers(cur_side)
 
     def new_side(self, event=None):
@@ -807,6 +876,7 @@ class UIMapConfig(tk.Frame):
                         "num_agents": 0,
                         "random_placement": False,
                         "starting_locations": [],
+                        "points_to_win":0,
                         "triggers":[]
                     }
                     sides[side_id] = new_side
@@ -851,15 +921,9 @@ class UIMapConfig(tk.Frame):
             rand_placement = self.side_random_entry.entry.get()
             side["random_placement"] = zfunctions.to_bool(rand_placement)
 
-            # Goal State
-            # goal_state = self.side_gstate_combo.combobox.get()
-            # if len(goal_state) == 0:
-            #     tk.messagebox.showwarning(
-            #         "Invalid Goal State",
-            #         "A side must have a goal state. It cannot be empty.",
-            #     )
-            # else:
-            #     side["gstate"] = goal_state
+            # Points to win
+            points_to_win = self.side_points_to_win_entry.entry.get()
+            side["points_to_win"] = points_to_win
 
             # ID
             side_id = self.side_id_entry.entry.get()
@@ -1063,6 +1127,7 @@ class UIMapConfig(tk.Frame):
         self.side_num_agents_entry.entry.delete(0, tk.END)
         self.side_color_entry.entry.delete(0, tk.END)
         self.side_random_entry.entry.delete(0, tk.END)
+        self.side_points_to_win_entry.entry.delete(0, tk.END)
 
 
     def show_side(self, event=None):
@@ -1075,6 +1140,9 @@ class UIMapConfig(tk.Frame):
             self.side_color_entry.entry.insert(0, cur_side["color"])
             self.side_random_entry.entry.insert(
                 0, cur_side["random_placement"]
+            )
+            self.side_points_to_win_entry.entry.insert(
+                0, cur_side["points_to_win"]
             )
             self.show_triggers(cur_side)
 
@@ -1181,13 +1249,14 @@ class UIMapConfig(tk.Frame):
                     self.canvas.draw_sprite(
                         x=x,
                         y=y,
+                        uuid=f"{x}_{y}",
                         sprite_filename=obj["alive_sprite_filename"],
                         sprite_type="object"
                     )
         elif self.add_remove_var == AddRemove.DelObject:
             if things["object_index"] is not None:
                 del cur_map["objects"][things["object_index"]]
-                self.canvas.remove_obj_at(x, y)
+                self.canvas.remove_obj(f"{x}_{y}")
 
     def handle_add_remove_item(self, x, y, things, cur_map):
         if self.add_remove_var == AddRemove.AddItem:
@@ -1208,14 +1277,14 @@ class UIMapConfig(tk.Frame):
                     x=x,
                     y=y,
                     sprite_filename=itm["sprite_filename"],
-                    id=itm["id"],
+                    uuid=f"{x}_{y}_{itm['id']}",
                     sprite_type="item",
                 )
         elif self.add_remove_var == AddRemove.DelItem:
             if len(things["item_indexes"]) == 1:
                 _id = cur_map["items"][things["item_indexes"][0]]["id"]
                 del cur_map["items"][things["item_indexes"][0]]
-                self.canvas.remove_item_at(x, y, _id)
+                self.canvas.remove_item(f"{x}_{y}_{_id}")
             elif len(things["item_indexes"]) > 1:
 
                 msg = f"The items present in cell {x},{y} are:\n"
@@ -1231,7 +1300,7 @@ class UIMapConfig(tk.Frame):
                 if index is not None and index in things["item_indexes"]:
                     _id = cur_map["items"][index]["id"]
                     del cur_map["items"][index]
-                    self.canvas.remove_item_at(x, y, _id)
+                    self.canvas.remove_item(f"{x}_{y}_{_id}")
                 else:
                     tk.messagebox.showwarning(
                         "Error", "Invalid index entered."
@@ -1310,13 +1379,14 @@ class UIMapConfig(tk.Frame):
 
         for obj_entry in cur_map["objects"]:
 
-            obj = self.ldr.get_obj_template(obj_entry["id"])
-
-            sprite_filename = obj["alive_sprite_filename"]
-
+            _obj = self.ldr.get_obj_template(obj_entry["id"])
+            x = obj_entry["x"]
+            y = obj_entry["y"]
+            sprite_filename = _obj["alive_sprite_filename"]
             self.canvas.draw_sprite(
-                x=obj_entry["x"],
-                y=obj_entry["y"],
+                x=x,
+                y=y,
+                uuid=f"{x}_{y}",
                 sprite_filename=sprite_filename,
                 sprite_type="object",
             )
@@ -1337,12 +1407,14 @@ class UIMapConfig(tk.Frame):
                 self.canvas.draw_sprite(
                     x=x,
                     y=0,
+                    uuid=f"{x}_{0}",
                     sprite_filename=sprite_filename,
                     sprite_type="object"
                 )
                 self.canvas.draw_sprite(
                     x=x,
                     y=map_height - 1,
+                    uuid=f"{x}_{map_height - 1}",
                     sprite_filename=sprite_filename,
                     sprite_type="object",
                 )
@@ -1352,12 +1424,14 @@ class UIMapConfig(tk.Frame):
                 self.canvas.draw_sprite(
                     x=0,
                     y=y,
+                    uuid=f"{0}_{y}",
                     sprite_filename=sprite_filename,
                     sprite_type="object"
                 )
                 self.canvas.draw_sprite(
                     x=map_width - 1,
                     y=y,
+                    uuid=f"{map_width - 1}_{y}",
                     sprite_filename=sprite_filename,
                     sprite_type="object",
                 )
@@ -1376,13 +1450,14 @@ class UIMapConfig(tk.Frame):
 
         for item_entry in cur_map["items"]:
 
-            obj = self.ldr.get_item_template(item_entry["id"])
-            sprite_filename = obj["sprite_filename"]
-
+            itm = self.ldr.get_item_template(item_entry["id"])
+            x = item_entry["x"]
+            y = item_entry["y"]
+            sprite_filename = itm["sprite_filename"]
             self.canvas.draw_sprite(
-                x=item_entry["x"],
-                y=item_entry["y"],
-                id=obj["id"],
+                x=x,
+                y=y,
+                uuid=f"{x}_{y}_{itm['id']}",
                 sprite_filename=sprite_filename,
                 sprite_type="item",
             )

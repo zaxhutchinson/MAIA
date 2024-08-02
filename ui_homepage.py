@@ -68,14 +68,14 @@ class UIHomepage(tk.Frame):
         self.about_button = uiw.uiButton(
             master=self.general_frame,
             text="About MAIA",
-            command=lambda: self.controller.show_frame("about_page"),
+            command=self.show_about,
         )
         self.about_button.config(width=20, height=3)
         self.about_button.grid(row=0, column=0, sticky="ew")
 
         self.config_teams_button = uiw.uiButton(
             master=self.config_frame,
-            command=lambda: self.controller.show_frame("config_team"),
+            command=self.show_teams_config,
             text="Team Config",
         )
         self.config_teams_button.config(width=20, height=3)
@@ -83,7 +83,7 @@ class UIHomepage(tk.Frame):
 
         self.config_component_button = uiw.uiButton(
             master=self.config_frame,
-            command=lambda: self.controller.show_frame("config_component"),
+            command=self.show_component_config,
             text="Component Config",
         )
         self.config_component_button.config(width=20, height=3)
@@ -91,7 +91,7 @@ class UIHomepage(tk.Frame):
 
         self.config_object_button = uiw.uiButton(
             master=self.config_frame,
-            command=lambda: self.controller.show_frame("config_object"),
+            command=self.show_object_config,
             text="Object Config",
         )
         self.config_object_button.config(width=20, height=3)
@@ -99,7 +99,7 @@ class UIHomepage(tk.Frame):
 
         self.config_item_button = uiw.uiButton(
             master=self.config_frame,
-            command=lambda: self.controller.show_frame("config_item"),
+            command=self.show_item_config,
             text="Item Config",
         )
         self.config_item_button.config(width=20, height=3)
@@ -107,24 +107,46 @@ class UIHomepage(tk.Frame):
 
         self.config_map_button = uiw.uiButton(
             master=self.config_frame,
-            command=lambda: self.controller.show_frame("config_map"),
+            command=self.show_map_config,
             text="Map Config",
         )
         self.config_map_button.config(width=20, height=3)
         self.config_map_button.grid(row=2, column=0, sticky="ew")
 
-        self.config_gstate_button = uiw.uiButton(
-            master=self.config_frame,
-            command=lambda: self.controller.show_frame("config_gstate"),
-            text="Goal Config",
-        )
-        self.config_gstate_button.config(width=20, height=3)
-        self.config_gstate_button.grid(row=2, column=1, sticky="we")
+        # self.config_gstate_button = uiw.uiButton(
+        #     master=self.config_frame,
+        #     command=lambda: self.controller.show_frame("config_gstate"),
+        #     text="Goal Config",
+        # )
+        # self.config_gstate_button.config(width=20, height=3)
+        # self.config_gstate_button.grid(row=2, column=1, sticky="we")
 
         self.start_game_button = uiw.uiButton(
             master=self.match_frame,
             text="Match Setup",
-            command=lambda: self.controller.show_frame("setup_page"),
+            command=self.show_match,
         )
         self.start_game_button.config(width=20, height=3)
         self.start_game_button.pack(side=tk.TOP)
+
+    def show_map_config(self):
+        self.controller.get_frame("config_map").event_generate("<<ShowFrame>>")
+        self.controller.show_frame("config_map")
+
+    def show_item_config(self):
+        self.controller.show_frame("config_item")
+
+    def show_object_config(self):
+        self.controller.show_frame("config_object")
+
+    def show_component_config(self):
+        self.controller.show_frame("config_component")
+
+    def show_teams_config(self):
+        self.controller.show_frame("config_team")
+
+    def show_about(self):
+        self.controller.show_frame("about_page")
+
+    def show_match(self):
+        self.controller.show_frame("setup_page")

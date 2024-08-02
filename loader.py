@@ -28,40 +28,43 @@ class Loader:
         self.ITEM_JSON_FILENAME = f"{self.DIRECTORY}/items.json"
         self.MAP_JSON_FILENAME = f"{self.DIRECTORY}/maps.json"
         self.TEAM_JSON_FILENAME = f"{self.DIRECTORY}/teams.json"
-        self.GOALS_JSON_FILENAME = f"{self.DIRECTORY}/goals.json"
+        # self.GOALS_JSON_FILENAME = f"{self.DIRECTORY}/goals.json"
 
         self.load_main_config()
+        self.LoadAllTemplates()
+        # self.load_goal_templates()
+
+        self.logger = logger
+
+    def LoadAllTemplates(self):
         self.load_comp_templates()
         self.load_obj_templates()
         self.load_item_templates()
         self.load_map_templates()
         self.load_team_templates()
-        self.load_goal_templates()
-
-        self.logger = logger
 
     ##########################################################################
     # GSTATE
-    def load_goal_templates(self):
-        """Loads goal templates"""
-        with open(self.GOALS_JSON_FILENAME, "r") as f:
-            json_objs = json.load(f)
-            for k, v in json_objs.items():
-                self.goal_templates[k] = v
-
-    def save_goal_templates(self):
-        if len(self.goal_templates) > 0:
-            with open(self.GOALS_JSON_FILENAME, "w") as f:
-                json.dump(self.goal_templates, f, indent=4, sort_keys=True)
-
-    def build_goal(self, _id):
-        return goal.Goal(self.goal_templates[_id])
-
-    def get_goal_template(self, _id):
-        return self.goal_templates[_id]
-
-    def get_goal_templates(self):
-        return self.goal_templates
+    # def load_goal_templates(self):
+    #     """Loads goal templates"""
+    #     with open(self.GOALS_JSON_FILENAME, "r") as f:
+    #         json_objs = json.load(f)
+    #         for k, v in json_objs.items():
+    #             self.goal_templates[k] = v
+    #
+    # def save_goal_templates(self):
+    #     if len(self.goal_templates) > 0:
+    #         with open(self.GOALS_JSON_FILENAME, "w") as f:
+    #             json.dump(self.goal_templates, f, indent=4, sort_keys=True)
+    #
+    # def build_goal(self, _id):
+    #     return goal.Goal(self.goal_templates[_id])
+    #
+    # def get_goal_template(self, _id):
+    #     return self.goal_templates[_id]
+    #
+    # def get_goal_templates(self):
+    #     return self.goal_templates
 
     ##########################################################################
     # OBJ

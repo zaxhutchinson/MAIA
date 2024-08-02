@@ -1,111 +1,76 @@
 {
-    "0": {
+    "blue_tank": {
+        "alive_sprite_filename": "blue_tank.png",
+        "comp_ids": [
+            "0",
+            "1000",
+            "2000",
+            "3000",
+            "4000"
+        ],
+        "damage_to_points": 1.0,
+        "dead_sprite_filename": "tombstone.png",
+        "density": 1000,
+        "health": 100,
+        "id": "blue_tank",
+        "name": "Blue Tank"
+    },
+    "green_tank": {
+        "alive_sprite_filename": "green_tank.png",
+        "comp_ids": [
+            "0",
+            "1000",
+            "2000",
+            "3000",
+            "4000"
+        ],
+        "damage_to_points": 1.0,
+        "dead_sprite_filename": "tombstone.png",
+        "density": 1000,
+        "health": 100,
+        "id": "green_tank",
+        "name": "Green Tank"
+    },
+    "metal_block": {
         "alive_sprite_filename": "metal_block.png",
         "comp_ids": [],
-        "dead_sprite_filename": "tombstone.png",
-        "density": 1000,
-        "health": 100000000000000000000,
-        "id": "0",
-        "name": "Indestructible Block",
-        "damage_as_points": 0.0
+        "damage_to_points": 0.0,
+        "dead_sprite_filename": "metal_block.png",
+        "density": 1000000000,
+        "health": 1000000000,
+        "id": "metal_block",
+        "name": "Metal Block"
     },
-    "1": {
-        "alive_sprite_filename": "finalBox.png",
-        "comp_ids": [],
-        "dead_sprite_filename": "tombstone.png",
-        "density": "1000",
-        "health": "10",
-        "id": "1",
-        "name": "Box",
-        "damage_as_points": 0.0
-    },
-    "2": {
-        "alive_sprite_filename": "blue_right1.png",
+    "red_tank": {
+        "alive_sprite_filename": "red_tank.png",
         "comp_ids": [
             "0",
             "1000",
             "2000",
             "3000",
-            "4000",
-            "5000"
+            "4000"
         ],
+        "damage_to_points": 1.0,
         "dead_sprite_filename": "tombstone.png",
         "density": 1000,
         "health": 100,
-        "id": "2",
-        "name": "Blue Tank",
-        "damage_as_points": 0.0
+        "id": "red_tank",
+        "name": "Red Tank"
     },
-    "3": {
-        "alive_sprite_filename": "red_right1.png",
+    "yellow_tank": {
+        "alive_sprite_filename": "yellow_tank.png",
         "comp_ids": [
             "0",
             "1000",
             "2000",
             "3000",
-            "4000",
-            "5000"
+            "4000"
         ],
+        "damage_to_points": 1.0,
         "dead_sprite_filename": "tombstone.png",
         "density": 1000,
         "health": 100,
-        "id": "3",
-        "name": "Red Tank",
-        "damage_as_points": 0.0
-    },
-    "4": {
-        "alive_sprite_filename": "stick.png",
-        "comp_ids": [
-            "0",
-            "2000",
-            "3000"
-        ],
-        "dead_sprite_filename": "tombstone.png",
-        "density": 1000,
-        "health": 100,
-        "id": "4",
-        "name": "player",
-        "damage_as_points": 0.0
-    },
-    "5": {
-        "alive_sprite_filename": "wild_flower_13.png",
-        "comp_ids": [],
-        "dead_sprite_filename": "tombstone.png",
-        "density": 0,
-        "health": 0,
-        "id": "5",
-        "name": "Starting Location",
-        "damage_as_points": 0.0
-    },
-    "6": {
-        "alive_sprite_filename": "cliff.png",
-        "comp_ids": [
-            "0",
-            "1000",
-            "2000",
-            "3000",
-            "4000",
-            "5000"
-        ],
-        "dead_sprite_filename": "tombstone.png",
-        "density": 1000,
-        "health": 100,
-        "id": "6",
-        "name": "cliff",
-        "damage_as_points": 0.0
-    },
-    "7": {
-        "alive_sprite_filename": "arrow.png",
-        "comp_ids": [
-            "0",
-            "2000",
-            "3000"
-        ],
-        "dead_sprite_filename": "tombstone.png",
-        "density": 1000,
-        "health": 100,
-        "id": "7",
-        "name": "player",
-        "damage_as_points": 0.0
+        "id": "yellow_tank",
+        "name": "Yellow Tank"
     }
 }

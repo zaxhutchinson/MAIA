@@ -8,7 +8,9 @@ class Map:
         self.object_grid = []
         self.item_grid = []
         self.edge_obj_id = template["edge_obj_id"]
+        self.triggers = []
         self.build_map_grid()
+        self.build_triggers(template)
 
     def get_width(self):
         return self.width
@@ -18,6 +20,9 @@ class Map:
 
     def get_edge_obj_id(self):
         return self.edge_obj_id
+
+    def build_triggers(self, map_template):
+        pass
 
     def build_map_grid(self):
         """Generates map grid

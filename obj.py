@@ -19,7 +19,7 @@ class Object:
         self.template_id = template["id"]
         self.name = template["name"]
         self.health = template["health"]
-        self.damage_as_points = template["damage_as_points"]
+        self.damage_to_points = template["damage_to_points"]
         self.redraw = True
 
         # Filled in during sim build.
@@ -36,6 +36,7 @@ class Object:
         self.callsign = None
         self.squad = None
         self.logger = None
+        self.points = 0.0
 
     def __eq__(self, other):
         if isinstance(other, Object):
@@ -47,8 +48,8 @@ class Object:
         return self.uuid
 
     def build_comps(self, ldr):
-        for ctype in comp.CTYPES_LIST:
-            self.comps[ctype] = None
+        # for ctype in comp.CTYPES_LIST:
+        #     self.comps[ctype] = None
 
         for comp_id in self.comp_ids:
             new_comp = ldr.build_comp(comp_id)
@@ -123,6 +124,15 @@ class Object:
 
     def get_density(self):
         return self.density
+
+    def get_points(self):
+        return self.points
+
+    def set_points(self, points):
+        self.points = points
+
+    def add_points(self, points):
+        self.points += points
 
     def is_alive(self):
         """Determines if object is alive"""
@@ -210,7 +220,7 @@ class Object:
                 self.damage = self.health
             else:
                 self.damage = new_damage
-            points = points * self.damage_as_points
+            points = points * self.damage_to_points
 
             self.log_info(f"Damaged for {amt} - Total Damage: {self.damage}/{self.health}")
 
