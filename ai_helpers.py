@@ -229,12 +229,9 @@ class CmdMaker:
         """Gets commands"""
         return self.cmds
 
-    def add_cmd(self, tick, slot, cmd):
+    def add_cmd(self, ctype, cmd):
         """Adds commands"""
-        tick = str(tick)
-        if tick not in self.cmds:
-            self.cmds[tick] = {}
-        self.cmds[tick][str(slot)] = cmd
+        self.cmds[str(ctype)] = cmd
 
 
 ##############################################################################

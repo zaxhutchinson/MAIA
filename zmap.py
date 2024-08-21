@@ -18,20 +18,13 @@ class Map:
 
     def build_map_grid(self):
         """Generates map grid
-
-        Build the map 2 hexes wider and taller. This allows for
-        the placing of blocks around the edge while still keeping
-        the same playable space outlined in the map json. And
-        it means we do not have to worry about accounting for edge
-        boundries as they cannot be reached (if the edge obj is
-        indestructible).
         """
         obj_grid = []
         item_grid = []
-        for x in range(self.data["width"] + 2):
+        for x in range(self.data["width"]):
             obj_new_col = []
             item_new_col = []
-            for y in range(self.data["height"] + 2):
+            for y in range(self.data["height"]):
                 obj_new_col.append(None)
                 item_new_col.append([])
             obj_grid.append(obj_new_col)

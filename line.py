@@ -7,7 +7,7 @@ class LineSeg:
         self.v1 = v1
         self.v2 = v2
 
-    def itersects_point(self, point):
+    def intersects_point(self, point):
         """Determines if line intersects a point"""
         if self.v1.get_x() == self.v2.get_x():
             return self.v1.get_x() == point.get_x()

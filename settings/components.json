@@ -6,24 +6,14 @@
         "name": "Basic Command Module"
     },
     "1000": {
-        "ammunition": 101,
+        "ammunition": 100,
         "ctype": "FixedGun",
         "id": "1000",
         "max_damage": 100,
         "min_damage": 100,
-        "name": "Main Cannon",
+        "name": "Main Gun",
         "range": 20,
         "reload_ticks": 1
-    },
-    "1100": {
-        "ammunition": 100,
-        "ctype": "FixedGun",
-        "id": "1100",
-        "max_damage": 250,
-        "min_damage": 250,
-        "name": "Heavy Cannon",
-        "range": 30,
-        "reload_ticks": 3
     },
     "2000": {
         "ctype": "Engine",
@@ -33,19 +23,11 @@
         "min_speed": -1.0,
         "name": "Small Engine"
     },
-    "2100": {
-        "ctype": "Engine",
-        "id": "2100",
-        "max_speed": 1.5,
-        "max_turnrate": 90.0,
-        "min_speed": -1.5,
-        "name": "Medium Engine"
-    },
     "3000": {
         "ctype": "Radar",
         "id": "3000",
         "level": 1,
-        "name": "Simple 120/20/10 Radar",
+        "name": "Simple Radar",
         "offset_angle": 0,
         "range": 20,
         "resolution": 0,
@@ -53,7 +35,6 @@
     },
     "4000": {
         "ctype": "Radio",
-        "cur_range": 100,
         "id": "4000",
         "max_range": 100,
         "name": "Basic Radio"
@@ -61,8 +42,8 @@
     "5000": {
         "ctype": "Arm",
         "id": "5000",
-        "max_bulk": 1000,
-        "max_weight": 1000,
-        "name": "Robotic Arm"
+        "max_bulk": 1,
+        "max_weight": 1,
+        "name": "Basic Arm"
     }
 }

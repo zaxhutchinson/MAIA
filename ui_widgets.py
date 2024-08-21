@@ -318,7 +318,7 @@ class uiCanvas(tk.Canvas):
             highlightbackground=TEXTCOLOR,
             highlightcolor=TEXTCOLOR,
         )
-        self.sprites = []
+        self.sprites = {}
         self.tiles = {}
         self.objects = {}
         self.items = {}
@@ -386,24 +386,25 @@ class uiCanvas(tk.Canvas):
             width, height = sprite.size
             x += (width // 2) + ((self.cell_size - width) // 2)
             y += (height // 2) + ((self.cell_size - height) // 2)
-            facing = 0
-            if "facing" in kwargs:
-                # sim uses clock-wise coords, ui uses counter-clockwise coords
-                facing = kwargs["facing"] * -1
-            sprite.rotate(facing)
-            tk_sprite = ImageTk.PhotoImage(sprite)
-            self.sprites.append(tk_sprite)
-            sprite_id = self.create_image(x, y, image=tk_sprite)
 
-            match (sprite_type):
+            facing = 0
+            if "facing" in kwargs and kwargs["facing"] != 0:
+                # sim uses clock-wise coords, ui uses counter-clockwise coords
+                facing = kwargs["facing"] * -1.0
+            sprite = sprite.rotate(facing)
+            tk_sprite = ImageTk.PhotoImage(sprite)
+            sprite_id = self.create_image(x, y, image=tk_sprite)
+            self.sprites[sprite_id] = tk_sprite
+
+            match sprite_type:
                 case "object":
-                    self.objects[(kwargs["x"], kwargs["y"])] = sprite_id
+                    self.objects[kwargs["uuid"]] = sprite_id
                 case "item":
-                    self.items[(kwargs["x"], kwargs["y"], kwargs["id"])] \
-                        = sprite_id
+                    self.items[kwargs["uuid"]] = sprite_id
                 case "start":
-                    self.starting_locations[(kwargs["x"], kwargs["y"])] \
-                        = sprite_id
+                    self.starting_locations[(kwargs["x"], kwargs["y"])] = sprite_id
+
+            return sprite_id
         except Exception:
             raise
 
@@ -412,12 +413,14 @@ class uiCanvas(tk.Canvas):
 
     def remove_obj(self, obj_id):
         """Removes object"""
+        del self.sprites[obj_id]
         self.delete(obj_id)
 
     def remove_item_at(self, x, y, _id):
         self.remove_item(self.items[(x, y, _id)])
 
     def remove_item(self, item_id):
+        del self.sprites[item_id]
         self.delete(item_id)
 
     def remove_start_at(self, x, y):
@@ -429,8 +432,8 @@ class uiCanvas(tk.Canvas):
 
     def redraw_obj(self, **kwargs):
         """Redraws object"""
-        self.remove_obj(kwargs["obj_id"])
-        return self.draw_obj(**kwargs)
+        self.remove_obj(kwargs["uuid"])
+        return self.draw_sprite(**kwargs)
 
     def update_drawn_obj(self, **kwargs):
         """Updates drawn object"""

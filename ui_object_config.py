@@ -108,36 +108,15 @@ class UIObjectConfig(tk.Frame):
             + "equal value, preventing the scan from detecting objects "
             + "on the other side.",
         )
-        self.obj_points_label = uiw.uiLabel(
-            master=self.obj_info_frame, text="Points"
+        self.obj_damage_to_points = uiw.uiLabel(
+            master=self.obj_info_frame, text="Dmg 2 Points"
         )
-        self.obj_points_entry = uiw.EntryHelp(
+        self.obj_damage_to_points_entry = uiw.EntryHelp(
             master=self.obj_info_frame,
-            text="Point value associated with the destruction of the object.",
-        )
-        self.obj_char_label = uiw.uiLabel(
-            master=self.obj_info_frame, text="Display Char"
-        )
-        self.obj_char_entry = uiw.EntryHelp(
-            master=self.obj_info_frame,
-            text="A single character used to display the object "
-            + "on the map when a sprite is not available.",
-        )
-        self.obj_char_color_alive_label = uiw.uiLabel(
-            master=self.obj_info_frame, text="Alive Color"
-        )
-        self.obj_char_color_alive_entry = uiw.EntryHelp(
-            master=self.obj_info_frame,
-            text="The color used to display the object's character "
-            + "when the object is alive.",
-        )
-        self.obj_char_color_dead_label = uiw.uiLabel(
-            master=self.obj_info_frame, text="Dead Color"
-        )
-        self.obj_char_color_dead_entry = uiw.EntryHelp(
-            master=self.obj_info_frame,
-            text="The color used to display the object's character "
-            + "when the object is dead.",
+            text="A non-negative real value used to convert damage inflicted "
+            + "to the object into points. A value of 0.0 would award no points "
+            + "for damaging this object. A value of 1.0 would award points on a "
+            + "1-to-1 basis. NOTE: This value can be greater than 1."
         )
         self.obj_sprite_alive_name_label = uiw.uiLabel(
             master=self.obj_info_frame, text="Alive Sprite"
@@ -165,16 +144,8 @@ class UIObjectConfig(tk.Frame):
         self.obj_health_entry.frame.grid(row=2, column=1, sticky="ew")
         self.obj_density_label.grid(row=3, column=0, sticky="ew")
         self.obj_density_entry.frame.grid(row=3, column=1, sticky="ew")
-        self.obj_points_label.grid(row=4, column=0, sticky="ew")
-        self.obj_points_entry.frame.grid(row=4, column=1, sticky="ew")
-        self.obj_char_label.grid(row=5, column=0, sticky="ew")
-        self.obj_char_entry.frame.grid(row=5, column=1, sticky="ew")
-        self.obj_char_color_alive_label.grid(row=6, column=0, sticky="ew")
-        self.obj_char_color_alive_entry.frame.grid(
-            row=6, column=1, sticky="ew"
-        )
-        self.obj_char_color_dead_label.grid(row=7, column=0, sticky="ew")
-        self.obj_char_color_dead_entry.frame.grid(row=7, column=1, sticky="ew")
+        self.obj_damage_to_points.grid(row=4, column=0, sticky="ew")
+        self.obj_damage_to_points_entry.frame.grid(row=4, column=1, sticky="ew")
         self.obj_sprite_alive_name_label.grid(row=8, column=0, sticky="ew")
         self.obj_sprite_alive_name_entry.frame.grid(
             row=8, column=1, sticky="ew"
@@ -285,10 +256,7 @@ class UIObjectConfig(tk.Frame):
         self.obj_name_entry.entry.delete(0, tk.END)
         self.obj_health_entry.entry.delete(0, tk.END)
         self.obj_density_entry.entry.delete(0, tk.END)
-        self.obj_points_entry.entry.delete(0, tk.END)
-        self.obj_char_entry.entry.delete(0, tk.END)
-        self.obj_char_color_alive_entry.entry.delete(0, tk.END)
-        self.obj_char_color_dead_entry.entry.delete(0, tk.END)
+        self.obj_damage_to_points_entry.entry.delete(0, tk.END)
         self.obj_sprite_alive_name_entry.entry.delete(0, tk.END)
         self.obj_sprite_dead_name_entry.entry.delete(0, tk.END)
         self.obj_comp_remove_listbox.delete(0, tk.END)
@@ -312,14 +280,7 @@ class UIObjectConfig(tk.Frame):
             self.obj_name_entry.entry.insert(0, selected_obj["name"])
             self.obj_health_entry.entry.insert(0, selected_obj["health"])
             self.obj_density_entry.entry.insert(0, selected_obj["density"])
-            self.obj_points_entry.entry.insert(0, selected_obj["points"])
-            self.obj_char_entry.entry.insert(0, selected_obj["character"])
-            self.obj_char_color_alive_entry.entry.insert(
-                0, selected_obj["color_alive"]
-            )
-            self.obj_char_color_dead_entry.entry.insert(
-                0, selected_obj["color_dead"]
-            )
+            self.obj_damage_to_points_entry.entry.insert(0, selected_obj["damage_to_points"])
             self.obj_sprite_alive_name_entry.entry.insert(
                 0, selected_obj["alive_sprite_filename"]
             )
@@ -374,13 +335,10 @@ class UIObjectConfig(tk.Frame):
         new_obj = {
             "id": obj_id,
             "name": "None",
-            "color_alive": "green",
-            "color_dead": "red",
-            "character": "O",
             "health": 0,
             "density": 0,
             "comp_ids": [],
-            "points": 0,
+            "damage_to_points": 0.0,
             "alive_sprite_filename": "",
             "dead_sprite_filename": "",
         }
@@ -401,10 +359,7 @@ class UIObjectConfig(tk.Frame):
         new_name = self.obj_name_entry.entry.get()
         new_health = self.obj_health_entry.entry.get()
         new_density = self.obj_density_entry.entry.get()
-        new_points = self.obj_points_entry.entry.get()
-        new_char = self.obj_char_entry.entry.get()
-        new_alive_color = self.obj_char_color_alive_entry.entry.get()
-        new_dead_color = self.obj_char_color_dead_entry.entry.get()
+        new_dmg2pts = self.obj_damage_to_points_entry.entry.get()
         new_alive_sprite = self.obj_sprite_alive_name_entry.entry.get()
         new_dead_sprite = self.obj_sprite_dead_name_entry.entry.get()
 
@@ -429,28 +384,21 @@ class UIObjectConfig(tk.Frame):
             warnings += "WARNING: Name field cannot be empty.\n"
 
         if len(new_health) > 0 and zfunctions.is_int(new_health):
-            current_obj["health"] = new_health
+            current_obj["health"] = int(new_health)
         else:
             warnings += "WARNING: Health field must be an integer.\n"
 
         if len(new_density) > 0 and zfunctions.is_int(new_density):
-            current_obj["density"] = new_density
+            current_obj["density"] = int(new_density)
         else:
             warnings += "WARNING: Density field must be an integer.\n"
 
-        if len(new_points) > 0 and zfunctions.is_int(new_points):
-            current_obj["points"] = new_points
+        if len(new_dmg2pts) > 0 and zfunctions.is_real(new_dmg2pts):
+            current_obj["damage_to_points"] = float(new_dmg2pts)
         else:
-            warnings += "WARNING: Points field must be an integer.\n"
-
-        if len(new_char) == 1:
-            current_obj["character"] = new_char
-        else:
-            warnings += "WARNING: Character must be a single character.\n"
+            warnings += "WARNING: Damage to points must be a real number.\n"
 
         # TODO: Some color and filename validation. Maybe.
-        current_obj["color_alive"] = new_alive_color
-        current_obj["color_dead"] = new_dead_color
         current_obj["alive_sprite_filename"] = new_alive_sprite
         current_obj["dead_sprite_filename"] = new_dead_sprite
 

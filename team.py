@@ -1,73 +1,67 @@
+import copy
 import logging
-import agent
+
+import trigger
+from old_code import agent
+import uuid
+import random
 
 
 class Team:
     """This class is currently depreciated and is not in use"""
 
-    def __init__(self, data):
+    def __init__(self, template):
         """Initializes data to input and creates agents"""
-        self.data = {}
-        self.logger = None
 
-        if "name" in data:
-            self.logger = logging.getLogger(data["name"])
-            self.handler = logging.FileHandler(
-                "log/" + self.logger.name + ".log", mode="w"
-            )
-            self.formatter = logging.Formatter("%(name)s - %(message)s")
-            self.handler.setFormatter(self.formatter)
-            self.logger.addHandler(self.handler)
-        else:
-            raise KeyError("name")
+        self.name = template["name"]
+        self.agent_defs = template["agent_defs"]
+        self.agents = []
+        self.side_id = None
+        self.logger = logging.getLogger(self.name)
+        self.handler = logging.FileHandler(
+            "log/" + self.logger.name + ".log", mode="w"
+        )
+        self.formatter = logging.Formatter("%(name)s - %(message)s")
+        self.handler.setFormatter(self.formatter)
+        self.logger.addHandler(self.handler)
+        self.triggers = []
 
-        self.required_data = []
+    def build_triggers(self, trigger_list, items):
+        for trgr in trigger_list:
+            t = trigger.Trigger(trgr)
+            t.init(items)
+            self.triggers.append(t)
 
-        self.set_data(data)
+    def get_side_id(self):
+        return self.side_id
 
-        self.create_agents()
+    def set_side_id(self, side_id):
+        self.side_id = side_id
 
-    def set_data(self, data):
-        """Sets data"""
-        # Agents are created later based on agent_defs read from the json
-        self.data["agents"] = {}
+    def get_agent_defs(self):
+        return self.agent_defs
 
-        req_data = ["size", "agent_defs"]
+    def get_triggers(self):
+        return self.triggers
 
-        for rd in req_data:
-            if rd in data:
-                self.data[rd] = data[rd]
-            else:
-                self.data[rd] = None
-                self.logger.error("TEAM: Missing data " + rd)
+    def get_name(self):
+        return self.name
 
-        self.required_data += req_data
+    def add_agent(self, _agent):
+        self.agents.append(_agent)
 
-    def get_data(self, key):
-        """Gets data"""
-        if key in self.data:
-            return self.data[key]
-        else:
-            return None
+    def get_agents(self):
+        return self.agents
 
-    def get_number_of_agents(self):
-        """Gets number of agents"""
-        if "agents" in self.data:
-            return len(self.data["agents"])
-        else:
-            0
-
-    def create_agents(self):
-        """Creates agents"""
-        agent_defs = self.get_data("agent_defs")
-
-        if agent_defs is None:
-            self.logger.error("AGENT: Agent definition data is missing.")
-        else:
-            for ID, data in agent_defs.items():
-                ID = int(ID)
-                obj_id = data["object"]
-                ai_file_name = data["AI_file"]
-
-                _agent = agent.Agent(ID, obj_id, ai_file_name)
-                self.data["agents"][ID] = _agent
+    # def create_agents(self, ldr, side_data):
+    #     """Creates agents"""
+    #     starting_locations = copy.deepcopy(["starting_locations"])
+    #     if side_data["random_placement"]:
+    #         random.shuffle(starting_locations)
+    #
+    #     for adef in self.agent_defs:
+    #         agent_id = uuid.uuid4()
+    #         agent_object = ldr.build_object(adef["object"])
+    #         _agent = agent.Agent(adef, agent_id, agent_object, self.name)
+    #
+    #         self.agents[agent_id] = _agent

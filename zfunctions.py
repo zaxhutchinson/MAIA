@@ -17,6 +17,15 @@ def action_to_string(action):
     return s
 
 
+def is_real(i):
+    try:
+        float(i)
+    except Exception:
+        return False
+    else:
+        return True
+
+
 def is_int(i):
     """Tests if i can be cast to an int."""
     try:
