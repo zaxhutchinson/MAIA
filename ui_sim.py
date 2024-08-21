@@ -177,7 +177,7 @@ class UISim(tk.Frame):
         self.end_game_button = uiw.uiButton(
             master=self.btn_frame_3,
             text="End Game",
-            command=self.display_points
+            command=self.abort_game
         )
         self.end_game_button.grid(row=0, column=1, sticky="ew")
 
@@ -412,18 +412,46 @@ class UISim(tk.Frame):
         """Pauses continuous mode"""
         self.continuous_run = False
 
+    def abort_game(self):
+
+        self.continuous_run = False
+        self.turns_button['state'] = "disabled"
+        self.btn_run['state'] = "disabled"
+        self.btn_pause['state'] = "disabled"
+
+        self.display_message(
+            msgs.Msg(
+                self.sim.get_turn(),
+                "END GAME",
+                ""
+                )
+            )
+        self.display_points()
+        
     def display_points(self):
         """Displays points"""
         scores = self.sim.get_final_scores()
 
-        for name, score in scores.items():
-            self.display_message(
-                msgs.Msg(
-                    self.sim.get_turn(),
-                    name,
-                    f'{score}'
-                )
+        score_string = ""
+        
+        for team_name, agent_scores in scores.items():
+            team_total_points = 0.0
+
+            score_string += f"-----  {team_name}  -----\n"
+            
+            for name, score in agent_scores.items():
+                team_total_points += score
+                score_string += f"   {name:<20} {score}\n"
+            
+            score_string += f"{team_name} total: {team_total_points}\n\n"
+
+        self.display_message(
+            msgs.Msg(
+                self.sim.get_turn(),
+                "FINAL SCORES",
+                f'{score_string}'
             )
+        )
 
     def display_scoreboard(self):
         """TODO: Broken. Displays scoreboard"""

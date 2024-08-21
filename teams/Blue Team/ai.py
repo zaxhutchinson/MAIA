@@ -45,5 +45,5 @@ class AI:
     # commands.
     def run_ai(self, view):
         self.cmd_maker.reset()
-        print(view)
+        
         return self.cmd_maker.get_cmds()

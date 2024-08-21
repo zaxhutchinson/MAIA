@@ -396,9 +396,13 @@ class Sim:
         final_scores = {}
 
         for _team in self.teams:
-            # side = self.sides[_team.get_side_id()]
-            score = self.calculate_team_points(_team)
-            final_scores[_team.get_name()] = score
+            team_scores = {}
+            for _agent in _team.get_agents():
+                agent_name = _agent.get_name()
+                points = _agent.get_points()
+                team_scores[agent_name] = points
+            # score = self.calculate_team_points(_team)
+            final_scores[_team.get_name()] = team_scores
 
         return final_scores
         #

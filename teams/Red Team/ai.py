@@ -45,7 +45,6 @@ class AI:
     # specifications. Can return empty dictionary or None if there are no
     # commands.
     def run_ai(self, view):
-        print(view)
 
         self.cmd_maker.reset()
 
