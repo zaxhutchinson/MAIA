@@ -22,7 +22,7 @@ class UISetup(tk.Frame):
         self.omsgr = msgs.OMsgr(self.msg_queue)
 
         self.ldr = ldr
-        self.sim = None #sim.Sim(ldr, self.imsgr)
+        self.sim = None  # sim.Sim(ldr, self.imsgr)
 
         # Store selections make via the UI. Only build Sim when
         # 'start match' is clicked.
@@ -283,7 +283,6 @@ class UISetup(tk.Frame):
             self.logger.error(
                 "App::add_team() - No side or team selected."
             )
-
 
     def remove_team_side_assignment(self):
         """Removes team/side assignment from sim"""

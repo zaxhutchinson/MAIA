@@ -582,12 +582,12 @@ class Sim:
                 view["name"] = self.objs[id_in_cell].get_data("name")
 
                 damage_str = (
-                        curr_obj.get_best_display_name()
-                        + " shot "
-                        + self.objs[id_in_cell].get_best_display_name()
-                        + " for "
-                        + str(damage)
-                        + " points of damage."
+                    curr_obj.get_best_display_name()
+                    + " shot "
+                    + self.objs[id_in_cell].get_best_display_name()
+                    + " for "
+                    + str(damage)
+                    + " points of damage."
                 )
                 self.log_msg("DAMAGE", damage_str)
 
@@ -704,8 +704,6 @@ class Sim:
                 i.set_y(new_y)
                 i.set_redraw(True)
 
-
-
         # Didn't leave the cell, update in-cell coords.
         else:
             curr_obj.set_x(new_x)
@@ -786,7 +784,7 @@ class Sim:
 
                     # If our radar level can't penetrate the object, stop.
                     if actn.get_data("level") < \
-                            self.objs[ping["uuid"]].get_data("density"):
+                        self.objs[ping["uuid"]].get_data("density"):
                         break
 
             for ping in item_pings:
