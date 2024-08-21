@@ -732,7 +732,7 @@ class Sim:
 
         # Set up the necessary data for easy access
         radar_facing = curr_obj.get_data("facing") + \
-                       actn.get_data("offset_angle")
+            actn.get_data("offset_angle")
         start = radar_facing - actn.get_data("visarc")
         end = radar_facing + actn.get_data("visarc")
         angle = start
@@ -783,8 +783,8 @@ class Sim:
                     temp_view.append(ping)
 
                     # If our radar level can't penetrate the object, stop.
-                    if actn.get_data("level") < \
-                        self.objs[ping["uuid"]].get_data("density"):
+                    if (actn.get_data("level") <
+                            self.objs[ping["uuid"]].get_data("density")):
                         break
 
             for ping in item_pings:
