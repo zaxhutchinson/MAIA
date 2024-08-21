@@ -386,7 +386,7 @@ class Sim:
                 points = _agent.get_points()
                 total_points += points
                 msg += f"   {agent_name}: {points}\n"
-            msg += f"   Total: {total}\n"
+            msg += f"   Total: {total_points}\n"
 
         m = msgs.Msg(str(self.turn), "Current points: ", msg)
         self.imsgr.add_msg(m)
