@@ -1,0 +1,2 @@
+[flake8]
+exclude=.git,__pycache__,old_code,old_settings,teams,docs,log,images,settings,README.md,LICENSE
