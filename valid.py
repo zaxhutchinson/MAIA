@@ -42,7 +42,7 @@ class CommandValidator:
             # log.LogDebug("COMMAND VALIDATOR: Not a dictionary\n"+str(cmd))
             return {}
 
-        good_cmds = []
+        # good_cmds = []
 
         # k = tick, v = cmds by slot id
         for ctype, command in cmds.items():

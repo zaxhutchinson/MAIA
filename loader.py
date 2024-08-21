@@ -10,6 +10,7 @@ import comp
 import goal
 import team
 
+
 class Loader:
     def __init__(self, logger=None):
         """Initializes empty dict templates and loads jsons"""
@@ -109,8 +110,8 @@ class Loader:
     def get_obj_names(self):
         """Gets object names"""
         obj_names = []
-        for object in self.obj_templates.values():
-            obj_names.append(object.get_data("name"))
+        for o in self.obj_templates.values():
+            obj_names.append(o.get_data("name"))
         return obj_names
 
     ##########################################################################

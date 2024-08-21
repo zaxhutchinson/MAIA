@@ -27,7 +27,7 @@ class UITrigger:
         self.item_ids = []
 
         self.top = tk.Toplevel()  # use Toplevel() instead of Tk()
-        self.top.minsize(300,400)
+        self.top.minsize(300, 400)
 
         self.frame = uiw.uiQuietFrame(
             master=self.top
@@ -90,7 +90,7 @@ class UITrigger:
         if self.cur_trigger is not None:
             self.name_entry.entry.delete(0, tk.END)
             self.points_entry.entry.delete(0, tk.END)
-            self.name_entry.entry.insert(0,self.cur_trigger["name"])
+            self.name_entry.entry.insert(0, self.cur_trigger["name"])
             self.type_combo.set(self.cur_trigger["type"])
             self.points_entry.entry.insert(0, self.cur_trigger["points"])
 
@@ -117,7 +117,6 @@ class UITrigger:
                 "Error", "Missing a valid integer value for the points awarded by this trigger."
             )
             return False
-
 
         if self.type_var == "ITEM_AT_ITEM":
             if len(self.item_ids) == 2:
@@ -155,19 +154,20 @@ class UITrigger:
             self.destroy()
         else:
             self.top.lift()
-            self.top.attributes('-topmost',True)
-            self.top.after_idle(self.top.attributes,'-topmost',False)
+            self.top.attributes('-topmost', True)
+            self.top.after_idle(self.top.attributes, '-topmost', False)
 
     def get_result(self):
         if self.verify():
             return {
-                "name":self.name_var,
-                "type":self.type_var,
-                "points":self.points_var,
-                "item_ids":self.item_ids
+                "name": self.name_var,
+                "type": self.type_var,
+                "points": self.points_var,
+                "item_ids": self.item_ids
             }
         else:
             return None
+
 
 class UIMapConfig(tk.Frame):
     def __init__(self, controller, ldr, master=None, logger=None):
@@ -296,8 +296,8 @@ class UIMapConfig(tk.Frame):
         self.map_width_entry = uiw.EntryHelp(
             master=self.map_info_frame,
             text="The playable width of the map in number of cells. NOTE: "
-            + "The actual width will be two greater to compensate for the "
-            + "edges."
+                 + "The actual width will be two greater to compensate for the "
+                 + "edges."
         )
         self.map_height_label = uiw.uiLabel(
             master=self.map_info_frame, text="Height"
@@ -305,8 +305,8 @@ class UIMapConfig(tk.Frame):
         self.map_height_entry = uiw.EntryHelp(
             master=self.map_info_frame,
             text="The playable height of the map in number of cells. NOTE: "
-            + "The actual width will be two greater to compensate for the "
-            + "edges."
+                 + "The actual width will be two greater to compensate for the "
+                 + "edges."
         )
         self.map_edge_id_label = uiw.uiLabel(
             master=self.map_info_frame, text="Edge Obj ID"
@@ -314,8 +314,8 @@ class UIMapConfig(tk.Frame):
         self.map_edge_id_entry = uiw.EntryHelp(
             master=self.map_info_frame,
             text="The ID of the object at the outer edge of the map. "
-            + "This should be an indestructible object. Copies of this object "
-            + "will be added automatically to fence in the playable area."
+                 + "This should be an indestructible object. Copies of this object "
+                 + "will be added automatically to fence in the playable area."
         )
 
         self.map_id_label.grid(row=0, column=0, sticky="ew")
@@ -345,13 +345,13 @@ class UIMapConfig(tk.Frame):
         self.side_id_entry = uiw.EntryHelp(
             master=self.side_frame,
             text="A side is a placeholder for a team of agents. Each side "
-            + "must have a unique ID.",
+                 + "must have a unique ID.",
         )
         self.side_name_label = uiw.uiLabel(master=self.side_frame, text="Name")
         self.side_name_entry = uiw.EntryHelp(
             master=self.side_frame,
             text="The name of the side. Names are used to distinguish sides "
-            + "during match setup.",
+                 + "during match setup.",
         )
         self.side_num_agents_label = uiw.uiLabel(
             master=self.side_frame, text="Num. Agents"
@@ -359,9 +359,9 @@ class UIMapConfig(tk.Frame):
         self.side_num_agents_entry = uiw.EntryHelp(
             master=self.side_frame,
             text="The number of agents a team must have. Team size cannot "
-            + "be larger than the number of starting locations. It can be "
-            + "less if an asymmetric match is desired or if random placement is "
-            + "enabled.",
+                 + "be larger than the number of starting locations. It can be "
+                 + "less if an asymmetric match is desired or if random placement is "
+                 + "enabled.",
         )
         self.side_color_label = uiw.uiLabel(
             master=self.side_frame, text="Color"
@@ -369,11 +369,11 @@ class UIMapConfig(tk.Frame):
         self.side_color_entry = uiw.EntryHelp(
             master=self.side_frame,
             text="The placement token color. This is only used on this "
-            + "configuration screen to denote team ownership of agent "
-            + "placement tokens. It will not recolor sprites. NOTE: colors "
-            + "must be given as hex RGB values (e.g. #FFFFFF) or as a "
-            + "recognized tkinter named color. Color strings are NOT "
-            + "currently validated by MAIA.",
+                 + "configuration screen to denote team ownership of agent "
+                 + "placement tokens. It will not recolor sprites. NOTE: colors "
+                 + "must be given as hex RGB values (e.g. #FFFFFF) or as a "
+                 + "recognized tkinter named color. Color strings are NOT "
+                 + "currently validated by MAIA.",
         )
         self.side_random_label = uiw.uiLabel(
             master=self.side_frame, text="Random"
@@ -381,10 +381,10 @@ class UIMapConfig(tk.Frame):
         self.side_random_entry = uiw.EntryHelp(
             master=self.side_frame,
             text="Are agents randomly assigned starting locations? "
-            + "If 'true', agents will be randomly distributed over the "
-            + "starting locations. If 'false, starting location is determined "
-            + "by order. true, t, 1, yes, y eval to true. Everything else is "
-            + "false.",
+                 + "If 'true', agents will be randomly distributed over the "
+                 + "starting locations. If 'false, starting location is determined "
+                 + "by order. true, t, 1, yes, y eval to true. Everything else is "
+                 + "false.",
         )
         self.side_points_to_win_label = uiw.uiLabel(
             master=self.side_frame, text="Points to Win"
@@ -392,9 +392,9 @@ class UIMapConfig(tk.Frame):
         self.side_points_to_win_entry = uiw.EntryHelp(
             master=self.side_frame,
             text="This positive integer value specifies how many points "
-            + "this team must score to win the match. All teams start with "
-            + "zero points. Points are scored by damaging other agents or by "
-            + "activating triggers."
+                 + "this team must score to win the match. All teams start with "
+                 + "zero points. Points are scored by damaging other agents or by "
+                 + "activating triggers."
         )
 
         # #####################################################################################
@@ -799,7 +799,7 @@ class UIMapConfig(tk.Frame):
             self.populate_map_listbox()
 
             for i, map_entry in enumerate(
-                self.map_select_listbox.get(0, tk.END)
+                    self.map_select_listbox.get(0, tk.END)
             ):
                 map_id, map_name = map_entry.split(":")
                 if map_id == cur_map["id"]:
@@ -880,8 +880,8 @@ class UIMapConfig(tk.Frame):
                         "num_agents": 0,
                         "random_placement": False,
                         "starting_locations": [],
-                        "points_to_win":0,
-                        "triggers":[]
+                        "points_to_win": 0,
+                        "triggers": []
                     }
                     sides[side_id] = new_side
                     self.show_map_info(cur_map)
@@ -998,8 +998,6 @@ class UIMapConfig(tk.Frame):
                 return triggers[trigger_index[0]]
         return None
 
-
-
     def get_currently_selected_obj(self):
         obj_index = self.obj_select_listbox.curselection()
         if len(obj_index) == 1:
@@ -1021,7 +1019,7 @@ class UIMapConfig(tk.Frame):
     def select_side(self, _id):
 
         for i, side_entry in enumerate(
-            self.side_select_listbox.get(0, tk.END)
+                self.side_select_listbox.get(0, tk.END)
         ):
             side_id, side_name = side_entry.split(":")
             if side_id == _id:
@@ -1073,7 +1071,6 @@ class UIMapConfig(tk.Frame):
 
         cur_map = self.get_currently_selected_map()
         if cur_map is not None:
-
             self.show_map_info(cur_map)
 
             # Get map attributes
@@ -1133,7 +1130,6 @@ class UIMapConfig(tk.Frame):
         self.side_color_entry.entry.delete(0, tk.END)
         self.side_random_entry.entry.delete(0, tk.END)
         self.side_points_to_win_entry.entry.delete(0, tk.END)
-
 
     def show_side(self, event=None):
         self.clear_side()
@@ -1196,22 +1192,22 @@ class UIMapConfig(tk.Frame):
 
             # Object
             if (
-                self.add_remove_var == AddRemove.AddObject
-                or self.add_remove_var == AddRemove.DelObject
+                    self.add_remove_var == AddRemove.AddObject
+                    or self.add_remove_var == AddRemove.DelObject
             ):
                 self.handle_add_remove_object(x, y, things, cur_map)
 
             # Item
             elif (
-                self.add_remove_var == AddRemove.AddItem
-                or self.add_remove_var == AddRemove.DelItem
+                    self.add_remove_var == AddRemove.AddItem
+                    or self.add_remove_var == AddRemove.DelItem
             ):
                 self.handle_add_remove_item(x, y, things, cur_map)
 
             # Starting location
             elif (
-                self.add_remove_var == AddRemove.AddStart
-                or self.add_remove_var == AddRemove.DelStart
+                    self.add_remove_var == AddRemove.AddStart
+                    or self.add_remove_var == AddRemove.DelStart
             ):
                 self.handle_add_remove_start(x, y, things, cur_map)
 
@@ -1384,7 +1380,6 @@ class UIMapConfig(tk.Frame):
         """Draws placed object on the map"""
 
         for obj_entry in cur_map["objects"]:
-
             _obj = self.ldr.get_obj_template(obj_entry["id"])
             x = obj_entry["x"]
             y = obj_entry["y"]
@@ -1455,7 +1450,6 @@ class UIMapConfig(tk.Frame):
         """Draws items on the map"""
 
         for item_entry in cur_map["items"]:
-
             itm = self.ldr.get_item_template(item_entry["id"])
             x = item_entry["x"]
             y = item_entry["y"]

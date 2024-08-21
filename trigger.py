@@ -1,5 +1,3 @@
-
-
 TRIGGER_TYPES = [
     "OBJECT_AT_ITEM",
     "ITEM_AT_ITEM"
@@ -67,4 +65,3 @@ class Trigger:
                             if o.get_cell_x() == ax and o.get_cell_y() == ay:
                                 return o, self.points
         return None, 0
-

@@ -6,6 +6,7 @@ from old_code import agent
 import uuid
 import random
 
+
 class Team:
     """This class is currently depreciated and is not in use"""
 
@@ -64,4 +65,3 @@ class Team:
     #         _agent = agent.Agent(adef, agent_id, agent_object, self.name)
     #
     #         self.agents[agent_id] = _agent
-

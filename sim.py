@@ -98,6 +98,7 @@ class Sim:
 
     def get_items(self):
         return self.items
+
     #
     # def has_map(self):
     #     """Determines if sim has map"""
@@ -362,7 +363,6 @@ class Sim:
             team_points_total += _agent.get_points()
         return team_points_total
 
-
     def check_end_of_sim(self):
         """Checks if win state conditions have been met"""
         for _team in self.teams:
@@ -396,7 +396,7 @@ class Sim:
         final_scores = {}
 
         for _team in self.teams:
-            side = self.sides[_team.get_side_id()]
+            # side = self.sides[_team.get_side_id()]
             score = self.calculate_team_points(_team)
             final_scores[_team.get_name()] = score
 
@@ -463,12 +463,11 @@ class Sim:
                     cmds_by_uuid[agent_uuid] = cmds
                 ui.draw_object(cur_agent)
 
-
             # Flush the obj_views, so no one gets old data.
             self.comp_views = {}
 
             # Get the list of obj uuids which have issued cmds.
-            obj_uuids_list = list(cmds_by_uuid.keys())
+            # obj_uuids_list = list(cmds_by_uuid.keys())
 
             self.imsgr.add_msg(msgs.Msg(self.turn, "---NEW TURN---", ""))
 
@@ -528,7 +527,6 @@ class Sim:
             # Dispatch each action to the function that
             # handles its execution.
             for a in actions:
-
                 # Add obj ref and action as a tuple.
                 self.actions[a.get_type()].append((curr_obj, a))
 
@@ -544,7 +542,6 @@ class Sim:
             actions = o.process_updates()
 
             for a in actions:
-
                 # Add obj ref and action as a tuple.
                 self.actions[a.get_type()].append((o, a))
 
@@ -585,12 +582,12 @@ class Sim:
                 view["name"] = self.objs[id_in_cell].get_data("name")
 
                 damage_str = (
-                    curr_obj.get_best_display_name()
-                    + " shot "
-                    + self.objs[id_in_cell].get_best_display_name()
-                    + " for "
-                    + str(damage)
-                    + " points of damage."
+                        curr_obj.get_best_display_name()
+                        + " shot "
+                        + self.objs[id_in_cell].get_best_display_name()
+                        + " for "
+                        + str(damage)
+                        + " points of damage."
                 )
                 self.log_msg("DAMAGE", damage_str)
 
@@ -655,11 +652,11 @@ class Sim:
             if has_collided:
 
                 # CRASH INTO SOMETHING
-                dest_cell_x = int(new_x)
-                dest_cell_y = int(new_y)
+                # dest_cell_x = int(new_x)
+                # dest_cell_y = int(new_y)
 
                 if new_x - x != 0.0:
-                    a = (new_y-y) / (new_x-x)
+                    a = (new_y - y) / (new_x - x)
                     b = y - a * x
 
                     # y = ax+b
@@ -737,7 +734,7 @@ class Sim:
 
         # Set up the necessary data for easy access
         radar_facing = curr_obj.get_data("facing") + \
-            actn.get_data("offset_angle")
+                       actn.get_data("offset_angle")
         start = radar_facing - actn.get_data("visarc")
         end = radar_facing + actn.get_data("visarc")
         angle = start
@@ -893,8 +890,8 @@ class Sim:
 
                     if not arm_comp.is_holding_item():
                         if arm_comp.can_take_item(
-                            item_to_take.get_data("weight"),
-                            item_to_take.get_data("bulk"),
+                                item_to_take.get_data("weight"),
+                                item_to_take.get_data("bulk"),
                         ):
                             arm_comp.set_data("item", matching_item)
                             self.world.remove_item(obj_x, obj_y, matching_item)
@@ -971,7 +968,6 @@ class Sim:
             self.destroyed_objs[_uuid] = dead_obj
 
         return points
-
 
     ##########################################################################
     # SEND MESSAGE TO HANDLER

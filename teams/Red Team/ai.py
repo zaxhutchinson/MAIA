@@ -30,6 +30,7 @@ class AI:
         self.facing = kwargs["facing"]
         self.damage = kwargs["damage"]
         self.health = kwargs["health"]
+
     #
     # ===========================================================================================================
 
@@ -44,7 +45,6 @@ class AI:
     # specifications. Can return empty dictionary or None if there are no
     # commands.
     def run_ai(self, view):
-
         print(view)
 
         self.cmd_maker.reset()
@@ -55,4 +55,3 @@ class AI:
         # print(cmd)
 
         return self.cmd_maker.get_cmds()
-
