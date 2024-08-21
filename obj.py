@@ -1,8 +1,8 @@
 import math
 import logging
-import copy
+# import copy
 import zfunctions
-import comp
+# import comp
 
 _2PI = 2.0 * math.pi
 
@@ -89,6 +89,9 @@ class Object:
             health=self.health
         )
 
+    def get_name(self):
+        return self.name
+
     def get_x(self):
         return self.x
 
@@ -150,16 +153,22 @@ class Object:
 
     def get_alive_sprite_filename(self):
         return self.alive_sprite_filename
-    
+
     def get_dead_sprite_filename(self):
         return self.dead_sprite_filename
-    
+
     def get_sprite_filename_based_on_damage(self):
         if self.is_alive():
             return self.get_alive_sprite_filename()
         else:
             return self.get_dead_sprite_filename()
-        
+
+    def get_redraw(self):
+        return self.redraw
+
+    def set_redraw(self, redraw):
+        self.redraw = redraw
+
     def init_logger(self):
         """Initializes logger"""
         self.logger = logging.getLogger(

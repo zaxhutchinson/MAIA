@@ -706,22 +706,26 @@ class UIMapConfig(tk.Frame):
             map_data.update({map_id: new_map_data})
             self.populate_map_listbox()
 
-    def verify_new_map_size(self, cur_map, new_height, new_width):
+    def verify_new_map_size(self, cur_map, new_width, new_height):
+        # print(f"NW {new_width} NH {new_height}")
         for obj in cur_map["objects"]:
             x = obj["x"]
             y = obj["y"]
-            if x < 1 or y < 1 or x >= new_width or y >= new_height:
+            if x < 0 or y < 0 or x >= new_width or y >= new_height:
+                # print(f"object {x} {y}")
                 return False
         for itm in cur_map["items"]:
             x = itm["x"]
             y = itm["y"]
-            if x < 1 or y < 1 or x >= new_width or y >= new_height:
+            if x < 0 or y < 0 or x >= new_width or y >= new_height:
+                # print(f"item {x} {y}")
                 return False
         for side in cur_map["sides"].values():
             for start in side["starting_locations"]:
                 x = start["x"]
                 y = start["y"]
-                if x < 1 or y < 1 or x >= new_width or y >= new_height:
+                if x < 0 or y < 0 or x >= new_width or y >= new_height:
+                    # print(f"start loc {x} {y}")
                     return False
 
         return True
@@ -923,7 +927,8 @@ class UIMapConfig(tk.Frame):
 
             # Points to win
             points_to_win = self.side_points_to_win_entry.entry.get()
-            side["points_to_win"] = points_to_win
+            if zfunctions.is_int(points_to_win):
+                side["points_to_win"] = int(points_to_win)
 
             # ID
             side_id = self.side_id_entry.entry.get()
@@ -1273,6 +1278,7 @@ class UIMapConfig(tk.Frame):
 
                 item_entry = {"id": itm["id"], "x": x, "y": y}
                 cur_map["items"].append(item_entry)
+                print(x, y, itm['id'])
                 self.canvas.draw_sprite(
                     x=x,
                     y=y,

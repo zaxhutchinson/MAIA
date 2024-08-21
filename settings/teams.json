@@ -22,5 +22,17 @@
         ],
         "name": "Red Team",
         "size": "0"
+    },
+    "Team001": {
+        "agent_defs": [
+            {
+                "AI_file": "ai.py",
+                "callsign": "Leader",
+                "object": "blue_tank",
+                "squad": "1"
+            }
+        ],
+        "name": "Team001",
+        "size": "0"
     }
 }

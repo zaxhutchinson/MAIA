@@ -34,7 +34,7 @@
                 "id": "alpha",
                 "name": "Alpha",
                 "num_agents": 1,
-                "points_to_win": "100",
+                "points_to_win": 100,
                 "random_placement": false,
                 "starting_locations": [
                     {
@@ -50,7 +50,7 @@
                 "id": "beta",
                 "name": "Beta",
                 "num_agents": 1,
-                "points_to_win": "100",
+                "points_to_win": 100,
                 "random_placement": false,
                 "starting_locations": [
                     {
@@ -60,6 +60,49 @@
                     }
                 ],
                 "triggers": []
+            }
+        },
+        "width": 10
+    },
+    "wind_tunnel": {
+        "desc": "",
+        "edge_obj_id": "metal_block",
+        "height": 3,
+        "id": "wind_tunnel",
+        "items": [
+            {
+                "id": "blue_base",
+                "x": 8,
+                "y": 1
+            }
+        ],
+        "name": "Wind Tunnel Test Ground",
+        "objects": [],
+        "sides": {
+            "Test001": {
+                "color": "#0000FF",
+                "id": "Test001",
+                "name": "Test001",
+                "num_agents": 1,
+                "points_to_win": 100,
+                "random_placement": false,
+                "starting_locations": [
+                    {
+                        "facing": 0.0,
+                        "x": 1,
+                        "y": 1
+                    }
+                ],
+                "triggers": [
+                    {
+                        "item_ids": [
+                            "blue_base"
+                        ],
+                        "name": "Blue Base Captured",
+                        "points": 100,
+                        "type": "OBJECT_AT_ITEM"
+                    }
+                ]
             }
         },
         "width": 10

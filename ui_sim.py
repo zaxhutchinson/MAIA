@@ -177,7 +177,7 @@ class UISim(tk.Frame):
         self.end_game_button = uiw.uiButton(
             master=self.btn_frame_3,
             text="End Game",
-            command=self.display_scoreboard
+            command=self.display_points
         )
         self.end_game_button.grid(row=0, column=1, sticky="ew")
 
@@ -228,6 +228,7 @@ class UISim(tk.Frame):
             self.remove_object_draw_id(dd["uuid"])
             obj_id = self.canvas.draw_sprite(**dd)
             self.add_object_draw_id(dd["uuid"], obj_id)
+            _obj.set_redraw(False)
 
     def draw_items(self):
         for i in self.sim.get_items().values():
@@ -239,6 +240,7 @@ class UISim(tk.Frame):
             self.remove_item_draw_id(dd["uuid"])
             item_id = self.canvas.draw_sprite(**dd)
             self.add_item_draw_id(dd["uuid"], item_id)
+            itm.set_redraw(False)
 
     #####################################################
     # OBJECT DRAWING
@@ -253,7 +255,7 @@ class UISim(tk.Frame):
         else:
             return None
 
-    def remove_object_draw_id(self, _uuid):
+    def remove_object_draw_id(self, _uuid: object) -> object:
         """Removes object draw id to obj draw id list"""
         obj_id = self.get_object_draw_id(_uuid)
         if obj_id is not None:
@@ -313,7 +315,10 @@ class UISim(tk.Frame):
 
     def remove_item_draw_id(self, _uuid):
         """Removes object draw id from item draw id list"""
-        del self.item_drawIDs[_uuid]
+        item_id = self.get_item_draw_id(_uuid)
+        if item_id is not None:
+            self.canvas.remove_item(item_id)
+            del self.item_drawIDs[_uuid]
     #
     # def init_items(self):
     #     """Draws initial item state
@@ -360,13 +365,13 @@ class UISim(tk.Frame):
                 self.display_message(msgs.Msg(self.sim.get_turn(), "Turn", ""))
 
                 game_ended = self.sim.run_sim(self, 1)
+                self.draw_objects()
+                self.draw_items()
+
                 turns_to_run -= 1
                 if game_ended:
-                    self.display_scoreboard()
+                    self.display_points()
                     break
-
-            self.draw_objects()
-            self.draw_items()
 
     def run_continuous_proxy(self):
         """A proxy function for continuous mode"""
@@ -398,7 +403,7 @@ class UISim(tk.Frame):
         self.draw_items()
 
         if game_ended:
-            self.display_scoreboard()
+            self.display_points()
         else:
             if self.continuous_run:
                 self.btn_run.after(delay, self.run_continuous, delay)
@@ -409,10 +414,19 @@ class UISim(tk.Frame):
 
     def display_points(self):
         """Displays points"""
-        self.sim.get_points_data()
+        scores = self.sim.get_final_scores()
+
+        for name, score in scores.items():
+            self.display_message(
+                msgs.Msg(
+                    self.sim.get_turn(),
+                    name,
+                    f'{score}'
+                )
+            )
 
     def display_scoreboard(self):
-        """Displays scoreboard"""
+        """TODO: Broken. Displays scoreboard"""
         teams_scores = self.sim.get_final_scores()
         for widget in self.log_frame.winfo_children():
             widget.pack_forget()

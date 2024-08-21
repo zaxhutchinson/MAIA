@@ -13,6 +13,7 @@ class Item:
         self.x = 0.0
         self.y = 0.0
         self.owner = None
+        self.redraw = True
 
     def __eq__(self, other):
         if isinstance(other, Item):
@@ -27,6 +28,9 @@ class Item:
 
     def get_uuid(self):
         return self.uuid
+
+    def get_template_id(self):
+        return self.id
 
     def get_x(self):
         return self.x
@@ -65,6 +69,7 @@ class Item:
             "x": self.get_cell_x(),
             "y": self.get_cell_y(),
             "name": self.name,
+            "redraw": self.redraw,
             "sprite_filename": self.sprite_filename,
             "sprite_type": "item"
         }
@@ -76,3 +81,9 @@ class Item:
     def drop_item(self):
         """De-assigns owner that has dropped item"""
         self.owner = None
+
+    def get_redraw(self):
+        return self.redraw
+
+    def set_redraw(self, redraw):
+        self.redraw = redraw

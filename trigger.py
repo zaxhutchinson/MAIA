@@ -25,14 +25,17 @@ class Trigger:
                 self.init = self.init_item_at_item
                 self.check = self.check_item_at_item
 
+    def get_name(self):
+        return self.name
+
     def init_object_at_item(self, items):
         for i in items:
-            if i.get_id() in self.item_ids:
+            if i.get_template_id() in self.item_ids:
                 self.items.append(i)
 
-    def check_object_at_item(self, objects):
+    def check_object_at_item(self, objects: dict):
         if self.active:
-            for o in objects:
+            for _uuid, o in objects.items():
                 ox = o.get_cell_x()
                 oy = o.get_cell_y()
                 for i in self.items:
@@ -40,12 +43,12 @@ class Trigger:
                     iy = i.get_cell_y()
                     if ix == ox and iy == oy:
                         self.active = False
-                        return self.points
-        return 0
+                        return o, self.points
+        return None, 0
 
     def init_item_at_item(self, items):
         for i in items:
-            if i.get_id() in self.item_ids:
+            if i.get_template_id() in self.item_ids:
                 self.items.append(i)
 
     def check_item_at_item(self, objects):
@@ -60,6 +63,8 @@ class Trigger:
                     by = b.get_cell_y()
                     if ax == bx and ay == by:
                         self.active = False
-                        return self.points
-        return 0
+                        for o in objects:
+                            if o.get_cell_x() == ax and o.get_cell_y() == ay:
+                                return o, self.points
+        return None, 0
 

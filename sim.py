@@ -32,6 +32,7 @@ class Sim:
         self.items = {}
         self.destroyed_objs = {}
         self.sides = {}
+        self.teams = []
         self.turn = 0
         self.win_states = []
         self.comp_views = {}
@@ -203,11 +204,11 @@ class Sim:
             new_obj = self.ldr.build_obj(edge_obj_id)
             new_obj.init_basic_data(
                 x=x,
-                y=map_height-1,
+                y=map_height - 1,
                 facing=0
             )
             self.objects[new_obj.get_uuid()] = new_obj
-            self.map.add_object_to(x, map_height-1, new_obj.get_uuid())
+            self.map.add_object_to(x, map_height - 1, new_obj.get_uuid())
 
         for y in range(map_height):
             new_obj = self.ldr.build_obj(edge_obj_id)
@@ -221,19 +222,19 @@ class Sim:
 
             new_obj = self.ldr.build_obj(edge_obj_id)
             new_obj.init_basic_data(
-                x=map_width-1,
+                x=map_width - 1,
                 y=y,
                 facing=0
             )
             self.objects[new_obj.get_uuid()] = new_obj
-            self.map.add_object_to(map_width-1, y, new_obj.get_uuid())
+            self.map.add_object_to(map_width - 1, y, new_obj.get_uuid())
 
         # Add all objects
         objects = self.map_template["objects"]
         for o in objects:
             new_obj = self.ldr.build_obj(o["id"])
-            new_obj.x = o["x"] # have to fill these in manually.
-            new_obj.y = o["y"] # probably a better way
+            new_obj.x = o["x"]  # have to fill these in manually.
+            new_obj.y = o["y"]  # probably a better way
             self.objects[new_obj.get_uuid()] = new_obj
             self.map.add_object_to(
                 new_obj.get_cell_x(),
@@ -246,6 +247,7 @@ class Sim:
         for i in items:
             item_id = i["id"]
             new_item = self.ldr.build_item(item_id)
+            new_item.init_for_sim(**i)
             self.items[new_item.get_uuid()] = new_item
             self.map.add_item_to(
                 new_item.get_cell_x(),
@@ -256,20 +258,23 @@ class Sim:
     def build_teams(self):
 
         team_dir = self.config["team_dir"]
+        self.sides = self.map_template["sides"]
 
         for side_id, team_id in self.team_side_assignments.items():
 
+            # Get the side information
+            side_data = self.sides[side_id]
+
             # Create new team object
             new_team = self.ldr.build_team(team_id)
+            new_team.set_side_id(side_id)
+            new_team.build_triggers(side_data["triggers"], self.items.values())
 
             # Get team data elements
             team_name = new_team.get_name()
             agent_defs = new_team.get_agent_defs()
-            triggers = new_team.get_triggers()
+            # triggers = new_team.get_triggers()
 
-            # Get and init side data
-            self.sides = self.map_template["sides"]
-            side_data = self.sides[side_id]
             starting_locations = side_data["starting_locations"]
             if side_data["random_placement"]:
                 random.shuffle(starting_locations)
@@ -338,6 +343,8 @@ class Sim:
                     agent_object.get_uuid()
                 )
 
+            self.teams.append(new_team)
+
     ##########################################################################
     # Get the world view
     def get_general_view(self):
@@ -348,64 +355,78 @@ class Sim:
 
     ##########################################################################
     # CHECK END OF GAME
+    def calculate_team_points(self, _team):
+
+        team_points_total = 0.0
+        for _agent in _team.get_agents():
+            team_points_total += _agent.get_points()
+        return team_points_total
+
+
     def check_end_of_sim(self):
         """Checks if win state conditions have been met"""
-        rtn = False
+        for _team in self.teams:
+            side = self.sides[_team.get_side_id()]
+            team_points_total = self.calculate_team_points(_team)
 
-        # Run through all win conditions even if one is True.
-        # Two win conditions could come up True in the same turn.
-        for win_state in self.win_states:
+            if team_points_total >= side["points_to_win"]:
+                return True
 
-            r = win_state.check_state()
-
-            if r:
-                self.imsgr.add_msg(
-                    msgs.Msg(
-                        self.turn,
-                        "GAME OVER",
-                        win_state.get_data("msg"),
-                    )
-                )
-            rtn = rtn or r
-        return rtn
+        return False
 
     def get_points_data(self):
         """Gets points data"""
         msg = ""
-        for name, data in self.sides.items():
-            msg += "  TEAM: " + name + "\n"
-            total = 0
-            for curr_obj in data["team"]["agents"].values():
-                msg += (
-                    "    "
-                    + curr_obj.get_best_display_name()
-                    + ": "
-                    + str(curr_obj.get_data("points"))
-                    + "\n"
-                )
-                total += curr_obj.get_data("points")
-            msg += "    TOTAL: " + str(total) + "\n"
 
-        m = msgs.Msg(str(self.turn), "CURRENT POINTS", msg)
+        for _team in self.teams:
+            msg += f"TEAM: {_team.get_name()}\n"
+            total_points = 0.0
+            for _agent in _team.get_agents():
+                agent_name = _agent.get_name()
+                points = _agent.get_points()
+                total_points += points
+                msg += f"   {agent_name}: {points}\n"
+            msg += f"   Total: {total}\n"
+
+        m = msgs.Msg(str(self.turn), "Current points: ", msg)
         self.imsgr.add_msg(m)
 
     def get_final_scores(self):
         """Get final scores"""
         final_scores = {}
-        for name, data in self.sides.items():
-            team_scores = {"agents": {}, "total": 0}
 
-            for agent_name, curr_obj in data["team"]["agents"].items():
-                agent_score = curr_obj.get_data("points")
-                team_scores["agents"][curr_obj.get_best_display_name()] = \
-                    agent_score
-                team_scores["total"] += agent_score
-
-            final_scores[name] = team_scores
+        for _team in self.teams:
+            side = self.sides[_team.get_side_id()]
+            score = self.calculate_team_points(_team)
+            final_scores[_team.get_name()] = score
 
         return final_scores
+        #
+        # for name, data in self.sides.items():
+        #     team_scores = {"agents": {}, "total": 0}
+        #
+        #     for agent_name, curr_obj in data["team"]["agents"].items():
+        #         agent_score = curr_obj.get_data("points")
+        #         team_scores["agents"][curr_obj.get_best_display_name()] = \
+        #             agent_score
+        #         team_scores["total"] += agent_score
+        #
+        #     final_scores[name] = team_scores
+        #
+        # return final_scores
 
     ##########################################################################
+
+    def check_triggers(self):
+        """Checks all triggers and awards any points to the object that activated it."""
+        for _team in self.teams:
+            print(_team.get_name())
+            for trgr in _team.get_triggers():
+                print(trgr.get_name())
+                _obj, points = trgr.check(self.objects)
+                if _obj is not None:
+                    _obj.add_points(points)
+                    print(f"POINTS: {points}")
 
     def run_next_agent(self, cur_agent):
         cmds = []
@@ -478,6 +499,9 @@ class Sim:
 
             # All actions have been run, now clear action dict.
             self.reset_action_dict()
+
+            # Check if any actions have completed any triggers
+            self.check_triggers()
 
             # Check if the sim is over.
             if self.check_end_of_sim():
@@ -673,12 +697,15 @@ class Sim:
             curr_obj.set_x(new_x)
             curr_obj.set_y(new_y)
 
+            curr_obj.set_redraw(True)
+
             # Update held item's locations
             item_uuids = curr_obj.get_all_held_stored_items()
             for _uuid in item_uuids:
                 i = self.items[_uuid]
                 i.set_x(new_x)
                 i.set_y(new_y)
+                i.set_redraw(True)
 
 
 
@@ -697,6 +724,7 @@ class Sim:
         while new_facing >= 360:
             new_facing -= 360
         curr_obj.set_data("facing", new_facing)
+        curr_obj.set_redraw(True)
 
     # Performs a radar transmission
     def actn_transmit_radar(self, curr_obj, actn):
@@ -871,6 +899,7 @@ class Sim:
                             arm_comp.set_data("item", matching_item)
                             self.world.remove_item(obj_x, obj_y, matching_item)
                             item_to_take.take_item(curr_obj.get_data("uuid"))
+                            matching_item.redraw(True)
                             # print("Take successful.")
                         else:
                             # print("Item too heavy or bulky.")
@@ -902,6 +931,7 @@ class Sim:
                 self.world.add_item(obj_x, obj_y, held_item_uuid)
                 arm_comp.set_data("item", None)
                 held_item.drop_item()
+                held_item.redraw(True)
 
     ##########################################################################
     # ADDITIONAL HELPER FUNCTIONS
