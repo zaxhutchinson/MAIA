@@ -1,8 +1,6 @@
 import tkinter as tk
 import queue
 import sim
-import loader
-import ui_sim
 import msgs
 import zexceptions
 import ui_widgets as uiw

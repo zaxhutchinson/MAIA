@@ -1,10 +1,5 @@
-import copy
 import logging
-
 import trigger
-from old_code import agent
-import uuid
-import random
 
 
 class Team:

@@ -1,7 +1,6 @@
 import tkinter as tk
 import queue
 from PIL import ImageTk, Image
-import sim
 import loader
 import msgs
 import ui_widgets as uiw

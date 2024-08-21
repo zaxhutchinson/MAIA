@@ -4,11 +4,8 @@
 # The main UI element for a simulation in progress.
 ##############################################################################
 import tkinter as tk
-import queue
-
 import msgs
 import ui_scoreboard
-
 import ui_widgets as uiw
 
 # The default delay between turns. This value is used by

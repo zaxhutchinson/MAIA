@@ -1,9 +1,5 @@
 import importlib.util
 import random
-import time
-import uuid
-
-import obj
 import zmath
 import msgs
 import valid
@@ -23,7 +19,6 @@ class Sim:
     ):
         """Initializes default sim values and an empty action dispatch table"""
         self.ldr = ldr
-        
         self.logger = logger
         self.map_template = map_template
         self.map = None

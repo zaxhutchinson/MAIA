@@ -7,7 +7,6 @@ import copy
 import map
 import item
 import comp
-import goal
 import team
 
 

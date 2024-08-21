@@ -1,4 +1,3 @@
-import copy
 import action
 
 CTYPES_LIST = ["FixedGun", "Engine", "Radar", "CnC", "Radio", "Arm"]
