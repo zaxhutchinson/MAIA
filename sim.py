@@ -783,8 +783,8 @@ class Sim:
                     temp_view.append(ping)
 
                     # If our radar level can't penetrate the object, stop.
-                    if (actn.get_data("level") <
-                            self.objs[ping["uuid"]].get_data("density")):
+                    if (actn.get_data("level")
+                            < self.objs[ping["uuid"]].get_data("density")):
                         break
 
             for ping in item_pings:
