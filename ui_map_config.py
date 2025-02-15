@@ -1257,7 +1257,7 @@ class UIMapConfig(tk.Frame):
         elif self.add_remove_var == AddRemove.DelObject:
             if things["object_index"] is not None:
                 del cur_map["objects"][things["object_index"]]
-                self.canvas.remove_obj(f"{x}_{y}")
+                self.canvas.remove_obj_at(x, y)
 
     def handle_add_remove_item(self, x, y, things, cur_map):
         if self.add_remove_var == AddRemove.AddItem:

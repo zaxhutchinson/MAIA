@@ -409,7 +409,7 @@ class uiCanvas(tk.Canvas):
             raise
 
     def remove_obj_at(self, x, y):
-        self.remove_obj(self.objects[(x, y)])
+        self.remove_obj(self.objects[f"{x}_{y}"])
 
     def remove_obj(self, obj_id):
         """Removes object"""
